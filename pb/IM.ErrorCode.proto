@@ -1,0 +1,13 @@
+syntax = "proto2";
+
+package IM.ErrorCode;
+option java_package = "com.coffeechat.protobuf";
+option optimize_for = LITE_RUNTIME;
+
+// 登录结果
+enum ResultType {
+  REFUSE_REASON_NONE = 0;               // 成功
+  REFUSE_REASON_DB_VALIDATE_FAILED = 1; // 失败
+  REFUSE_REASON_VERSION_TOO_OLD = 2;    // 客户端版本太久
+  REFUSE_REASON_INVALID_USER_TOKEN = 3; // 非法的口令
+}
