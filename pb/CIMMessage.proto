@@ -1,0 +1,78 @@
+syntax = "proto2";
+
+package CIMMessage;
+import "CIMDef.proto";
+option java_package = "com.coffeechat.protobuf";
+option optimize_for = LITE_RUNTIME;
+
+// 发送消息
+message IMMsgData {
+  // cmd id:		0x0301
+  required uint64 from_user_id = 1; // 消息发送方
+  required uint64 to_session_id = 2; // 消息接受方，单聊用户ID，群聊群ID
+  required string msg_id = 3;        // 消息ID，唯一（UUID）
+  required uint64 create_time = 4;         // 消息创建时间戳(毫秒)
+  required CIMDef.CIMMsgType msg_type = 5; // 消息类型
+  required bytes msg_data = 6;             // 消息内容
+}
+
+// 消息收到回复
+message IMMsgDataAck {
+  // cmd id:		0x0302
+  required uint64 user_id = 1;    // 消息发送方
+  required uint64 session_id = 2; // 消息接受方，单聊用户ID，群聊群ID
+  required string msg_id = 3;     // 消息ID，唯一（UUID）
+  required CIMDef.CIMSessionType session_type = 4; // 会话类型
+  optional uint64 create_time = 5;                 // 创建时间戳(毫秒)
+}
+
+// 消息已读回复（我方）
+message IMMsgDataReadAck {
+  // cmd id:		0x0303
+  required uint64 user_id = 1; // 消息发送方
+  required uint64 session_id = 2;
+  required string msg_id = 3; // 消息ID，唯一（UUID）
+  required CIMDef.CIMSessionType session_type = 4;
+}
+
+// 已读消息通知（对方）
+message IMMsgDataReadNotify {
+  // cmd id:		0x0304
+  required uint64 user_id = 1; // 消息发送方
+  required uint64 session_id = 2;
+  required string msg_id = 3;
+  required CIMDef.CIMSessionType session_type = 4;
+}
+
+// 某个会话最新的消息ID请求
+message IMGetLatestMsgIdReq {
+  // cmd id: 		0x030b
+  required uint64 user_id = 1;
+  required CIMDef.CIMSessionType session_type = 2;
+  required uint64 session_id = 3;
+}
+
+message IMGetLatestMsgIdRsp {
+  // cmd id:		0x030c
+  required uint64 user_id = 1;
+  required CIMDef.CIMSessionType session_type = 2;
+  required uint64 session_id = 3;
+  required string latest_msg_id = 4; // 会话最新的消息ID（UUID）
+}
+
+// 批量查询消息详情请求(20条内)
+message IMGetMsgByIdReq {
+  // cmd id: 		0x030d
+  required uint64 user_id = 1;
+  required CIMDef.CIMSessionType session_type = 2;
+  required uint64 session_id = 3;
+  repeated string msg_id_list = 4; // 要查询消息详情的ID列表
+}
+
+message IMGetMsgByIdRsp {
+  // cmd id:		0x030e
+  required uint64 user_id = 1;
+  required CIMDef.CIMSessionType session_type = 2;
+  required uint64 session_id = 3;
+  repeated CIMDef.CIMMsgInfo msg_list = 4; // 消息详情列表
+}

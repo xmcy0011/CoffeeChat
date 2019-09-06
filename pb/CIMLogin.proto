@@ -1,23 +1,23 @@
 syntax = "proto2";
 
-package IM.Login;
-import "IM.Common.proto";
-import "IM.ErrorCode.proto";
+package CIMLogin;
+import "CIMDef.proto";
 option java_package = "com.coffeechat.protobuf";
 option optimize_for = LITE_RUNTIME;
 
-message IMAuthTokenReq {
+// 认证请求
+message CIMAuthTokenReq {
   // cmd id:		0x0101
   required uint64 user_id = 1;
   required string user_token = 2;
-  required IM.Common.ClientType client_type = 3;
+  required CIMDef.CIMClientType client_type = 3;
   optional string client_version = 4;
 }
 
-message IMAuthTokenRsp {
+message CIMAuthTokenRsp {
   // cmd id:		0x0102
   required uint32 server_time = 1;              // 服务器时间
-  required IM.Common.ErrorCode result_code = 2; // 验证结果
+  required CIMDef.CIMErrorCode result_code = 2; // 验证结果
   optional string result_string = 3;            // 结果描述
-  optional IM.Common.UserInfo user_info = 4;    // 用户信息
+  optional CIMDef.CIMUserInfo user_info = 4;    // 用户信息
 }

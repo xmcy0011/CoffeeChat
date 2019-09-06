@@ -1,0 +1,42 @@
+syntax = "proto2";
+
+package CIMList;
+import "CIMDef.proto";
+option java_package = "com.coffeechat.protobuf";
+option optimize_for = LITE_RUNTIME;
+
+// 最近聊天会话列表请求
+message CIMRecentContactSessionReq {
+  // cmd id:		0x0201
+  required uint64 user_id = 1;
+  required uint32 latest_update_time = 2; // 最后更新时间
+}
+message CIMRecentContactSessionRsp {
+  // cmd id:		0x0202
+  required uint64 user_id = 1;
+  required uint32 unread_counts = 2; // 总未读数量
+  repeated CIMDef.CIMContactSessionInfo contact_session_list = 3; // 会话列表
+}
+
+// 历史离线聊天消息请求
+message CIMGetMsgListReq {
+  // cmd id:		0x0205
+  required uint64 user_id = 1;
+  required CIMDef.CIMSessionType session_type = 2;
+  required uint64 session_id = 3;
+  required uint64 from_time_stamp = 4; // 起始时间点，单位：毫秒
+  required uint64 end_time_stamp = 5;  // 结束时间点，单位：毫秒
+  required uint32 limit_count = 6; // 本次查询消息的条数上线(最多100条)
+}
+//对于群而言，如果消息数目返回的数值小于请求的cnt,则表示群的消息能拉取的到头了，更早的消息没有权限拉取。
+//如果limit_count 和 msg_list.count 不一致，说明服务器消息有缺失，需要
+//客户端做一个缺失标记，避免下次再次拉取。
+message CIMGetMsgListRsp {
+  // cmd id:		0x0206
+  required uint64 user_id = 1;
+  required CIMDef.CIMSessionType session_type = 2;
+  required uint64 session_id = 3;
+  required uint64 from_time_stamp = 4;      // 起始时间点，单位：毫秒
+  required uint64 end_time_stamp = 5;       // 结束时间点，单位：毫秒
+  repeated CIMDef.CIMMsgInfo msg_list = 6; // 消息列表
+}
