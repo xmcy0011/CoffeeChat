@@ -25,3 +25,15 @@ message CIMAuthTokenRsp {
   optional string result_string = 3;            // 结果描述
   optional CIMDef.CIMUserInfo user_info = 4;    // 用户信息
 }
+
+// 登出
+message CIMLogoutReq {
+  // cmd id:		0x0103
+  required uint64 user_id = 1;
+  required CIMDef.CIMClientType client_type = 2;
+}
+
+message CIMLogoutRsp {
+  // cmd id:		0x0104
+  required uint32 result_code = 1;
+}
