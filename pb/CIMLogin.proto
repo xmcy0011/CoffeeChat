@@ -9,9 +9,13 @@ option optimize_for = LITE_RUNTIME;
 message CIMAuthTokenReq {
   // cmd id:		0x0101
   required uint64 user_id = 1;
-  required string user_token = 2;
-  required CIMDef.CIMClientType client_type = 3;
-  optional string client_version = 4;
+  // CoffeeChat不存储用户信息，消息推送时需要显示昵称
+  // 基于流量考虑，昵称不放在每条消息中携带
+  // 但是如果期间用户更新昵称后，消息推送显示昵称会有延迟，CoffeeChat认为是能接受的
+  required string nick_name = 2;
+  required string user_token = 3;
+  required CIMDef.CIMClientType client_type = 4;
+  optional string client_version = 5;
 }
 
 message CIMAuthTokenRsp {
