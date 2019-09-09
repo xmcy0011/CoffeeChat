@@ -144,14 +144,19 @@ message CIMContactSessionInfo {
 
 // 消息信息
 message CIMMsgInfo {
-  required string msg_id = 1;               // 消息唯一ID（UUID）
-  required uint64 from_session_id = 2;      // 来源会话ID
-  required uint64 create_time = 3;          // 消息创建时间戳（毫秒）
-  required CIMMsgType msg_type = 4;         // 消息类型
-  required CIMMessageStatus msg_status = 5; // 消息状态（预留）
-  required CIMMessageFeature msg_feature = 6; // 消息属性
-  required CIMResCode msg_res_code = 7;       // 消息错误码
-  required bytes msg_data = 11;               // 消息内容
-  optional string attach = 12;                // 消息附件（预留）
-  optional CIMClientType client_type = 13;    // 发送者客户端类型
+  required string client_msg_id = 1; // 客户端消息ID（UUID）
+  required uint64 server_msg_id = 2; // 服务端消息ID
+
+  required CIMResCode msg_res_code = 3;       // 消息错误码
+  required CIMMessageFeature msg_feature = 4; // 消息属性
+  required CIMSessionType session_type = 5;   // 会话类型
+  required uint64 from_user_id = 6;           // 来源会话ID
+  required uint64 to_session_id = 7;          // 目标会话ID
+  required uint64 create_time = 8; // 消息创建时间戳（毫秒）
+
+  required CIMMsgType msg_type = 9;               // 消息类型
+  required CIMMessageStatus msg_status = 10;      // 消息状态（预留）
+  required bytes msg_data = 11;                   // 消息内容
+  optional string attach = 12;                    // 消息附件（预留）
+  required CIMClientType sender_client_type = 13; // 发送者客户端类型
 }
