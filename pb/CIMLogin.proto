@@ -37,3 +37,8 @@ message CIMLogoutRsp {
   // cmd id:		0x0104
   required uint32 result_code = 1;
 }
+
+// 心跳
+message CIMHeartBeat {
+  // cmd id:		0x0105
+}
