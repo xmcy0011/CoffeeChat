@@ -3,6 +3,7 @@ syntax = "proto2";
 package CIM.List;
 import "CIM.Def.proto";
 option java_package = "com.coffeechat.protobuf";
+option go_package="grpc";
 option optimize_for = LITE_RUNTIME;
 
 // 最近聊天会话列表请求

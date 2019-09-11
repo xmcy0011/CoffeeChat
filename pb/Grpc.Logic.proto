@@ -1,0 +1,14 @@
+syntax = "proto2";
+
+package CIM.Grpc;
+option go_package="grpc";
+option optimize_for = LITE_RUNTIME;
+
+import "CIM.Def.proto";
+import "CIM.List.proto";
+import "CIM.Login.proto";
+import "CIM.Message.proto";
+
+service Logic {
+    rpc Ping(CIM.Login.CIMHeartBeat) returns(CIM.Login.CIMHeartBeat);
+}

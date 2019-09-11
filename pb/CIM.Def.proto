@@ -2,6 +2,7 @@ syntax = "proto2";
 
 package CIM.Def;
 option java_package = "com.coffeechat.protobuf";
+option go_package="grpc";
 option optimize_for = LITE_RUNTIME;
 
 // 外部消息：客户端 <-> 服务器消息定义
