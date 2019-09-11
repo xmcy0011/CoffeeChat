@@ -1,7 +1,7 @@
 syntax = "proto2";
 
 package CIMLogin;
-import "CIMDef.proto";
+import "CIM.Def.proto";
 option java_package = "com.coffeechat.protobuf";
 option optimize_for = LITE_RUNTIME;
 
@@ -14,23 +14,23 @@ message CIMAuthTokenReq {
   // 但是如果期间用户更新昵称后，消息推送显示昵称会有延迟，CoffeeChat认为是能接受的
   required string nick_name = 2;
   required string user_token = 3;
-  required CIMDef.CIMClientType client_type = 4;
+  required CIM.Def.CIMClientType client_type = 4;
   optional string client_version = 5;
 }
 
 message CIMAuthTokenRsp {
   // cmd id:		0x0102
   required uint32 server_time = 1;              // 服务器时间
-  required CIMDef.CIMErrorCode result_code = 2; // 验证结果
+  required CIM.Def.CIMErrorCode result_code = 2; // 验证结果
   optional string result_string = 3;            // 结果描述
-  optional CIMDef.CIMUserInfo user_info = 4;    // 用户信息
+  optional CIM.Def.CIMUserInfo user_info = 4;    // 用户信息
 }
 
 // 登出
 message CIMLogoutReq {
   // cmd id:		0x0103
   required uint64 user_id = 1;
-  required CIMDef.CIMClientType client_type = 2;
+  required CIM.Def.CIMClientType client_type = 2;
 }
 
 message CIMLogoutRsp {

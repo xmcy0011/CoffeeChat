@@ -1,6 +1,6 @@
 syntax = "proto2";
 
-package CIMDef;
+package CIM.Def;
 option java_package = "com.coffeechat.protobuf";
 option optimize_for = LITE_RUNTIME;
 
