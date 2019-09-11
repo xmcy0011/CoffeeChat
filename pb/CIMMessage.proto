@@ -1,6 +1,6 @@
 syntax = "proto2";
 
-package CIMMessage;
+package CIM.Message;
 import "CIM.Def.proto";
 option java_package = "com.coffeechat.protobuf";
 option optimize_for = LITE_RUNTIME;
