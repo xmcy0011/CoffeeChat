@@ -2,7 +2,7 @@ syntax = "proto2";
 
 package CIM.Def;
 option java_package = "com.coffeechat.protobuf";
-option go_package="grpc";
+option go_package = "grpc";
 option optimize_for = LITE_RUNTIME;
 
 // 外部消息：客户端 <-> 服务器消息定义
@@ -48,10 +48,10 @@ enum CIMErrorCode {
 
 // 客户端类型
 enum CIMClientType {
-  // kCIM_CLIENT_TYPE_DEFAULT = 0; // unset
-  // kCIM_CLIENT_TYPE_ANDROID = 1;  // 安卓
-  kCIM_CLIENT_TYPE_IOS = 2; // iOS
-  // kCIM_CLIENT_TYPE_WEB = 3;      // WebSocket
+  kCIM_CLIENT_TYPE_DEFAULT = 0; // unset
+  kCIM_CLIENT_TYPE_ANDROID = 1; // 安卓
+  kCIM_CLIENT_TYPE_IOS = 2;     // iOS
+  kCIM_CLIENT_TYPE_WEB = 3;     // WebSocket
   // kCIM_CLIENT_TYPE_REST_API = 4; // RestAPI
   // kCIM_CLIENT_TYPE_PC_WINDOWS = 5; // PC Windows
   // kCIM_CLIENT_TYPE_MAC_OS = 5;     // MAC
