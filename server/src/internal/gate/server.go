@@ -1,8 +1,11 @@
 package gate
 
 import (
-	"github.com/golang/glog"
+	"github.com/CoffeeChat/server/src/api/grpc"
+	"github.com/CoffeeChat/server/src/pkg/logger"
+	"monit_server/Base"
 	"net"
+	"os"
 	"strconv"
 )
 
@@ -11,33 +14,82 @@ func StartServer(config ServerConfig) {
 }
 
 func startTcpServer(ip string, port int) {
-	listenerTcp, err := net.ListenTCP("tcp", ip+":"+strconv.Itoa(port))
+	logger.Sugar.Info("server listen on ", ip+":"+strconv.Itoa(port))
+
+	addr, err := net.ResolveTCPAddr("tcp", ip+":"+strconv.Itoa(port))
 	if err != nil {
-		glog.Fatal("listen on ", ip, ":", port, " error:", err.Error())
-		return
+		logger.Sugar.Error("ResolveTCPAddr error:", err.Error(), ",ip=", ip, ",port=", port)
+		os.Exit(-1)
+	}
+
+	listenerTcp, err := net.ListenTCP("tcp", addr)
+	if err != nil {
+		logger.Sugar.Error("listen on ", ip, ":", port, " error:", err.Error())
+		os.Exit(-1)
 	}
 
 	for {
-		conn, err := listenerTcp.Accept()
+		// FIXED ME
+		// use cpu num accept routine
+		conn, err := listenerTcp.AcceptTCP()
 		if err != nil {
-			glog.Error("accept conn error:", err.Error())
+			logger.Sugar.Error("accept conn error:", err.Error())
 		} else {
 			tcpConn := NewTcpConn()
 			tcpConn.OnConnect(conn)
+			ConnManager.Add(tcpConn)
 
-			// 一个连接
-			go func() {
-				ConnManager.Add(tcpConn)
-				for {
-					len, err := tcpConn.conn.Read()
-					if err != nil {
-						break
-					}
-				}
-				ConnManager.Remove(tcpConn)
-			}()
+			// FIXED ME
+			// 一个连接一个read routine？
+			go tcpConnRead(tcpConn)
 		}
 	}
+}
+
+func tcpConnRead(tcpConn *TcpConn) {
+	// FIXED ME
+	// use ROUND buffer instead
+	// 10KB,if 500,000 user online,need memory 10KB*500,000/1024/1024=4.76GB
+	const kBufferMaxLen = 10 * 1024 * 1024
+	var buffer = make([]byte, kBufferMaxLen)
+	var writeOffset = 0
+	for {
+		buffLen, err := tcpConn.conn.Read(buffer[writeOffset:])
+		if err != nil || buffLen < 0 {
+			break
+		}
+		writeOffset += buffLen
+
+		for {
+			if !Base.IsPduAvailable(buffer, writeOffset) {
+				break
+			}
+
+			// 解析出头部
+			header := &grpc.ImHeader{}
+			header.ReadHeader(buffer, writeOffset)
+
+			// 有效数据=len-HeaderLen，但是这里需要偏移HeaderLen刚好抵消
+			dataLen := header.Length
+			data := buffer[grpc.IMHeaderLen:dataLen]
+
+			// 回调处理
+			tcpConn.OnRead(header, data)
+
+			// 处理粘包问题，把余下的数据拷贝到数组起始位置
+			resetBuf := buffer[dataLen:writeOffset]
+			copy(buffer, resetBuf)
+			writeOffset -= int(dataLen)
+		}
+
+		// safe
+		if writeOffset >= kBufferMaxLen {
+			writeOffset = 0
+		}
+	}
+	// close the connect
+	tcpConn.OnClose()
+	ConnManager.Remove(tcpConn)
 }
 
 //func startWebSocketServer(ip string, port int) {
@@ -50,7 +102,7 @@ func startTcpServer(ip string, port int) {
 //	for{
 //		conn, err := listenerWss.Accept()
 //		if err != nil {
-//			glog.Error("accept conn error:", err.Error())
+//			logger.Sugar.Error("accept conn error:", err.Error())
 //		} else {
 //
 //		}

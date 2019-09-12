@@ -1,0 +1,124 @@
+package grpc
+
+import (
+	"bytes"
+	"encoding/binary"
+	"github.com/CoffeeChat/server/src/pkg/logger"
+	"github.com/golang/protobuf/proto"
+	"sync"
+)
+
+const IMHeaderLen = 16
+const IMHeaderVersion = 1
+const UINT16_MAX = ^uint16(0)
+
+var pduSeq uint16 = 1
+var mutex sync.Mutex
+
+type ImHeader struct {
+	Length    uint32 // the whole pdu length
+	Version   uint16 // pdu version number
+	Flag      uint16 // not used
+	ServiceId uint16 //
+	CommandId uint16 //
+	SeqNum    uint16 // 包序号
+	Reversed  uint16 // 保留
+
+	pbMessage proto.Message // 消息体
+}
+
+func (it *ImHeader) SetPduMsg(message proto.Message) {
+	it.pbMessage = message
+}
+
+func (it *ImHeader) ReadHeader(data []byte, len int) {
+	if len >= IMHeaderLen {
+		buffer := bytes.NewBuffer(data)
+		binary.Read(buffer, binary.BigEndian, &it.Length)
+		binary.Read(buffer, binary.BigEndian, &it.Version)
+		binary.Read(buffer, binary.BigEndian, &it.Flag)
+		binary.Read(buffer, binary.BigEndian, &it.ServiceId)
+		binary.Read(buffer, binary.BigEndian, &it.CommandId)
+		binary.Read(buffer, binary.BigEndian, &it.SeqNum)
+		binary.Read(buffer, binary.BigEndian, &it.Reversed)
+	}
+}
+
+func (it *ImHeader) getHeaderBuffer() []byte {
+	tempSlice := make([]byte, 0)
+	buffer := bytes.NewBuffer(tempSlice)
+	binary.Write(buffer, binary.BigEndian, it.Length)
+	binary.Write(buffer, binary.BigEndian, it.Version)
+	binary.Write(buffer, binary.BigEndian, it.Flag)
+	binary.Write(buffer, binary.BigEndian, it.ServiceId)
+	binary.Write(buffer, binary.BigEndian, it.CommandId)
+	binary.Write(buffer, binary.BigEndian, it.SeqNum)
+	binary.Write(buffer, binary.BigEndian, it.Reversed)
+
+	return buffer.Bytes()
+}
+
+func IsPduAvailable(data []byte, len int) bool {
+	if len < IMHeaderLen {
+		return false
+	}
+
+	buffer := bytes.NewBuffer(data)
+	var packetLen uint32 = 0
+	binary.Read(buffer, binary.BigEndian, &packetLen)
+
+	if int(packetLen) > len {
+		return false
+	}
+
+	if packetLen == 0 {
+		logger.Sugar.Error("pdu len is 0")
+		return false
+	}
+
+	return true
+}
+
+/**
+获取递增唯一序号
+ */
+func getSeq() uint16 {
+	mutex.Lock()
+	pduSeq ++
+	// 溢出
+	if pduSeq >= UINT16_MAX {
+		pduSeq = 1
+	}
+	mutex.Unlock()
+	return pduSeq
+}
+
+func (it *ImHeader) GetBuffer() []byte {
+	// write header
+	tempSlice := make([]byte, 0)
+	buffer := bytes.NewBuffer(tempSlice)
+
+	data, err := proto.Marshal(it.pbMessage)
+	if err != nil {
+		logger.Sugar.Error("parse pb error:", err.Error())
+		return nil
+	}
+
+	// 设置头信息
+	it.Length = uint32(len(data)) + IMHeaderLen
+	it.Version = uint16(IMHeaderVersion)
+	// 序号全局唯一
+	it.SeqNum = getSeq()
+
+	headerData := it.getHeaderBuffer()
+
+	binary.Write(buffer, binary.BigEndian, headerData)
+	binary.Write(buffer, binary.BigEndian, data)
+
+	return buffer.Bytes()
+}
+
+func (it *ImHeader) GetBodyBuffer() []byte {
+	data, _ := proto.Marshal(it.pbMessage)
+	return data
+}

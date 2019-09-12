@@ -3,7 +3,7 @@ package gate
 import (
 	"container/list"
 	"github.com/CoffeeChat/server/src/api/grpc"
-	"github.com/golang/glog"
+	"github.com/CoffeeChat/server/src/pkg/logger"
 	"net"
 	"time"
 )
@@ -12,9 +12,9 @@ import (
 来自于客户端的连接
  */
 type CImConn interface {
-	OnConnect(conn net.Conn)
+	OnConnect(conn *net.TCPConn)
 	OnClose()
-	OnRead(buff []byte)
+	OnRead(header *grpc.ImHeader, buff []byte)
 
 	OnTimer(tick int64) // 定时器回调，间隔1秒
 
@@ -62,6 +62,6 @@ func (c *Manager) Remove(conn CImConn) {
 	if e != nil {
 		c.connList.Remove(e)
 	} else {
-		glog.Error("element is nil")
+		logger.Sugar.Error("element is nil")
 	}
 }
