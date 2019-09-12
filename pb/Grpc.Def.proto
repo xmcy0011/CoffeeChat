@@ -1,0 +1,7 @@
+syntax = "proto2";
+
+package CIM.Grpc;
+option go_package="grpc";
+option optimize_for = LITE_RUNTIME;
+
+message Empty{}

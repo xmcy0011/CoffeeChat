@@ -10,20 +10,15 @@ import "CIM.Login.proto";
 import "CIM.Message.proto";
 import "Grpc.Def.proto";
 
-// logic的grpc接口定义
-service Logic {
+service Gate{
     // ping
     rpc Ping(CIM.Login.CIMHeartBeat) returns(CIM.Login.CIMHeartBeat);
-    // 验证token
-    rpc AuthToken(CIM.Login.CIMAuthTokenReq) returns(CIM.Login.CIMAuthTokenRsp);
-
-    // 查询会话列表
-    rpc RecentContactSession(CIM.List.CIMRecentContactSessionReq) returns(CIM.List.CIMRecentContactSessionRsp);
-    // 查询历史消息列表
-    rpc GetMsgList(CIM.List.CIMGetMsgListReq) returns(CIM.List.CIMGetMsgListRsp);
 
     // 发消息
     rpc SendMsgData(CIM.Message.CIMMsgData) returns(CIM.Message.CIMMsgDataAck);
     // 消息收到ACK
     rpc AckMsgData(CIM.Message.CIMMsgDataAck) returns(Empty);
+
+    // 停止接收消息
+    rpc StopReceivePacket(Empty) returns(Empty);
 }
