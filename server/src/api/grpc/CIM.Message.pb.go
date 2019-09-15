@@ -23,15 +23,15 @@ const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 // 发送消息
 type CIMMsgData struct {
 	// cmd id:		0x0301
-	FromUserId           *uint64     `protobuf:"varint,1,req,name=from_user_id,json=fromUserId" json:"from_user_id,omitempty"`
-	ToSessionId          *uint64     `protobuf:"varint,2,req,name=to_session_id,json=toSessionId" json:"to_session_id,omitempty"`
-	MsgId                *string     `protobuf:"bytes,3,req,name=msg_id,json=msgId" json:"msg_id,omitempty"`
-	CreateTime           *uint64     `protobuf:"varint,4,req,name=create_time,json=createTime" json:"create_time,omitempty"`
-	MsgType              *CIMMsgType `protobuf:"varint,5,req,name=msg_type,json=msgType,enum=CIM.Def.CIMMsgType" json:"msg_type,omitempty"`
-	MsgData              []byte      `protobuf:"bytes,6,req,name=msg_data,json=msgData" json:"msg_data,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}    `json:"-"`
-	XXX_unrecognized     []byte      `json:"-"`
-	XXX_sizecache        int32       `json:"-"`
+	FromUserId           uint64     `protobuf:"varint,1,opt,name=from_user_id,json=fromUserId,proto3" json:"from_user_id,omitempty"`
+	ToSessionId          uint64     `protobuf:"varint,2,opt,name=to_session_id,json=toSessionId,proto3" json:"to_session_id,omitempty"`
+	MsgId                string     `protobuf:"bytes,3,opt,name=msg_id,json=msgId,proto3" json:"msg_id,omitempty"`
+	CreateTime           uint64     `protobuf:"varint,4,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
+	MsgType              CIMMsgType `protobuf:"varint,5,opt,name=msg_type,json=msgType,proto3,enum=CIM.Def.CIMMsgType" json:"msg_type,omitempty"`
+	MsgData              []byte     `protobuf:"bytes,6,opt,name=msg_data,json=msgData,proto3" json:"msg_data,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}   `json:"-"`
+	XXX_unrecognized     []byte     `json:"-"`
+	XXX_sizecache        int32      `json:"-"`
 }
 
 func (m *CIMMsgData) Reset()         { *m = CIMMsgData{} }
@@ -60,38 +60,38 @@ func (m *CIMMsgData) XXX_DiscardUnknown() {
 var xxx_messageInfo_CIMMsgData proto.InternalMessageInfo
 
 func (m *CIMMsgData) GetFromUserId() uint64 {
-	if m != nil && m.FromUserId != nil {
-		return *m.FromUserId
+	if m != nil {
+		return m.FromUserId
 	}
 	return 0
 }
 
 func (m *CIMMsgData) GetToSessionId() uint64 {
-	if m != nil && m.ToSessionId != nil {
-		return *m.ToSessionId
+	if m != nil {
+		return m.ToSessionId
 	}
 	return 0
 }
 
 func (m *CIMMsgData) GetMsgId() string {
-	if m != nil && m.MsgId != nil {
-		return *m.MsgId
+	if m != nil {
+		return m.MsgId
 	}
 	return ""
 }
 
 func (m *CIMMsgData) GetCreateTime() uint64 {
-	if m != nil && m.CreateTime != nil {
-		return *m.CreateTime
+	if m != nil {
+		return m.CreateTime
 	}
 	return 0
 }
 
 func (m *CIMMsgData) GetMsgType() CIMMsgType {
-	if m != nil && m.MsgType != nil {
-		return *m.MsgType
+	if m != nil {
+		return m.MsgType
 	}
-	return CIMMsgType_kCIM_MSG_TYPE_TEXT
+	return CIMMsgType_kCIM_MSG_TYPE_UNKNOWN
 }
 
 func (m *CIMMsgData) GetMsgData() []byte {
@@ -104,15 +104,16 @@ func (m *CIMMsgData) GetMsgData() []byte {
 // 消息收到回复
 type CIMMsgDataAck struct {
 	// cmd id:		0x0302
-	FromUserId           *uint64         `protobuf:"varint,1,req,name=from_user_id,json=fromUserId" json:"from_user_id,omitempty"`
-	ToSessionId          *uint64         `protobuf:"varint,2,req,name=to_session_id,json=toSessionId" json:"to_session_id,omitempty"`
-	MsgId                *string         `protobuf:"bytes,3,req,name=msg_id,json=msgId" json:"msg_id,omitempty"`
-	ResCode              *CIMResCode     `protobuf:"varint,4,req,name=res_code,json=resCode,enum=CIM.Def.CIMResCode" json:"res_code,omitempty"`
-	SessionType          *CIMSessionType `protobuf:"varint,5,req,name=session_type,json=sessionType,enum=CIM.Def.CIMSessionType" json:"session_type,omitempty"`
-	CreateTime           *uint64         `protobuf:"varint,6,opt,name=create_time,json=createTime" json:"create_time,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}        `json:"-"`
-	XXX_unrecognized     []byte          `json:"-"`
-	XXX_sizecache        int32           `json:"-"`
+	FromUserId  uint64         `protobuf:"varint,1,opt,name=from_user_id,json=fromUserId,proto3" json:"from_user_id,omitempty"`
+	ToSessionId uint64         `protobuf:"varint,2,opt,name=to_session_id,json=toSessionId,proto3" json:"to_session_id,omitempty"`
+	MsgId       string         `protobuf:"bytes,3,opt,name=msg_id,json=msgId,proto3" json:"msg_id,omitempty"`
+	ResCode     CIMResCode     `protobuf:"varint,4,opt,name=res_code,json=resCode,proto3,enum=CIM.Def.CIMResCode" json:"res_code,omitempty"`
+	SessionType CIMSessionType `protobuf:"varint,5,opt,name=session_type,json=sessionType,proto3,enum=CIM.Def.CIMSessionType" json:"session_type,omitempty"`
+	//optional
+	CreateTime           uint64   `protobuf:"varint,6,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *CIMMsgDataAck) Reset()         { *m = CIMMsgDataAck{} }
@@ -141,43 +142,43 @@ func (m *CIMMsgDataAck) XXX_DiscardUnknown() {
 var xxx_messageInfo_CIMMsgDataAck proto.InternalMessageInfo
 
 func (m *CIMMsgDataAck) GetFromUserId() uint64 {
-	if m != nil && m.FromUserId != nil {
-		return *m.FromUserId
+	if m != nil {
+		return m.FromUserId
 	}
 	return 0
 }
 
 func (m *CIMMsgDataAck) GetToSessionId() uint64 {
-	if m != nil && m.ToSessionId != nil {
-		return *m.ToSessionId
+	if m != nil {
+		return m.ToSessionId
 	}
 	return 0
 }
 
 func (m *CIMMsgDataAck) GetMsgId() string {
-	if m != nil && m.MsgId != nil {
-		return *m.MsgId
+	if m != nil {
+		return m.MsgId
 	}
 	return ""
 }
 
 func (m *CIMMsgDataAck) GetResCode() CIMResCode {
-	if m != nil && m.ResCode != nil {
-		return *m.ResCode
+	if m != nil {
+		return m.ResCode
 	}
 	return CIMResCode_kCIM_RES_CODE_OK
 }
 
 func (m *CIMMsgDataAck) GetSessionType() CIMSessionType {
-	if m != nil && m.SessionType != nil {
-		return *m.SessionType
+	if m != nil {
+		return m.SessionType
 	}
-	return CIMSessionType_kCIM_SESSION_TYPE_SINGLE
+	return CIMSessionType_kCIM_SESSION_TYPE_Invalid
 }
 
 func (m *CIMMsgDataAck) GetCreateTime() uint64 {
-	if m != nil && m.CreateTime != nil {
-		return *m.CreateTime
+	if m != nil {
+		return m.CreateTime
 	}
 	return 0
 }
@@ -185,13 +186,13 @@ func (m *CIMMsgDataAck) GetCreateTime() uint64 {
 // 消息已读回复（我方）
 type CIMMsgDataReadAck struct {
 	// cmd id:		0x0303
-	UserId               *uint64         `protobuf:"varint,1,req,name=user_id,json=userId" json:"user_id,omitempty"`
-	SessionId            *uint64         `protobuf:"varint,2,req,name=session_id,json=sessionId" json:"session_id,omitempty"`
-	MsgId                *string         `protobuf:"bytes,3,req,name=msg_id,json=msgId" json:"msg_id,omitempty"`
-	SessionType          *CIMSessionType `protobuf:"varint,4,req,name=session_type,json=sessionType,enum=CIM.Def.CIMSessionType" json:"session_type,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}        `json:"-"`
-	XXX_unrecognized     []byte          `json:"-"`
-	XXX_sizecache        int32           `json:"-"`
+	UserId               uint64         `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	SessionId            uint64         `protobuf:"varint,2,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
+	MsgId                string         `protobuf:"bytes,3,opt,name=msg_id,json=msgId,proto3" json:"msg_id,omitempty"`
+	SessionType          CIMSessionType `protobuf:"varint,4,opt,name=session_type,json=sessionType,proto3,enum=CIM.Def.CIMSessionType" json:"session_type,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}       `json:"-"`
+	XXX_unrecognized     []byte         `json:"-"`
+	XXX_sizecache        int32          `json:"-"`
 }
 
 func (m *CIMMsgDataReadAck) Reset()         { *m = CIMMsgDataReadAck{} }
@@ -220,43 +221,43 @@ func (m *CIMMsgDataReadAck) XXX_DiscardUnknown() {
 var xxx_messageInfo_CIMMsgDataReadAck proto.InternalMessageInfo
 
 func (m *CIMMsgDataReadAck) GetUserId() uint64 {
-	if m != nil && m.UserId != nil {
-		return *m.UserId
+	if m != nil {
+		return m.UserId
 	}
 	return 0
 }
 
 func (m *CIMMsgDataReadAck) GetSessionId() uint64 {
-	if m != nil && m.SessionId != nil {
-		return *m.SessionId
+	if m != nil {
+		return m.SessionId
 	}
 	return 0
 }
 
 func (m *CIMMsgDataReadAck) GetMsgId() string {
-	if m != nil && m.MsgId != nil {
-		return *m.MsgId
+	if m != nil {
+		return m.MsgId
 	}
 	return ""
 }
 
 func (m *CIMMsgDataReadAck) GetSessionType() CIMSessionType {
-	if m != nil && m.SessionType != nil {
-		return *m.SessionType
+	if m != nil {
+		return m.SessionType
 	}
-	return CIMSessionType_kCIM_SESSION_TYPE_SINGLE
+	return CIMSessionType_kCIM_SESSION_TYPE_Invalid
 }
 
 // 已读消息通知（对方）
 type CIMMsgDataReadNotify struct {
 	// cmd id:		0x0304
-	UserId               *uint64         `protobuf:"varint,1,req,name=user_id,json=userId" json:"user_id,omitempty"`
-	SessionId            *uint64         `protobuf:"varint,2,req,name=session_id,json=sessionId" json:"session_id,omitempty"`
-	MsgId                *string         `protobuf:"bytes,3,req,name=msg_id,json=msgId" json:"msg_id,omitempty"`
-	SessionType          *CIMSessionType `protobuf:"varint,4,req,name=session_type,json=sessionType,enum=CIM.Def.CIMSessionType" json:"session_type,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}        `json:"-"`
-	XXX_unrecognized     []byte          `json:"-"`
-	XXX_sizecache        int32           `json:"-"`
+	UserId               uint64         `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	SessionId            uint64         `protobuf:"varint,2,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
+	MsgId                string         `protobuf:"bytes,3,opt,name=msg_id,json=msgId,proto3" json:"msg_id,omitempty"`
+	SessionType          CIMSessionType `protobuf:"varint,4,opt,name=session_type,json=sessionType,proto3,enum=CIM.Def.CIMSessionType" json:"session_type,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}       `json:"-"`
+	XXX_unrecognized     []byte         `json:"-"`
+	XXX_sizecache        int32          `json:"-"`
 }
 
 func (m *CIMMsgDataReadNotify) Reset()         { *m = CIMMsgDataReadNotify{} }
@@ -285,42 +286,42 @@ func (m *CIMMsgDataReadNotify) XXX_DiscardUnknown() {
 var xxx_messageInfo_CIMMsgDataReadNotify proto.InternalMessageInfo
 
 func (m *CIMMsgDataReadNotify) GetUserId() uint64 {
-	if m != nil && m.UserId != nil {
-		return *m.UserId
+	if m != nil {
+		return m.UserId
 	}
 	return 0
 }
 
 func (m *CIMMsgDataReadNotify) GetSessionId() uint64 {
-	if m != nil && m.SessionId != nil {
-		return *m.SessionId
+	if m != nil {
+		return m.SessionId
 	}
 	return 0
 }
 
 func (m *CIMMsgDataReadNotify) GetMsgId() string {
-	if m != nil && m.MsgId != nil {
-		return *m.MsgId
+	if m != nil {
+		return m.MsgId
 	}
 	return ""
 }
 
 func (m *CIMMsgDataReadNotify) GetSessionType() CIMSessionType {
-	if m != nil && m.SessionType != nil {
-		return *m.SessionType
+	if m != nil {
+		return m.SessionType
 	}
-	return CIMSessionType_kCIM_SESSION_TYPE_SINGLE
+	return CIMSessionType_kCIM_SESSION_TYPE_Invalid
 }
 
 // 某个会话最新的消息ID请求
 type CIMGetLatestMsgIdReq struct {
 	// cmd id: 		0x030b
-	UserId               *uint64         `protobuf:"varint,1,req,name=user_id,json=userId" json:"user_id,omitempty"`
-	SessionType          *CIMSessionType `protobuf:"varint,2,req,name=session_type,json=sessionType,enum=CIM.Def.CIMSessionType" json:"session_type,omitempty"`
-	SessionId            *uint64         `protobuf:"varint,3,req,name=session_id,json=sessionId" json:"session_id,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}        `json:"-"`
-	XXX_unrecognized     []byte          `json:"-"`
-	XXX_sizecache        int32           `json:"-"`
+	UserId               uint64         `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	SessionType          CIMSessionType `protobuf:"varint,2,opt,name=session_type,json=sessionType,proto3,enum=CIM.Def.CIMSessionType" json:"session_type,omitempty"`
+	SessionId            uint64         `protobuf:"varint,3,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}       `json:"-"`
+	XXX_unrecognized     []byte         `json:"-"`
+	XXX_sizecache        int32          `json:"-"`
 }
 
 func (m *CIMGetLatestMsgIdReq) Reset()         { *m = CIMGetLatestMsgIdReq{} }
@@ -349,35 +350,35 @@ func (m *CIMGetLatestMsgIdReq) XXX_DiscardUnknown() {
 var xxx_messageInfo_CIMGetLatestMsgIdReq proto.InternalMessageInfo
 
 func (m *CIMGetLatestMsgIdReq) GetUserId() uint64 {
-	if m != nil && m.UserId != nil {
-		return *m.UserId
+	if m != nil {
+		return m.UserId
 	}
 	return 0
 }
 
 func (m *CIMGetLatestMsgIdReq) GetSessionType() CIMSessionType {
-	if m != nil && m.SessionType != nil {
-		return *m.SessionType
+	if m != nil {
+		return m.SessionType
 	}
-	return CIMSessionType_kCIM_SESSION_TYPE_SINGLE
+	return CIMSessionType_kCIM_SESSION_TYPE_Invalid
 }
 
 func (m *CIMGetLatestMsgIdReq) GetSessionId() uint64 {
-	if m != nil && m.SessionId != nil {
-		return *m.SessionId
+	if m != nil {
+		return m.SessionId
 	}
 	return 0
 }
 
 type CIMGetLatestMsgIdRsp struct {
 	// cmd id:		0x030c
-	UserId               *uint64         `protobuf:"varint,1,req,name=user_id,json=userId" json:"user_id,omitempty"`
-	SessionType          *CIMSessionType `protobuf:"varint,2,req,name=session_type,json=sessionType,enum=CIM.Def.CIMSessionType" json:"session_type,omitempty"`
-	SessionId            *uint64         `protobuf:"varint,3,req,name=session_id,json=sessionId" json:"session_id,omitempty"`
-	LatestMsgId          *string         `protobuf:"bytes,4,req,name=latest_msg_id,json=latestMsgId" json:"latest_msg_id,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}        `json:"-"`
-	XXX_unrecognized     []byte          `json:"-"`
-	XXX_sizecache        int32           `json:"-"`
+	UserId               uint64         `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	SessionType          CIMSessionType `protobuf:"varint,2,opt,name=session_type,json=sessionType,proto3,enum=CIM.Def.CIMSessionType" json:"session_type,omitempty"`
+	SessionId            uint64         `protobuf:"varint,3,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
+	LatestMsgId          string         `protobuf:"bytes,4,opt,name=latest_msg_id,json=latestMsgId,proto3" json:"latest_msg_id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}       `json:"-"`
+	XXX_unrecognized     []byte         `json:"-"`
+	XXX_sizecache        int32          `json:"-"`
 }
 
 func (m *CIMGetLatestMsgIdRsp) Reset()         { *m = CIMGetLatestMsgIdRsp{} }
@@ -406,29 +407,29 @@ func (m *CIMGetLatestMsgIdRsp) XXX_DiscardUnknown() {
 var xxx_messageInfo_CIMGetLatestMsgIdRsp proto.InternalMessageInfo
 
 func (m *CIMGetLatestMsgIdRsp) GetUserId() uint64 {
-	if m != nil && m.UserId != nil {
-		return *m.UserId
+	if m != nil {
+		return m.UserId
 	}
 	return 0
 }
 
 func (m *CIMGetLatestMsgIdRsp) GetSessionType() CIMSessionType {
-	if m != nil && m.SessionType != nil {
-		return *m.SessionType
+	if m != nil {
+		return m.SessionType
 	}
-	return CIMSessionType_kCIM_SESSION_TYPE_SINGLE
+	return CIMSessionType_kCIM_SESSION_TYPE_Invalid
 }
 
 func (m *CIMGetLatestMsgIdRsp) GetSessionId() uint64 {
-	if m != nil && m.SessionId != nil {
-		return *m.SessionId
+	if m != nil {
+		return m.SessionId
 	}
 	return 0
 }
 
 func (m *CIMGetLatestMsgIdRsp) GetLatestMsgId() string {
-	if m != nil && m.LatestMsgId != nil {
-		return *m.LatestMsgId
+	if m != nil {
+		return m.LatestMsgId
 	}
 	return ""
 }
@@ -436,13 +437,13 @@ func (m *CIMGetLatestMsgIdRsp) GetLatestMsgId() string {
 // 批量查询消息详情请求(20条内)
 type CIMGetMsgByIdReq struct {
 	// cmd id: 		0x030d
-	UserId               *uint64         `protobuf:"varint,1,req,name=user_id,json=userId" json:"user_id,omitempty"`
-	SessionType          *CIMSessionType `protobuf:"varint,2,req,name=session_type,json=sessionType,enum=CIM.Def.CIMSessionType" json:"session_type,omitempty"`
-	SessionId            *uint64         `protobuf:"varint,3,req,name=session_id,json=sessionId" json:"session_id,omitempty"`
-	MsgIdList            []string        `protobuf:"bytes,4,rep,name=msg_id_list,json=msgIdList" json:"msg_id_list,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}        `json:"-"`
-	XXX_unrecognized     []byte          `json:"-"`
-	XXX_sizecache        int32           `json:"-"`
+	UserId               uint64         `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	SessionType          CIMSessionType `protobuf:"varint,2,opt,name=session_type,json=sessionType,proto3,enum=CIM.Def.CIMSessionType" json:"session_type,omitempty"`
+	SessionId            uint64         `protobuf:"varint,3,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
+	MsgIdList            []string       `protobuf:"bytes,4,rep,name=msg_id_list,json=msgIdList,proto3" json:"msg_id_list,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}       `json:"-"`
+	XXX_unrecognized     []byte         `json:"-"`
+	XXX_sizecache        int32          `json:"-"`
 }
 
 func (m *CIMGetMsgByIdReq) Reset()         { *m = CIMGetMsgByIdReq{} }
@@ -471,22 +472,22 @@ func (m *CIMGetMsgByIdReq) XXX_DiscardUnknown() {
 var xxx_messageInfo_CIMGetMsgByIdReq proto.InternalMessageInfo
 
 func (m *CIMGetMsgByIdReq) GetUserId() uint64 {
-	if m != nil && m.UserId != nil {
-		return *m.UserId
+	if m != nil {
+		return m.UserId
 	}
 	return 0
 }
 
 func (m *CIMGetMsgByIdReq) GetSessionType() CIMSessionType {
-	if m != nil && m.SessionType != nil {
-		return *m.SessionType
+	if m != nil {
+		return m.SessionType
 	}
-	return CIMSessionType_kCIM_SESSION_TYPE_SINGLE
+	return CIMSessionType_kCIM_SESSION_TYPE_Invalid
 }
 
 func (m *CIMGetMsgByIdReq) GetSessionId() uint64 {
-	if m != nil && m.SessionId != nil {
-		return *m.SessionId
+	if m != nil {
+		return m.SessionId
 	}
 	return 0
 }
@@ -500,13 +501,13 @@ func (m *CIMGetMsgByIdReq) GetMsgIdList() []string {
 
 type CIMGetMsgByIdRsp struct {
 	// cmd id:		0x030e
-	UserId               *uint64         `protobuf:"varint,1,req,name=user_id,json=userId" json:"user_id,omitempty"`
-	SessionType          *CIMSessionType `protobuf:"varint,2,req,name=session_type,json=sessionType,enum=CIM.Def.CIMSessionType" json:"session_type,omitempty"`
-	SessionId            *uint64         `protobuf:"varint,3,req,name=session_id,json=sessionId" json:"session_id,omitempty"`
-	MsgList              []*CIMMsgInfo   `protobuf:"bytes,4,rep,name=msg_list,json=msgList" json:"msg_list,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}        `json:"-"`
-	XXX_unrecognized     []byte          `json:"-"`
-	XXX_sizecache        int32           `json:"-"`
+	UserId               uint64         `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	SessionType          CIMSessionType `protobuf:"varint,2,opt,name=session_type,json=sessionType,proto3,enum=CIM.Def.CIMSessionType" json:"session_type,omitempty"`
+	SessionId            uint64         `protobuf:"varint,3,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
+	MsgList              []*CIMMsgInfo  `protobuf:"bytes,4,rep,name=msg_list,json=msgList,proto3" json:"msg_list,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}       `json:"-"`
+	XXX_unrecognized     []byte         `json:"-"`
+	XXX_sizecache        int32          `json:"-"`
 }
 
 func (m *CIMGetMsgByIdRsp) Reset()         { *m = CIMGetMsgByIdRsp{} }
@@ -535,22 +536,22 @@ func (m *CIMGetMsgByIdRsp) XXX_DiscardUnknown() {
 var xxx_messageInfo_CIMGetMsgByIdRsp proto.InternalMessageInfo
 
 func (m *CIMGetMsgByIdRsp) GetUserId() uint64 {
-	if m != nil && m.UserId != nil {
-		return *m.UserId
+	if m != nil {
+		return m.UserId
 	}
 	return 0
 }
 
 func (m *CIMGetMsgByIdRsp) GetSessionType() CIMSessionType {
-	if m != nil && m.SessionType != nil {
-		return *m.SessionType
+	if m != nil {
+		return m.SessionType
 	}
-	return CIMSessionType_kCIM_SESSION_TYPE_SINGLE
+	return CIMSessionType_kCIM_SESSION_TYPE_Invalid
 }
 
 func (m *CIMGetMsgByIdRsp) GetSessionId() uint64 {
-	if m != nil && m.SessionId != nil {
-		return *m.SessionId
+	if m != nil {
+		return m.SessionId
 	}
 	return 0
 }
@@ -576,35 +577,35 @@ func init() {
 func init() { proto.RegisterFile("CIM.Message.proto", fileDescriptor_51e1c4ce9d6da003) }
 
 var fileDescriptor_51e1c4ce9d6da003 = []byte{
-	// 475 bytes of a gzipped FileDescriptorProto
+	// 478 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x94, 0xbd, 0x8e, 0xd3, 0x40,
-	0x10, 0x80, 0x65, 0xc7, 0x97, 0x5c, 0xc6, 0x09, 0x82, 0x05, 0x14, 0x83, 0x04, 0x18, 0x57, 0xae,
-	0x5c, 0x50, 0xd2, 0x71, 0x39, 0x09, 0x2c, 0x9d, 0x29, 0xcc, 0xd1, 0xd0, 0x58, 0x8b, 0x3d, 0x36,
-	0x16, 0xf1, 0xad, 0xf1, 0x6c, 0x8a, 0xbc, 0x02, 0x0f, 0x81, 0x44, 0x43, 0x49, 0xc9, 0x9b, 0xf0,
-	0x30, 0x74, 0x68, 0x77, 0x13, 0x92, 0x38, 0x20, 0xa0, 0x40, 0xa1, 0xdb, 0x9d, 0xfd, 0x99, 0xef,
-	0x1b, 0xaf, 0x07, 0x6e, 0xcc, 0xe3, 0x24, 0x4a, 0x90, 0x88, 0x57, 0x18, 0xb5, 0x9d, 0x90, 0x82,
-	0xb9, 0x3b, 0xa1, 0xbb, 0x53, 0x35, 0x39, 0xc7, 0xd2, 0xac, 0x05, 0x5f, 0x2d, 0x80, 0x79, 0x9c,
-	0x24, 0x54, 0x9d, 0x73, 0xc9, 0x99, 0x0f, 0x93, 0xb2, 0x13, 0x4d, 0xb6, 0x24, 0xec, 0xb2, 0xba,
-	0xf0, 0x2c, 0xdf, 0x0e, 0x9d, 0x14, 0x54, 0xec, 0x25, 0x61, 0x17, 0x17, 0x2c, 0x80, 0xa9, 0x14,
-	0x19, 0x21, 0x51, 0x2d, 0xae, 0xd4, 0x16, 0x5b, 0x6f, 0x71, 0xa5, 0x78, 0x61, 0x62, 0x71, 0xc1,
-	0x6e, 0xc3, 0xb0, 0xa1, 0x4a, 0x2d, 0x0e, 0x7c, 0x3b, 0x1c, 0xa7, 0x27, 0x0d, 0x55, 0x71, 0xc1,
-	0x1e, 0x80, 0x9b, 0x77, 0xc8, 0x25, 0x66, 0xb2, 0x6e, 0xd0, 0x73, 0xcc, 0xdd, 0x26, 0x74, 0x59,
-	0x37, 0xc8, 0x22, 0x38, 0x55, 0xe7, 0xe4, 0xaa, 0x45, 0xef, 0xc4, 0xb7, 0xc3, 0x6b, 0x8f, 0x6e,
-	0x46, 0x1b, 0x5c, 0x03, 0x79, 0xb9, 0x6a, 0x31, 0x1d, 0x35, 0x66, 0xc0, 0xee, 0x98, 0xfd, 0x05,
-	0x97, 0xdc, 0x1b, 0xfa, 0x76, 0x38, 0xd1, 0x4b, 0x4a, 0x24, 0xf8, 0x66, 0xc1, 0x74, 0xeb, 0xf5,
-	0x24, 0x7f, 0xfb, 0x6f, 0xd5, 0x22, 0x38, 0xed, 0x90, 0xb2, 0x5c, 0x14, 0xc6, 0xab, 0x47, 0x9e,
-	0x22, 0xcd, 0x45, 0x81, 0xe9, 0xa8, 0x33, 0x03, 0xf6, 0x18, 0x26, 0x9b, 0x3c, 0x3b, 0xb6, 0xb3,
-	0xdd, 0x33, 0xeb, 0x9c, 0xda, 0xd8, 0xa5, 0xed, 0xa4, 0x5f, 0xc6, 0xa1, 0x6f, 0xed, 0x97, 0x31,
-	0xf8, 0x60, 0xe9, 0x57, 0xb0, 0x76, 0x4f, 0x91, 0x17, 0xca, 0x7f, 0x06, 0xa3, 0x7d, 0xf5, 0xe1,
-	0xd2, 0x68, 0xdf, 0x03, 0x38, 0x70, 0x1e, 0xd3, 0xef, 0x8c, 0xfb, 0x06, 0xce, 0x9f, 0x1b, 0x04,
-	0x1f, 0x2d, 0xb8, 0xb5, 0x0f, 0xf8, 0x5c, 0xc8, 0xba, 0x5c, 0xfd, 0x4f, 0x8c, 0xef, 0x0d, 0xe3,
-	0x53, 0x94, 0x17, 0x5c, 0x22, 0xc9, 0x44, 0xdd, 0x98, 0xe2, 0xbb, 0x5f, 0x33, 0xf6, 0xb3, 0xd9,
-	0x7f, 0xf1, 0x4d, 0xf7, 0xfd, 0x06, 0x3d, 0xbf, 0xe0, 0xf3, 0x4f, 0x61, 0xa8, 0x3d, 0x06, 0x8c,
-	0xfa, 0x4d, 0x16, 0x9a, 0x22, 0x5b, 0xd7, 0xdc, 0xd1, 0x35, 0x77, 0x17, 0x5b, 0xb4, 0xe0, 0x93,
-	0x05, 0xd7, 0x0d, 0x70, 0x42, 0xd5, 0xd9, 0xea, 0x68, 0x95, 0x63, 0xf7, 0xc1, 0x35, 0x94, 0xd9,
-	0xa2, 0x26, 0xe9, 0x39, 0xfe, 0x20, 0x1c, 0xa7, 0x63, 0xfd, 0x3c, 0x2e, 0x6a, 0x92, 0xc1, 0x97,
-	0x03, 0xd0, 0x23, 0x55, 0x75, 0xdd, 0xfb, 0x7e, 0x50, 0xba, 0x07, 0xbd, 0x2f, 0xbe, 0x2a, 0x85,
-	0x6e, 0x70, 0x0a, 0xfc, 0xec, 0x21, 0xcc, 0x72, 0xd1, 0x44, 0xb9, 0x28, 0x4b, 0xc4, 0xfc, 0x0d,
-	0x97, 0xa6, 0xa1, 0xbf, 0x5e, 0x96, 0xcf, 0x06, 0xaf, 0x9c, 0xaa, 0x6b, 0xf3, 0xef, 0x01, 0x00,
-	0x00, 0xff, 0xff, 0x4e, 0x37, 0x4d, 0xce, 0x0b, 0x06, 0x00, 0x00,
+	0x10, 0x80, 0xb5, 0x17, 0x9f, 0x73, 0x19, 0x27, 0x08, 0x0c, 0x28, 0x06, 0x09, 0x30, 0xae, 0x5c,
+	0xb9, 0x80, 0x8e, 0x8e, 0xcb, 0x49, 0x60, 0xe9, 0x4c, 0x61, 0x8e, 0x86, 0xc6, 0xda, 0xb3, 0xc7,
+	0xc6, 0x22, 0xbe, 0x35, 0x9e, 0x4d, 0x91, 0x57, 0xe0, 0x21, 0x90, 0x68, 0x28, 0x29, 0x79, 0x13,
+	0x1e, 0x86, 0x0e, 0xed, 0x6e, 0x42, 0x12, 0x07, 0x04, 0x14, 0x28, 0x74, 0xbb, 0xb3, 0x3f, 0xf3,
+	0x7d, 0xe3, 0xf5, 0xc0, 0x8d, 0x59, 0x9c, 0x44, 0x09, 0x12, 0xf1, 0x0a, 0xa3, 0xb6, 0x13, 0x52,
+	0xb8, 0xce, 0x56, 0xe8, 0xee, 0x44, 0x4d, 0xce, 0xb0, 0x34, 0x6b, 0xc1, 0x57, 0x06, 0x30, 0x8b,
+	0x93, 0x84, 0xaa, 0x33, 0x2e, 0xb9, 0xeb, 0xc3, 0xb8, 0xec, 0x44, 0x93, 0x2d, 0x08, 0xbb, 0xac,
+	0x2e, 0x3c, 0xe6, 0xb3, 0xd0, 0x4a, 0x41, 0xc5, 0x5e, 0x11, 0x76, 0x71, 0xe1, 0x06, 0x30, 0x91,
+	0x22, 0x23, 0x24, 0xaa, 0xc5, 0x95, 0xda, 0x72, 0xa4, 0xb7, 0x38, 0x52, 0xbc, 0x34, 0xb1, 0xb8,
+	0x70, 0x6f, 0x83, 0xdd, 0x50, 0xa5, 0x16, 0x07, 0x3e, 0x0b, 0x47, 0xe9, 0x71, 0x43, 0x55, 0x5c,
+	0xb8, 0x0f, 0xc0, 0xc9, 0x3b, 0xe4, 0x12, 0x33, 0x59, 0x37, 0xe8, 0x59, 0xe6, 0x6e, 0x13, 0xba,
+	0xa8, 0x1b, 0x74, 0x23, 0x38, 0x51, 0xe7, 0xe4, 0xb2, 0x45, 0xef, 0xd8, 0x67, 0xe1, 0xb5, 0x47,
+	0x37, 0xa3, 0x35, 0xae, 0x81, 0xbc, 0x58, 0xb6, 0x98, 0x0e, 0x1b, 0x33, 0x70, 0xef, 0x98, 0xfd,
+	0x05, 0x97, 0xdc, 0xb3, 0x7d, 0x16, 0x8e, 0xf5, 0x92, 0x12, 0x09, 0xbe, 0x31, 0x98, 0x6c, 0xbc,
+	0x9e, 0xe6, 0x6f, 0xff, 0xad, 0x5a, 0x04, 0x27, 0x1d, 0x52, 0x96, 0x8b, 0xc2, 0x78, 0xf5, 0xc8,
+	0x53, 0xa4, 0x99, 0x28, 0x30, 0x1d, 0x76, 0x66, 0xe0, 0x3e, 0x81, 0xf1, 0x3a, 0xcf, 0x96, 0xed,
+	0x74, 0xfb, 0xcc, 0x2a, 0xa7, 0x36, 0x76, 0x68, 0x33, 0xe9, 0x97, 0xd1, 0xee, 0x97, 0x31, 0xf8,
+	0xc0, 0xf4, 0x2b, 0x58, 0xb9, 0xa7, 0xc8, 0x0b, 0xe5, 0x3f, 0x85, 0xe1, 0xae, 0xba, 0xbd, 0x30,
+	0xda, 0xf7, 0x00, 0xf6, 0x9c, 0x47, 0xf4, 0x3b, 0xe3, 0xbe, 0x81, 0xf5, 0xe7, 0x06, 0xc1, 0x47,
+	0x06, 0xb7, 0x76, 0x01, 0x5f, 0x08, 0x59, 0x97, 0xcb, 0xff, 0x89, 0xf1, 0xbd, 0x61, 0x7c, 0x86,
+	0xf2, 0x9c, 0x4b, 0x24, 0x99, 0xa8, 0x1b, 0x53, 0x7c, 0xf7, 0x6b, 0xc6, 0x7e, 0xb6, 0xa3, 0xbf,
+	0xf8, 0xa6, 0xbb, 0x7e, 0x83, 0x9e, 0x5f, 0xf0, 0xf9, 0xa7, 0x30, 0xd4, 0x1e, 0x02, 0x46, 0xfd,
+	0x26, 0x73, 0x4d, 0x91, 0xad, 0x6a, 0x6e, 0xe9, 0x9a, 0x3b, 0xf3, 0x0d, 0x5a, 0xf0, 0x89, 0xc1,
+	0x75, 0x03, 0x9c, 0x50, 0x75, 0xba, 0x3c, 0x58, 0xe5, 0xdc, 0xfb, 0xe0, 0x18, 0xca, 0x6c, 0x5e,
+	0x93, 0xf4, 0x2c, 0x7f, 0x10, 0x8e, 0xd2, 0x91, 0x7e, 0x1e, 0xe7, 0x35, 0xc9, 0xe0, 0xcb, 0x1e,
+	0xe8, 0x81, 0xaa, 0xba, 0xea, 0x7d, 0x3f, 0x28, 0x9d, 0xbd, 0xde, 0x17, 0x5f, 0x95, 0x42, 0x37,
+	0x38, 0x05, 0x7e, 0xfa, 0x10, 0xa6, 0xb9, 0x68, 0xa2, 0x5c, 0x94, 0x25, 0x62, 0xfe, 0x86, 0x4b,
+	0xd3, 0xd0, 0x2f, 0x17, 0xe5, 0xf3, 0xc1, 0x6b, 0xab, 0xea, 0xda, 0xfc, 0xd2, 0xd6, 0x91, 0xc7,
+	0xdf, 0x03, 0x00, 0x00, 0xff, 0xff, 0x95, 0x0f, 0x37, 0x9d, 0x13, 0x06, 0x00, 0x00,
 }

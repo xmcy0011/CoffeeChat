@@ -1,24 +1,24 @@
-syntax = "proto2";
+syntax = "proto3";
 
 package CIM.Grpc;
 option go_package="grpc";
 option optimize_for = LITE_RUNTIME;
 
-import "CIM.Def.proto";
-import "CIM.List.proto";
+//import "CIM.Def.proto";
+//import "CIM.List.proto";
 import "CIM.Login.proto";
 import "CIM.Message.proto";
 import "Grpc.Def.proto";
 
 service Gate{
     // ping
-    rpc Ping(CIM.Login.CIMHeartBeat) returns(CIM.Login.CIMHeartBeat);
+    rpc Ping(CIM.Login.CIMHeartBeat) returns(CIM.Login.CIMHeartBeat) {}
 
     // 发消息
-    rpc SendMsgData(CIM.Message.CIMMsgData) returns(CIM.Message.CIMMsgDataAck);
+    rpc SendMsgData(CIM.Message.CIMMsgData) returns(CIM.Message.CIMMsgDataAck) {}
     // 消息收到ACK
-    rpc AckMsgData(CIM.Message.CIMMsgDataAck) returns(Empty);
+    rpc AckMsgData(CIM.Message.CIMMsgDataAck) returns(Empty) {}
 
     // 停止接收消息
-    rpc StopReceivePacket(Empty) returns(Empty);
+    rpc StopReceivePacket(Empty) returns(Empty) {}
 }

@@ -1,4 +1,4 @@
-syntax = "proto2";
+syntax = "proto3";
 
 package CIM.Def;
 option java_package = "com.coffeechat.protobuf";
@@ -7,6 +7,8 @@ option optimize_for = LITE_RUNTIME;
 
 // 外部消息：客户端 <-> 服务器消息定义
 enum CIMCmdID {
+  kCIM_CID_UNKNOWN = 0x00;
+
   kCIM_CID_LOGIN_AUTH_TOKEN_REQ = 0x0101; // 认证请求
   kCIM_CID_LOGIN_AUTH_TOKEN_RSP = 0x0102;
   kCIM_CID_LOGIN_AUTH_LOGOUT_REQ = 0x0103; // 登出
@@ -32,6 +34,8 @@ enum CIMCmdID {
 
 // 内部消息：服务器 <-> 服务器消息定义
 enum CIMIntenralCmdID {
+  kCIM_SID_UNKNOWN = 0x00; // 验证口令请求
+
   kCIM_SID_DB_VALIDATE_REQ = 0x0701; // 验证口令请求
   kCIM_SID_DB_VALIDATE_RSP = 0x0702; //
 }
@@ -59,15 +63,16 @@ enum CIMClientType {
 
 // 会话类型
 enum CIMSessionType {
-  // kCIM_SESSION_TYPE_Invalid = 0;   // 无效会话
-  kCIM_SESSION_TYPE_SINGLE = 1; // 单聊
-  kCIM_SESSION_TYPE_GROUP = 2;  // 群聊
+  kCIM_SESSION_TYPE_Invalid = 0; // 无效会话
+  kCIM_SESSION_TYPE_SINGLE = 1;  // 单聊
+  kCIM_SESSION_TYPE_GROUP = 2;   // 群聊
   // kCIM_SESSION_TYPE_CHAT_ROOM = 3; // 聊天室
   // kCIM_SESSION_TYPE_CONSULT = 4; // 客服
 }
 
 // 消息类型
 enum CIMMsgType {
+  kCIM_MSG_TYPE_UNKNOWN = 0; // 未知类型消息，本地使用，发送时请勿使用
   kCIM_MSG_TYPE_TEXT = 1;  // 文本
   kCIM_MSG_TYPE_IMAGE = 2; // 图片
   kCIM_MSG_TYPE_Audio = 3; // 声音
@@ -79,7 +84,6 @@ enum CIMMsgType {
   kCIM_MSG_TYPE_Robot = 9; // 图灵机器人消息
 
   // kCIM_MSG_TYPE_CUSTOM = 100; // 自定义
-  // kCIM_MSG_TYPE_UNKNOWN = 1000; // 未知类型消息，本地使用，发送时请勿使用
 }
 
 // 消息状态
@@ -121,44 +125,44 @@ enum CIMResCode {
 
 // 用户信息
 message CIMUserInfo {
-  required uint64 user_id = 1;
-  required string nick_name = 2;    // 用户昵称
-  optional string attach_info = 11; // 自定义字段
+  uint64 user_id = 1;
+  string nick_name = 2;                 // 用户昵称
+  /*optional*/ string attach_info = 11; // 自定义字段
 }
 
 // 会话信息
 message CIMContactSessionInfo {
-  required uint64 session_id = 1;                   // 会话id
-  required CIMSessionType session_type = 2;         // 会话类型
-  required CIMSessionStatusType session_status = 3; // 会话修改命令，预留
-  required uint32 unread_cnt = 4;     // 该会话未读消息数量
-  required uint32 updated_time = 5;   // 更新时间
-  required string msg_id = 6;         // 最新一条消息的id（UUID）
-  required uint64 msg_time_stamp = 7; // 最新一条消息时间戳（毫秒）
-  required bytes msg_data = 8;        // 最新一条消息的内容
-  required CIMMsgType msg_type = 9;   // 最新一条消息的类型
-  required uint64 msg_from_user_id = 10; // 最新一条消息的发送者
-  required CIMMessageStatus msg_status = 11; // 最新一条消息的状态（预留）
-  optional string msg_attach = 12;  // 最新一条消息的附件（预留）
-  optional string extend_data = 13; // 本地扩展字段（限制4096）
-  optional bool is_robot_session = 14 [ default = false ]; // 是否为机器人会话
+  uint64 session_id = 1;                   // 会话id
+  CIMSessionType session_type = 2;         // 会话类型
+  CIMSessionStatusType session_status = 3; // 会话修改命令，预留
+  uint32 unread_cnt = 4;                   // 该会话未读消息数量
+  uint32 updated_time = 5;                 // 更新时间
+  string msg_id = 6;                       // 最新一条消息的id（UUID）
+  uint64 msg_time_stamp = 7;        // 最新一条消息时间戳（毫秒）
+  bytes msg_data = 8;               // 最新一条消息的内容
+  CIMMsgType msg_type = 9;          // 最新一条消息的类型
+  uint64 msg_from_user_id = 10;     // 最新一条消息的发送者
+  CIMMessageStatus msg_status = 11; // 最新一条消息的状态（预留）
+  /*optional*/ string msg_attach = 12; // 最新一条消息的附件（预留）
+  /*optional*/ string extend_data = 13;    // 本地扩展字段（限制4096）
+  /*optional*/ bool is_robot_session = 14; // 是否为机器人会话
 }
 
 // 消息信息
 message CIMMsgInfo {
-  required string client_msg_id = 1; // 客户端消息ID（UUID）
-  required uint64 server_msg_id = 2; // 服务端消息ID
+  string client_msg_id = 1; // 客户端消息ID（UUID）
+  uint64 server_msg_id = 2; // 服务端消息ID
 
-  required CIMResCode msg_res_code = 3;       // 消息错误码
-  required CIMMessageFeature msg_feature = 4; // 消息属性
-  required CIMSessionType session_type = 5;   // 会话类型
-  required uint64 from_user_id = 6;           // 来源会话ID
-  required uint64 to_session_id = 7;          // 目标会话ID
-  required uint64 create_time = 8; // 消息创建时间戳（毫秒）
+  CIMResCode msg_res_code = 3;       // 消息错误码
+  CIMMessageFeature msg_feature = 4; // 消息属性
+  CIMSessionType session_type = 5;   // 会话类型
+  uint64 from_user_id = 6;           // 来源会话ID
+  uint64 to_session_id = 7;          // 目标会话ID
+  uint64 create_time = 8;            // 消息创建时间戳（毫秒）
 
-  required CIMMsgType msg_type = 9;               // 消息类型
-  required CIMMessageStatus msg_status = 10;      // 消息状态（预留）
-  required bytes msg_data = 11;                   // 消息内容
-  optional string attach = 12;                    // 消息附件（预留）
-  required CIMClientType sender_client_type = 13; // 发送者客户端类型
+  CIMMsgType msg_type = 9;               // 消息类型
+  CIMMessageStatus msg_status = 10;      // 消息状态（预留）
+  bytes msg_data = 11;                   // 消息内容
+  /*optional*/ string attach = 12;       // 消息附件（预留）
+  CIMClientType sender_client_type = 13; // 发送者客户端类型
 }

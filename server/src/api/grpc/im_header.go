@@ -81,10 +81,10 @@ func IsPduAvailable(data []byte, len int) bool {
 
 /**
 获取递增唯一序号
- */
+*/
 func getSeq() uint16 {
 	mutex.Lock()
-	pduSeq ++
+	pduSeq++
 	// 溢出
 	if pduSeq >= UINT16_MAX {
 		pduSeq = 1

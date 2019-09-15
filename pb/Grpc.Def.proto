@@ -1,4 +1,4 @@
-syntax = "proto2";
+syntax = "proto3";
 
 package CIM.Grpc;
 option go_package="grpc";

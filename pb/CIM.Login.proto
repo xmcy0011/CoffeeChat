@@ -1,42 +1,42 @@
-syntax = "proto2";
+syntax = "proto3";
 
 package CIM.Login;
 import "CIM.Def.proto";
 option java_package = "com.coffeechat.protobuf";
-option go_package="grpc";
+option go_package = "grpc";
 option optimize_for = LITE_RUNTIME;
 
 // 认证请求
 message CIMAuthTokenReq {
   // cmd id:		0x0101
-  required uint64 user_id = 1;
+  uint64 user_id = 1;
   // CoffeeChat不存储用户信息，消息推送时需要显示昵称
   // 基于流量考虑，昵称不放在每条消息中携带
   // 但是如果期间用户更新昵称后，消息推送显示昵称会有延迟，CoffeeChat认为是能接受的
-  required string nick_name = 2;
-  required string user_token = 3;
-  required CIM.Def.CIMClientType client_type = 4;
-  optional string client_version = 5;
+  string nick_name = 2;
+  string user_token = 3;
+  CIM.Def.CIMClientType client_type = 4;
+  /*optional*/ string client_version = 5;
 }
 
 message CIMAuthTokenRsp {
   // cmd id:		0x0102
-  required uint32 server_time = 1;              // 服务器时间
-  required CIM.Def.CIMErrorCode result_code = 2; // 验证结果
-  optional string result_string = 3;            // 结果描述
-  optional CIM.Def.CIMUserInfo user_info = 4;    // 用户信息
+  uint32 server_time = 1;                         // 服务器时间
+  CIM.Def.CIMErrorCode result_code = 2;           // 验证结果
+  /*optional*/ string result_string = 3;          // 结果描述
+  /*optional*/ CIM.Def.CIMUserInfo user_info = 4; // 用户信息
 }
 
 // 登出
 message CIMLogoutReq {
   // cmd id:		0x0103
-  required uint64 user_id = 1;
-  required CIM.Def.CIMClientType client_type = 2;
+  uint64 user_id = 1;
+  CIM.Def.CIMClientType client_type = 2;
 }
 
 message CIMLogoutRsp {
   // cmd id:		0x0104
-  required uint32 result_code = 1;
+  uint32 result_code = 1;
 }
 
 // 心跳

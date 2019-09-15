@@ -4,8 +4,12 @@
 package grpc
 
 import (
+	context "context"
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
+	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
 	math "math"
 )
 
@@ -23,19 +27,215 @@ const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 func init() { proto.RegisterFile("Grpc.Gate.proto", fileDescriptor_35c748e1f33b6695) }
 
 var fileDescriptor_35c748e1f33b6695 = []byte{
-	// 214 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x7c, 0x90, 0x3f, 0x4b, 0xc7, 0x30,
-	0x10, 0x86, 0x11, 0x3b, 0x94, 0x88, 0x96, 0x66, 0x11, 0xf2, 0x21, 0x32, 0x08, 0x82, 0x8e, 0xfd,
-	0x23, 0x6d, 0xc1, 0x40, 0xb1, 0x9b, 0x5b, 0x88, 0x67, 0x08, 0xc5, 0x26, 0x24, 0x87, 0xe0, 0x17,
-	0x77, 0x96, 0xd4, 0x44, 0x41, 0xe9, 0x6f, 0xcb, 0xfb, 0x3e, 0x77, 0xcf, 0x41, 0x48, 0x35, 0x78,
-	0xa7, 0xf8, 0x20, 0x11, 0xb8, 0xf3, 0x16, 0x2d, 0x2d, 0xbb, 0x49, 0xf0, 0x58, 0xb2, 0xcb, 0xf8,
-	0xea, 0xe1, 0xf5, 0x1b, 0xb0, 0xab, 0x18, 0x1f, 0x4d, 0xc0, 0x94, 0xab, 0x3d, 0x5b, 0x6d, 0xb6,
-	0x54, 0xd4, 0xb1, 0x10, 0x10, 0x82, 0xd4, 0x90, 0x77, 0x76, 0xfb, 0x8f, 0xe3, 0xe6, 0xf3, 0x8c,
-	0x14, 0xf1, 0x16, 0xbd, 0x23, 0xc5, 0x6c, 0x36, 0x4d, 0xaf, 0xf9, 0xaf, 0xa5, 0x9b, 0xc4, 0x08,
-	0xd2, 0x63, 0x0b, 0x12, 0xd9, 0x11, 0xa0, 0x2d, 0xb9, 0x58, 0x60, 0x7b, 0x11, 0x41, 0xf7, 0x12,
-	0x65, 0x12, 0xe4, 0xab, 0xdd, 0x24, 0x12, 0x60, 0xec, 0x00, 0x34, 0x6a, 0xa5, 0xf7, 0x84, 0x34,
-	0x6a, 0xcd, 0x8a, 0x13, 0x93, 0xac, 0xe2, 0xf9, 0x3b, 0xf8, 0xc3, 0x9b, 0xc3, 0x0f, 0x7a, 0x4b,
-	0xea, 0x05, 0xad, 0x7b, 0x02, 0x05, 0xe6, 0x1d, 0x66, 0xa9, 0x56, 0x40, 0xfa, 0x77, 0xea, 0xdf,
-	0x5a, 0x5b, 0x8e, 0xe7, 0xcf, 0x85, 0xf6, 0x4e, 0x7d, 0x05, 0x00, 0x00, 0xff, 0xff, 0x00, 0x97,
-	0x51, 0x33, 0x71, 0x01, 0x00, 0x00,
+	// 217 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x77, 0x2f, 0x2a, 0x48,
+	0xd6, 0x73, 0x4f, 0x2c, 0x49, 0xd5, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0xe2, 0x70, 0xf6, 0xf4,
+	0xd5, 0x03, 0x09, 0x4a, 0xf1, 0x83, 0x58, 0x3e, 0xf9, 0xe9, 0x99, 0x79, 0x10, 0x29, 0x29, 0x41,
+	0x90, 0x80, 0x6f, 0x6a, 0x71, 0x71, 0x62, 0x3a, 0x54, 0xb5, 0x14, 0x1f, 0x58, 0xbb, 0x4b, 0x6a,
+	0x1a, 0x84, 0x6f, 0xf4, 0x8f, 0x91, 0x8b, 0x05, 0x64, 0x98, 0x90, 0x15, 0x17, 0x4b, 0x40, 0x66,
+	0x5e, 0xba, 0x90, 0xb8, 0x1e, 0xc2, 0x14, 0x67, 0x4f, 0x5f, 0x8f, 0xd4, 0xc4, 0xa2, 0x12, 0xa7,
+	0xd4, 0xc4, 0x12, 0x29, 0x5c, 0x12, 0x4a, 0x0c, 0x42, 0x2e, 0x5c, 0xdc, 0xc1, 0xa9, 0x79, 0x29,
+	0xbe, 0xc5, 0xe9, 0x2e, 0x89, 0x25, 0x89, 0x50, 0x23, 0x60, 0xf6, 0x3a, 0x7b, 0xfa, 0x42, 0x25,
+	0xa4, 0xa4, 0x70, 0x48, 0x38, 0x26, 0x67, 0x2b, 0x31, 0x08, 0x59, 0x73, 0x71, 0x39, 0x26, 0x67,
+	0xc3, 0x0c, 0xc1, 0xa3, 0x56, 0x8a, 0x5f, 0x0f, 0xe6, 0x67, 0x3d, 0xd7, 0xdc, 0x82, 0x92, 0x4a,
+	0x25, 0x06, 0x21, 0x73, 0x2e, 0xc1, 0xe0, 0x92, 0xfc, 0x82, 0xa0, 0xd4, 0xe4, 0xd4, 0xcc, 0xb2,
+	0xd4, 0x80, 0xc4, 0xe4, 0xec, 0xd4, 0x12, 0x21, 0x74, 0x75, 0x58, 0x34, 0x3a, 0x71, 0x78, 0x30,
+	0x47, 0xb1, 0xa4, 0x17, 0x15, 0x24, 0x27, 0xb1, 0x81, 0x43, 0xc4, 0x18, 0x10, 0x00, 0x00, 0xff,
+	0xff, 0xa2, 0xef, 0xee, 0xe9, 0x62, 0x01, 0x00, 0x00,
+}
+
+// Reference imports to suppress errors if they are not otherwise used.
+var _ context.Context
+var _ grpc.ClientConn
+
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the grpc package it is being compiled against.
+const _ = grpc.SupportPackageIsVersion4
+
+// GateClient is the client API for Gate service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
+type GateClient interface {
+	// ping
+	Ping(ctx context.Context, in *CIMHeartBeat, opts ...grpc.CallOption) (*CIMHeartBeat, error)
+	// 发消息
+	SendMsgData(ctx context.Context, in *CIMMsgData, opts ...grpc.CallOption) (*CIMMsgDataAck, error)
+	// 消息收到ACK
+	AckMsgData(ctx context.Context, in *CIMMsgDataAck, opts ...grpc.CallOption) (*Empty, error)
+	// 停止接收消息
+	StopReceivePacket(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error)
+}
+
+type gateClient struct {
+	cc *grpc.ClientConn
+}
+
+func NewGateClient(cc *grpc.ClientConn) GateClient {
+	return &gateClient{cc}
+}
+
+func (c *gateClient) Ping(ctx context.Context, in *CIMHeartBeat, opts ...grpc.CallOption) (*CIMHeartBeat, error) {
+	out := new(CIMHeartBeat)
+	err := c.cc.Invoke(ctx, "/CIM.Grpc.Gate/Ping", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gateClient) SendMsgData(ctx context.Context, in *CIMMsgData, opts ...grpc.CallOption) (*CIMMsgDataAck, error) {
+	out := new(CIMMsgDataAck)
+	err := c.cc.Invoke(ctx, "/CIM.Grpc.Gate/SendMsgData", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gateClient) AckMsgData(ctx context.Context, in *CIMMsgDataAck, opts ...grpc.CallOption) (*Empty, error) {
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, "/CIM.Grpc.Gate/AckMsgData", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gateClient) StopReceivePacket(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error) {
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, "/CIM.Grpc.Gate/StopReceivePacket", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// GateServer is the server API for Gate service.
+type GateServer interface {
+	// ping
+	Ping(context.Context, *CIMHeartBeat) (*CIMHeartBeat, error)
+	// 发消息
+	SendMsgData(context.Context, *CIMMsgData) (*CIMMsgDataAck, error)
+	// 消息收到ACK
+	AckMsgData(context.Context, *CIMMsgDataAck) (*Empty, error)
+	// 停止接收消息
+	StopReceivePacket(context.Context, *Empty) (*Empty, error)
+}
+
+// UnimplementedGateServer can be embedded to have forward compatible implementations.
+type UnimplementedGateServer struct {
+}
+
+func (*UnimplementedGateServer) Ping(ctx context.Context, req *CIMHeartBeat) (*CIMHeartBeat, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Ping not implemented")
+}
+func (*UnimplementedGateServer) SendMsgData(ctx context.Context, req *CIMMsgData) (*CIMMsgDataAck, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendMsgData not implemented")
+}
+func (*UnimplementedGateServer) AckMsgData(ctx context.Context, req *CIMMsgDataAck) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AckMsgData not implemented")
+}
+func (*UnimplementedGateServer) StopReceivePacket(ctx context.Context, req *Empty) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method StopReceivePacket not implemented")
+}
+
+func RegisterGateServer(s *grpc.Server, srv GateServer) {
+	s.RegisterService(&_Gate_serviceDesc, srv)
+}
+
+func _Gate_Ping_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CIMHeartBeat)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GateServer).Ping(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/CIM.Grpc.Gate/Ping",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GateServer).Ping(ctx, req.(*CIMHeartBeat))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Gate_SendMsgData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CIMMsgData)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GateServer).SendMsgData(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/CIM.Grpc.Gate/SendMsgData",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GateServer).SendMsgData(ctx, req.(*CIMMsgData))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Gate_AckMsgData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CIMMsgDataAck)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GateServer).AckMsgData(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/CIM.Grpc.Gate/AckMsgData",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GateServer).AckMsgData(ctx, req.(*CIMMsgDataAck))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Gate_StopReceivePacket_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GateServer).StopReceivePacket(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/CIM.Grpc.Gate/StopReceivePacket",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GateServer).StopReceivePacket(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+var _Gate_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "CIM.Grpc.Gate",
+	HandlerType: (*GateServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Ping",
+			Handler:    _Gate_Ping_Handler,
+		},
+		{
+			MethodName: "SendMsgData",
+			Handler:    _Gate_SendMsgData_Handler,
+		},
+		{
+			MethodName: "AckMsgData",
+			Handler:    _Gate_AckMsgData_Handler,
+		},
+		{
+			MethodName: "StopReceivePacket",
+			Handler:    _Gate_StopReceivePacket_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "Grpc.Gate.proto",
 }

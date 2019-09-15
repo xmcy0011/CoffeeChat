@@ -1,10 +1,10 @@
-syntax = "proto2";
+syntax = "proto3";
 
 package CIM.Grpc;
 option go_package="grpc";
 option optimize_for = LITE_RUNTIME;
 
-import "CIM.Def.proto";
+//import "CIM.Def.proto";
 import "CIM.List.proto";
 import "CIM.Login.proto";
 import "CIM.Message.proto";
@@ -13,17 +13,17 @@ import "Grpc.Def.proto";
 // logic的grpc接口定义
 service Logic {
     // ping
-    rpc Ping(CIM.Login.CIMHeartBeat) returns(CIM.Login.CIMHeartBeat);
+    rpc Ping(CIM.Login.CIMHeartBeat) returns(CIM.Login.CIMHeartBeat) {}
     // 验证token
-    rpc AuthToken(CIM.Login.CIMAuthTokenReq) returns(CIM.Login.CIMAuthTokenRsp);
+    rpc AuthToken(CIM.Login.CIMAuthTokenReq) returns(CIM.Login.CIMAuthTokenRsp) {}
 
     // 查询会话列表
-    rpc RecentContactSession(CIM.List.CIMRecentContactSessionReq) returns(CIM.List.CIMRecentContactSessionRsp);
+    rpc RecentContactSession(CIM.List.CIMRecentContactSessionReq) returns(CIM.List.CIMRecentContactSessionRsp) {}
     // 查询历史消息列表
-    rpc GetMsgList(CIM.List.CIMGetMsgListReq) returns(CIM.List.CIMGetMsgListRsp);
+    rpc GetMsgList(CIM.List.CIMGetMsgListReq) returns(CIM.List.CIMGetMsgListRsp) {}
 
     // 发消息
-    rpc SendMsgData(CIM.Message.CIMMsgData) returns(CIM.Message.CIMMsgDataAck);
+    rpc SendMsgData(CIM.Message.CIMMsgData) returns(CIM.Message.CIMMsgDataAck) {}
     // 消息收到ACK
-    rpc AckMsgData(CIM.Message.CIMMsgDataAck) returns(Empty);
+    rpc AckMsgData(CIM.Message.CIMMsgDataAck) returns(Empty) {}
 }
