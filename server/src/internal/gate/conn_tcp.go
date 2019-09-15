@@ -114,7 +114,7 @@ func (tcp *TcpConn) onHandleAuthReq(header *grpc.ImHeader, buff []byte) {
 		}
 
 		logger.Sugar.Infof("onHandleAuthReq user_id=%d,client_version=%s,client_type=%d",
-			*req.UserId, *req.ClientVersion, *req.ClientType)
+			req.UserId, req.ClientVersion, req.ClientType)
 
 		// to do
 		// call logic gRPC to validate
@@ -123,19 +123,16 @@ func (tcp *TcpConn) onHandleAuthReq(header *grpc.ImHeader, buff []byte) {
 
 		// response
 
-		var code = grpc.CIMErrorCode_kCIM_ERR_SUCCSSE
-		var str = "success"
-		var serverTime = uint32(time.Now().Unix())
 		var userInfo = &grpc.CIMUserInfo{
 			UserId:     req.UserId,
 			NickName:   req.NickName,
-			AttachInfo: &str, // not used
+			AttachInfo: "", // not used
 		}
 
 		rsp := &grpc.CIMAuthTokenRsp{}
-		rsp.ResultCode = &code
-		rsp.ResultString = &str
-		rsp.ServerTime = &serverTime
+		rsp.ResultCode = grpc.CIMErrorCode_kCIM_ERR_SUCCSSE
+		rsp.ResultString = "success"
+		rsp.ServerTime = uint32(time.Now().Unix())
 		rsp.UserInfo = userInfo
 
 		header.SetPduMsg(rsp)

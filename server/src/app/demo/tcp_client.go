@@ -41,18 +41,12 @@ func login(conn *net.TCPConn) error {
 	header := &grpc.ImHeader{}
 	header.CommandId = uint16(grpc.CIMCmdID_kCIM_CID_LOGIN_AUTH_LOGOUT_REQ)
 
-	var userId uint64 = 80808080808123
-	var token = "gsdgsadgwerwer"
-	var clientVersion = "demo/0.1"
-	var nickName = "demo"
-	var clientType = grpc.CIMClientType_kCIM_CLIENT_TYPE_WEB
-
 	req := &grpc.CIMAuthTokenReq{
-		UserId:        &userId,
-		UserToken:     &token,
-		ClientVersion: &clientVersion,
-		ClientType:    &clientType,
-		NickName:      &nickName,
+		UserId:        80808080808123,
+		UserToken:     "gsdgsadgwerwer",
+		ClientVersion: "demo/0.1",
+		ClientType:    grpc.CIMClientType_kCIM_CLIENT_TYPE_WEB,
+		NickName:      "demo",
 	}
 	header.SetPduMsg(req)
 
@@ -78,8 +72,8 @@ func login(conn *net.TCPConn) error {
 		return err
 	}
 
-	if *res.ResultCode != grpc.CIMErrorCode_kCIM_ERR_SUCCSSE {
-		return errors.New("auth err:" + *res.ResultString)
+	if res.ResultCode != grpc.CIMErrorCode_kCIM_ERR_SUCCSSE {
+		return errors.New("auth err:" + res.ResultString)
 	}
 
 	return nil

@@ -10,7 +10,7 @@ import (
 
 /**
 来自于客户端的连接
- */
+*/
 type CImConn interface {
 	OnConnect(conn *net.TCPConn)
 	OnClose()

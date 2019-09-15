@@ -1,18 +1,16 @@
-[db]
-db_instances=["cim_master","cim_slave"]
+[Db]
+    [Db.Master]
+    host="127.0.0.1"
+    port=3306
+    dbname="coffeechat"
+    username="test"
+    password="123456"
+    maxconncnt=16
 
-#cim_master
-cim_master_host="127.0.0.1"
-cim_master_port=3306
-cim_master_dbname="cim"
-cim_master_username="test"
-cim_master_password="123456"
-cim_master_maxconncnt=16
-
-#cim_slave
-cim_slave_host="127.0.0.1"
-cim_slave_port=3306
-cim_slave_dbname="cim"
-cim_slave_username="test"
-cim_slave_password="123456"
-cim_slave_maxconncnt=16
+    [Db.Slave]
+    host="127.0.0.1"
+    port=3306
+    dbname="coffeechat"
+    username="test"
+    password="123456"
+    maxconncnt=16
