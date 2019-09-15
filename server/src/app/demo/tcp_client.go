@@ -62,7 +62,7 @@ func login(conn *net.TCPConn) error {
 	}
 
 	var buffer = make([]byte, 10*1024)
-	conn.SetReadDeadline(time.Now().Add(time.Duration(10 * time.Second)))
+	_ = conn.SetReadDeadline(time.Now().Add(time.Duration(10 * time.Second)))
 	buffLen, err := conn.Read(buffer)
 	if err != nil {
 		return err
@@ -72,7 +72,8 @@ func login(conn *net.TCPConn) error {
 	header.ReadHeader(buffer, buffLen)
 
 	res := &grpc.CIMAuthTokenRsp{}
-	err = proto.Unmarshal(buffer[grpc.IMHeaderLen:], res)
+	var dataBuff = buffer[grpc.IMHeaderLen:header.Length] // body=len-headLen
+	err = proto.Unmarshal(dataBuff, res)
 	if err != nil {
 		return err
 	}

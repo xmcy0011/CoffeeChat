@@ -34,26 +34,26 @@ func (it *ImHeader) SetPduMsg(message proto.Message) {
 func (it *ImHeader) ReadHeader(data []byte, len int) {
 	if len >= IMHeaderLen {
 		buffer := bytes.NewBuffer(data)
-		binary.Read(buffer, binary.BigEndian, &it.Length)
-		binary.Read(buffer, binary.BigEndian, &it.Version)
-		binary.Read(buffer, binary.BigEndian, &it.Flag)
-		binary.Read(buffer, binary.BigEndian, &it.ServiceId)
-		binary.Read(buffer, binary.BigEndian, &it.CommandId)
-		binary.Read(buffer, binary.BigEndian, &it.SeqNum)
-		binary.Read(buffer, binary.BigEndian, &it.Reversed)
+		_ = binary.Read(buffer, binary.BigEndian, &it.Length)
+		_ = binary.Read(buffer, binary.BigEndian, &it.Version)
+		_ = binary.Read(buffer, binary.BigEndian, &it.Flag)
+		_ = binary.Read(buffer, binary.BigEndian, &it.ServiceId)
+		_ = binary.Read(buffer, binary.BigEndian, &it.CommandId)
+		_ = binary.Read(buffer, binary.BigEndian, &it.SeqNum)
+		_ = binary.Read(buffer, binary.BigEndian, &it.Reversed)
 	}
 }
 
 func (it *ImHeader) getHeaderBuffer() []byte {
 	tempSlice := make([]byte, 0)
 	buffer := bytes.NewBuffer(tempSlice)
-	binary.Write(buffer, binary.BigEndian, it.Length)
-	binary.Write(buffer, binary.BigEndian, it.Version)
-	binary.Write(buffer, binary.BigEndian, it.Flag)
-	binary.Write(buffer, binary.BigEndian, it.ServiceId)
-	binary.Write(buffer, binary.BigEndian, it.CommandId)
-	binary.Write(buffer, binary.BigEndian, it.SeqNum)
-	binary.Write(buffer, binary.BigEndian, it.Reversed)
+	_ = binary.Write(buffer, binary.BigEndian, it.Length)
+	_ = binary.Write(buffer, binary.BigEndian, it.Version)
+	_ = binary.Write(buffer, binary.BigEndian, it.Flag)
+	_ = binary.Write(buffer, binary.BigEndian, it.ServiceId)
+	_ = binary.Write(buffer, binary.BigEndian, it.CommandId)
+	_ = binary.Write(buffer, binary.BigEndian, it.SeqNum)
+	_ = binary.Write(buffer, binary.BigEndian, it.Reversed)
 
 	return buffer.Bytes()
 }
@@ -65,7 +65,7 @@ func IsPduAvailable(data []byte, len int) bool {
 
 	buffer := bytes.NewBuffer(data)
 	var packetLen uint32 = 0
-	binary.Read(buffer, binary.BigEndian, &packetLen)
+	_ = binary.Read(buffer, binary.BigEndian, &packetLen)
 
 	if int(packetLen) > len {
 		return false
@@ -112,8 +112,8 @@ func (it *ImHeader) GetBuffer() []byte {
 
 	headerData := it.getHeaderBuffer()
 
-	binary.Write(buffer, binary.BigEndian, headerData)
-	binary.Write(buffer, binary.BigEndian, data)
+	_ = binary.Write(buffer, binary.BigEndian, headerData)
+	_ = binary.Write(buffer, binary.BigEndian, data)
 
 	return buffer.Bytes()
 }
