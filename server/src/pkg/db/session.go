@@ -7,22 +7,22 @@ import (
 const beginStatus = 1
 const kDriveName = "mysql"
 
-type ServerConfig struct {
-	ServerIp   string // 数据库的服务器ip地址
-	ServerPort int
+type DatabaseConfig struct {
+	ServerName string // 服务名，读/写分离
 
-	UserName string // 连接数据库的用户名
-	Password string // 密码
-	DbName   string // 数据库名
+	Host string // 数据库的服务器ip地址
+	Port int
 
-	ServerName      string // 服务名，读/写分离
-	MaxConnectCount int    // 最大连接数
+	DbName     string // 数据库名
+	Username   string // 连接数据库的用户名
+	Password   string // 密码
+	MaxConnCnt int    // 最大连接数
 }
 
 // Db对象接口，非单个连接
 type Session interface {
 	// 初始化数据库的连接
-	Init(db ServerConfig) error
+	Init(db DatabaseConfig) error
 
 	// Begin 开启事务
 	Begin() error
@@ -53,7 +53,7 @@ type SessionMysql struct {
 	commitSign   int8    // 提交标记，控制是否提交事务
 	rollbackSign bool    // 回滚标记，控制是否回滚事务
 
-	config ServerConfig // 配置信息
+	config DatabaseConfig // 配置信息
 }
 
 // 获取一个Mysql连接
@@ -62,13 +62,16 @@ func NewSessionMysql() *SessionMysql {
 	return conn
 }
 
-func (s *SessionMysql) Init(cofnig ServerConfig) error {
-	s.config = cofnig
+func (s *SessionMysql) Init(config DatabaseConfig) error {
+	s.config = config
 
-	db, err := sql.Open(kDriveName, cofnig.UserName+":"+cofnig.Password+"@/"+cofnig.DbName+"?charset=utf8")
-	if err != nil{
+	db, err := sql.Open(kDriveName, config.Username+":"+config.Password+"@/"+config.DbName+"?charset=utf8")
+	if err != nil {
 		return err
 	}
+
+	// limit max connect count
+	db.SetMaxOpenConns(config.MaxConnCnt)
 
 	s.DB = db
 	return nil
