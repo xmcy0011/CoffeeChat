@@ -5,7 +5,6 @@ import (
 	"github.com/CoffeeChat/server/src/internal/gate/conf"
 	"github.com/CoffeeChat/server/src/internal/gate/tcpserver"
 	"github.com/CoffeeChat/server/src/pkg/logger"
-	"monit_server/Base"
 	"net"
 	"os"
 	"strconv"
@@ -65,7 +64,7 @@ func tcpConnRead(tcpConn *tcpserver.TcpConn) {
 		writeOffset += buffLen
 
 		for {
-			if !Base.IsPduAvailable(buffer, writeOffset) {
+			if !cim.IsPduAvailable(buffer, writeOffset) {
 				break
 			}
 
