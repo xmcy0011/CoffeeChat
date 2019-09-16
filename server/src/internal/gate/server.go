@@ -13,10 +13,10 @@ import (
 func StartServer(config conf.Config) {
 	tcpserver.StartGrpcClient(config.Logic)
 
-	startTcpServer(config.ListenIp, config.ListenPort)
+	StartTcpServer(config.ListenIp, config.ListenPort)
 }
 
-func startTcpServer(ip string, port int) {
+func StartTcpServer(ip string, port int) {
 	logger.Sugar.Info("server listen on ", ip+":"+strconv.Itoa(port))
 
 	addr, err := net.ResolveTCPAddr("tcp", ip+":"+strconv.Itoa(port))
