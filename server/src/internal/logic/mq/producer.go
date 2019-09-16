@@ -1,0 +1,5 @@
+package mq
+
+func init()  {
+	
+}
