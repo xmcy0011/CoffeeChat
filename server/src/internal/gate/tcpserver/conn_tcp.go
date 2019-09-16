@@ -3,6 +3,7 @@ package tcpserver
 import (
 	"container/list"
 	"github.com/CoffeeChat/server/src/api/cim"
+	"github.com/CoffeeChat/server/src/internal/gate/user"
 	"github.com/CoffeeChat/server/src/pkg/logger"
 	"github.com/golang/protobuf/proto"
 	"net"
@@ -13,15 +14,17 @@ const kLoginTimeOut = 15   // 登录超时时间(s)
 const kBusinessTimeOut = 5 // 常规业务超时时间(s)
 
 type TcpConn struct {
-	Conn       *net.TCPConn      // 客户端的连接
-	clientType cim.CIMClientType // 客户端连接类型
-	userId     uint64            // 客户端id
+	Conn          *net.TCPConn      // 客户端的连接
+	clientType    cim.CIMClientType // 客户端连接类型
+	clientVersion string            // 客户端版本
+	userId        uint64            // 客户端id
 
 	connectedTime int64 // 连接时间
 	loginTime     int64 // 登录时间
 	isLogin       bool  // 是否已认证
 
-	connManagerListElement *list.Element // 该连接在ConnManager.connList中的元素
+	connManagerListElement *list.Element // 该连接在ConnManager.connList中的位置
+	connUserListElement    *list.Element // 该连接在User.connList中的位置
 }
 
 func NewTcpConn() *TcpConn {
@@ -43,7 +46,9 @@ func (tcp *TcpConn) OnConnect(conn *net.TCPConn) {
 	tcp.loginTime = 0
 
 	// save conn
-	tcp.connManagerListElement = ConnManager.Add(tcp)
+	tcp.connManagerListElement = DefaultConnManager.Add(tcp)
+	// when user auth success, then save to user.connList
+	//tcp.connUserListElement = user.DefaultUserManager.FindUser(tcp.userId).AddConn(tcp)
 
 	logger.Sugar.Debug("new connect come in, address:", conn.RemoteAddr().String())
 }
@@ -55,8 +60,22 @@ func (tcp *TcpConn) OnClose() {
 		logger.Sugar.Error("close connect error,address=", tcp.Conn.RemoteAddr().String())
 	}
 
-	ConnManager.Remove(tcp.connManagerListElement, tcp)
+	// remove conn from manager.connList
+	DefaultConnManager.Remove(tcp.connManagerListElement, tcp)
 	tcp.connManagerListElement = nil
+
+	// remove conn from user.connList
+	userInfo := user.DefaultUserManager.FindUser(tcp.userId)
+	if userInfo != nil {
+		userInfo.RemoveConn(tcp.connUserListElement, tcp)
+
+		// if have't any conn, then remove user from UserManager
+		if userInfo.GetConnCount() <= 0 {
+			user.DefaultUserManager.RemoveUser(userInfo.UserId)
+		}
+	}
+
+	tcp.isLogin = false
 }
 
 //OnRead implements the CImConn OnRead method.
@@ -95,6 +114,11 @@ func (tcp *TcpConn) OnTimer(tick int64) {
 //GetClientType implements the CImConn GetClientType method.
 func (tcp *TcpConn) GetClientType() cim.CIMClientType {
 	return tcp.clientType
+}
+
+//GetClientVersion implements the CImConn GetClientVersion method.
+func (tcp *TcpConn) GetClientVersion() string {
+	return tcp.clientVersion
 }
 
 //SetUserId implements the CImConn SetUserId method.

@@ -21,11 +21,12 @@ type CImConn interface {
 	Send(cmdId uint16, body proto.Message) (int, error)
 
 	GetClientType() cim.CIMClientType // 获取该连接的客户端类型
+	GetClientVersion() string         // 获取该连接的客户端版本
 	SetUserId(userId uint64)          // 设置连接对应的用户id
 	GetUserId() uint64
 }
 
-var ConnManager = new(Manager)
+var DefaultConnManager = new(Manager)
 
 type Manager struct {
 	connList *list.List // CImConn
@@ -33,14 +34,14 @@ type Manager struct {
 
 func init() {
 	c := time.NewTicker(time.Duration(1 * time.Second))
-	ConnManager.connList = list.New()
+	DefaultConnManager.connList = list.New()
 
 	// 心跳检测routine
 	go func() {
 		for {
 			select {
 			case tick := <-c.C:
-				for i := ConnManager.connList.Front(); i != nil; i = i.Next() {
+				for i := DefaultConnManager.connList.Front(); i != nil; i = i.Next() {
 					conn := i.Value.(CImConn)
 					conn.OnTimer(tick.Unix())
 				}
@@ -57,8 +58,9 @@ func (c *Manager) Add(conn CImConn) *list.Element {
 func (c *Manager) Remove(e *list.Element, conn CImConn) {
 	if e != nil {
 		ele := c.connList.Remove(e)
-		if ele == nil {
-			logger.Sugar.Error("element is nil")
+		if ele == nil || ele != conn {
+			logger.Sugar.Errorf("manager.connList removed conn failed,user_id=%d,client_type=%s", conn.GetUserId(),
+				conn.GetClientType())
 		}
 	}
 }

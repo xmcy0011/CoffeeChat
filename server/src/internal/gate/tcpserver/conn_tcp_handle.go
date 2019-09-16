@@ -8,6 +8,7 @@ package tcpserver
 import (
 	"context"
 	"github.com/CoffeeChat/server/src/api/cim"
+	"github.com/CoffeeChat/server/src/internal/gate/user"
 	"github.com/CoffeeChat/server/src/pkg/logger"
 	"github.com/golang/protobuf/proto"
 	"time"
@@ -40,6 +41,21 @@ func (tcp *TcpConn) onHandleAuthReq(header *cim.ImHeader, buff []byte) {
 		} else {
 			if rsp.ResultCode == cim.CIMErrorCode_kCIM_ERR_SUCCSSE {
 				tcp.isLogin = true
+				tcp.userId = req.UserId
+				tcp.clientType = req.ClientType
+				tcp.clientVersion = req.ClientVersion
+				tcp.loginTime = time.Now().Unix()
+
+				// save to UserManager
+				userInfo := user.DefaultUserManager.FindUser(tcp.userId)
+				if userInfo == nil {
+					userInfo = user.NewUser()
+					userInfo.UserId = tcp.userId
+					userInfo.NickName = req.NickName
+					user.DefaultUserManager.AddUser(userInfo.UserId, userInfo)
+				}
+				// save to user.connList
+				tcp.connUserListElement = userInfo.AddConn(tcp)
 			}
 		}
 
