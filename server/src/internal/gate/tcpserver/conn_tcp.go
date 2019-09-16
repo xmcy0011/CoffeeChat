@@ -71,6 +71,14 @@ func (tcp *TcpConn) OnRead(header *cim.ImHeader, buff []byte) {
 	}
 }
 
+func (tcp *TcpConn) Send(cmdId uint16, body proto.Message) (int, error) {
+	header := &cim.ImHeader{}
+	header.CommandId = cmdId
+	header.SetPduMsg(body)
+
+	return tcp.Conn.Write(header.GetBuffer())
+}
+
 //OnTimer implements the CImConn OnTimer method.
 func (tcp *TcpConn) OnTimer(tick int64) {
 	if tcp.loginTime == 0 && (tick-tcp.connectedTime) > kLoginTimeOut {
@@ -133,9 +141,7 @@ func (tcp *TcpConn) onHandleAuthReq(header *cim.ImHeader, buff []byte) {
 			}
 		}
 
-		header.SetPduMsg(rsp)
-		header.CommandId = uint16(cim.CIMCmdID_kCIM_CID_LOGIN_AUTH_TOKEN_RSP)
-		_, err = tcp.Conn.Write(header.GetBuffer())
+		_, err = tcp.Send(uint16(cim.CIMCmdID_kCIM_CID_LOGIN_AUTH_TOKEN_RSP), rsp)
 
 		logger.Sugar.Infof("onHandleAuthReq result_code=%d,result_string=%s,user_id=%d,client_version=%s,client_type=%d",
 			rsp.ResultCode, rsp.ResultString, req.UserId, req.ClientVersion, req.ClientType)

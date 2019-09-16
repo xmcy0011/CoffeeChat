@@ -4,6 +4,7 @@ import (
 	"container/list"
 	"github.com/CoffeeChat/server/src/api/cim"
 	"github.com/CoffeeChat/server/src/pkg/logger"
+	"github.com/golang/protobuf/proto"
 	"net"
 	"time"
 )
@@ -15,6 +16,8 @@ type CImConn interface {
 	OnConnect(conn *net.TCPConn)
 	OnClose()
 	OnRead(header *cim.ImHeader, buff []byte)
+
+	Send(cmdId uint16, body proto.Message) (int, error)
 
 	OnTimer(tick int64) // 定时器回调，间隔1秒
 
