@@ -16,17 +16,12 @@ type CImConn interface {
 	OnConnect(conn *net.TCPConn)
 	OnClose()
 	OnRead(header *cim.ImHeader, buff []byte)
+	OnTimer(tick int64) // 定时器回调，间隔1秒
 
 	Send(cmdId uint16, body proto.Message) (int, error)
 
-	OnTimer(tick int64) // 定时器回调，间隔1秒
-
 	GetClientType() cim.CIMClientType // 获取该连接的客户端类型
-
-	SetConnListElement(e *list.Element) // ConnManager
-	GetConnListElement() *list.Element
-
-	SetUserId(userId uint64) // 设置连接对应的用户id
+	SetUserId(userId uint64)          // 设置连接对应的用户id
 	GetUserId() uint64
 }
 
@@ -55,16 +50,15 @@ func init() {
 	}()
 }
 
-func (c *Manager) Add(conn CImConn) {
-	e := c.connList.PushBack(conn)
-	conn.SetConnListElement(e)
+func (c *Manager) Add(conn CImConn) *list.Element {
+	return c.connList.PushBack(conn)
 }
 
-func (c *Manager) Remove(conn CImConn) {
-	e := conn.GetConnListElement()
+func (c *Manager) Remove(e *list.Element, conn CImConn) {
 	if e != nil {
-		c.connList.Remove(e)
-	} else {
-		logger.Sugar.Error("element is nil")
+		ele := c.connList.Remove(e)
+		if ele == nil {
+			logger.Sugar.Error("element is nil")
+		}
 	}
 }

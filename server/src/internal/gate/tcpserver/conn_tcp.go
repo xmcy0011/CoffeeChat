@@ -42,6 +42,9 @@ func (tcp *TcpConn) OnConnect(conn *net.TCPConn) {
 	tcp.connectedTime = time.Now().Unix()
 	tcp.loginTime = 0
 
+	// save conn
+	tcp.connManagerListElement = ConnManager.Add(tcp)
+
 	logger.Sugar.Debug("new connect come in, address:", conn.RemoteAddr().String())
 }
 
@@ -51,6 +54,9 @@ func (tcp *TcpConn) OnClose() {
 	if err != nil {
 		logger.Sugar.Error("close connect error,address=", tcp.Conn.RemoteAddr().String())
 	}
+
+	ConnManager.Remove(tcp.connManagerListElement, tcp)
+	tcp.connManagerListElement = nil
 }
 
 //OnRead implements the CImConn OnRead method.
@@ -89,16 +95,6 @@ func (tcp *TcpConn) OnTimer(tick int64) {
 //GetClientType implements the CImConn GetClientType method.
 func (tcp *TcpConn) GetClientType() cim.CIMClientType {
 	return tcp.clientType
-}
-
-//SetConnListElement implements the CImConn SetConnListElement method.
-func (tcp *TcpConn) SetConnListElement(e *list.Element) {
-	tcp.connManagerListElement = e
-}
-
-//GetConnListElement implements the CImConn GetConnListElement method.
-func (tcp *TcpConn) GetConnListElement() *list.Element {
-	return tcp.connManagerListElement
 }
 
 //SetUserId implements the CImConn SetUserId method.

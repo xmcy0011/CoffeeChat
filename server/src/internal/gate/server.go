@@ -40,7 +40,6 @@ func StartTcpServer(ip string, port int) {
 		} else {
 			tcpConn := tcpserver.NewTcpConn()
 			tcpConn.OnConnect(conn)
-			tcpserver.ConnManager.Add(tcpConn)
 
 			// FIXED ME
 			// 一个连接一个read routine？
@@ -92,7 +91,6 @@ func tcpConnRead(tcpConn *tcpserver.TcpConn) {
 	}
 	// close the connect
 	tcpConn.OnClose()
-	tcpserver.ConnManager.Remove(tcpConn)
 }
 
 //func startWebSocketServer(ip string, port int) {
