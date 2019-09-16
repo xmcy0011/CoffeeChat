@@ -2,6 +2,7 @@ package gate
 
 import (
 	"github.com/CoffeeChat/server/src/api/cim"
+	"github.com/CoffeeChat/server/src/internal/gate/conf"
 	"github.com/CoffeeChat/server/src/pkg/logger"
 	"monit_server/Base"
 	"net"
@@ -9,7 +10,9 @@ import (
 	"strconv"
 )
 
-func StartServer(config ServerConfig) {
+func StartServer(config conf.Config) {
+	startGrpcClient(config.Logic)
+
 	startTcpServer(config.ListenIp, config.ListenPort)
 }
 

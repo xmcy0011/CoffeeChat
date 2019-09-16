@@ -9,6 +9,10 @@ type Manager struct {
 
 var DefaultManager = &Manager{}
 
+func init() {
+	DefaultManager.dbList = make(map[string]Session)
+}
+
 func (d *Manager) Init(server []DatabaseConfig) error {
 	for i := 0; i < len(server); i++ {
 		session := NewSessionMysql()

@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/BurntSushi/toml"
 	"github.com/CoffeeChat/server/src/internal/gate"
+	"github.com/CoffeeChat/server/src/internal/gate/conf"
 	"github.com/CoffeeChat/server/src/pkg/logger"
 	"os"
 	"os/signal"
@@ -30,10 +31,10 @@ func main() {
 	defer logger.Logger.Sync() // flushes buffer, if any
 
 	// resolve gate.conf
-	config := &gate.ServerConfig{}
+	config := &conf.Config{}
 	_, err := toml.DecodeFile(configFile, config)
 	if err != nil {
-		logger.Sugar.Error("load config error, exit...")
+		logger.Sugar.Error("load config error:", err.Error(), "exit...")
 		return
 	}
 

@@ -2,6 +2,7 @@ package gate
 
 import (
 	"container/list"
+	"context"
 	"github.com/CoffeeChat/server/src/api/cim"
 	"github.com/CoffeeChat/server/src/pkg/logger"
 	"github.com/golang/protobuf/proto"
@@ -9,12 +10,13 @@ import (
 	"time"
 )
 
-const kLoginTimeOut = 15 // 登录超时时间(s)
+const kLoginTimeOut = 15   // 登录超时时间(s)
+const kBusinessTimeOut = 5 // 常规业务超时时间(s)
 
 type TcpConn struct {
-	conn       *net.TCPConn     // 客户端的连接
+	conn       *net.TCPConn      // 客户端的连接
 	clientType cim.CIMClientType // 客户端连接类型
-	userId     uint64           // 客户端id
+	userId     uint64            // 客户端id
 
 	connectedTime int64 // 连接时间
 	loginTime     int64 // 登录时间
@@ -113,36 +115,29 @@ func (tcp *TcpConn) onHandleAuthReq(header *cim.ImHeader, buff []byte) {
 			return
 		}
 
-		logger.Sugar.Infof("onHandleAuthReq user_id=%d,client_version=%s,client_type=%d",
-			req.UserId, req.ClientVersion, req.ClientType)
-
-		// to do
 		// call logic gRPC to validate
+		conn := GetLoginConn()
+		ctx, cancelFun := context.WithTimeout(context.Background(), time.Duration(time.Second*kBusinessTimeOut))
+		defer cancelFun()
+		rsp, err := conn.AuthToken(ctx, req)
 
-		tcp.isLogin = true
-
-		// response
-
-		var userInfo = &cim.CIMUserInfo{
-			UserId:     req.UserId,
-			NickName:   req.NickName,
-			AttachInfo: "", // not used
+		if err != nil {
+			logger.Sugar.Error("err:", err.Error())
+			rsp = &cim.CIMAuthTokenRsp{
+				ResultCode:   cim.CIMErrorCode_kCIM_ERR_INTERNAL_ERROR,
+				ResultString: "服务器内部错误",
+			}
+		} else {
+			if rsp.ResultCode == cim.CIMErrorCode_kCIM_ERR_SUCCSSE {
+				tcp.isLogin = true
+			}
 		}
-
-		rsp := &cim.CIMAuthTokenRsp{}
-		rsp.ResultCode = cim.CIMErrorCode_kCIM_ERR_SUCCSSE
-		rsp.ResultString = "success"
-		rsp.ServerTime = uint32(time.Now().Unix())
-		rsp.UserInfo = userInfo
 
 		header.SetPduMsg(rsp)
 		header.CommandId = uint16(cim.CIMCmdID_kCIM_CID_LOGIN_AUTH_TOKEN_RSP)
-		tcp.conn.Write(header.GetBuffer())
+		_, err = tcp.conn.Write(header.GetBuffer())
 
-		temp := header.GetBuffer()
-		err = proto.Unmarshal(temp[16:], rsp)
-		if err != nil {
-			logger.Sugar.Error(err)
-		}
+		logger.Sugar.Infof("onHandleAuthReq result_code=%d,result_string=%s,user_id=%d,client_version=%s,client_type=%d",
+			rsp.ResultCode, rsp.ResultString, req.UserId, req.ClientVersion, req.ClientType)
 	}
 }

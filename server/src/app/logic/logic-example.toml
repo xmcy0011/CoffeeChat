@@ -1,16 +1,23 @@
-[Db]
-    [Db.Master]
-    host="127.0.0.1"
-    port=3306
-    dbname="coffeechat"
-    username="test"
-    password="123456"
-    maxconncnt=16
+ListenIp="127.0.0.1"
+ListenPort=10600
 
-    [Db.Slave]
-    host="127.0.0.1"
-    port=3306
-    dbname="coffeechat"
-    username="test"
-    password="123456"
-    maxconncnt=16
+[[Db]]
+# 主库，读写，优先写
+ServerName="Master"
+Host="127.0.0.1"
+Port=3306
+DbName="coffeechat"
+UserName="test"
+Password="123456"
+MaxConnCnt=16
+
+[[Db]]
+# 从库，只读
+# 可以和主库保持一致，这样则意味着不使用主从模式，此时，建议把maxconncnt调小一倍
+ServerName="Slave"
+Host="127.0.0.1"
+Port=3306
+DbName="coffeechat"
+UserName="test"
+Password="123456"
+MaxConnCnt=16

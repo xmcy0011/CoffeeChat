@@ -44,9 +44,12 @@ func (u *User) Validate(userId uint64, userToken string) (bool, error) {
 			kUserTableName, userId, userToken)
 		row := session.QueryRow(sql)
 
-		count := 0
-		err := row.Scan(count)
+		user := &model.UserCount{}
+		err := row.Scan(user.Count)
 		if err != nil {
+			logger.Sugar.Error("Validate error:", err.Error())
+			return false, err
+		} else if user.Count > 0 {
 			return true, nil
 		} else {
 			logger.Sugar.Info("no result for sql:", sql)

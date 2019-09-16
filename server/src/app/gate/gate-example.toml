@@ -1,3 +1,16 @@
 ListenIp="127.0.0.1"
 ListenPort=8000
 ListenPortWebSocket=8001
+
+# 双机冗余，也可部署一个节点
+# 第一个节点：处理登录、列表、历史消息查询等业务
+# 第二个节点：处理消息收发业务
+[[Logic]]
+Ip="127.0.0.1"
+Port=10600
+MaxConnCnt=4                # 2的整数倍
+
+[[Logic]]
+Ip="127.0.0.1"
+Port=10600
+MaxConnCnt=4                # 2的整数倍
