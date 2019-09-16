@@ -3,6 +3,7 @@ package gate
 import (
 	"github.com/CoffeeChat/server/src/api/cim"
 	"github.com/CoffeeChat/server/src/internal/gate/conf"
+	"github.com/CoffeeChat/server/src/internal/gate/tcpserver"
 	"github.com/CoffeeChat/server/src/pkg/logger"
 	"monit_server/Base"
 	"net"
@@ -11,7 +12,7 @@ import (
 )
 
 func StartServer(config conf.Config) {
-	startGrpcClient(config.Logic)
+	tcpserver.StartGrpcClient(config.Logic)
 
 	startTcpServer(config.ListenIp, config.ListenPort)
 }
@@ -38,9 +39,9 @@ func startTcpServer(ip string, port int) {
 		if err != nil {
 			logger.Sugar.Error("accept conn error:", err.Error())
 		} else {
-			tcpConn := NewTcpConn()
+			tcpConn := tcpserver.NewTcpConn()
 			tcpConn.OnConnect(conn)
-			ConnManager.Add(tcpConn)
+			tcpserver.ConnManager.Add(tcpConn)
 
 			// FIXED ME
 			// 一个连接一个read routine？
@@ -49,7 +50,7 @@ func startTcpServer(ip string, port int) {
 	}
 }
 
-func tcpConnRead(tcpConn *TcpConn) {
+func tcpConnRead(tcpConn *tcpserver.TcpConn) {
 	// FIXED ME
 	// use ROUND buffer instead
 	// 10KB,if 500,000 user online,need memory 10KB*500,000/1024/1024=4.76GB
@@ -57,7 +58,7 @@ func tcpConnRead(tcpConn *TcpConn) {
 	var buffer = make([]byte, kBufferMaxLen)
 	var writeOffset = 0
 	for {
-		buffLen, err := tcpConn.conn.Read(buffer[writeOffset:])
+		buffLen, err := tcpConn.Conn.Read(buffer[writeOffset:])
 		if err != nil || buffLen < 0 {
 			break
 		}
@@ -92,7 +93,7 @@ func tcpConnRead(tcpConn *TcpConn) {
 	}
 	// close the connect
 	tcpConn.OnClose()
-	ConnManager.Remove(tcpConn)
+	tcpserver.ConnManager.Remove(tcpConn)
 }
 
 //func startWebSocketServer(ip string, port int) {

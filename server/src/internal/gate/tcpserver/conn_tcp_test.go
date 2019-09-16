@@ -1,4 +1,4 @@
-package gate
+package tcpserver
 
 import (
 	"github.com/CoffeeChat/server/src/pkg/logger"

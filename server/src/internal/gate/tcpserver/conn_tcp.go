@@ -1,4 +1,4 @@
-package gate
+package tcpserver
 
 import (
 	"container/list"
@@ -14,7 +14,7 @@ const kLoginTimeOut = 15   // 登录超时时间(s)
 const kBusinessTimeOut = 5 // 常规业务超时时间(s)
 
 type TcpConn struct {
-	conn       *net.TCPConn      // 客户端的连接
+	Conn       *net.TCPConn      // 客户端的连接
 	clientType cim.CIMClientType // 客户端连接类型
 	userId     uint64            // 客户端id
 
@@ -39,7 +39,7 @@ func NewTcpConn() *TcpConn {
 
 //OnConnect implements the CImConn OnConnect method.
 func (tcp *TcpConn) OnConnect(conn *net.TCPConn) {
-	tcp.conn = conn
+	tcp.Conn = conn
 	tcp.connectedTime = time.Now().Unix()
 	tcp.loginTime = 0
 
@@ -48,9 +48,9 @@ func (tcp *TcpConn) OnConnect(conn *net.TCPConn) {
 
 //OnClose implements the CImConn OnClose method.
 func (tcp *TcpConn) OnClose() {
-	err := tcp.conn.Close()
+	err := tcp.Conn.Close()
 	if err != nil {
-		logger.Sugar.Error("close connect error,address=", tcp.conn.RemoteAddr().String())
+		logger.Sugar.Error("close connect error,address=", tcp.Conn.RemoteAddr().String())
 	}
 }
 
@@ -59,7 +59,7 @@ func (tcp *TcpConn) OnRead(header *cim.ImHeader, buff []byte) {
 	logger.Sugar.Debug("recv data:", string(buff))
 
 	if !tcp.isLogin && header.CommandId != uint16(cim.CIMCmdID_kCIM_CID_LOGIN_AUTH_LOGOUT_REQ) {
-		logger.Sugar.Error("need login,close connect,address=", tcp.conn.RemoteAddr().String())
+		logger.Sugar.Error("need login,close connect,address=", tcp.Conn.RemoteAddr().String())
 		tcp.OnClose()
 		return
 	}
@@ -74,7 +74,7 @@ func (tcp *TcpConn) OnRead(header *cim.ImHeader, buff []byte) {
 //OnTimer implements the CImConn OnTimer method.
 func (tcp *TcpConn) OnTimer(tick int64) {
 	if tcp.loginTime == 0 && (tick-tcp.connectedTime) > kLoginTimeOut {
-		logger.Sugar.Info("login time out, close connect, address=", tcp.conn.RemoteAddr().String())
+		logger.Sugar.Info("login time out, close connect, address=", tcp.Conn.RemoteAddr().String())
 		tcp.OnClose()
 	}
 }
@@ -106,7 +106,7 @@ func (tcp *TcpConn) GetUserId() uint64 {
 
 func (tcp *TcpConn) onHandleAuthReq(header *cim.ImHeader, buff []byte) {
 	if tcp.isLogin {
-		logger.Sugar.Errorf("duplication login,address:%s,user_id=%d", tcp.conn.RemoteAddr().String(), tcp.userId)
+		logger.Sugar.Errorf("duplication login,address:%s,user_id=%d", tcp.Conn.RemoteAddr().String(), tcp.userId)
 	} else {
 		req := &cim.CIMAuthTokenReq{}
 		err := proto.Unmarshal(buff, req)
@@ -135,7 +135,7 @@ func (tcp *TcpConn) onHandleAuthReq(header *cim.ImHeader, buff []byte) {
 
 		header.SetPduMsg(rsp)
 		header.CommandId = uint16(cim.CIMCmdID_kCIM_CID_LOGIN_AUTH_TOKEN_RSP)
-		_, err = tcp.conn.Write(header.GetBuffer())
+		_, err = tcp.Conn.Write(header.GetBuffer())
 
 		logger.Sugar.Infof("onHandleAuthReq result_code=%d,result_string=%s,user_id=%d,client_version=%s,client_type=%d",
 			rsp.ResultCode, rsp.ResultString, req.UserId, req.ClientVersion, req.ClientType)

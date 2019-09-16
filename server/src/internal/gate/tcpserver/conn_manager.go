@@ -1,4 +1,4 @@
-package gate
+package tcpserver
 
 import (
 	"container/list"

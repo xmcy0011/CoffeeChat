@@ -1,4 +1,4 @@
-package gate
+package tcpserver
 
 import (
 	"fmt"
@@ -64,7 +64,7 @@ func init() {
 	}()
 }
 
-func startGrpcClient(config []conf.LogicConfig) {
+func StartGrpcClient(config []conf.LogicConfig) {
 	logger.Sugar.Info("start grpc client")
 
 	var curCount = 0
