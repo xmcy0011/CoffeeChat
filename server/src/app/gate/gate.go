@@ -10,7 +10,7 @@ import (
 	"syscall"
 )
 
-const configFile = "gate-example.toml"
+const configFile = "app/gate/gate-example.toml"
 
 //const configFile = "gate.toml"
 
