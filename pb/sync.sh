@@ -1,2 +1,2 @@
-cp *.go ../server/src/api/grpc/
+cp *.go ../server/src/api/cim/
 rm -rf *.go

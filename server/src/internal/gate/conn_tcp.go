@@ -2,7 +2,7 @@ package gate
 
 import (
 	"container/list"
-	"github.com/CoffeeChat/server/src/api/grpc"
+	"github.com/CoffeeChat/server/src/api/cim"
 	"github.com/CoffeeChat/server/src/pkg/logger"
 	"github.com/golang/protobuf/proto"
 	"net"
@@ -12,9 +12,9 @@ import (
 const kLoginTimeOut = 15 // 登录超时时间(s)
 
 type TcpConn struct {
-	conn       *net.TCPConn       // 客户端的连接
-	clientType grpc.CIMClientType // 客户端连接类型
-	userId     uint64             // 客户端id
+	conn       *net.TCPConn     // 客户端的连接
+	clientType cim.CIMClientType // 客户端连接类型
+	userId     uint64           // 客户端id
 
 	connectedTime int64 // 连接时间
 	loginTime     int64 // 登录时间
@@ -25,7 +25,7 @@ type TcpConn struct {
 
 func NewTcpConn() *TcpConn {
 	conn := &TcpConn{
-		clientType:             grpc.CIMClientType_kCIM_CLIENT_TYPE_DEFAULT,
+		clientType:             cim.CIMClientType_kCIM_CLIENT_TYPE_DEFAULT,
 		userId:                 0,
 		connManagerListElement: nil,
 		connectedTime:          0,
@@ -53,17 +53,17 @@ func (tcp *TcpConn) OnClose() {
 }
 
 //OnRead implements the CImConn OnRead method.
-func (tcp *TcpConn) OnRead(header *grpc.ImHeader, buff []byte) {
+func (tcp *TcpConn) OnRead(header *cim.ImHeader, buff []byte) {
 	logger.Sugar.Debug("recv data:", string(buff))
 
-	if !tcp.isLogin && header.CommandId != uint16(grpc.CIMCmdID_kCIM_CID_LOGIN_AUTH_LOGOUT_REQ) {
+	if !tcp.isLogin && header.CommandId != uint16(cim.CIMCmdID_kCIM_CID_LOGIN_AUTH_LOGOUT_REQ) {
 		logger.Sugar.Error("need login,close connect,address=", tcp.conn.RemoteAddr().String())
 		tcp.OnClose()
 		return
 	}
 
 	switch header.CommandId {
-	case uint16(grpc.CIMCmdID_kCIM_CID_LOGIN_AUTH_LOGOUT_REQ):
+	case uint16(cim.CIMCmdID_kCIM_CID_LOGIN_AUTH_LOGOUT_REQ):
 		tcp.onHandleAuthReq(header, buff)
 		break
 	}
@@ -78,7 +78,7 @@ func (tcp *TcpConn) OnTimer(tick int64) {
 }
 
 //GetClientType implements the CImConn GetClientType method.
-func (tcp *TcpConn) GetClientType() grpc.CIMClientType {
+func (tcp *TcpConn) GetClientType() cim.CIMClientType {
 	return tcp.clientType
 }
 
@@ -102,11 +102,11 @@ func (tcp *TcpConn) GetUserId() uint64 {
 	return tcp.userId
 }
 
-func (tcp *TcpConn) onHandleAuthReq(header *grpc.ImHeader, buff []byte) {
+func (tcp *TcpConn) onHandleAuthReq(header *cim.ImHeader, buff []byte) {
 	if tcp.isLogin {
 		logger.Sugar.Errorf("duplication login,address:%s,user_id=%d", tcp.conn.RemoteAddr().String(), tcp.userId)
 	} else {
-		req := &grpc.CIMAuthTokenReq{}
+		req := &cim.CIMAuthTokenReq{}
 		err := proto.Unmarshal(buff, req)
 		if err != nil {
 			logger.Sugar.Error(err.Error())
@@ -123,20 +123,20 @@ func (tcp *TcpConn) onHandleAuthReq(header *grpc.ImHeader, buff []byte) {
 
 		// response
 
-		var userInfo = &grpc.CIMUserInfo{
+		var userInfo = &cim.CIMUserInfo{
 			UserId:     req.UserId,
 			NickName:   req.NickName,
 			AttachInfo: "", // not used
 		}
 
-		rsp := &grpc.CIMAuthTokenRsp{}
-		rsp.ResultCode = grpc.CIMErrorCode_kCIM_ERR_SUCCSSE
+		rsp := &cim.CIMAuthTokenRsp{}
+		rsp.ResultCode = cim.CIMErrorCode_kCIM_ERR_SUCCSSE
 		rsp.ResultString = "success"
 		rsp.ServerTime = uint32(time.Now().Unix())
 		rsp.UserInfo = userInfo
 
 		header.SetPduMsg(rsp)
-		header.CommandId = uint16(grpc.CIMCmdID_kCIM_CID_LOGIN_AUTH_TOKEN_RSP)
+		header.CommandId = uint16(cim.CIMCmdID_kCIM_CID_LOGIN_AUTH_TOKEN_RSP)
 		tcp.conn.Write(header.GetBuffer())
 
 		temp := header.GetBuffer()

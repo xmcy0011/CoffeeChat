@@ -1,7 +1,7 @@
 package gate
 
 import (
-	"github.com/CoffeeChat/server/src/api/grpc"
+	"github.com/CoffeeChat/server/src/api/cim"
 	"github.com/CoffeeChat/server/src/pkg/logger"
 	"monit_server/Base"
 	"net"
@@ -66,12 +66,12 @@ func tcpConnRead(tcpConn *TcpConn) {
 			}
 
 			// 解析出头部
-			header := &grpc.ImHeader{}
+			header := &cim.ImHeader{}
 			header.ReadHeader(buffer, writeOffset)
 
 			// 有效数据=len-HeaderLen，但是这里需要偏移HeaderLen刚好抵消
 			dataLen := header.Length
-			data := buffer[grpc.IMHeaderLen:dataLen]
+			data := buffer[cim.IMHeaderLen:dataLen]
 
 			// 回调处理
 			tcpConn.OnRead(header, data)

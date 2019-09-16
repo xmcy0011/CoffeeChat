@@ -1,4 +1,4 @@
-package grpc
+package cim
 
 import (
 	"bytes"
@@ -100,7 +100,7 @@ func (it *ImHeader) GetBuffer() []byte {
 
 	data, err := proto.Marshal(it.pbMessage)
 	if err != nil {
-		logger.Sugar.Error("parse pb error:", err.Error())
+		logger.Sugar.Error("parse cim error:", err.Error())
 		return nil
 	}
 

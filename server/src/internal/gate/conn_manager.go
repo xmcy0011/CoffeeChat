@@ -2,7 +2,7 @@ package gate
 
 import (
 	"container/list"
-	"github.com/CoffeeChat/server/src/api/grpc"
+	"github.com/CoffeeChat/server/src/api/cim"
 	"github.com/CoffeeChat/server/src/pkg/logger"
 	"net"
 	"time"
@@ -14,11 +14,11 @@ import (
 type CImConn interface {
 	OnConnect(conn *net.TCPConn)
 	OnClose()
-	OnRead(header *grpc.ImHeader, buff []byte)
+	OnRead(header *cim.ImHeader, buff []byte)
 
 	OnTimer(tick int64) // 定时器回调，间隔1秒
 
-	GetClientType() grpc.CIMClientType // 获取该连接的客户端类型
+	GetClientType() cim.CIMClientType // 获取该连接的客户端类型
 
 	SetConnListElement(e *list.Element) // ConnManager
 	GetConnListElement() *list.Element

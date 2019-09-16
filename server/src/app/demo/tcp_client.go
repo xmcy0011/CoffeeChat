@@ -2,7 +2,7 @@ package main
 
 import (
 	"errors"
-	"github.com/CoffeeChat/server/src/api/grpc"
+	"github.com/CoffeeChat/server/src/api/cim"
 	"github.com/CoffeeChat/server/src/pkg/logger"
 	"github.com/golang/protobuf/proto"
 	"net"
@@ -38,14 +38,14 @@ func main() {
 
 func login(conn *net.TCPConn) error {
 	// auth req
-	header := &grpc.ImHeader{}
-	header.CommandId = uint16(grpc.CIMCmdID_kCIM_CID_LOGIN_AUTH_LOGOUT_REQ)
+	header := &cim.ImHeader{}
+	header.CommandId = uint16(cim.CIMCmdID_kCIM_CID_LOGIN_AUTH_LOGOUT_REQ)
 
-	req := &grpc.CIMAuthTokenReq{
+	req := &cim.CIMAuthTokenReq{
 		UserId:        80808080808123,
 		UserToken:     "gsdgsadgwerwer",
 		ClientVersion: "demo/0.1",
-		ClientType:    grpc.CIMClientType_kCIM_CLIENT_TYPE_WEB,
+		ClientType:    cim.CIMClientType_kCIM_CLIENT_TYPE_WEB,
 		NickName:      "demo",
 	}
 	header.SetPduMsg(req)
@@ -65,14 +65,14 @@ func login(conn *net.TCPConn) error {
 	// auth res
 	header.ReadHeader(buffer, buffLen)
 
-	res := &grpc.CIMAuthTokenRsp{}
-	var dataBuff = buffer[grpc.IMHeaderLen:header.Length] // body=len-headLen
+	res := &cim.CIMAuthTokenRsp{}
+	var dataBuff = buffer[cim.IMHeaderLen:header.Length] // body=len-headLen
 	err = proto.Unmarshal(dataBuff, res)
 	if err != nil {
 		return err
 	}
 
-	if res.ResultCode != grpc.CIMErrorCode_kCIM_ERR_SUCCSSE {
+	if res.ResultCode != cim.CIMErrorCode_kCIM_ERR_SUCCSSE {
 		return errors.New("auth err:" + res.ResultString)
 	}
 
