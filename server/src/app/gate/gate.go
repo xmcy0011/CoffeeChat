@@ -2,12 +2,13 @@ package main
 
 import (
 	"github.com/BurntSushi/toml"
-	"github.com/CoffeeChat/server/src/internal/gate"
 	"github.com/CoffeeChat/server/src/internal/gate/conf"
+	"github.com/CoffeeChat/server/src/internal/gate/tcpserver"
 	"github.com/CoffeeChat/server/src/pkg/logger"
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 )
 
 const configFile = "app/gate/gate-example.toml"
@@ -38,7 +39,7 @@ func main() {
 		return
 	}
 
-	go gate.StartServer(*config)
+	go tcpserver.StartServer(*config)
 
 	// before exit, cleanup something ...
 	c := make(chan os.Signal)

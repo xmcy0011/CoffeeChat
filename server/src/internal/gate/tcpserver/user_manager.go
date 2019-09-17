@@ -3,7 +3,7 @@
   * @author CoffeeChat
   * @date 2019-09-16
   */
-package user
+package tcpserver
 
 type UserManager struct {
 	users map[uint64]*User // 在线用户字典

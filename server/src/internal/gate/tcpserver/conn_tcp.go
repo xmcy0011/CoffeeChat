@@ -3,7 +3,6 @@ package tcpserver
 import (
 	"container/list"
 	"github.com/CoffeeChat/server/src/api/cim"
-	"github.com/CoffeeChat/server/src/internal/gate/user"
 	"github.com/CoffeeChat/server/src/pkg/logger"
 	"github.com/golang/protobuf/proto"
 	"net"
@@ -65,13 +64,13 @@ func (tcp *TcpConn) OnClose() {
 	tcp.connManagerListElement = nil
 
 	// remove conn from user.connList
-	userInfo := user.DefaultUserManager.FindUser(tcp.userId)
+	userInfo := DefaultUserManager.FindUser(tcp.userId)
 	if userInfo != nil {
 		userInfo.RemoveConn(tcp.connUserListElement, tcp)
 
 		// if have't any conn, then remove user from UserManager
 		if userInfo.GetConnCount() <= 0 {
-			user.DefaultUserManager.RemoveUser(userInfo.UserId)
+			DefaultUserManager.RemoveUser(userInfo.UserId)
 		}
 	}
 

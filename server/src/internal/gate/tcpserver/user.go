@@ -3,11 +3,10 @@
   * @author CoffeeChat
   * @date 2019-09-16
   */
-package user
+package tcpserver
 
 import (
 	"container/list"
-	"github.com/CoffeeChat/server/src/internal/gate/tcpserver"
 	"github.com/CoffeeChat/server/src/pkg/logger"
 )
 
@@ -25,11 +24,11 @@ func NewUser() *User {
 	return u
 }
 
-func (u *User) AddConn(conn tcpserver.CImConn) *list.Element {
+func (u *User) AddConn(conn CImConn) *list.Element {
 	return u.conn.PushBack(conn)
 }
 
-func (u *User) RemoveConn(e *list.Element, conn tcpserver.CImConn) {
+func (u *User) RemoveConn(e *list.Element, conn CImConn) {
 	removedConn := u.conn.Remove(e)
 	if removedConn == nil || removedConn != conn {
 		logger.Sugar.Errorf("user.connList removed conn failed, user_id=%d, client_type=%s", u.UserId,

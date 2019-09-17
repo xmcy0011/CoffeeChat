@@ -1,9 +1,8 @@
-package gate
+package tcpserver
 
 import (
 	"github.com/CoffeeChat/server/src/api/cim"
 	"github.com/CoffeeChat/server/src/internal/gate/conf"
-	"github.com/CoffeeChat/server/src/internal/gate/tcpserver"
 	"github.com/CoffeeChat/server/src/pkg/logger"
 	"net"
 	"os"
@@ -11,12 +10,12 @@ import (
 )
 
 func StartServer(config conf.Config) {
-	tcpserver.StartGrpcClient(config.Logic)
+	StartGrpcClient(config.Logic)
 
-	StartTcpServer(config.ListenIp, config.ListenPort)
+	startTcpServer(config.ListenIp, config.ListenPort)
 }
 
-func StartTcpServer(ip string, port int) {
+func startTcpServer(ip string, port int) {
 	logger.Sugar.Info("server listen on ", ip+":"+strconv.Itoa(port))
 
 	addr, err := net.ResolveTCPAddr("tcp", ip+":"+strconv.Itoa(port))
@@ -38,7 +37,7 @@ func StartTcpServer(ip string, port int) {
 		if err != nil {
 			logger.Sugar.Error("accept conn error:", err.Error())
 		} else {
-			tcpConn := tcpserver.NewTcpConn()
+			tcpConn := NewTcpConn()
 			tcpConn.OnConnect(conn)
 
 			// FIXED ME
@@ -48,7 +47,7 @@ func StartTcpServer(ip string, port int) {
 	}
 }
 
-func tcpConnRead(tcpConn *tcpserver.TcpConn) {
+func tcpConnRead(tcpConn *TcpConn) {
 	// FIXED ME
 	// use ROUND buffer instead
 	// 10KB,if 500,000 user online,need memory 10KB*500,000/1024/1024=4.76GB

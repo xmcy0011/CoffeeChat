@@ -1,7 +1,6 @@
 package tcpserver
 
 import (
-	"github.com/CoffeeChat/server/src/internal/gate"
 	"github.com/CoffeeChat/server/src/pkg/logger"
 	"net"
 	"testing"
@@ -11,7 +10,7 @@ import (
 func TestTcpConn_OnTimer(t *testing.T) {
 	logger.InitLogger("log/log.log", "debug")
 
-	go gate.StartTcpServer("127.0.0.1", 8000)
+	go startTcpServer("127.0.0.1", 8000)
 
 	time.Sleep(time.Duration(3 * time.Second))
 
