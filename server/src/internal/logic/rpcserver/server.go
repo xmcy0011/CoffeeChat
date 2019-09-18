@@ -32,7 +32,7 @@ func StartRpcServer(listenIp string, listenPort int) {
 		MaxConnectionAge:      kMaxLifeTime,
 	})
 	server := grpc.NewServer(keepParams)
-	// auth
+	// logic server
 	cim.RegisterLogicServer(server, DefaultLogicRpcServer)
 
 	if err := server.Serve(listener); err != nil {

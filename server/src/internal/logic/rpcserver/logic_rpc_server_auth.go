@@ -1,10 +1,10 @@
 package rpcserver
 
 import (
+	"context"
 	"github.com/CoffeeChat/server/src/api/cim"
 	"github.com/CoffeeChat/server/src/internal/logic/dao"
 	"github.com/CoffeeChat/server/src/pkg/logger"
-	"golang.org/x/net/context"
 	"time"
 )
 
@@ -52,24 +52,4 @@ func (s *LogicServer) AuthToken(ctx context.Context, in *cim.CIMAuthTokenReq) (*
 	}
 
 	return rsp, nil
-}
-
-// 查询会话列表
-func (s *LogicServer) RecentContactSession(ctx context.Context, in *cim.CIMRecentContactSessionReq) (*cim.CIMRecentContactSessionRsp, error) {
-	return nil, nil
-}
-
-// 查询历史消息列表
-func (s *LogicServer) GetMsgList(ctx context.Context, in *cim.CIMGetMsgListReq) (*cim.CIMGetMsgListRsp, error) {
-	return nil, nil
-}
-
-// 发消息
-func (s *LogicServer) SendMsgData(ctx context.Context, in *cim.CIMMsgData) (*cim.CIMMsgDataAck, error) {
-	return nil, nil
-}
-
-// 消息收到ACK
-func (s *LogicServer) AckMsgData(ctx context.Context, in *cim.CIMMsgDataAck) (*cim.Empty, error) {
-	return nil, nil
 }
