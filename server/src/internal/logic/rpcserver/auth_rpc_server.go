@@ -8,13 +8,13 @@ import (
 	"time"
 )
 
-type AuthRpcServer struct {
+type LogicServer struct {
 }
 
-var DefaultAuthRpcServer = &AuthRpcServer{}
+var DefaultLogicRpcServer = &LogicServer{}
 
 // ping
-func (s *AuthRpcServer) Ping(ctx context.Context, in *cim.CIMHeartBeat) (*cim.CIMHeartBeat, error) {
+func (s *LogicServer) Ping(ctx context.Context, in *cim.CIMHeartBeat) (*cim.CIMHeartBeat, error) {
 	logger.Sugar.Debug("ping")
 
 	heart := &cim.CIMHeartBeat{}
@@ -22,7 +22,7 @@ func (s *AuthRpcServer) Ping(ctx context.Context, in *cim.CIMHeartBeat) (*cim.CI
 }
 
 // 验证token
-func (s *AuthRpcServer) AuthToken(ctx context.Context, in *cim.CIMAuthTokenReq) (*cim.CIMAuthTokenRsp, error) {
+func (s *LogicServer) AuthToken(ctx context.Context, in *cim.CIMAuthTokenReq) (*cim.CIMAuthTokenRsp, error) {
 	logger.Sugar.Infof("authToken userId=%d,nickName=%s,userToken=%s,clientType=%d,ClientVersion=%s",
 		in.UserId, in.NickName, in.UserToken, in.ClientType, in.ClientVersion)
 
@@ -55,21 +55,21 @@ func (s *AuthRpcServer) AuthToken(ctx context.Context, in *cim.CIMAuthTokenReq) 
 }
 
 // 查询会话列表
-func (s *AuthRpcServer) RecentContactSession(ctx context.Context, in *cim.CIMRecentContactSessionReq) (*cim.CIMRecentContactSessionRsp, error) {
+func (s *LogicServer) RecentContactSession(ctx context.Context, in *cim.CIMRecentContactSessionReq) (*cim.CIMRecentContactSessionRsp, error) {
 	return nil, nil
 }
 
 // 查询历史消息列表
-func (s *AuthRpcServer) GetMsgList(ctx context.Context, in *cim.CIMGetMsgListReq) (*cim.CIMGetMsgListRsp, error) {
+func (s *LogicServer) GetMsgList(ctx context.Context, in *cim.CIMGetMsgListReq) (*cim.CIMGetMsgListRsp, error) {
 	return nil, nil
 }
 
 // 发消息
-func (s *AuthRpcServer) SendMsgData(ctx context.Context, in *cim.CIMMsgData) (*cim.CIMMsgDataAck, error) {
+func (s *LogicServer) SendMsgData(ctx context.Context, in *cim.CIMMsgData) (*cim.CIMMsgDataAck, error) {
 	return nil, nil
 }
 
 // 消息收到ACK
-func (s *AuthRpcServer) AckMsgData(ctx context.Context, in *cim.CIMMsgDataAck) (*cim.Empty, error) {
+func (s *LogicServer) AckMsgData(ctx context.Context, in *cim.CIMMsgDataAck) (*cim.Empty, error) {
 	return nil, nil
 }

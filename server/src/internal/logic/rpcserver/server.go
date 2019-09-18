@@ -4,9 +4,17 @@ import (
 	"github.com/CoffeeChat/server/src/api/cim"
 	"github.com/CoffeeChat/server/src/pkg/logger"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/keepalive"
 	"net"
 	"strconv"
+	"time"
 )
+
+const kMaxConnectionIdle = 60 * time.Second
+const kMaxConnectionAgeGrace = time.Second * 20
+const kKeepAliveInterval = time.Second * 60
+const kKeepAliveTimeout = time.Second * 20
+const kMaxLifeTime = time.Hour * 2
 
 func StartRpcServer(listenIp string, listenPort int) {
 	var address = listenIp + ":" + strconv.Itoa(listenPort)
@@ -16,9 +24,16 @@ func StartRpcServer(listenIp string, listenPort int) {
 	}
 	logger.Sugar.Info("server listen on:", address)
 
-	server := grpc.NewServer()
+	keepParams := grpc.KeepaliveParams(keepalive.ServerParameters{
+		MaxConnectionIdle:     kMaxConnectionIdle,
+		MaxConnectionAgeGrace: kMaxConnectionAgeGrace,
+		Time:                  kKeepAliveInterval,
+		Timeout:               kKeepAliveTimeout,
+		MaxConnectionAge:      kMaxLifeTime,
+	})
+	server := grpc.NewServer(keepParams)
 	// auth
-	cim.RegisterLogicServer(server, DefaultAuthRpcServer)
+	cim.RegisterLogicServer(server, DefaultLogicRpcServer)
 
 	if err := server.Serve(listener); err != nil {
 		logger.Sugar.Fatalf("server.Serve error:", err.Error())
