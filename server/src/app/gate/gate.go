@@ -8,7 +8,6 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-	"time"
 )
 
 const configFile = "app/gate/gate-example.toml"

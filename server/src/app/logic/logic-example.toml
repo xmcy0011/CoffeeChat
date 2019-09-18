@@ -21,3 +21,8 @@ DbName="coffeechat"
 UserName="test"
 Password="123456"
 MaxConnCnt=16
+
+[Kafka]
+# Topic由前缀+cmdID组成，如msg_data消息id为301，则Topic=CoffeeChat_301
+TopicPrefix="CoffeeChat_"
+Brokers= ["10.0.59.231:9092"]
