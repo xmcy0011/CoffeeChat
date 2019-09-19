@@ -15,14 +15,14 @@ type User struct {
 var DefaultUser = &User{}
 
 // 查询用户信息
-func (u *User) Get(userId uint64) *model.User {
+func (u *User) Get(userId uint64) *model.UserModel {
 	session := db.DefaultManager.GetDBSlave()
 	if session != nil {
 		sql := fmt.Sprintf("select user_id,user_nick_name,user_token,user_attach,created,updated from "+
 			"%s where user_id = %d", kUserTableName, userId)
 		row := session.QueryRow(sql)
 
-		userInfo := &model.User{}
+		userInfo := &model.UserModel{}
 		err := row.Scan(userInfo.UserId, userInfo.UserNickName, userInfo.UserToken, userInfo.UserAttach,
 			userInfo.Created, userInfo.Updated)
 		if err != nil {
