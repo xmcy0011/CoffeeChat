@@ -31,14 +31,13 @@ func main() {
 	defer logger.Logger.Sync() // flushes buffer, if any
 
 	// resolve gate.conf
-	config := &conf.Config{}
-	_, err := toml.DecodeFile(configFile, config)
+	_, err := toml.DecodeFile(configFile, conf.DefaultConfig)
 	if err != nil {
 		logger.Sugar.Error("load config error:", err.Error(), "exit...")
 		return
 	}
 
-	go tcpserver.StartServer(*config)
+	go tcpserver.StartServer()
 
 	// before exit, cleanup something ...
 	c := make(chan os.Signal)

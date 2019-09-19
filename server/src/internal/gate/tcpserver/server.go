@@ -9,10 +9,14 @@ import (
 	"strconv"
 )
 
-func StartServer(config conf.Config) {
-	StartGrpcClient(config.Logic)
+func StartServer() {
+	// connect logic grpc server
+	StartGrpcClient(conf.DefaultConfig.Logic)
+	// listen from logic grpc caller
+	StartGrpcServer()
 
-	startTcpServer(config.ListenIp, config.ListenPort)
+	// listen android/ios/windows client connect
+	startTcpServer(conf.DefaultConfig.ListenIp, conf.DefaultConfig.ListenPort)
 }
 
 func startTcpServer(ip string, port int) {
