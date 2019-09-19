@@ -1,0 +1,38 @@
+@startuml
+actor App1
+actor App2
+
+activate App1
+App1 -> App1: generate msgId=uuid
+App1 -> Gate1: CID_MSG_DATA
+deactivate App1
+
+activate Gate1
+Gate1 -> Logic: gRPC SendMsgData()
+activate Logic
+deactivate Logic
+deactivate Gate1
+
+Logic -> DbMessageSend: save
+activate Logic
+Logic -> DbMessageReceive: save
+Logic -> DbSession: write/update session
+Logic --> Gate1: gRPC AckMsgData
+deactivate Logic
+
+Gate1 --> App1: CID_MSG_DATA_ACK
+
+activate Logic
+Logic -> Logic: find gate
+Logic -> Gate2: gRPC SendMsgData
+deactivate Logic
+Gate2 -> App2: CID_MSG_DATA
+App2 --> Gate2: CID_MSG_DATA_ACK
+activate Logic
+Gate2 --> Logic: gRPC AckMsgData
+Logic -> DbMessageReceive: 更新消息已送达
+deactivate Logic
+
+@enduml
+
+

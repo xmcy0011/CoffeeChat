@@ -1,0 +1,20 @@
+1.login
+@startuml
+actor App
+
+App -> Gate: 0x0101 Auth(uname,token,nickname)
+Gate -> Logic: gRPC Auth()
+activate Logic
+
+Logic -> DbUser: select
+Logic --> Gate: return
+deactivate Logic
+
+Gate --> App: 0x0102 Rsp
+@enduml
+
+2.grpc服务注册
+@startuml
+Gate -> Logic: gRPC Ping()
+Logic --> Gate: return
+@enduml
