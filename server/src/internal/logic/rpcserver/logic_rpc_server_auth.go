@@ -5,6 +5,8 @@ import (
 	"github.com/CoffeeChat/server/src/api/cim"
 	"github.com/CoffeeChat/server/src/internal/logic/dao"
 	"github.com/CoffeeChat/server/src/pkg/logger"
+	"google.golang.org/grpc"
+	"strconv"
 	"time"
 )
 
@@ -12,6 +14,25 @@ type LogicServer struct {
 }
 
 var DefaultLogicRpcServer = &LogicServer{}
+var gateRpcClientMap map[string]cim.GateClient
+
+// 传递我方信息，双向GRPC
+func (s *LogicServer) SayHello(ctx context.Context, in *cim.Hello) (*cim.Empty, error) {
+	address := in.Ip + ":" + strconv.Itoa(int(in.Port))
+	conn, err := grpc.Dial(address, grpc.WithInsecure())
+	if err != nil {
+		return nil, err
+	}
+	// save
+	gateClient := cim.NewGateClient(conn)
+	if _, ok := gateRpcClientMap[address]; !ok {
+		gateRpcClientMap[address] = gateClient
+	} else {
+		logger.Sugar.Warnf("address %s gRPC client already register!",address)
+	}
+	empty := &cim.Empty{}
+	return empty, nil
+}
 
 // ping
 func (s *LogicServer) Ping(ctx context.Context, in *cim.CIMHeartBeat) (*cim.CIMHeartBeat, error) {

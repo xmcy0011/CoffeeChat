@@ -1,6 +1,7 @@
 package tcpserver
 
 import (
+	"context"
 	"fmt"
 	"github.com/CoffeeChat/server/src/api/cim"
 	"github.com/CoffeeChat/server/src/internal/gate/conf"
@@ -45,9 +46,20 @@ func init() {
 						logicClientMap[i].isConnected = false
 					} else {
 						if !logicClientMap[i].isConnected {
-							logger.Sugar.Infof("grpc server connected success,%s:%d,index=%d",
-								logicClientMap[i].config.Ip, logicClientMap[i].config.Port, logicClientMap[i].index)
-							logicClientMap[i].isConnected = true
+							// gRPC sayHello
+							for j := 1; j <= 3; j++ {
+								err := sayHello(logicClientMap[i].instance)
+								if err != nil {
+									logger.Sugar.Infof("grpc server connected success,but sayHello failed,retry=%d,%s:%d,index=%d,err=%s",
+										j, logicClientMap[i].config.Ip, logicClientMap[i].config.Port, logicClientMap[i].index, err.Error())
+									time.Sleep(10 * time.Millisecond)
+								} else {
+									logger.Sugar.Infof("grpc server connected success,%s:%d,index=%d",
+										logicClientMap[i].config.Ip, logicClientMap[i].config.Port, logicClientMap[i].index)
+									logicClientMap[i].isConnected = true
+									break
+								}
+							}
 						}
 					}
 				}
@@ -81,15 +93,30 @@ func StartGrpcClient(config []conf.LogicConfig) {
 			client := cim.NewLogicClient(conn)
 			// save
 			logicClientMap[curCount] = &LogicGrpcClient{
-				instance: client,
-				conn:     conn,
-				config:   config[i],
-				index:    i,
+				instance:    client,
+				conn:        conn,
+				config:      config[i],
+				index:       i,
+				isConnected: true,
+			}
+			// sayHello
+			err := sayHello(client)
+			if err != nil {
+				// if failed, the routine will try again
+				logicClientMap[curCount].isConnected = false
 			}
 		}
-
 		curCount++
 	}
+}
+
+func sayHello(conn cim.LogicClient) error {
+	heart := &cim.Hello{
+		Ip:   conf.DefaultConfig.ListenIpGrpc,
+		Port: int32(conf.DefaultConfig.ListenPortGrpc),
+	}
+	_, err := conn.SayHello(context.Background(), heart)
+	return err
 }
 
 // 获取登录验证的业务连接
