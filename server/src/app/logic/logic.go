@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/BurntSushi/toml"
 	"github.com/CoffeeChat/server/src/internal/logic/conf"
+	"github.com/CoffeeChat/server/src/internal/logic/dao"
 	"github.com/CoffeeChat/server/src/internal/logic/rpcserver"
 	"github.com/CoffeeChat/server/src/pkg/db"
 	"github.com/CoffeeChat/server/src/pkg/logger"
@@ -41,6 +42,14 @@ func main() {
 	err = db.DefaultManager.Init(conf.DefaultLogicConfig.Db)
 	if err != nil {
 		logger.Sugar.Fatal("db init failed:", err.Error())
+		return
+	}
+
+	// init cache
+	err = dao.InitCache()
+	if err != nil {
+		logger.Sugar.Fatal("redis cache init failed:", err.Error())
+		return
 	}
 
 	// start rpc server

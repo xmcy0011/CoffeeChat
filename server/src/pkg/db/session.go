@@ -1,3 +1,9 @@
+/** @file session.go
+  * @brief ref https://github.com/alberliu/goim/blob/master/public/session/session.go
+  * @author CoffeeChat
+  * @date 2019/9/19
+  */
+
 package db
 
 import (

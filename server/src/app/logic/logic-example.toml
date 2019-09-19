@@ -26,3 +26,14 @@ MaxConnCnt=16
 # Topic由前缀+cmdID组成，如msg_data消息id为301，则Topic=CoffeeChat_301
 TopicPrefix="CoffeeChat_"
 Brokers= ["10.0.59.231:9092"]
+
+[Redis]
+Name="cim"
+Ip="10.0.59.117"
+Port=6379
+KeyPrefix="cim|"  # redis中key的统一前缀
+Password="12345"  # redis的密码，不允许为空
+[[Pool]]
+Name="unread"
+DbNum=1
+MaxConnect=64
