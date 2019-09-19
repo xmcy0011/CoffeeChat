@@ -5,3 +5,8 @@ option go_package="cim";
 option optimize_for = LITE_RUNTIME;
 
 message Empty{}
+
+message Hello {
+    string ip = 1;
+    int32 port = 2;
+}

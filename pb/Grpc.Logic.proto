@@ -12,6 +12,9 @@ import "Grpc.Def.proto";
 
 // logic的grpc接口定义
 service Logic {
+    // 传递我方信息，双向GRPC
+    rpc SayHello(Hello) returns(Empty){}
+
     // ping
     rpc Ping(CIM.Login.CIMHeartBeat) returns(CIM.Login.CIMHeartBeat) {}
     // 验证token
