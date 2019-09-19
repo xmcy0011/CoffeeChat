@@ -11,6 +11,8 @@ type Config struct {
 	Kafka *Kafka // mq
 }
 
+var DefaultLogicConfig = &Config{}
+
 // kafka config
 type Kafka struct {
 	TopicPrefix string // Topic由前缀+cmdID组成，如msg_data消息id为301，则Topic=CoffeeChat_301

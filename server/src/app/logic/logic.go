@@ -32,20 +32,19 @@ func main() {
 	logger.InitLogger("log/log.log", "debug")
 	defer logger.Sugar.Sync()
 
-	conf := &conf.Config{}
-	_, err := toml.DecodeFile(kDefaultConf, conf)
+	_, err := toml.DecodeFile(kDefaultConf, conf.DefaultLogicConfig)
 	if err != nil {
 		logger.Sugar.Fatal("load conf file err:", err.Error())
 	}
 
 	// init db
-	err = db.DefaultManager.Init(conf.Db)
+	err = db.DefaultManager.Init(conf.DefaultLogicConfig.Db)
 	if err != nil {
 		logger.Sugar.Fatal("db init failed:", err.Error())
 	}
 
 	// start rpc server
-	go rpcserver.StartRpcServer(conf.ListenIp, conf.ListenPort)
+	go rpcserver.StartRpcServer(conf.DefaultLogicConfig.ListenIp, conf.DefaultLogicConfig.ListenPort)
 
 	// before exit, cleanup something ...
 	c := make(chan os.Signal)
