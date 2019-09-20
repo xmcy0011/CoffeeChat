@@ -13,8 +13,9 @@ message CIMMsgData {
   uint64 to_session_id = 2; // 消息接受方，单聊用户ID，群聊群ID
   string msg_id = 3;        // 客户端消息ID，唯一（UUID）
   uint64 create_time = 4;   // 消息创建时间戳(毫秒)
-  CIM.Def.CIMMsgType msg_type = 5; // 消息类型
-  bytes msg_data = 6;              // 消息内容
+  CIM.Def.CIMMsgType msg_type = 5;         // 消息类型
+  CIM.Def.CIMSessionType session_type = 6; // 会话类型
+  bytes msg_data = 7;                      // 消息内容
 }
 
 // 消息收到回复
@@ -24,8 +25,8 @@ message CIMMsgDataAck {
   uint64 to_session_id = 2; // 消息接受方，单聊用户ID，群聊群ID
   string msg_id = 3;        // 客户端消息ID，唯一（UUID）
   CIM.Def.CIMResCode res_code = 4;         // 错误码
-  CIM.Def.CIMSessionType session_type = 5; // 会话类型
-  /*optional*/ uint64 create_time = 6;     // 创建时间戳(毫秒)
+  CIM.Def.CIMSessionType session_type = 6; // 会话类型
+  /*optional*/ uint64 create_time = 7;     // 创建时间戳(毫秒)
 }
 
 // 消息已读回复（我方）
