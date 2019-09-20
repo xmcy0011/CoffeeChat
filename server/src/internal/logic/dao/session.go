@@ -15,7 +15,7 @@ const kSessionTableName = "im_session"
 type TblSession struct {
 }
 
-var DefaultTblSession = &TblSession{}
+var DefaultSession = &TblSession{}
 
 func (t *TblSession) Get(userId uint64, peerId uint64) *model.SessionModel {
 	session := db.DefaultManager.GetDBSlave()
@@ -24,10 +24,11 @@ func (t *TblSession) Get(userId uint64, peerId uint64) *model.SessionModel {
 			"is_robot_session,created,updated from %s where user_id=%d and peer_id=%d", kSessionTableName, userId, peerId)
 		row := session.QueryRow(sql)
 
-		model := &model.SessionModel{}
-		err := row.Scan(model.Id, model.UserId, model.PeerId, model.SessionType, model.SessionStatus, model.IsRobotSession, model.Created, model.Updated)
+		sessionModel := &model.SessionModel{}
+		err := row.Scan(sessionModel.Id, sessionModel.UserId, sessionModel.PeerId, sessionModel.SessionType,
+			sessionModel.SessionStatus, sessionModel.IsRobotSession, sessionModel.Created, sessionModel.Updated)
 		if err == nil {
-			return model
+			return sessionModel
 		} else {
 			logger.Sugar.Error("no result for sql:", sql)
 		}
@@ -43,7 +44,7 @@ func (t *TblSession) Get(userId uint64, peerId uint64) *model.SessionModel {
  * 注：以事物的方式添加双向关系,a->b,b->a
  */
 func (t *TblSession) AddUserSession(userId uint64, peerId uint64, sessionType cim.CIMSessionType, sessionStatus cim.CIMSessionStatusType,
-	isRobotSession bool) error {
+	isRobotSession bool) (int, int, error) {
 	session := db.DefaultManager.GetDbMaster()
 	if session != nil {
 		robotSession := 0
@@ -56,10 +57,13 @@ func (t *TblSession) AddUserSession(userId uint64, peerId uint64, sessionType ci
 		err := session.Begin()
 		if err != nil {
 			logger.Sugar.Error("session begin error:", err.Error())
-			return err
+			return 0, 0, err
 		}
 
 		result := false
+		id1 := int64(0)
+		id2 := int64(0)
+
 		// insert a->b
 		sql := fmt.Sprintf("insert into %s(user_id,peer_id,sessoin_type,session_status,"+
 			"is_robot_session,created,updated) values(%d,%d,%d,%d,%d,%d,%d)",
@@ -67,7 +71,7 @@ func (t *TblSession) AddUserSession(userId uint64, peerId uint64, sessionType ci
 		r, err := session.Exec(sql)
 		if err != nil {
 			logger.Sugar.Errorf("Exec error:%s,sql:%s", err.Error(), sql)
-		} else if _, err := r.RowsAffected(); err != nil {
+		} else if id1, err = r.RowsAffected(); err != nil {
 			logger.Sugar.Errorf("Exec error:%s,sql:%s", err.Error(), sql)
 		} else {
 			result = true
@@ -82,7 +86,7 @@ func (t *TblSession) AddUserSession(userId uint64, peerId uint64, sessionType ci
 			r, err = session.Exec(sql)
 			if err != nil {
 				logger.Sugar.Errorf("Exec error:%s,sql:%s", err.Error(), sql)
-			} else if _, err := r.RowsAffected(); err != nil {
+			} else if id2, err = r.RowsAffected(); err != nil {
 				logger.Sugar.Errorf("Exec error:%s,sql:%s", err.Error(), sql)
 			} else {
 				result = true
@@ -104,13 +108,15 @@ func (t *TblSession) AddUserSession(userId uint64, peerId uint64, sessionType ci
 			err := session.Rollback()
 			if err != nil {
 				logger.Sugar.Errorf("session rollback error:%s,sql:%s", err.Error(), sql)
-				return err
+				return 0, 0, err
 			}
+		} else {
+			return int(id1), int(id2), nil
 		}
 	} else {
 		logger.Sugar.Error("no db connect for master")
 	}
-	return def.DefaultError
+	return 0, 0, def.DefaultError
 }
 
 // 添加用户和群的会话关系

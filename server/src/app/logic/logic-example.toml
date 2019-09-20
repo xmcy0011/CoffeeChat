@@ -37,3 +37,11 @@ Password="12345"  # redis的密码，不允许为空
 Name="unread"
 DbNum=1
 MaxConnect=64
+[[Pool]]
+Name="msgid"        # 消息序号ID
+DbNum=2
+MaxConnect=16
+[[Pool]]
+Name="online"      # 存储用户在线状态
+DbNum=3
+MaxConnect=16

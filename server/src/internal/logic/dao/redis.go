@@ -7,8 +7,10 @@
 package dao
 
 import (
+	"errors"
 	"fmt"
 	"github.com/CoffeeChat/server/src/internal/logic/conf"
+	"github.com/CoffeeChat/server/src/pkg/logger"
 	"github.com/go-redis/redis"
 	"time"
 )
@@ -27,11 +29,13 @@ type RedisPool struct {
 var DefaultRedisPool = &RedisPool{}
 
 const kUnreadKeyName = "unread"
+const kMsgIdKeyName = "msgid"
 
 func InitCache() error {
 	redisConfig := conf.DefaultLogicConfig.Redis
 	address := fmt.Sprintf("%s:%d", redisConfig.Ip, redisConfig.Port)
 
+	logger.Sugar.Info("init cache,redis address:", address)
 	DefaultRedisPool.clientMap = make(map[string]*RedisConnect)
 
 	for i := 0; i < len(conf.DefaultLogicConfig.Redis.Pool); i++ {
@@ -54,11 +58,18 @@ func InitCache() error {
 				return err
 			}
 		}
-
+		logger.Sugar.Info("pool ping success,name=", poolInfo.Name)
 		// save
 		DefaultRedisPool.clientMap[poolInfo.Name] = conn
 	}
 
+	// check pool
+	if _, ok := DefaultRedisPool.clientMap[kUnreadKeyName]; !ok {
+		return errors.New("can't find " + kUnreadKeyName + " pool cache")
+	}
+	if _, ok := DefaultRedisPool.clientMap[kMsgIdKeyName]; !ok {
+		return errors.New("can't find " + kMsgIdKeyName + " pool cache")
+	}
 	return nil
 }
 
@@ -68,6 +79,10 @@ func InitCache() error {
 
 func (r *RedisPool) GetUnreadPool() *RedisConnect {
 	return DefaultRedisPool.clientMap[kUnreadKeyName]
+}
+
+func (r *RedisPool) GetMsgIdPool() *RedisConnect {
+	return DefaultRedisPool.clientMap[kMsgIdKeyName]
 }
 
 //
@@ -80,4 +95,8 @@ func (conn *RedisConnect) Set(key string, value interface{}, expiration time.Dur
 
 func (conn *RedisConnect) Get(key string) *redis.StringCmd {
 	return conn.redisClient.Get(conf.DefaultLogicConfig.Redis.KeyPrefix + key)
+}
+
+func (conn *RedisConnect) Incr(key string) *redis.IntCmd {
+	return conn.redisClient.Incr(conf.DefaultLogicConfig.Redis.KeyPrefix + key)
 }

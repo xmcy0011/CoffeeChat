@@ -23,8 +23,9 @@ message CIMMsgDataAck {
   // cmd id:		0x0302
   uint64 from_user_id = 1;  // 消息发送方
   uint64 to_session_id = 2; // 消息接受方，单聊用户ID，群聊群ID
-  string msg_id = 3;        // 客户端消息ID，唯一（UUID）
-  CIM.Def.CIMResCode res_code = 4;         // 错误码
+  string msg_id = 4;        // 客户端消息ID，唯一（UUID）
+  uint64 server_msg_id = 3;  // 服务端生成的消息ID，顺序
+  CIM.Def.CIMResCode res_code = 5;         // 错误码
   CIM.Def.CIMSessionType session_type = 6; // 会话类型
   /*optional*/ uint64 create_time = 7;     // 创建时间戳(毫秒)
 }
