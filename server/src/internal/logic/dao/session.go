@@ -65,13 +65,13 @@ func (t *Session) AddUserSession(userId uint64, peerId uint64, sessionType cim.C
 		id2 := int64(0)
 
 		// insert a->b
-		sql := fmt.Sprintf("insert into %s(user_id,peer_id,sessoin_type,session_status,"+
+		sql := fmt.Sprintf("insert into %s(user_id,peer_id,session_type,session_status,"+
 			"is_robot_session,created,updated) values(%d,%d,%d,%d,%d,%d,%d)",
 			kSessionTableName, userId, peerId, int(sessionType), int(sessionStatus), robotSession, timeStamp, timeStamp)
 		r, err := session.Exec(sql)
 		if err != nil {
 			logger.Sugar.Errorf("Exec error:%s,sql:%s", err.Error(), sql)
-		} else if id1, err = r.RowsAffected(); err != nil {
+		} else if id1, err = r.LastInsertId(); err != nil {
 			logger.Sugar.Errorf("Exec error:%s,sql:%s", err.Error(), sql)
 		} else {
 			result = true
@@ -80,13 +80,13 @@ func (t *Session) AddUserSession(userId uint64, peerId uint64, sessionType cim.C
 		// insert b->a
 		if result {
 			result = false
-			sql = fmt.Sprintf("insert into %s(user_id,peer_id,sessoin_type,session_status,"+
+			sql = fmt.Sprintf("insert into %s(user_id,peer_id,session_type,session_status,"+
 				"is_robot_session,created,updated) values(%d,%d,%d,%d,%d,%d,%d)",
 				kSessionTableName, peerId, userId, int(sessionType), int(sessionStatus), robotSession, timeStamp, timeStamp)
 			r, err = session.Exec(sql)
 			if err != nil {
 				logger.Sugar.Errorf("Exec error:%s,sql:%s", err.Error(), sql)
-			} else if id2, err = r.RowsAffected(); err != nil {
+			} else if id2, err = r.LastInsertId(); err != nil {
 				logger.Sugar.Errorf("Exec error:%s,sql:%s", err.Error(), sql)
 			} else {
 				result = true
