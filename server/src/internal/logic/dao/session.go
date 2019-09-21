@@ -12,12 +12,12 @@ import (
 
 const kSessionTableName = "im_session"
 
-type TblSession struct {
+type Session struct {
 }
 
-var DefaultSession = &TblSession{}
+var DefaultSession = &Session{}
 
-func (t *TblSession) Get(userId uint64, peerId uint64) *model.SessionModel {
+func (t *Session) Get(userId uint64, peerId uint64) *model.SessionModel {
 	session := db.DefaultManager.GetDBSlave()
 	if session != nil {
 		sql := fmt.Sprintf("select id,user_id,peer_id,sessoin_type,session_status,"+
@@ -43,7 +43,7 @@ func (t *TblSession) Get(userId uint64, peerId uint64) *model.SessionModel {
  * 添加一个用户和用户的会话记录
  * 注：以事物的方式添加双向关系,a->b,b->a
  */
-func (t *TblSession) AddUserSession(userId uint64, peerId uint64, sessionType cim.CIMSessionType, sessionStatus cim.CIMSessionStatusType,
+func (t *Session) AddUserSession(userId uint64, peerId uint64, sessionType cim.CIMSessionType, sessionStatus cim.CIMSessionStatusType,
 	isRobotSession bool) (int, int, error) {
 	session := db.DefaultManager.GetDbMaster()
 	if session != nil {
@@ -120,7 +120,7 @@ func (t *TblSession) AddUserSession(userId uint64, peerId uint64, sessionType ci
 }
 
 // 添加用户和群的会话关系
-func (t *TblSession) AddGroupSession(userId uint64, groupId uint64, sessionType cim.CIMSessionType, sessionStatus cim.CIMSessionStatusType,
+func (t *Session) AddGroupSession(userId uint64, groupId uint64, sessionType cim.CIMSessionType, sessionStatus cim.CIMSessionStatusType,
 	isRobotSession bool) error {
 	session := db.DefaultManager.GetDbMaster()
 	if session != nil {
@@ -148,7 +148,7 @@ func (t *TblSession) AddGroupSession(userId uint64, groupId uint64, sessionType 
 }
 
 // 更新会话最后修改时间
-func (t *TblSession) UpdateUpdated(id int, updated int) error {
+func (t *Session) UpdateUpdated(id int, updated int) error {
 	session := db.DefaultManager.GetDbMaster()
 	if session != nil {
 		sql := fmt.Sprintf("update %s set updated=%d where id=%d", kSessionTableName, updated, id)
