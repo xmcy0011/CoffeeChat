@@ -30,6 +30,7 @@ var DefaultRedisPool = &RedisPool{}
 
 const kUnreadKeyName = "unread"
 const kMsgIdKeyName = "msgid"
+const kOnlineKeyName = "online"
 
 func InitCache() error {
 	redisConfig := conf.DefaultLogicConfig.Redis
@@ -83,6 +84,10 @@ func (r *RedisPool) GetUnreadPool() *RedisConnect {
 
 func (r *RedisPool) GetMsgIdPool() *RedisConnect {
 	return DefaultRedisPool.clientMap[kMsgIdKeyName]
+}
+
+func (r *RedisPool) GetOnlinePool() *RedisConnect {
+	return DefaultRedisPool.clientMap[kOnlineKeyName]
 }
 
 //
