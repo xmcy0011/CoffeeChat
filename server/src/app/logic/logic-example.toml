@@ -7,7 +7,7 @@ ServerName="Master"
 Host="127.0.0.1"
 Port=3306
 DbName="coffeechat"
-UserName="test"
+UserName="root"
 Password="123456"
 MaxConnCnt=16
 
@@ -18,7 +18,7 @@ ServerName="Slave"
 Host="127.0.0.1"
 Port=3306
 DbName="coffeechat"
-UserName="test"
+UserName="root"
 Password="123456"
 MaxConnCnt=16
 
