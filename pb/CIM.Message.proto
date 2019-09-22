@@ -27,7 +27,7 @@ message CIMMsgDataAck {
   uint64 server_msg_id = 3; // 服务端生成的消息ID，顺序
   CIM.Def.CIMResCode res_code = 5;         // 错误码
   CIM.Def.CIMSessionType session_type = 6; // 会话类型
-  /*optional*/ uint64 create_time = 7;     // 创建时间戳(毫秒)
+  /*optional*/ int32 create_time = 7;      // 创建时间戳(毫秒)
 }
 
 // 消息已读回复（我方）
