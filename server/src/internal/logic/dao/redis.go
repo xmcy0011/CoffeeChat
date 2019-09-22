@@ -71,6 +71,9 @@ func InitCache() error {
 	if _, ok := DefaultRedisPool.clientMap[kMsgIdKeyName]; !ok {
 		return errors.New("can't find " + kMsgIdKeyName + " pool cache")
 	}
+	if _, ok := DefaultRedisPool.clientMap[kOnlineKeyName]; !ok {
+		return errors.New("can't find " + kOnlineKeyName + " pool cache")
+	}
 	return nil
 }
 
