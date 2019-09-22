@@ -45,7 +45,7 @@ func (m *Message) GetByMsgId(msgId string, tableName string) int64 {
 }
 
 // 存储消息
-func (m *Message) SaveMessage(fromId uint64, toId uint64, clientMsgId string, createTime uint64,
+func (m *Message) SaveMessage(fromId uint64, toId uint64, clientMsgId string, createTime int32,
 	msgType cim.CIMMsgType, sessionType cim.CIMSessionType, msgData string) (uint64, error) {
 	if sessionType == cim.CIMSessionType_kCIM_SESSION_TYPE_SINGLE {
 		return m.saveSingleMessage(fromId, toId, clientMsgId, createTime, msgType, msgData)
@@ -56,7 +56,7 @@ func (m *Message) SaveMessage(fromId uint64, toId uint64, clientMsgId string, cr
 	}
 }
 
-func (m *Message) saveSingleMessage(fromId uint64, toId uint64, clientMsgId string, createTime uint64, msgType cim.CIMMsgType, msgData string) (uint64, error) {
+func (m *Message) saveSingleMessage(fromId uint64, toId uint64, clientMsgId string, createTime int32, msgType cim.CIMMsgType, msgData string) (uint64, error) {
 	dbMaster := db.DefaultManager.GetDbMaster()
 	if dbMaster != nil {
 		// Get MsgId
@@ -110,6 +110,6 @@ func (m *Message) saveSingleMessage(fromId uint64, toId uint64, clientMsgId stri
 }
 
 // not support
-func (m *Message) saveGroupMessage(fromId uint64, groupId uint64, clientMsgId string, createTime uint64, msgType cim.CIMMsgType, msgData string) (uint64, error) {
+func (m *Message) saveGroupMessage(fromId uint64, groupId uint64, clientMsgId string, createTime int32, msgType cim.CIMMsgType, msgData string) (uint64, error) {
 	return 0, def.DefaultError
 }
