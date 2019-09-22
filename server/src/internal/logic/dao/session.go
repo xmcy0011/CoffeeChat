@@ -20,19 +20,18 @@ var DefaultSession = &Session{}
 func (t *Session) Get(userId uint64, peerId uint64) *model.SessionModel {
 	session := db.DefaultManager.GetDBSlave()
 	if session != nil {
-		sql := fmt.Sprintf("select id,user_id,peer_id,sessoin_type,session_status,"+
+		sql := fmt.Sprintf("select id,user_id,peer_id,session_type,session_status,"+
 			"is_robot_session,created,updated from %s where user_id=%d and peer_id=%d", kSessionTableName, userId, peerId)
 		row := session.QueryRow(sql)
 
 		sessionModel := &model.SessionModel{}
-		err := row.Scan(sessionModel.Id, sessionModel.UserId, sessionModel.PeerId, sessionModel.SessionType,
-			sessionModel.SessionStatus, sessionModel.IsRobotSession, sessionModel.Created, sessionModel.Updated)
+		err := row.Scan(&sessionModel.Id, &sessionModel.UserId, &sessionModel.PeerId, &sessionModel.SessionType,
+			&sessionModel.SessionStatus, &sessionModel.IsRobotSession, &sessionModel.Created, &sessionModel.Updated)
 		if err == nil {
 			return sessionModel
 		} else {
-			logger.Sugar.Error("no result for sql:", sql)
+			logger.Sugar.Errorf("no result for sql:%s,error:%s", sql, err.Error())
 		}
-
 	} else {
 		logger.Sugar.Error("no db connect for slave")
 	}
@@ -130,7 +129,7 @@ func (t *Session) AddGroupSession(userId uint64, groupId uint64, sessionType cim
 		}
 		timeStamp := time.Now().Unix()
 
-		sql := fmt.Sprintf("insert into %s(user_id,peer_id,sessoin_type,session_status,"+
+		sql := fmt.Sprintf("insert into %s(user_id,peer_id,session_type,session_status,"+
 			"is_robot_session,created,updated) values(%d,%d,%d,%d,%d,%d,%d)",
 			kSessionTableName, userId, groupId, int(sessionType), int(sessionStatus), robotSession, timeStamp, timeStamp)
 		r, err := session.Exec(sql)
