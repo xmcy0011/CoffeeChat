@@ -20,6 +20,9 @@ func (d *Manager) Init(server []DatabaseConfig) error {
 		if err != nil {
 			return err
 		}
+		if err := session.Ping(); err != nil {
+			return err
+		}
 		// insert to dbList
 		d.dbList[server[i].ServerName] = session
 	}

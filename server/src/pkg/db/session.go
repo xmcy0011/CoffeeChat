@@ -1,8 +1,8 @@
 /** @file session.go
-  * @brief ref https://github.com/alberliu/goim/blob/master/public/session/session.go
-  * @author CoffeeChat
-  * @date 2019/9/19
-  */
+ * @brief ref https://github.com/alberliu/goim/blob/master/public/session/session.go
+ * @author CoffeeChat
+ * @date 2019/9/19
+ */
 
 package db
 
@@ -82,6 +82,11 @@ func (s *SessionMysql) Init(config DatabaseConfig) error {
 
 	s.DB = db
 	return nil
+}
+
+// check connect status
+func (s *SessionMysql) Ping() error {
+	return s.DB.Ping()
 }
 
 // Begin 开启事务
