@@ -4,7 +4,7 @@
  * @date 2019/9/19
  */
 
-package dao
+package db
 
 import (
 	"errors"

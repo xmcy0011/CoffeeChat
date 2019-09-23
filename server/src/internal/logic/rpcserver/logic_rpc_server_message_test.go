@@ -5,7 +5,6 @@ import (
 	"github.com/BurntSushi/toml"
 	"github.com/CoffeeChat/server/src/api/cim"
 	"github.com/CoffeeChat/server/src/internal/logic/conf"
-	"github.com/CoffeeChat/server/src/internal/logic/dao"
 	"github.com/CoffeeChat/server/src/pkg/db"
 	"github.com/CoffeeChat/server/src/pkg/logger"
 	uuid "github.com/satori/go.uuid"
@@ -28,7 +27,7 @@ func TestLogicServer_SendMsgData(t *testing.T) {
 	}
 
 	// init cache
-	err = dao.InitCache()
+	err = db.InitCache()
 	if err != nil {
 		t.Fatal(err.Error())
 	}

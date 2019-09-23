@@ -22,12 +22,12 @@ var DefaultMessage = &Message{}
 
 // if redis not connected then will failed
 func (m *Message) GetMsgIdGroup(groupId uint64) (int64, error) {
-	conn := DefaultRedisPool.GetMsgIdPool()
+	conn := db.DefaultRedisPool.GetMsgIdPool()
 	key := fmt.Sprintf("%s_%d", kRedisKeyMsgId, groupId)
 	return conn.Incr(key).Result()
 }
 func (m *Message) GetMsgIdSingle() (int64, error) {
-	conn := DefaultRedisPool.GetMsgIdPool()
+	conn := db.DefaultRedisPool.GetMsgIdPool()
 	return conn.Incr(KRedisKeySingleMsgId).Result()
 }
 

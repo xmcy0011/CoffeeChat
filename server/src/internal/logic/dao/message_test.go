@@ -24,7 +24,7 @@ func TestMessage_SaveMessage(t *testing.T) {
 	}
 
 	// init cache
-	err = InitCache()
+	err = db.InitCache()
 	if err != nil {
 		t.Fatal(err.Error())
 	}

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/CoffeeChat/server/src/api/cim"
 	"github.com/CoffeeChat/server/src/internal/logic/dao"
+	"github.com/CoffeeChat/server/src/pkg/db"
 	"github.com/CoffeeChat/server/src/pkg/logger"
 )
 
@@ -50,8 +51,8 @@ func (s *LogicServer) messageBroadcastSingle(in *cim.CIMMsgData) {
 	// 2.find gate gRPC server
 	// 3.call SendMsgData
 	// 4.etc ...
-	redisConn := dao.DefaultRedisPool.GetOnlinePool()
-	key := fmt.Sprintf("%s_%d", dao.KOnlineKeyName, in.ToSessionId)
+	redisConn := db.DefaultRedisPool.GetOnlinePool()
+	key := fmt.Sprintf("%s_%d", db.KOnlineKeyName, in.ToSessionId)
 	userMap, err := redisConn.HGetAll(key).Result()
 	if err != nil || len(userMap) == 0 {
 		logger.Sugar.Debugf("from:%d,to:%d,he/she is not online,don't need broadcast", in.FromUserId, in.ToSessionId, in.ToSessionId /*, err.Error()*/)
