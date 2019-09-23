@@ -16,6 +16,7 @@ func (s *LogicServer) RecentContactSession(ctx context.Context, in *cim.CIMRecen
 	// ps：简单起见，不支持分页
 	sessionList, err := dao.DefaultSession.GetSessionList(in.UserId)
 	if err != nil {
+		logger.Sugar.Error("RecentContactSession error:", err.Error())
 		return nil, err
 	}
 
@@ -24,7 +25,7 @@ func (s *LogicServer) RecentContactSession(ctx context.Context, in *cim.CIMRecen
 	for i := range sessionList {
 		e := sessionList[i]
 		info := &cim.CIMContactSessionInfo{
-			SessionId:      e.Id,
+			SessionId:      e.PeerId,
 			SessionType:    cim.CIMSessionType(e.SessionType),
 			SessionStatus:  cim.CIMSessionStatusType(e.SessionStatus),
 			UnreadCnt:      0, // FIXED ME
@@ -52,6 +53,7 @@ func (s *LogicServer) RecentContactSession(ctx context.Context, in *cim.CIMRecen
 		info.MsgType = cim.CIMMsgType(msgInfo.MsgType)
 		info.MsgData = []byte(msgInfo.MsgContent)
 		info.MsgStatus = cim.CIMMsgStatus(msgInfo.MsgStatus)
+		info.MsgFromUserId = msgInfo.FromId
 		// FIXED ME
 		// info.MsgAttach =
 		// info.ExtendData =
@@ -61,6 +63,10 @@ func (s *LogicServer) RecentContactSession(ctx context.Context, in *cim.CIMRecen
 	rsp.UserId = in.UserId
 	// FIXED ME
 	rsp.UnreadCounts = 0
+
+	logger.Sugar.Infof("RecentContactSession userId=%d,LatestUpdateTime=%d,total_session_cnt=%d", in.UserId,
+		in.LatestUpdateTime, len(rsp.ContactSessionList))
+
 	return rsp, nil
 }
 

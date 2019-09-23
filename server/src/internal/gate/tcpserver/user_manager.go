@@ -1,8 +1,8 @@
 /** @file user_manager.go
-  * @brief 用户管理类
-  * @author CoffeeChat
-  * @date 2019-09-16
-  */
+ * @brief 用户管理类
+ * @author CoffeeChat
+ * @date 2019-09-16
+ */
 package tcpserver
 
 type UserManager struct {
@@ -10,6 +10,10 @@ type UserManager struct {
 }
 
 var DefaultUserManager = &UserManager{}
+
+func init() {
+	DefaultUserManager.users = make(map[uint64]*User)
+}
 
 // 查找用户
 func (u *UserManager) FindUser(userId uint64) *User {

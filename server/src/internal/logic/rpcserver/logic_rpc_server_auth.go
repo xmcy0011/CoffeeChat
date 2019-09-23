@@ -48,7 +48,7 @@ func (s *LogicServer) Ping(ctx context.Context, in *cim.CIMHeartBeat) (*cim.CIMH
 
 // 验证token
 func (s *LogicServer) AuthToken(ctx context.Context, in *cim.CIMAuthTokenReq) (*cim.CIMAuthTokenRsp, error) {
-	logger.Sugar.Infof("authToken userId=%d,nickName=%s,userToken=%s,clientType=%d,ClientVersion=%s",
+	logger.Sugar.Infof("AuthToken userId=%d,nickName=%s,userToken=%s,clientType=%d,ClientVersion=%s",
 		in.UserId, in.NickName, in.UserToken, in.ClientType, in.ClientVersion)
 
 	rsp := &cim.CIMAuthTokenRsp{}

@@ -80,7 +80,7 @@ func (tcp *TcpConn) OnClose() {
 
 //OnRead implements the CImConn OnRead method.
 func (tcp *TcpConn) OnRead(header *cim.ImHeader, buff []byte) {
-	logger.Sugar.Debug("recv data:", string(buff))
+	//logger.Sugar.Debug("recv data:", string(buff))
 
 	if !tcp.isLogin && header.CommandId != uint16(cim.CIMCmdID_kCIM_CID_LOGIN_AUTH_LOGOUT_REQ) {
 		logger.Sugar.Error("need login,close connect,address=", tcp.Conn.RemoteAddr().String())
@@ -93,6 +93,7 @@ func (tcp *TcpConn) OnRead(header *cim.ImHeader, buff []byte) {
 		tcp.onHandleAuthReq(header, buff)
 		break
 	case uint16(cim.CIMCmdID_kCIM_CID_LIST_RECENT_CONTACT_SESSION_REQ):
+		tcp.onHandleRecentContactSessionReq(header, buff)
 		break
 	case uint16(cim.CIMCmdID_kCIM_CID_MSG_DATA):
 		break
@@ -190,7 +191,7 @@ func (tcp *TcpConn) onHandleAuthReq(header *cim.ImHeader, buff []byte) {
 }
 
 // 查询会话列表请求
-func (tcp *TcpConn) onHandleRecentContactSession(header *cim.ImHeader, buff []byte) {
+func (tcp *TcpConn) onHandleRecentContactSessionReq(header *cim.ImHeader, buff []byte) {
 	req := &cim.CIMRecentContactSessionReq{}
 	err := proto.Unmarshal(buff, req)
 	if err != nil {
@@ -205,9 +206,14 @@ func (tcp *TcpConn) onHandleRecentContactSession(header *cim.ImHeader, buff []by
 
 	if err != nil {
 		logger.Sugar.Error("err:", err.Error())
+		return
 	} else {
 		_, err = tcp.Send(uint16(cim.CIMCmdID_kCIM_CID_LIST_RECENT_CONTACT_SESSION_RSP), rsp)
 	}
+
+	logger.Sugar.Infof("onHandleRecentContactSessionReq user_id:%d,latest_update_time:%d,"+
+		"total_unread_count=%d,total_session_cnt=%d",
+		req.UserId, req.LatestUpdateTime, rsp.UnreadCounts, len(rsp.ContactSessionList))
 }
 
 // 发送消息
