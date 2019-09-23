@@ -95,7 +95,7 @@ func (m *Message) saveSingleMessage(fromId uint64, toId uint64, clientMsgId stri
 		sql := fmt.Sprintf("insert into %s(msg_id,client_msg_id,from_id,to_id,group_id,msg_type,msg_content,"+
 			"msg_res_code,msg_feature,msg_status,created,updated) values(%d,'%s',%d,%d,%d,%d,'%s',%d,%d,%d,%d,%d)",
 			tableName, msgId, clientMsgId, fromId, toId, 0, msgType, msgData, cim.CIMResCode_kCIM_RES_CODE_OK,
-			cim.CIMMessageFeature_kCIM_MESSAGE_FEATURE_DEFAULT, cim.CIMMessageStatus_kCIM_MESSAGE_STATUS_NONE, timeStamp, timeStamp)
+			cim.CIMMsgFeature_kCIM_MSG_FEATURE_DEFAULT, cim.CIMMsgStatus_kCIM_MSG_STATUS_DELETED, timeStamp, timeStamp)
 		_, err = dbMaster.Exec(sql)
 		if err != nil {
 			logger.Sugar.Errorf("exec failed,sql:%s,error:%s", sql, err.Error())
@@ -106,7 +106,7 @@ func (m *Message) saveSingleMessage(fromId uint64, toId uint64, clientMsgId stri
 			sql = fmt.Sprintf("insert into %s(msg_id,client_msg_id,from_id,to_id,group_id,msg_type,msg_content,"+
 				"msg_res_code,msg_feature,msg_status,created,updated) values(%d,'%s',%d,%d,%d,%d,'%s',%d,%d,%d,%d,%d)",
 				tableName, msgId, clientMsgId, fromId, toId, 0, msgType, msgData, cim.CIMResCode_kCIM_RES_CODE_OK,
-				cim.CIMMessageFeature_kCIM_MESSAGE_FEATURE_DEFAULT, cim.CIMMessageStatus_kCIM_MESSAGE_STATUS_NONE, timeStamp, timeStamp)
+				cim.CIMMsgFeature_kCIM_MSG_FEATURE_DEFAULT, cim.CIMMsgStatus_kCIM_MSG_STATUS_DELETED, timeStamp, timeStamp)
 			_, err = dbMaster.Exec(sql)
 			if err != nil {
 				logger.Sugar.Errorf("exec failed,sql:%s,error:%s", sql, err.Error())

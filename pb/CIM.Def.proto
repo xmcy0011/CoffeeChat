@@ -88,17 +88,17 @@ enum CIMMsgType {
 }
 
 // 消息状态
-enum CIMMessageStatus {
-  kCIM_MESSAGE_STATUS_NONE = 0; // 默认，不能当查询条件，意义太多
-  kCIM_MESSAGE_STATUS_UNREAD = 1;  // 收到消息，未读
-  kCIM_MESSAGE_STATUS_READ = 2;    // 收到消息，已读
-  kCIM_MESSAGE_STATUS_DELETED = 3; // 已删
-  // kCIM_MESSAGE_STATUS_SENDING = 4;   // 发送中
-  kCIM_MESSAGE_STATUS_SENT = 5; // 已发送
-  // kCIM_MESSAGE_STATUS_RECEIPT = 6;   // 对方已读发送的内容
-  // kCIM_MESSAGE_STATUS_DRAFT = 7;     // 草稿
-  // kCIM_MESSAGE_STATUS_SendCacel = 8; // 发送取消
-  // kCIM_MESSAGE_STATUS_REFUSED = 9; // 被对方拒绝，比如被对方加入黑名单等等
+enum CIMMsgStatus {
+  kCIM_MSG_STATUS_NONE = 0;    // 默认，不能当查询条件，意义太多
+  kCIM_MSG_STATUS_UNREAD = 1;  // 收到消息，未读
+  kCIM_MSG_STATUS_READ = 2;    // 收到消息，已读
+  kCIM_MSG_STATUS_DELETED = 3; // 已删
+  // kCIM_MSG_STATUS_SENDING = 4;   // 发送中
+  kCIM_MSG_STATUS_SENT = 5; // 已发送
+  // kCIM_MSG_STATUS_RECEIPT = 6;   // 对方已读发送的内容
+  // kCIM_MSG_STATUS_DRAFT = 7;     // 草稿
+  // kCIM_MSG_STATUS_SendCacel = 8; // 发送取消
+  // kCIM_MSG_STATUS_REFUSED = 9; // 被对方拒绝，比如被对方加入黑名单等等
 }
 
 // 会话状态
@@ -108,12 +108,12 @@ enum CIMSessionStatusType {
 }
 
 // 消息属性
-enum CIMMessageFeature {
-  kCIM_MESSAGE_FEATURE_DEFAULT = 0; // 默认
-  // kCIM_MESSAGE_FEATURE_LEAVE_MSG = 1;      // 离线消息(和漫游消息有何区别)
-  kCIM_MESSAGE_FEATURE_ROAM_MSG = 2; // 漫游消息，多端同步接收，永久存储(或1年)
-  // kCIM_MESSAGE_FEATURE_SYNS_MSG = 3;       // 同步消息
-  // kCIM_MESSAGE_FEATURE_CUSTOMIZED_MSG = 4; // 透传消息
+enum CIMMsgFeature {
+  kCIM_MSG_FEATURE_DEFAULT = 0; // 默认
+  // kCIM_MSG_FEATURE_LEAVE_MSG = 1;      // 离线消息(和漫游消息有何区别)
+  kCIM_MSG_FEATURE_ROAM_MSG = 2; // 漫游消息，多端同步接收，永久存储(或1年)
+  // kCIM_MSG_FEATURE_SYNS_MSG = 3;       // 同步消息
+  // kCIM_MSG_FEATURE_CUSTOMIZED_MSG = 4; // 透传消息
 }
 
 // 消息错误码
@@ -140,17 +140,18 @@ message CIMContactSessionInfo {
   uint32 unread_cnt = 4;                   // 该会话未读消息数量
   uint32 updated_time = 5;                 // 更新时间
   string msg_id = 6;                       // 最新一条消息的id（UUID）
-  uint64 msg_time_stamp = 7;        // 最新一条消息时间戳（毫秒）
-  bytes msg_data = 8;               // 最新一条消息的内容
-  CIMMsgType msg_type = 9;          // 最新一条消息的类型
-  uint64 msg_from_user_id = 10;     // 最新一条消息的发送者
-  CIMMessageStatus msg_status = 11; // 最新一条消息的状态（预留）
+  uint64 server_msg_id = 7; // 最新一条消息服务端的id（顺序递增）
+  uint32 msg_time_stamp = 8;        // 最新一条消息时间戳（毫秒）
+  bytes msg_data = 9;               // 最新一条消息的内容
+  CIMMsgType msg_type = 10;         // 最新一条消息的类型
+  uint64 msg_from_user_id = 11;     // 最新一条消息的发送者
+  CIMMsgStatus msg_status = 12; // 最新一条消息的状态（预留）
   /*optional*/
-  string msg_attach = 12; // 最新一条消息的附件（预留）
+  string msg_attach = 13; // 最新一条消息的附件（预留）
   /*optional*/
-  string extend_data = 13; // 本地扩展字段（限制4096）
+  string extend_data = 14; // 本地扩展字段（限制4096）
   /*optional*/
-  bool is_robot_session = 14; // 是否为机器人会话
+  bool is_robot_session = 15; // 是否为机器人会话
 }
 
 // 消息信息
@@ -159,14 +160,14 @@ message CIMMsgInfo {
   uint64 server_msg_id = 2; // 服务端消息ID
 
   CIMResCode msg_res_code = 3;       // 消息错误码
-  CIMMessageFeature msg_feature = 4; // 消息属性
+  CIMMsgFeature msg_feature = 4; // 消息属性
   CIMSessionType session_type = 5;   // 会话类型
   uint64 from_user_id = 6;           // 来源会话ID
   uint64 to_session_id = 7;          // 目标会话ID
   uint64 create_time = 8;            // 消息创建时间戳（毫秒）
 
   CIMMsgType msg_type = 9;          // 消息类型
-  CIMMessageStatus msg_status = 10; // 消息状态（预留）
+  CIMMsgStatus msg_status = 10; // 消息状态（预留）
   bytes msg_data = 11;              // 消息内容
   /*optional*/
   string attach = 12;                    // 消息附件（预留）

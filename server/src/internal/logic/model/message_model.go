@@ -20,7 +20,7 @@ type MessageModel struct {
 	// 消息属性 0：默认 1：离线消息 2：漫游消息 3：同步消息 4：透传消息
 	MsgFeature int `json:"msg_feature"`
 
-	// cim.CIMMessageStatus
+	// cim.CIMMsgStatus
 	// 消息状态 0：默认 1：收到消息，未读 2：收到消息，已读 3：已删 4：发送中 5：已发送
 	// 7：草稿 8：发送取消 9：被对方拒绝，如在黑名单中
 	MsgStatus int `json:"msg_status"`
