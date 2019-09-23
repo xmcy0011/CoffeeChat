@@ -51,6 +51,7 @@ func (t *Session) GetSessionList(userId uint64) ([]model.SessionModel, error) {
 			logger.Sugar.Error(err.Error())
 			return nil, err
 		}
+		defer rows.Close()
 
 		sessionArr := make([]model.SessionModel, 0, 5)
 		for rows.Next() {

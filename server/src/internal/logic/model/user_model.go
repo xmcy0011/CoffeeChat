@@ -9,7 +9,3 @@ type UserModel struct {
 	Created int	`json:"created"`
 	Updated int `json:"updated"`
 }
-
-type UserCount struct {
-	Count int `json:"count(1)"`
-}

@@ -1,3 +1,13 @@
+CREATE TABLE `im_user` (
+  `user_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `user_nick_name` varchar(32) DEFAULT NULL COMMENT '昵称',
+  `user_token` varchar(64) DEFAULT NULL COMMENT '口令',
+  `user_attach` varchar(1024) DEFAULT NULL COMMENT '附加信息（预留）',
+  `created` int(11) DEFAULT NULL,
+  `updated` int(11) DEFAULT NULL,
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE `im_session` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL COMMENT '用户id',
@@ -33,8 +43,8 @@ CREATE TABLE `im_message_send_0` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `msg_id` bigint(20) NOT NULL COMMENT '服务端消息ID',
   `client_msg_id` varchar(64) NOT NULL COMMENT '客户端消息ID-UUID',
-  `from_id` bigint(11) NOT NULL,
-  `to_id` bigint(11) NOT NULL,
+  `from_id` bigint(20) NOT NULL,
+  `to_id` bigint(20) NOT NULL,
   `group_id` bigint(20) DEFAULT NULL,
   `msg_type` int(11) DEFAULT NULL,
   `msg_content` varchar(2048) DEFAULT NULL,
@@ -50,8 +60,8 @@ CREATE TABLE `im_message_recv_0` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `msg_id` bigint(20) NOT NULL COMMENT '服务端消息ID',
   `client_msg_id` varchar(64) NOT NULL COMMENT '客户端消息ID-UUID',
-  `from_id` bigint(11) NOT NULL,
-  `to_id` bigint(11) NOT NULL,
+  `from_id` bigint(20) NOT NULL,
+  `to_id` bigint(20) NOT NULL,
   `group_id` bigint(20) DEFAULT NULL,
   `msg_type` int(11) DEFAULT NULL,
   `msg_content` varchar(2048) DEFAULT NULL,

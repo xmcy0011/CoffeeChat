@@ -13,7 +13,7 @@ func StartServer() {
 	// connect logic grpc server
 	StartGrpcClient(conf.DefaultConfig.Logic)
 	// listen from logic grpc caller
-	StartGrpcServer()
+	go StartGrpcServer()
 
 	// listen android/ios/windows client connect
 	startTcpServer(conf.DefaultConfig.ListenIp, conf.DefaultConfig.ListenPort)

@@ -40,19 +40,18 @@ func (u *User) Get(userId uint64) *model.UserModel {
 func (u *User) Validate(userId uint64, userToken string) (bool, error) {
 	session := db.DefaultManager.GetDBSlave()
 	if session != nil {
-		sql := fmt.Sprintf("select count(1) from %s where user_id = %d and user_token = %s",
-			kUserTableName, userId, userToken)
-		row := session.QueryRow(sql)
+		sql := fmt.Sprintf("select count(1) from %s where user_id=? and user_token=?", kUserTableName)
+		row := session.QueryRow(sql, userId, userToken)
 
-		user := &model.UserCount{}
-		err := row.Scan(user.Count)
+		userCount := 0
+		err := row.Scan(&userCount)
 		if err != nil {
 			logger.Sugar.Error("Validate error:", err.Error())
 			return false, err
-		} else if user.Count > 0 {
+		} else if userCount > 0 {
 			return true, nil
 		} else {
-			logger.Sugar.Info("no result for sql:", sql)
+			logger.Sugar.Infof("no result for sql,userId=%d,userToken=%s", userId, userToken)
 		}
 	} else {
 		logger.Sugar.Error("no db connect for slave")

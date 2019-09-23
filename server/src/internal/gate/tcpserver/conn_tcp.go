@@ -102,7 +102,7 @@ func (tcp *TcpConn) OnRead(header *cim.ImHeader, buff []byte) {
 }
 
 func (tcp *TcpConn) Send(cmdId uint16, body proto.Message) (int, error) {
-	header := &cim.ImHeader{}
+	header := cim.ImHeader{}
 	header.CommandId = cmdId
 	header.SetPduMsg(body)
 
