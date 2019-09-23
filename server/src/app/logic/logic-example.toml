@@ -4,22 +4,24 @@ ListenPort=10600
 [[Db]]
 # 主库，读写，优先写
 ServerName="Master"
-Host="127.0.0.1"
+#Host="127.0.0.1"
+Host="10.0.59.117"
 Port=3306
 DbName="coffeechat"
-UserName="root"
-Password="123456"
+UserName="cim"
+Password="12345"
 MaxConnCnt=16
 
 [[Db]]
 # 从库，只读
 # 可以和主库保持一致，这样则意味着不使用主从模式，此时，建议把maxconncnt调小一倍
 ServerName="Slave"
-Host="127.0.0.1"
+#Host="127.0.0.1"
+Host="10.0.59.117"
 Port=3306
 DbName="coffeechat"
-UserName="root"
-Password="123456"
+UserName="cim"
+Password="12345"
 MaxConnCnt=16
 
 [Kafka]
@@ -29,7 +31,8 @@ Brokers= ["10.0.59.231:9092"]
 
 [Redis]
 Name="cim"
-Ip="106.14.172.35"
+#Ip="106.14.172.35"
+Ip="10.0.59.117"
 Port=6379
 KeyPrefix="cim|"  # redis中key的统一前缀
 Password="12345"  # redis的密码，不允许为空
@@ -42,6 +45,6 @@ Name="msgid"        # 消息序号ID
 DbNum=2
 MaxConnect=16
 [[Redis.Pool]]
-Name="online"      # 存储用户在线状态
+Name="online_user_hash"      # 存储用户在线状态
 DbNum=3
 MaxConnect=16

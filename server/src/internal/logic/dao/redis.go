@@ -28,9 +28,9 @@ type RedisPool struct {
 // 禁止更改，全局
 var DefaultRedisPool = &RedisPool{}
 
-const kUnreadKeyName = "unread"
-const kMsgIdKeyName = "msgid"
-const kOnlineKeyName = "online"
+const KUnreadKeyName = "unread"
+const KMsgIdKeyName = "msgid"
+const KOnlineKeyName = "online_user_hash"
 
 func InitCache() error {
 	redisConfig := conf.DefaultLogicConfig.Redis
@@ -65,14 +65,14 @@ func InitCache() error {
 	}
 
 	// check pool
-	if _, ok := DefaultRedisPool.clientMap[kUnreadKeyName]; !ok {
-		return errors.New("can't find " + kUnreadKeyName + " pool cache")
+	if _, ok := DefaultRedisPool.clientMap[KUnreadKeyName]; !ok {
+		return errors.New("can't find " + KUnreadKeyName + " pool cache")
 	}
-	if _, ok := DefaultRedisPool.clientMap[kMsgIdKeyName]; !ok {
-		return errors.New("can't find " + kMsgIdKeyName + " pool cache")
+	if _, ok := DefaultRedisPool.clientMap[KMsgIdKeyName]; !ok {
+		return errors.New("can't find " + KMsgIdKeyName + " pool cache")
 	}
-	if _, ok := DefaultRedisPool.clientMap[kOnlineKeyName]; !ok {
-		return errors.New("can't find " + kOnlineKeyName + " pool cache")
+	if _, ok := DefaultRedisPool.clientMap[KOnlineKeyName]; !ok {
+		return errors.New("can't find " + KOnlineKeyName + " pool cache")
 	}
 	return nil
 }
@@ -82,15 +82,15 @@ func InitCache() error {
 //
 
 func (r *RedisPool) GetUnreadPool() *RedisConnect {
-	return DefaultRedisPool.clientMap[kUnreadKeyName]
+	return DefaultRedisPool.clientMap[KUnreadKeyName]
 }
 
 func (r *RedisPool) GetMsgIdPool() *RedisConnect {
-	return DefaultRedisPool.clientMap[kMsgIdKeyName]
+	return DefaultRedisPool.clientMap[KMsgIdKeyName]
 }
 
 func (r *RedisPool) GetOnlinePool() *RedisConnect {
-	return DefaultRedisPool.clientMap[kOnlineKeyName]
+	return DefaultRedisPool.clientMap[KOnlineKeyName]
 }
 
 //

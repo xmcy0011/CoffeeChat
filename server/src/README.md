@@ -24,7 +24,7 @@ flush privileges;
 GRANT ALL PRIVILEGES ON *.* TO 'cim'@'10.0.107.64' IDENTIFIED BY '12345' WITH GRANT OPTION;
 
 # 给用户添加某个库的权限
-grant all on coffeechat.* to dev;
+grant all on coffeechat.* to cim;
 
 # 刷新系统权限表
 flush privileges;
