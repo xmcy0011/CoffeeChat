@@ -1,5 +1,7 @@
 package db
 
+import "github.com/CoffeeChat/server/src/pkg/logger"
+
 const kDbMasterName = "Master"
 const kDbSlaveName = "Slave"
 
@@ -22,6 +24,8 @@ func (d *Manager) Init(server []DatabaseConfig) error {
 		}
 		if err := session.Ping(); err != nil {
 			return err
+		} else {
+			logger.Sugar.Infof("init db connection %s:%s,address:%s", server[i].DbName, server[i].ServerName, server[i].Host)
 		}
 		// insert to dbList
 		d.dbList[server[i].ServerName] = session

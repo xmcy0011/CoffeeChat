@@ -36,7 +36,7 @@ func InitCache() error {
 	redisConfig := conf.DefaultLogicConfig.Redis
 	address := fmt.Sprintf("%s:%d", redisConfig.Ip, redisConfig.Port)
 
-	logger.Sugar.Info("init cache,redis address:", address)
+	logger.Sugar.Info("init cache connection,redis address:", address)
 	DefaultRedisPool.clientMap = make(map[string]*RedisConnect)
 
 	for i := 0; i < len(conf.DefaultLogicConfig.Redis.Pool); i++ {
