@@ -29,9 +29,10 @@ func (t *Session) Get(userId uint64, peerId uint64) *model.SessionModel {
 			&sessionModel.SessionStatus, &sessionModel.IsRobotSession, &sessionModel.Created, &sessionModel.Updated)
 		if err == nil {
 			return sessionModel
-		} else {
-			logger.Sugar.Errorf("no result for sql:%s,error:%s", sql, err.Error())
 		}
+		/*else {
+			logger.Sugar.Errorf("no result for sql:%s,error:%s", sql, err.Error())
+		}*/
 	} else {
 		logger.Sugar.Error("no db connect for slave")
 	}
@@ -160,7 +161,7 @@ func (t *Session) UpdateUpdated(id int, updated int) error {
 				return err
 			} else {
 				if row != 1 {
-					logger.Sugar.Warn("update success,but row num != 1 for sql:", sql)
+					logger.Sugar.Warnf("update success,but row num != 1(%d) for sql:%s", row, sql)
 				}
 				// success
 				return nil

@@ -76,22 +76,20 @@ func (m *Message) saveSingleMessage(fromId uint64, toId uint64, clientMsgId stri
 		sessionModel := DefaultSession.Get(fromId, toId)
 		sessionModel2 := DefaultSession.Get(toId, fromId)
 
-		id1 := 0
-		id2 := 0
+		timeStamp := time.Now().Unix()
 		if sessionModel == nil || sessionModel2 == nil {
-			id1, id2, err = DefaultSession.AddUserSession(fromId, toId, cim.CIMSessionType_kCIM_SESSION_TYPE_SINGLE,
+			logger.Sugar.Infof("session %d->%d not exist,create it,session_type=SESSION_TYPE_SINGLE", fromId, toId, )
+			_, _, err = DefaultSession.AddUserSession(fromId, toId, cim.CIMSessionType_kCIM_SESSION_TYPE_SINGLE,
 				cim.CIMSessionStatusType_kCIM_SESSION_STATUS_OK, false)
 			if err != nil {
+				logger.Sugar.Error("create session %d->%d,session_type:SESSION_TYPE_SINGLE,error:%s", fromId, toId, err.Error())
 				return 0, err
 			}
 		} else {
-			id1 = sessionModel.Id
-			id2 = sessionModel2.Id
+			// update latest session time
+			_ = DefaultSession.UpdateUpdated(sessionModel.Id, int(timeStamp))
+			_ = DefaultSession.UpdateUpdated(sessionModel2.Id, int(timeStamp))
 		}
-		// update latest session time
-		timeStamp := time.Now().Unix()
-		_ = DefaultSession.UpdateUpdated(id1, int(timeStamp))
-		_ = DefaultSession.UpdateUpdated(id2, int(timeStamp))
 
 		// save to im_message_send_x
 		sql := fmt.Sprintf("insert into %s(msg_id,client_msg_id,from_id,to_id,group_id,msg_type,msg_content,"+
@@ -100,6 +98,7 @@ func (m *Message) saveSingleMessage(fromId uint64, toId uint64, clientMsgId stri
 			cim.CIMMessageFeature_kCIM_MESSAGE_FEATURE_DEFAULT, cim.CIMMessageStatus_kCIM_MESSAGE_STATUS_NONE, timeStamp, timeStamp)
 		_, err = dbMaster.Exec(sql)
 		if err != nil {
+			logger.Sugar.Errorf("exec failed,sql:%s,error:%s", sql, err.Error())
 			return 0, err
 		} else {
 			// save to im_message_recv_x
@@ -110,6 +109,7 @@ func (m *Message) saveSingleMessage(fromId uint64, toId uint64, clientMsgId stri
 				cim.CIMMessageFeature_kCIM_MESSAGE_FEATURE_DEFAULT, cim.CIMMessageStatus_kCIM_MESSAGE_STATUS_NONE, timeStamp, timeStamp)
 			_, err = dbMaster.Exec(sql)
 			if err != nil {
+				logger.Sugar.Errorf("exec failed,sql:%s,error:%s", sql, err.Error())
 				return 0, err
 			}
 			return uint64(msgId), nil
