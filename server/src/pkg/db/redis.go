@@ -9,7 +9,6 @@ package db
 import (
 	"errors"
 	"fmt"
-	"github.com/CoffeeChat/server/src/internal/logic/conf"
 	"github.com/CoffeeChat/server/src/pkg/logger"
 	"github.com/go-redis/redis"
 	"time"
@@ -25,22 +24,31 @@ type RedisPool struct {
 	clientMap map[string]*RedisConnect
 }
 
+type RedisPoolConfig struct {
+	Name       string // 名称
+	DbNum      int    // 在redis中数据库的位置
+	MaxConnect int    // 最大连接数
+}
+
 // 禁止更改，全局
 var DefaultRedisPool = &RedisPool{}
+
+// 统一key的前缀
+var redisKeyPrefix = ""
 
 const KUnreadKeyName = "unread"
 const KMsgIdKeyName = "msgid"
 const KOnlineKeyName = "online_user_hash"
 
-func InitCache() error {
-	redisConfig := conf.DefaultLogicConfig.Redis
-	address := fmt.Sprintf("%s:%d", redisConfig.Ip, redisConfig.Port)
+func InitCache(ip string, port int, pwd string, keyPrefix string, pool []*RedisPoolConfig) error {
+	address := fmt.Sprintf("%s:%d", ip, port)
+	redisKeyPrefix = keyPrefix
 
 	logger.Sugar.Info("init cache connection,redis address:", address)
 	DefaultRedisPool.clientMap = make(map[string]*RedisConnect)
 
-	for i := 0; i < len(conf.DefaultLogicConfig.Redis.Pool); i++ {
-		poolInfo := conf.DefaultLogicConfig.Redis.Pool[i]
+	for i := 0; i < len(pool); i++ {
+		poolInfo := pool[i]
 
 		conn := &RedisConnect{
 			name: poolInfo.Name,
@@ -48,7 +56,7 @@ func InitCache() error {
 		conn.redisClient = redis.NewClient(&redis.Options{
 			Network:  "tcp",
 			Addr:     address,
-			Password: redisConfig.Password,
+			Password: pwd,
 			DB:       poolInfo.DbNum,
 			PoolSize: poolInfo.MaxConnect, // default 10
 		})
@@ -98,18 +106,18 @@ func (r *RedisPool) GetOnlinePool() *RedisConnect {
 //
 
 func (conn *RedisConnect) Set(key string, value interface{}, expiration time.Duration) *redis.StatusCmd {
-	return conn.redisClient.Set(conf.DefaultLogicConfig.Redis.KeyPrefix+key, value, expiration)
+	return conn.redisClient.Set(redisKeyPrefix+key, value, expiration)
 }
 
 func (conn *RedisConnect) Get(key string) *redis.StringCmd {
-	return conn.redisClient.Get(conf.DefaultLogicConfig.Redis.KeyPrefix + key)
+	return conn.redisClient.Get(redisKeyPrefix + key)
 }
 
 func (conn *RedisConnect) Incr(key string) *redis.IntCmd {
-	return conn.redisClient.Incr(conf.DefaultLogicConfig.Redis.KeyPrefix + key)
+	return conn.redisClient.Incr(redisKeyPrefix + key)
 }
 
 // hash
 func (conn *RedisConnect) HGetAll(key string) *redis.StringStringMapCmd {
-	return conn.redisClient.HGetAll(conf.DefaultLogicConfig.Redis.KeyPrefix + key)
+	return conn.redisClient.HGetAll(redisKeyPrefix + key)
 }

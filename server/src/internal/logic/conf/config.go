@@ -28,11 +28,5 @@ type Redis struct {
 	Port      int
 	KeyPrefix string // redis中key的统一前缀
 
-	Pool []RedisPool
-}
-
-type RedisPool struct {
-	Name       string // 名称
-	DbNum      int    // 在redis中数据库的位置
-	MaxConnect int    // 最大连接数
+	Pool []*db.RedisPoolConfig
 }

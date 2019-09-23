@@ -27,7 +27,8 @@ func TestLogicServer_SendMsgData(t *testing.T) {
 	}
 
 	// init cache
-	err = db.InitCache()
+	redis := conf.DefaultLogicConfig.Redis
+	err = db.InitCache(redis.Ip, redis.Port, redis.Password, redis.KeyPrefix, redis.Pool)
 	if err != nil {
 		t.Fatal(err.Error())
 	}

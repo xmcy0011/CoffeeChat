@@ -45,7 +45,8 @@ func main() {
 	}
 
 	// init cache
-	err = db.InitCache()
+	redis := conf.DefaultLogicConfig.Redis
+	err = db.InitCache(redis.Ip, redis.Port, redis.Password, redis.KeyPrefix, redis.Pool)
 	if err != nil {
 		logger.Sugar.Fatal("redis cache init failed:", err.Error())
 		return
