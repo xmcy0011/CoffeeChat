@@ -46,5 +46,5 @@ flush privileges;
 
 using proxy
 ```bash
-env http_proxy=http://127.0.0.1:60339 https_proxy=http://127.0.0.1:60339 dep ensure
+env http_proxy=http://127.0.0.1:60339 https_proxy=http://127.0.0.1:60339 dep ensure -v
 ```

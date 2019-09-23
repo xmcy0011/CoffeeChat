@@ -108,3 +108,8 @@ func (conn *RedisConnect) Get(key string) *redis.StringCmd {
 func (conn *RedisConnect) Incr(key string) *redis.IntCmd {
 	return conn.redisClient.Incr(conf.DefaultLogicConfig.Redis.KeyPrefix + key)
 }
+
+// hash
+func (conn *RedisConnect) HGetAll(key string) *redis.StringStringMapCmd {
+	return conn.redisClient.HGetAll(conf.DefaultLogicConfig.Redis.KeyPrefix + key)
+}
