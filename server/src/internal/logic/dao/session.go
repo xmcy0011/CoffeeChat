@@ -17,6 +17,7 @@ type Session struct {
 
 var DefaultSession = &Session{}
 
+// 获取1个会话详情
 func (t *Session) Get(userId uint64, peerId uint64) *model.SessionModel {
 	session := db.DefaultManager.GetDBSlave()
 	if session != nil {
@@ -39,10 +40,38 @@ func (t *Session) Get(userId uint64, peerId uint64) *model.SessionModel {
 	return nil
 }
 
-/*
- * 添加一个用户和用户的会话记录
- * 注：以事物的方式添加双向关系,a->b,b->a
- */
+// 查询会话列表
+func (t *Session) GetSessionList(userId uint64) ([]model.SessionModel, error) {
+	session := db.DefaultManager.GetDBSlave()
+	if session != nil {
+		sql := fmt.Sprintf("select id,user_id,peer_id,session_type,session_status,"+
+			"is_robot_session,created,updated from %s where user_id=%d", kSessionTableName, userId)
+		rows, err := session.Query(sql)
+		if err != nil {
+			logger.Sugar.Error(err.Error())
+			return nil, err
+		}
+
+		sessionArr := make([]model.SessionModel, 0, 5)
+		for rows.Next() {
+			sessionInfo := model.SessionModel{}
+			err := rows.Scan(&sessionInfo.Id, &sessionInfo.UserId, &sessionInfo.PeerId, &sessionInfo.SessionType,
+				&sessionInfo.SessionStatus, &sessionInfo.IsRobotSession, &sessionInfo.Created, &sessionInfo.Updated)
+			if err != nil {
+				logger.Sugar.Error(err.Error())
+				return nil, err
+			}
+			sessionArr = append(sessionArr, sessionInfo)
+		}
+		return sessionArr, nil
+	} else {
+		logger.Sugar.Error("no db connect for slave")
+	}
+	return nil, def.DefaultError
+}
+
+// 添加一个用户和用户的会话记录
+// 注：以事物的方式添加双向关系,a->b,b->a
 func (t *Session) AddUserSession(userId uint64, peerId uint64, sessionType cim.CIMSessionType, sessionStatus cim.CIMSessionStatusType,
 	isRobotSession bool) (int, int, error) {
 	session := db.DefaultManager.GetDbMaster()
@@ -148,7 +177,7 @@ func (t *Session) AddGroupSession(userId uint64, groupId uint64, sessionType cim
 }
 
 // 更新会话最后修改时间
-func (t *Session) UpdateUpdated(id int, updated int) error {
+func (t *Session) UpdateUpdated(id uint64, updated int) error {
 	session := db.DefaultManager.GetDbMaster()
 	if session != nil {
 		sql := fmt.Sprintf("update %s set updated=%d where id=%d", kSessionTableName, updated, id)

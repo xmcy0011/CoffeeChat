@@ -13,8 +13,8 @@ import (
 
 // all grpc client connections
 var logicClientMap map[int]*LogicGrpcClient = nil
+var kMaxLogicClientConnect = 0
 
-const kMaxLogicClientConnect = 0
 const kMaxCheckInterval = 32 // s
 
 type LogicGrpcClient struct {
@@ -79,7 +79,11 @@ func init() {
 func StartGrpcClient(config []conf.LogicConfig) {
 	logger.Sugar.Info("start grpc client")
 
-	var curCount = 0
+	if len(config) < 2 {
+		logger.Sugar.Fatal("at least 2 logic connections are required")
+		return
+	}
+
 	for i := range config {
 		logger.Sugar.Infof("logic rpc server ip=%s,port=%d,maxConnCnt=%d", config[i].Ip, config[i].Port, config[i].MaxConnCnt)
 
@@ -92,7 +96,7 @@ func StartGrpcClient(config []conf.LogicConfig) {
 		} else {
 			client := cim.NewLogicClient(conn)
 			// save
-			logicClientMap[curCount] = &LogicGrpcClient{
+			logicClientMap[kMaxLogicClientConnect] = &LogicGrpcClient{
 				instance:    client,
 				conn:        conn,
 				config:      config[i],
@@ -103,10 +107,10 @@ func StartGrpcClient(config []conf.LogicConfig) {
 			err := sayHello(client)
 			if err != nil {
 				// if failed, the routine will try again
-				logicClientMap[curCount].isConnected = false
+				logicClientMap[kMaxLogicClientConnect].isConnected = false
 			}
 		}
-		curCount++
+		kMaxLogicClientConnect++
 	}
 }
 
@@ -119,7 +123,17 @@ func sayHello(conn cim.LogicClient) error {
 	return err
 }
 
-// 获取登录验证的业务连接
+// 获取登录验证的业务连接 0-0
 func GetLoginConn() cim.LogicClient {
+	return logicClientMap[0].instance
+}
+
+// 获取处理消息的业务连接 1-1
+func GetMessageConn() cim.LogicClient {
+	return logicClientMap[1].instance
+}
+
+// 获取处理列表的连接 0-0
+func GetlistConn() cim.LogicClient {
 	return logicClientMap[0].instance
 }

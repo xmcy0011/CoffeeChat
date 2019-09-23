@@ -92,6 +92,12 @@ func (tcp *TcpConn) OnRead(header *cim.ImHeader, buff []byte) {
 	case uint16(cim.CIMCmdID_kCIM_CID_LOGIN_AUTH_LOGOUT_REQ):
 		tcp.onHandleAuthReq(header, buff)
 		break
+	case uint16(cim.CIMCmdID_kCIM_CID_LIST_RECENT_CONTACT_SESSION_REQ):
+		break
+	case uint16(cim.CIMCmdID_kCIM_CID_MSG_DATA):
+		break
+	case uint16(cim.CIMCmdID_kCIM_CID_MSG_DATA_ACK):
+		break
 	}
 }
 
@@ -130,8 +136,6 @@ func (tcp *TcpConn) SetUserId(userId uint64) {
 func (tcp *TcpConn) GetUserId() uint64 {
 	return tcp.userId
 }
-
-
 
 // 认证授权
 func (tcp *TcpConn) onHandleAuthReq(header *cim.ImHeader, buff []byte) {
@@ -183,4 +187,35 @@ func (tcp *TcpConn) onHandleAuthReq(header *cim.ImHeader, buff []byte) {
 		logger.Sugar.Infof("onHandleAuthReq result_code=%d,result_string=%s,user_id=%d,client_version=%s,client_type=%d",
 			rsp.ResultCode, rsp.ResultString, req.UserId, req.ClientVersion, req.ClientType)
 	}
+}
+
+// 查询会话列表请求
+func (tcp *TcpConn) onHandleRecentContactSession(header *cim.ImHeader, buff []byte) {
+	req := &cim.CIMRecentContactSessionReq{}
+	err := proto.Unmarshal(buff, req)
+	if err != nil {
+		logger.Sugar.Error(err.Error())
+		return
+	}
+
+	conn := GetMessageConn()
+	ctx, cancelFun := context.WithTimeout(context.Background(), time.Second*kBusinessTimeOut)
+	defer cancelFun()
+	rsp, err := conn.RecentContactSession(ctx, req)
+
+	if err != nil {
+		logger.Sugar.Error("err:", err.Error())
+	} else {
+		_, err = tcp.Send(uint16(cim.CIMCmdID_kCIM_CID_LIST_RECENT_CONTACT_SESSION_RSP), rsp)
+	}
+}
+
+// 发送消息
+func (tcp *TcpConn) onHandleMsgData(header *cim.ImHeader, buff []byte) {
+
+}
+
+// 消息收到确认
+func (tcp *TcpConn) onHandleMsgAck(header *cim.ImHeader, buff []byte) {
+
 }

@@ -55,7 +55,7 @@ func (s *LogicServer) messageBroadcastSingle(in *cim.CIMMsgData) {
 	key := fmt.Sprintf("%s_%d", db.KOnlineKeyName, in.ToSessionId)
 	userMap, err := redisConn.HGetAll(key).Result()
 	if err != nil || len(userMap) == 0 {
-		logger.Sugar.Debugf("from:%d,to:%d,he/she is not online,don't need broadcast", in.FromUserId, in.ToSessionId, in.ToSessionId /*, err.Error()*/)
+		logger.Sugar.Debugf("from:%d,to:%d,he/she is not online,don't need broadcast", in.FromUserId, in.ToSessionId /*, err.Error()*/)
 		return
 	}
 
