@@ -14,6 +14,7 @@ import (
 
 var tcpConn *net.TCPConn
 var tcpBuffer = make([]byte, 10*1024)
+var heartBeatTicker *time.Ticker
 
 const KUserId = 1008
 const KUserToken = "12345"
@@ -95,6 +96,8 @@ func login() error {
 	}
 
 	//_ = tcpConn.SetReadDeadline(time.Unix(0, 0))
+	heartBeatTicker = time.NewTicker(30 * time.Second)
+	go heartBeat()
 
 	return nil
 }
@@ -121,6 +124,20 @@ func read() (*cim.ImHeader, []byte, error) {
 
 	dataBuff := tcpBuffer[cim.IMHeaderLen:header.Length] // body=len-headLen
 	return header, dataBuff, nil
+}
+
+func heartBeat() {
+	for {
+		<-heartBeatTicker.C
+		_ = send(uint16(cim.CIMCmdID_kCIM_CID_LOGIN_HEARTBEAT), &cim.CIMHeartBeat{})
+		header, _, err := read()
+		if err != nil {
+			logger.Sugar.Error("peer closed connection or network is unavailable", err.Error())
+			os.Exit(0)
+		} else if header.CommandId == uint16(cim.CIMCmdID_kCIM_CID_LOGIN_HEARTBEAT) {
+			// check heart beat
+		}
+	}
 }
 
 func showRecentSessionList() {

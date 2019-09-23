@@ -10,8 +10,9 @@ import (
 	"time"
 )
 
-const kLoginTimeOut = 15   // 登录超时时间(s)
-const kBusinessTimeOut = 5 // 常规业务超时时间(s)
+const kLoginTimeOut = 15     // 登录超时时间(s)
+const kBusinessTimeOut = 5   // 常规业务超时时间(s)
+const kHeartBeatTimeOut = 60 // 心跳超时时间
 
 type TcpConn struct {
 	Conn          *net.TCPConn      // 客户端的连接
@@ -19,9 +20,10 @@ type TcpConn struct {
 	clientVersion string            // 客户端版本
 	userId        uint64            // 客户端id
 
-	connectedTime int64 // 连接时间
-	loginTime     int64 // 登录时间
-	isLogin       bool  // 是否已认证
+	connectedTime     int64 // 连接时间
+	loginTime         int64 // 登录时间
+	isLogin           bool  // 是否已认证
+	lastHeartBeatTime int64 // 上次心跳时间
 
 	connManagerListElement *list.Element // 该连接在ConnManager.connList中的位置
 	connUserListElement    *list.Element // 该连接在User.connList中的位置
@@ -89,6 +91,10 @@ func (tcp *TcpConn) OnRead(header *cim.ImHeader, buff []byte) {
 	}
 
 	switch header.CommandId {
+	case uint16(cim.CIMCmdID_kCIM_CID_LOGIN_HEARTBEAT):
+		tcp.lastHeartBeatTime = time.Now().Unix()
+		_, _ = tcp.Send(uint16(cim.CIMCmdID_kCIM_CID_LOGIN_HEARTBEAT), &cim.CIMHeartBeat{})
+		break
 	case uint16(cim.CIMCmdID_kCIM_CID_LOGIN_AUTH_LOGOUT_REQ):
 		tcp.onHandleAuthReq(header, buff)
 		break
@@ -114,6 +120,10 @@ func (tcp *TcpConn) Send(cmdId uint16, body proto.Message) (int, error) {
 func (tcp *TcpConn) OnTimer(tick int64) {
 	if tcp.loginTime == 0 && (tick-tcp.connectedTime) > kLoginTimeOut {
 		logger.Sugar.Info("login time out, close connect, address=", tcp.Conn.RemoteAddr().String())
+		tcp.OnClose()
+	} else if (tick - tcp.lastHeartBeatTime) > kHeartBeatTimeOut {
+		logger.Sugar.Errorf("heartbeat time out, close connect, address=%s,userId=%d,clientType:%d",
+			tcp.Conn.RemoteAddr().String(), tcp.userId, tcp.clientType)
 		tcp.OnClose()
 	}
 }
@@ -169,6 +179,7 @@ func (tcp *TcpConn) onHandleAuthReq(header *cim.ImHeader, buff []byte) {
 				tcp.clientType = req.ClientType
 				tcp.clientVersion = req.ClientVersion
 				tcp.loginTime = time.Now().Unix()
+				tcp.lastHeartBeatTime = tcp.loginTime
 
 				// save to UserManager
 				userInfo := DefaultUserManager.FindUser(tcp.userId)
