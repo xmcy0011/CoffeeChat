@@ -8,6 +8,7 @@ package db
 
 import (
 	"database/sql"
+	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -72,7 +73,8 @@ func NewSessionMysql() *SessionMysql {
 func (s *SessionMysql) Init(config DatabaseConfig) error {
 	s.config = config
 
-	db, err := sql.Open(kDriveName, config.Username+":"+config.Password+"@/"+config.DbName+"?charset=utf8")
+	dataSourceName := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8", config.Username, config.Password, config.Host, config.DbName)
+	db, err := sql.Open(kDriveName, dataSourceName)
 	if err != nil {
 		return err
 	}
