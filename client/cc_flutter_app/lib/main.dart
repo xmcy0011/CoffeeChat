@@ -1,8 +1,3 @@
-import 'dart:async';
-
-import 'package:cc_flutter_app/gui/page_home.dart';
-import 'package:cc_flutter_app/gui/page_me.dart';
-import 'package:cc_flutter_app/gui/page_message.dart';
 import 'package:cc_flutter_app/page_lanuch.dart';
 import 'package:flutter/material.dart';
 

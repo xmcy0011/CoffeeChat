@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:cc_flutter_app/gui/helper.dart';
+import 'package:cc_flutter_app/page_login.dart';
 import 'package:cc_flutter_app/page_main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -69,7 +70,7 @@ class _PageLaunchStatefulWidgetState extends State<PageLaunchStatefulWidget> {
     var sleepMs = (tempMs * 1000).toInt();
 
     _timer = new Timer(Duration(seconds: sleep, milliseconds: sleepMs), () {
-      navigatePage(this.context, PageMainStatefulApp());
+      navigatePage(this.context, PageLoginStatefulWidget());
     });
     super.initState();
   }
