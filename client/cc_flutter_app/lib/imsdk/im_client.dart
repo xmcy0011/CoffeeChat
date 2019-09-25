@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:cc_flutter_app/imsdk/model/im_header.dart';
 import 'package:cc_flutter_app/imsdk/model/im_request.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
+import 'package:cc_flutter_app/imsdk/proto/CIM.List.pb.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Login.pbserver.dart';
 import 'package:protobuf/protobuf.dart';
 import 'package:fixnum/fixnum.dart';
@@ -29,6 +30,14 @@ class ImClient {
 
   ImClient._internal() {
     isLogin = false;
+
+    // send heartbeat
+    Timer timer = new Timer(Duration(seconds: 15), () {
+      if (isLogin) {
+        var heartBeat = new CIMHeartBeat();
+        send(CIMCmdID.kCIM_CID_LOGIN_HEARTBEAT.value, heartBeat);
+      }
+    });
   }
 
   /// 认证
@@ -60,9 +69,11 @@ class ImClient {
       req.clientVersion = "1.0/flutter";
       print("auth req,userId=$userId,nickName=$nickName,token=$userToken");
       sendRequest(CIMCmdID.kCIM_CID_LOGIN_AUTH_TOKEN_REQ.value, req, (rsp) {
-        this.isLogin = true;
         if (rsp is CIMAuthTokenRsp) {
-          this.userId = rsp.userInfo.userId;
+          if (rsp.resultCode == CIMErrorCode.kCIM_ERR_SUCCSSE) {
+            this.isLogin = true;
+            this.userId = rsp.userInfo.userId;
+          }
         }
         completer.complete(rsp);
       });
@@ -153,8 +164,18 @@ class ImClient {
 
   // 消息总处理
   void onHandle(IMHeader header, List<int> data) {
+    if (header.commandId == CIMCmdID.kCIM_CID_LOGIN_HEARTBEAT.value) {
+      print("onHandle heartbeat");
+      return null;
+    }
+
     if (header.commandId == CIMCmdID.kCIM_CID_LOGIN_AUTH_TOKEN_RSP.value) {
       _handleAuthRsp(header, data);
+    } else if (header.commandId ==
+        CIMCmdID.kCIM_CID_LIST_RECENT_CONTACT_SESSION_RSP.value) {
+      _handleRecentSessionList(header, data);
+    } else {
+      print("unknown message,cmdId:${header.commandId}");
     }
   }
 
@@ -168,6 +189,19 @@ class ImClient {
       req.callback(rsp);
     } else {
       print("_handleAuthRsp err:can't find req:${header.seqNumber}");
+    }
+  }
+
+  void _handleRecentSessionList(IMHeader header, List<int> data) {
+    var rsp = CIMRecentContactSessionRsp.fromBuffer(data);
+    print("_handleRecentSessionList count:${rsp.contactSessionList.length},"
+        "unreadCount:${rsp.unreadCounts}");
+
+    if (requestMap.containsKey(header.seqNumber)) {
+      IMRequest req = requestMap[header.seqNumber];
+      req.callback(rsp);
+    } else {
+      print("_handleRecentSessionList err:can't find req:${header.seqNumber}");
     }
   }
 }

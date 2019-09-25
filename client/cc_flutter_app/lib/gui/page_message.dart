@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:cc_flutter_app/imsdk/im_session.dart';
+import 'package:cc_flutter_app/imsdk/proto/CIM.List.pb.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -7,17 +11,39 @@ class PageMessageStateWidget extends StatefulWidget {
 }
 
 class _PageMessageStateWidgetState extends State<PageMessageStateWidget> {
+  List<Widget> _items = new List<Widget>();
+
   @override
   Widget build(BuildContext context) {
-    // items
-    List<Widget> items = new List<Widget>();
-    for (var i = 0; i < 4; i++) {
-      items.add(ListTile(
-        leading: Icon(Icons.map),
-        title: Text('Map' + i.toString()),
-        subtitle: Text("你好"),
-      ));
-    }
-    return ListView(children: items);
+    return ListView.builder(
+      itemCount: _items.length,
+      itemBuilder: (context, index) {
+        // 将数据items[index]返回给item组件. 进行数据绑定
+        return _items[index];
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    var session = new IMSession();
+    session.getRecentSessionList().then((data) {
+      if (data is CIMRecentContactSessionRsp) {
+        for (var i = 0; i < data.contactSessionList.length; i++) {
+          var sessionInfo = data.contactSessionList.elementAt(i);
+          var subtitle = utf8.decode(sessionInfo.msgData);
+          subtitle = "[${sessionInfo.msgFromUserId}]" + subtitle;
+          setState(() {
+            _items.add(ListTile(
+              leading: Icon(Icons.map),
+              title: Text(sessionInfo.sessionId.toString()),
+              subtitle: Text(subtitle),
+            ));
+          });
+        }
+      }
+    });
   }
 }
