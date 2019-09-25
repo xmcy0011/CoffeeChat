@@ -3,7 +3,6 @@ import 'dart:math';
 
 import 'package:cc_flutter_app/gui/helper.dart';
 import 'package:cc_flutter_app/page_login.dart';
-import 'package:cc_flutter_app/page_main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +15,6 @@ class PageLaunchStatefulWidget extends StatefulWidget {
 /// 显示一张欢迎图片
 /// 随机1-3秒后跳转到主界面
 class _PageLaunchStatefulWidgetState extends State<PageLaunchStatefulWidget> {
-  Timer _timer;
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +67,8 @@ class _PageLaunchStatefulWidgetState extends State<PageLaunchStatefulWidget> {
     var tempMs = Random(DateTime.now().millisecondsSinceEpoch).nextDouble();
     var sleepMs = (tempMs * 1000).toInt();
 
-    _timer = new Timer(Duration(seconds: sleep, milliseconds: sleepMs), () {
+    /*Timer _timer =*/
+    new Timer(Duration(seconds: sleep, milliseconds: sleepMs), () {
       navigatePage(this.context, PageLoginStatefulWidget());
     });
     super.initState();
