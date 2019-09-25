@@ -45,6 +45,7 @@ func NewTcpConn() *TcpConn {
 func (tcp *TcpConn) OnConnect(conn *net.TCPConn) {
 	tcp.Conn = conn
 	tcp.connectedTime = time.Now().Unix()
+	tcp.lastHeartBeatTime = tcp.connectedTime
 	tcp.loginTime = 0
 
 	// save conn
@@ -84,7 +85,7 @@ func (tcp *TcpConn) OnClose() {
 func (tcp *TcpConn) OnRead(header *cim.ImHeader, buff []byte) {
 	//logger.Sugar.Debug("recv data:", string(buff))
 
-	if !tcp.isLogin && header.CommandId != uint16(cim.CIMCmdID_kCIM_CID_LOGIN_AUTH_LOGOUT_REQ) {
+	if !tcp.isLogin && header.CommandId != uint16(cim.CIMCmdID_kCIM_CID_LOGIN_AUTH_TOKEN_REQ) {
 		logger.Sugar.Error("need login,close connect,address=", tcp.Conn.RemoteAddr().String())
 		tcp.OnClose()
 		return
@@ -95,7 +96,7 @@ func (tcp *TcpConn) OnRead(header *cim.ImHeader, buff []byte) {
 		tcp.lastHeartBeatTime = time.Now().Unix()
 		_, _ = tcp.Send(uint16(cim.CIMCmdID_kCIM_CID_LOGIN_HEARTBEAT), &cim.CIMHeartBeat{})
 		break
-	case uint16(cim.CIMCmdID_kCIM_CID_LOGIN_AUTH_LOGOUT_REQ):
+	case uint16(cim.CIMCmdID_kCIM_CID_LOGIN_AUTH_TOKEN_REQ):
 		tcp.onHandleAuthReq(header, buff)
 		break
 	case uint16(cim.CIMCmdID_kCIM_CID_LIST_RECENT_CONTACT_SESSION_REQ):
@@ -104,6 +105,9 @@ func (tcp *TcpConn) OnRead(header *cim.ImHeader, buff []byte) {
 	case uint16(cim.CIMCmdID_kCIM_CID_MSG_DATA):
 		break
 	case uint16(cim.CIMCmdID_kCIM_CID_MSG_DATA_ACK):
+		break
+	default:
+		logger.Sugar.Error("unknown command_id=%d", header.CommandId)
 		break
 	}
 }

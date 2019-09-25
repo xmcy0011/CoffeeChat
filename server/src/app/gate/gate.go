@@ -10,9 +10,9 @@ import (
 	"syscall"
 )
 
-const configFile = "app/gate/gate-example.toml"
+//const configFile = "app/gate/gate-example.toml"
 
-//const configFile = "gate.toml"
+const configFile = "gate-example.toml"
 
 func waitExit(c chan os.Signal) {
 	for i := range c {

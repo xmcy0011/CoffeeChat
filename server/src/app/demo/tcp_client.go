@@ -83,7 +83,7 @@ func login() error {
 		ClientType:    cim.CIMClientType_kCIM_CLIENT_TYPE_WEB,
 		NickName:      KNickName,
 	}
-	_ = send(uint16(cim.CIMCmdID_kCIM_CID_LOGIN_AUTH_LOGOUT_REQ), req)
+	_ = send(uint16(cim.CIMCmdID_kCIM_CID_LOGIN_AUTH_TOKEN_REQ), req)
 
 	res := &cim.CIMAuthTokenRsp{}
 
