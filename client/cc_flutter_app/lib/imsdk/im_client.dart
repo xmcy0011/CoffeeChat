@@ -6,6 +6,7 @@ import 'package:cc_flutter_app/imsdk/model/im_request.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.List.pb.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Login.pbserver.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:protobuf/protobuf.dart';
 import 'package:fixnum/fixnum.dart';
 
@@ -32,7 +33,7 @@ class ImClient {
     isLogin = false;
 
     // send heartbeat
-    Timer timer = new Timer(Duration(seconds: 15), () {
+    Timer.periodic(Duration(seconds: 15), (timer) {
       if (isLogin) {
         var heartBeat = new CIMHeartBeat();
         send(CIMCmdID.kCIM_CID_LOGIN_HEARTBEAT.value, heartBeat);

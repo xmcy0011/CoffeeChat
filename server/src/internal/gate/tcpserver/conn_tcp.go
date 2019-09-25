@@ -97,6 +97,7 @@ func (tcp *TcpConn) OnRead(header *cim.ImHeader, buff []byte) {
 
 	switch header.CommandId {
 	case uint16(cim.CIMCmdID_kCIM_CID_LOGIN_HEARTBEAT):
+		//logger.Sugar.Info("heartbeat", header.CommandId)
 		tcp.lastHeartBeatTime = time.Now().Unix()
 		_, _ = tcp.Send(0, uint16(cim.CIMCmdID_kCIM_CID_LOGIN_HEARTBEAT), &cim.CIMHeartBeat{})
 		break
