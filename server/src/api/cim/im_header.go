@@ -12,7 +12,7 @@ const IMHeaderLen = 16
 const IMHeaderVersion = 1
 const UINT16_MAX = ^uint16(0)
 
-var pduSeq uint16 = 1
+
 var mutex sync.Mutex
 
 type ImHeader struct {
@@ -79,20 +79,6 @@ func IsPduAvailable(data []byte, len int) bool {
 	return true
 }
 
-/**
-获取递增唯一序号
-*/
-func getSeq() uint16 {
-	mutex.Lock()
-	pduSeq++
-	// 溢出
-	if pduSeq >= UINT16_MAX {
-		pduSeq = 1
-	}
-	mutex.Unlock()
-	return pduSeq
-}
-
 func (it *ImHeader) GetBuffer() []byte {
 	// write header
 	tempSlice := make([]byte, 0)
@@ -108,7 +94,7 @@ func (it *ImHeader) GetBuffer() []byte {
 	it.Length = uint32(len(data)) + IMHeaderLen
 	it.Version = uint16(IMHeaderVersion)
 	// 序号全局唯一
-	it.SeqNum = getSeq()
+	//it.SeqNum = getSeq()
 
 	headerData := it.getHeaderBuffer()
 

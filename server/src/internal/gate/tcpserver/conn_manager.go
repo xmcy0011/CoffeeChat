@@ -18,12 +18,14 @@ type CImConn interface {
 	OnRead(header *cim.ImHeader, buff []byte)
 	OnTimer(tick int64) // 定时器回调，间隔1秒
 
-	Send(cmdId uint16, body proto.Message) (int, error)
+	// 如果seq设置为0，则内部自增使用全局序号
+	Send(seq uint16, cmdId uint16, body proto.Message) (int, error)
 
 	GetClientType() cim.CIMClientType // 获取该连接的客户端类型
 	GetClientVersion() string         // 获取该连接的客户端版本
 	SetUserId(userId uint64)          // 设置连接对应的用户id
 	GetUserId() uint64
+	GetSeq() uint16 // 获取该连接唯一的序列号
 }
 
 var DefaultConnManager = new(Manager)

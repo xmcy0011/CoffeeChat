@@ -7,6 +7,7 @@ import (
 	"github.com/CoffeeChat/server/src/pkg/logger"
 	"github.com/golang/protobuf/proto"
 	"net"
+	"sync"
 	"time"
 )
 
@@ -19,6 +20,9 @@ type TcpConn struct {
 	clientType    cim.CIMClientType // 客户端连接类型
 	clientVersion string            // 客户端版本
 	userId        uint64            // 客户端id
+
+	seq      uint16     // 给客户端返回的seq号
+	seqMutex sync.Mutex // 互斥锁
 
 	connectedTime     int64 // 连接时间
 	loginTime         int64 // 登录时间
@@ -94,7 +98,7 @@ func (tcp *TcpConn) OnRead(header *cim.ImHeader, buff []byte) {
 	switch header.CommandId {
 	case uint16(cim.CIMCmdID_kCIM_CID_LOGIN_HEARTBEAT):
 		tcp.lastHeartBeatTime = time.Now().Unix()
-		_, _ = tcp.Send(uint16(cim.CIMCmdID_kCIM_CID_LOGIN_HEARTBEAT), &cim.CIMHeartBeat{})
+		_, _ = tcp.Send(0, uint16(cim.CIMCmdID_kCIM_CID_LOGIN_HEARTBEAT), &cim.CIMHeartBeat{})
 		break
 	case uint16(cim.CIMCmdID_kCIM_CID_LOGIN_AUTH_TOKEN_REQ):
 		tcp.onHandleAuthReq(header, buff)
@@ -112,9 +116,14 @@ func (tcp *TcpConn) OnRead(header *cim.ImHeader, buff []byte) {
 	}
 }
 
-func (tcp *TcpConn) Send(cmdId uint16, body proto.Message) (int, error) {
+func (tcp *TcpConn) Send(seq uint16, cmdId uint16, body proto.Message) (int, error) {
 	header := cim.ImHeader{}
 	header.CommandId = cmdId
+	if seq == 0 {
+		header.SeqNum = tcp.GetSeq() // 全局自增
+	} else {
+		header.SeqNum = seq
+	}
 	header.SetPduMsg(body)
 
 	return tcp.Conn.Write(header.GetBuffer())
@@ -150,6 +159,18 @@ func (tcp *TcpConn) SetUserId(userId uint64) {
 //GetUserId implements the CImConn GetUserId method.
 func (tcp *TcpConn) GetUserId() uint64 {
 	return tcp.userId
+}
+
+//GetSeq implements the CImConn GetUserId method.
+func (tcp *TcpConn) GetSeq() uint16 {
+	tcp.seqMutex.Lock()
+	tcp.seq++
+	// 溢出
+	if tcp.seq >= cim.UINT16_MAX {
+		tcp.seq = 1
+	}
+	tcp.seqMutex.Unlock()
+	return tcp.seq
 }
 
 // 认证授权
@@ -198,7 +219,7 @@ func (tcp *TcpConn) onHandleAuthReq(header *cim.ImHeader, buff []byte) {
 			}
 		}
 
-		_, err = tcp.Send(uint16(cim.CIMCmdID_kCIM_CID_LOGIN_AUTH_TOKEN_RSP), rsp)
+		_, err = tcp.Send(header.SeqNum, uint16(cim.CIMCmdID_kCIM_CID_LOGIN_AUTH_TOKEN_RSP), rsp)
 
 		logger.Sugar.Infof("onHandleAuthReq result_code=%d,result_string=%s,user_id=%d,client_version=%s,client_type=%d",
 			rsp.ResultCode, rsp.ResultString, req.UserId, req.ClientVersion, req.ClientType)
@@ -223,7 +244,7 @@ func (tcp *TcpConn) onHandleRecentContactSessionReq(header *cim.ImHeader, buff [
 		logger.Sugar.Error("err:", err.Error())
 		return
 	} else {
-		_, err = tcp.Send(uint16(cim.CIMCmdID_kCIM_CID_LIST_RECENT_CONTACT_SESSION_RSP), rsp)
+		_, err = tcp.Send(header.SeqNum, uint16(cim.CIMCmdID_kCIM_CID_LIST_RECENT_CONTACT_SESSION_RSP), rsp)
 	}
 
 	logger.Sugar.Infof("onHandleRecentContactSessionReq user_id:%d,latest_update_time:%d,"+

@@ -110,6 +110,7 @@ func login() error {
 func send(cimId uint16, message proto.Message) error {
 	header := &cim.ImHeader{}
 	header.CommandId = cimId
+	header.SeqNum = cim.GetSeq()
 	header.SetPduMsg(message)
 
 	_, err := tcpConn.Write(header.GetBuffer())
