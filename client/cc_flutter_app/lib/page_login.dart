@@ -5,6 +5,7 @@ import 'package:cc_flutter_app/imsdk/proto/CIM.Login.pb.dart';
 import 'package:cc_flutter_app/page_main.dart';
 import 'package:flutter/material.dart';
 import 'package:fixnum/fixnum.dart';
+import 'package:toast/toast.dart';
 
 const DefaultServerIp = "127.0.0.1";
 const DefaultServerPort = 8000;
@@ -86,7 +87,7 @@ class _PageLoginStatefulWidgetState extends State<PageLoginStatefulWidget> {
                   shape: const BeveledRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(7.0)),
                   ),
-                  onPressed: _login,
+                  onPressed: _onLogin,
                 ),
               ],
             ),
@@ -96,7 +97,13 @@ class _PageLoginStatefulWidgetState extends State<PageLoginStatefulWidget> {
     );
   }
 
-  void _login() {
+  void _onLogin() {
+    _showLoading((closeDialog) {
+      _login(closeDialog);
+    });
+  }
+
+  void _login(Function closeDialog) {
     var userId = int.tryParse(_usernameController.value.text);
     var nick = _nicknameController.value.text;
     var token = _passwordController.value.text;
@@ -104,31 +111,52 @@ class _PageLoginStatefulWidgetState extends State<PageLoginStatefulWidget> {
     var port = DefaultServerPort;
 
     if (int.tryParse(_usernameController.value.text) == null) {
-      _alertLoginErr("用户ID必须为数字");
+      Toast.show("用户ID必须为数字", context, gravity: Toast.CENTER, duration: 3);
+      closeDialog();
       return null;
     } else if (_usernameController.value.text.isEmpty) {
-      _alertLoginErr("请输入昵称");
+      Toast.show("请输入昵称", context, gravity: Toast.CENTER, duration: 3);
+      closeDialog();
       return null;
     } else if (_passwordController.value.text.isEmpty) {
-      _alertLoginErr("请输入口令");
+      Toast.show("请输入口令", context, gravity: Toast.CENTER, duration: 3);
+      closeDialog();
       return null;
     }
 
     ImClient.singleton.auth(userId, nick, token, ip, port).then((rsp) {
+      closeDialog();
+
       if (rsp is CIMAuthTokenRsp) {
         if (rsp.resultCode == CIMErrorCode.kCIM_ERR_SUCCSSE) {
           navigatePage(context, PageMainStatefulApp());
         } else {
-          _alertLoginErr(rsp.resultString);
+          Toast.show(rsp.resultString, context,
+              gravity: Toast.CENTER, duration: 3);
         }
       } else {
-        _alertLoginErr("系统错误");
+        Toast.show("系统错误", context, gravity: Toast.CENTER, duration: 3);
       }
     }, onError: (err) {
-      _alertLoginErr(err.toString());
+      closeDialog();
+      Toast.show(err.toString(), context, gravity: Toast.CENTER, duration: 3);
     });
   }
 
+  Future<void> _showLoading(Function closeDialog) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (context) {
+        return new NetLoadingDialog(
+          dismissDialog: closeDialog,
+          outsideDismiss: false,
+        );
+      },
+    );
+  }
+
+/*
   Future<void> _alertLoginErr(String errDesc) async {
     return showDialog<void>(
       context: context,
@@ -155,6 +183,7 @@ class _PageLoginStatefulWidgetState extends State<PageLoginStatefulWidget> {
       },
     );
   }
+  */
 }
 
 /// 自定义颜色
@@ -171,6 +200,62 @@ class PrimaryColorOverride extends StatelessWidget {
       child: child,
       // 从主题拷贝，覆盖主要颜色
       data: Theme.of(context).copyWith(primaryColor: color),
+    );
+  }
+}
+
+// ignore: must_be_immutable
+class NetLoadingDialog extends StatefulWidget {
+  String loadingText;
+  bool outsideDismiss;
+
+  Function dismissDialog;
+
+  NetLoadingDialog(
+      {Key key,
+      this.loadingText = "loading...",
+      this.outsideDismiss = true,
+      this.dismissDialog})
+      : super(key: key);
+
+  @override
+  State<NetLoadingDialog> createState() => _LoadingDialog();
+}
+
+class _LoadingDialog extends State<NetLoadingDialog> {
+  _dismissDialog() {
+    Navigator.of(context).pop();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.dismissDialog != null) {
+      widget.dismissDialog(_dismissDialog);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+//    return Scaffold(
+//      body: SafeArea(
+//        child: PrimaryColorOverride(
+//          color: Colors.transparent,
+//          child: Center(
+//            child: CircularProgressIndicator(
+//              valueColor: AlwaysStoppedAnimation<Color>(Colors.black12),
+//            ),
+//          ),
+//        ),
+//      ),
+//    );
+    return PrimaryColorOverride(
+      color: Colors.transparent,
+      child: Center(
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.black12),
+        ),
+      ),
     );
   }
 }

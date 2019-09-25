@@ -14,7 +14,7 @@ class ImClient {
   RawSocket socket; // socket
 
   var isLogin = false;
-  var userId;
+  Int64 userId;
 
   var requestMap = new Map<int, IMRequest>(); // 请求列表
   var cache = new List<int>(); // socket receive cache
@@ -61,6 +61,9 @@ class ImClient {
       print("auth req,userId=$userId,nickName=$nickName,token=$userToken");
       sendRequest(CIMCmdID.kCIM_CID_LOGIN_AUTH_TOKEN_REQ.value, req, (rsp) {
         this.isLogin = true;
+        if (rsp is CIMAuthTokenRsp) {
+          this.userId = rsp.userInfo.userId;
+        }
         completer.complete(rsp);
       });
     }).catchError((err) {
@@ -140,8 +143,6 @@ class ImClient {
 
     var data = header.getBuffer();
     this.socket.write(data);
-
-    print("seq=${header.seqNumber}");
 
     // add
     if (callback != null) {
