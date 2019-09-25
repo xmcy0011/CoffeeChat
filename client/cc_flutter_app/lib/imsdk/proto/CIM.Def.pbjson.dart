@@ -1,0 +1,163 @@
+///
+//  Generated code. Do not modify.
+//  source: CIM.Def.proto
+///
+// ignore_for_file: camel_case_types,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name
+
+const CIMCmdID$json = const {
+  '1': 'CIMCmdID',
+  '2': const [
+    const {'1': 'kCIM_CID_UNKNOWN', '2': 0},
+    const {'1': 'kCIM_CID_LOGIN_AUTH_TOKEN_REQ', '2': 257},
+    const {'1': 'kCIM_CID_LOGIN_AUTH_TOKEN_RSP', '2': 258},
+    const {'1': 'kCIM_CID_LOGIN_AUTH_LOGOUT_REQ', '2': 259},
+    const {'1': 'kCIM_CID_LOGIN_AUTH_LOGOUT_RSP', '2': 260},
+    const {'1': 'kCIM_CID_LOGIN_HEARTBEAT', '2': 261},
+    const {'1': 'kCIM_CID_LIST_RECENT_CONTACT_SESSION_REQ', '2': 513},
+    const {'1': 'kCIM_CID_LIST_RECENT_CONTACT_SESSION_RSP', '2': 514},
+    const {'1': 'kCIM_CID_LIST_MSG_REQ', '2': 517},
+    const {'1': 'kCIM_CID_LIST_MSG_RSP', '2': 518},
+    const {'1': 'kCIM_CID_MSG_DATA', '2': 769},
+    const {'1': 'kCIM_CID_MSG_DATA_ACK', '2': 770},
+    const {'1': 'kCIM_CID_MSG_READ_ACK', '2': 771},
+    const {'1': 'kCIM_CID_MSG_READ_NOTIFY', '2': 772},
+    const {'1': 'kCIM_CID_MSG_GET_LATEST_MSG_ID_REQ', '2': 773},
+    const {'1': 'kCIM_CID_MSG_GET_LATEST_MSG_ID_RSP', '2': 774},
+    const {'1': 'kCIM_CID_MSG_GET_BY_MSG_ID_REQ', '2': 775},
+    const {'1': 'kCIM_CID_MSG_GET_BY_MSG_ID_RSP', '2': 776},
+  ],
+};
+
+const CIMIntenralCmdID$json = const {
+  '1': 'CIMIntenralCmdID',
+  '2': const [
+    const {'1': 'kCIM_SID_UNKNOWN', '2': 0},
+    const {'1': 'kCIM_SID_DB_VALIDATE_REQ', '2': 1793},
+    const {'1': 'kCIM_SID_DB_VALIDATE_RSP', '2': 1794},
+  ],
+};
+
+const CIMErrorCode$json = const {
+  '1': 'CIMErrorCode',
+  '2': const [
+    const {'1': 'kCIM_ERR_SUCCSSE', '2': 0},
+    const {'1': 'kCIM_ERR_INTERNAL_ERROR', '2': 1},
+    const {'1': 'kCIM_ERR_LOGIN_DB_VALIDATE_FAILED', '2': 200},
+    const {'1': 'kCIM_ERR_LOGIN_VERSION_TOO_OLD', '2': 201},
+    const {'1': 'kCIM_ERR_LOGIN_INVALID_USER_TOKEN', '2': 202},
+  ],
+};
+
+const CIMClientType$json = const {
+  '1': 'CIMClientType',
+  '2': const [
+    const {'1': 'kCIM_CLIENT_TYPE_DEFAULT', '2': 0},
+    const {'1': 'kCIM_CLIENT_TYPE_ANDROID', '2': 1},
+    const {'1': 'kCIM_CLIENT_TYPE_IOS', '2': 2},
+    const {'1': 'kCIM_CLIENT_TYPE_WEB', '2': 3},
+  ],
+};
+
+const CIMSessionType$json = const {
+  '1': 'CIMSessionType',
+  '2': const [
+    const {'1': 'kCIM_SESSION_TYPE_Invalid', '2': 0},
+    const {'1': 'kCIM_SESSION_TYPE_SINGLE', '2': 1},
+    const {'1': 'kCIM_SESSION_TYPE_GROUP', '2': 2},
+  ],
+};
+
+const CIMMsgType$json = const {
+  '1': 'CIMMsgType',
+  '2': const [
+    const {'1': 'kCIM_MSG_TYPE_UNKNOWN', '2': 0},
+    const {'1': 'kCIM_MSG_TYPE_TEXT', '2': 1},
+    const {'1': 'kCIM_MSG_TYPE_IMAGE', '2': 2},
+    const {'1': 'kCIM_MSG_TYPE_Audio', '2': 3},
+    const {'1': 'kCIM_MSG_TYPE_TIPS', '2': 8},
+    const {'1': 'kCIM_MSG_TYPE_Robot', '2': 9},
+  ],
+};
+
+const CIMMsgStatus$json = const {
+  '1': 'CIMMsgStatus',
+  '2': const [
+    const {'1': 'kCIM_MSG_STATUS_NONE', '2': 0},
+    const {'1': 'kCIM_MSG_STATUS_UNREAD', '2': 1},
+    const {'1': 'kCIM_MSG_STATUS_READ', '2': 2},
+    const {'1': 'kCIM_MSG_STATUS_DELETED', '2': 3},
+    const {'1': 'kCIM_MSG_STATUS_SENT', '2': 5},
+  ],
+};
+
+const CIMSessionStatusType$json = const {
+  '1': 'CIMSessionStatusType',
+  '2': const [
+    const {'1': 'kCIM_SESSION_STATUS_OK', '2': 0},
+  ],
+};
+
+const CIMMsgFeature$json = const {
+  '1': 'CIMMsgFeature',
+  '2': const [
+    const {'1': 'kCIM_MSG_FEATURE_DEFAULT', '2': 0},
+    const {'1': 'kCIM_MSG_FEATURE_ROAM_MSG', '2': 2},
+  ],
+};
+
+const CIMResCode$json = const {
+  '1': 'CIMResCode',
+  '2': const [
+    const {'1': 'kCIM_RES_CODE_OK', '2': 0},
+  ],
+};
+
+const CIMUserInfo$json = const {
+  '1': 'CIMUserInfo',
+  '2': const [
+    const {'1': 'user_id', '3': 1, '4': 1, '5': 4, '10': 'userId'},
+    const {'1': 'nick_name', '3': 2, '4': 1, '5': 9, '10': 'nickName'},
+    const {'1': 'attach_info', '3': 11, '4': 1, '5': 9, '10': 'attachInfo'},
+  ],
+};
+
+const CIMContactSessionInfo$json = const {
+  '1': 'CIMContactSessionInfo',
+  '2': const [
+    const {'1': 'session_id', '3': 1, '4': 1, '5': 4, '10': 'sessionId'},
+    const {'1': 'session_type', '3': 2, '4': 1, '5': 14, '6': '.CIM.Def.CIMSessionType', '10': 'sessionType'},
+    const {'1': 'session_status', '3': 3, '4': 1, '5': 14, '6': '.CIM.Def.CIMSessionStatusType', '10': 'sessionStatus'},
+    const {'1': 'unread_cnt', '3': 4, '4': 1, '5': 13, '10': 'unreadCnt'},
+    const {'1': 'updated_time', '3': 5, '4': 1, '5': 13, '10': 'updatedTime'},
+    const {'1': 'msg_id', '3': 6, '4': 1, '5': 9, '10': 'msgId'},
+    const {'1': 'server_msg_id', '3': 7, '4': 1, '5': 4, '10': 'serverMsgId'},
+    const {'1': 'msg_time_stamp', '3': 8, '4': 1, '5': 13, '10': 'msgTimeStamp'},
+    const {'1': 'msg_data', '3': 9, '4': 1, '5': 12, '10': 'msgData'},
+    const {'1': 'msg_type', '3': 10, '4': 1, '5': 14, '6': '.CIM.Def.CIMMsgType', '10': 'msgType'},
+    const {'1': 'msg_from_user_id', '3': 11, '4': 1, '5': 4, '10': 'msgFromUserId'},
+    const {'1': 'msg_status', '3': 12, '4': 1, '5': 14, '6': '.CIM.Def.CIMMsgStatus', '10': 'msgStatus'},
+    const {'1': 'msg_attach', '3': 13, '4': 1, '5': 9, '10': 'msgAttach'},
+    const {'1': 'extend_data', '3': 14, '4': 1, '5': 9, '10': 'extendData'},
+    const {'1': 'is_robot_session', '3': 15, '4': 1, '5': 8, '10': 'isRobotSession'},
+  ],
+};
+
+const CIMMsgInfo$json = const {
+  '1': 'CIMMsgInfo',
+  '2': const [
+    const {'1': 'client_msg_id', '3': 1, '4': 1, '5': 9, '10': 'clientMsgId'},
+    const {'1': 'server_msg_id', '3': 2, '4': 1, '5': 4, '10': 'serverMsgId'},
+    const {'1': 'msg_res_code', '3': 3, '4': 1, '5': 14, '6': '.CIM.Def.CIMResCode', '10': 'msgResCode'},
+    const {'1': 'msg_feature', '3': 4, '4': 1, '5': 14, '6': '.CIM.Def.CIMMsgFeature', '10': 'msgFeature'},
+    const {'1': 'session_type', '3': 5, '4': 1, '5': 14, '6': '.CIM.Def.CIMSessionType', '10': 'sessionType'},
+    const {'1': 'from_user_id', '3': 6, '4': 1, '5': 4, '10': 'fromUserId'},
+    const {'1': 'to_session_id', '3': 7, '4': 1, '5': 4, '10': 'toSessionId'},
+    const {'1': 'create_time', '3': 8, '4': 1, '5': 4, '10': 'createTime'},
+    const {'1': 'msg_type', '3': 9, '4': 1, '5': 14, '6': '.CIM.Def.CIMMsgType', '10': 'msgType'},
+    const {'1': 'msg_status', '3': 10, '4': 1, '5': 14, '6': '.CIM.Def.CIMMsgStatus', '10': 'msgStatus'},
+    const {'1': 'msg_data', '3': 11, '4': 1, '5': 12, '10': 'msgData'},
+    const {'1': 'attach', '3': 12, '4': 1, '5': 9, '10': 'attach'},
+    const {'1': 'sender_client_type', '3': 13, '4': 1, '5': 14, '6': '.CIM.Def.CIMClientType', '10': 'senderClientType'},
+  ],
+};
+
