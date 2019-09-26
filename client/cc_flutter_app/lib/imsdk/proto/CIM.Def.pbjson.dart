@@ -86,7 +86,13 @@ const CIMMsgStatus$json = const {
     const {'1': 'kCIM_MSG_STATUS_UNREAD', '2': 1},
     const {'1': 'kCIM_MSG_STATUS_READ', '2': 2},
     const {'1': 'kCIM_MSG_STATUS_DELETED', '2': 3},
+    const {'1': 'kCIM_MSG_STATUS_SENDING', '2': 4},
     const {'1': 'kCIM_MSG_STATUS_SENT', '2': 5},
+    const {'1': 'kCIM_MSG_STATUS_RECEIPT', '2': 6},
+    const {'1': 'kCIM_MSG_STATUS_DRAFT', '2': 7},
+    const {'1': 'kCIM_MSG_STATUS_SendCacel', '2': 8},
+    const {'1': 'kCIM_MSG_STATUS_REFUSED', '2': 9},
+    const {'1': 'kCIM_MSG_STATUS_FAILED', '2': 10},
   ],
 };
 

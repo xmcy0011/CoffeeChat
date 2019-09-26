@@ -157,14 +157,26 @@ class CIMMsgStatus extends $pb.ProtobufEnum {
   static const CIMMsgStatus kCIM_MSG_STATUS_UNREAD = CIMMsgStatus._(1, 'kCIM_MSG_STATUS_UNREAD');
   static const CIMMsgStatus kCIM_MSG_STATUS_READ = CIMMsgStatus._(2, 'kCIM_MSG_STATUS_READ');
   static const CIMMsgStatus kCIM_MSG_STATUS_DELETED = CIMMsgStatus._(3, 'kCIM_MSG_STATUS_DELETED');
+  static const CIMMsgStatus kCIM_MSG_STATUS_SENDING = CIMMsgStatus._(4, 'kCIM_MSG_STATUS_SENDING');
   static const CIMMsgStatus kCIM_MSG_STATUS_SENT = CIMMsgStatus._(5, 'kCIM_MSG_STATUS_SENT');
+  static const CIMMsgStatus kCIM_MSG_STATUS_RECEIPT = CIMMsgStatus._(6, 'kCIM_MSG_STATUS_RECEIPT');
+  static const CIMMsgStatus kCIM_MSG_STATUS_DRAFT = CIMMsgStatus._(7, 'kCIM_MSG_STATUS_DRAFT');
+  static const CIMMsgStatus kCIM_MSG_STATUS_SendCacel = CIMMsgStatus._(8, 'kCIM_MSG_STATUS_SendCacel');
+  static const CIMMsgStatus kCIM_MSG_STATUS_REFUSED = CIMMsgStatus._(9, 'kCIM_MSG_STATUS_REFUSED');
+  static const CIMMsgStatus kCIM_MSG_STATUS_FAILED = CIMMsgStatus._(10, 'kCIM_MSG_STATUS_FAILED');
 
   static const $core.List<CIMMsgStatus> values = <CIMMsgStatus> [
     kCIM_MSG_STATUS_NONE,
     kCIM_MSG_STATUS_UNREAD,
     kCIM_MSG_STATUS_READ,
     kCIM_MSG_STATUS_DELETED,
+    kCIM_MSG_STATUS_SENDING,
     kCIM_MSG_STATUS_SENT,
+    kCIM_MSG_STATUS_RECEIPT,
+    kCIM_MSG_STATUS_DRAFT,
+    kCIM_MSG_STATUS_SendCacel,
+    kCIM_MSG_STATUS_REFUSED,
+    kCIM_MSG_STATUS_FAILED,
   ];
 
   static final $core.Map<$core.int, CIMMsgStatus> _byValue = $pb.ProtobufEnum.initByValue(values);

@@ -93,12 +93,13 @@ enum CIMMsgStatus {
   kCIM_MSG_STATUS_UNREAD = 1;  // 收到消息，未读
   kCIM_MSG_STATUS_READ = 2;    // 收到消息，已读
   kCIM_MSG_STATUS_DELETED = 3; // 已删
-  // kCIM_MSG_STATUS_SENDING = 4;   // 发送中
+  kCIM_MSG_STATUS_SENDING = 4; // 发送中
   kCIM_MSG_STATUS_SENT = 5; // 已发送
-  // kCIM_MSG_STATUS_RECEIPT = 6;   // 对方已读发送的内容
-  // kCIM_MSG_STATUS_DRAFT = 7;     // 草稿
-  // kCIM_MSG_STATUS_SendCacel = 8; // 发送取消
-  // kCIM_MSG_STATUS_REFUSED = 9; // 被对方拒绝，比如被对方加入黑名单等等
+  kCIM_MSG_STATUS_RECEIPT = 6;   // 对方已读发送的内容
+  kCIM_MSG_STATUS_DRAFT = 7;     // 草稿
+  kCIM_MSG_STATUS_SendCacel = 8; // 发送取消
+  kCIM_MSG_STATUS_REFUSED = 9; // 被对方拒绝，比如被对方加入黑名单等等
+  kCIM_MSG_STATUS_FAILED = 10; // 发送失败，客户端使用
 }
 
 // 会话状态
