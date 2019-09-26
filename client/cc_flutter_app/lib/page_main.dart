@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'gui/page_home.dart';
 import 'gui/page_me.dart';
-import 'gui/page_message.dart';
+import 'gui/page_chat.dart';
 
 class PageMainStatefulApp extends StatefulWidget {
   @override
@@ -17,7 +17,7 @@ class _PageMainStatefulAppState extends State<PageMainStatefulApp> {
 
   static List<Widget> _pages = <Widget>[
     PageHomeStatefulWidget(),
-    PageMessageStateWidget(),
+    PageChatStateWidget(),
     PageMeStatefulWidget(),
   ];
 

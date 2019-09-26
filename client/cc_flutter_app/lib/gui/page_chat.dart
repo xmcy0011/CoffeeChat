@@ -5,12 +5,12 @@ import 'package:cc_flutter_app/imsdk/proto/CIM.List.pb.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class PageMessageStateWidget extends StatefulWidget {
+class PageChatStateWidget extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _PageMessageStateWidgetState();
+  State<StatefulWidget> createState() => _PageChatStateWidgetState();
 }
 
-class _PageMessageStateWidgetState extends State<PageMessageStateWidget> {
+class _PageChatStateWidgetState extends State<PageChatStateWidget> {
   List<Widget> _items = new List<Widget>();
 
   @override
