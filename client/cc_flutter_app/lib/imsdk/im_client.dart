@@ -11,6 +11,7 @@ import 'package:protobuf/protobuf.dart';
 import 'package:fixnum/fixnum.dart';
 
 const kReadBufferSize = 1024; // Bytes
+const kRequestTimeout = 10; // 10秒请求超时
 
 class ImClient {
   RawSocket socket; // socket
@@ -37,6 +38,33 @@ class ImClient {
       if (isLogin) {
         var heartBeat = new CIMHeartBeat();
         send(CIMCmdID.kCIM_CID_LOGIN_HEARTBEAT.value, heartBeat);
+      }
+    });
+
+    // timeout
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      Map<int, IMRequest> tempList;
+
+      requestMap.forEach((k, v) {
+        var reqTime = v.requestTime;
+        var timespan = DateTime.now().difference(reqTime).inSeconds;
+        if (timespan >= kRequestTimeout) {
+          print("timeout seqNumber=${v.header.seqNumber},"
+              "cmdId=${v.header.commandId}");
+          v.callback(Future.error("timeout"));
+          if (tempList == null) {
+            tempList = new Map<int, IMRequest>();
+          }
+          tempList[v.header.seqNumber] = v;
+        }
+      });
+
+      // clear timeout request
+      if (tempList != null) {
+        tempList.forEach((k, v) {
+          requestMap.remove(k);
+        });
+        tempList.clear();
       }
     });
   }
@@ -75,14 +103,48 @@ class ImClient {
             this.isLogin = true;
             this.userId = rsp.userInfo.userId;
           }
+          completer.complete(rsp);
+        } else {
+          completer.completeError(rsp);
         }
-        completer.complete(rsp);
       });
     }).catchError((err) {
       completer.completeError(err);
       print("connect error:" + err.toString());
     });
     return completer.future;
+  }
+
+  /// 判断是否是来自于自己的消息
+  bool isSelf(Int64 fromUserId) {
+    return this.userId == fromUserId;
+  }
+
+  /// 发送通知，没有响应
+  /// [commandId] 命令ID
+  /// [message] 数据部
+  void send(int cmdId, GeneratedMessage message) {
+    sendRequest(cmdId, message, null);
+  }
+
+  /// 发送请求，获得响应后回调
+  /// [commandId] 命令ID
+  /// [message] 数据部
+  /// [callback] 结果回调
+  void sendRequest(int cmdId, GeneratedMessage message, Function callback) {
+    var header = new IMHeader();
+    header.setCommandId(cmdId);
+    header.setMsg(message);
+    header.setSeq(SeqGen.singleton.gen());
+
+    var data = header.getBuffer();
+    this.socket.write(data);
+
+    // add
+    if (callback != null) {
+      IMRequest req = new IMRequest(header, callback, DateTime.now());
+      requestMap[header.seqNumber] = req;
+    }
   }
 
   // 数据处理
@@ -107,7 +169,7 @@ class ImClient {
         // 去掉头部
         List<int> data = List.from(temp.sublist(kHeaderLen), growable: false);
         // sync callback
-        onHandle(header, data);
+        _onHandle(header, data);
         start += header.length;
       }
 
@@ -136,35 +198,8 @@ class ImClient {
     print("on close connection");
   }
 
-  /// 发送通知，没有响应
-  /// [commandId] 命令ID
-  /// [message] 数据部
-  void send(int cmdId, GeneratedMessage message) {
-    sendRequest(cmdId, message, null);
-  }
-
-  /// 发送请求，获得响应后回调
-  /// [commandId] 命令ID
-  /// [message] 数据部
-  /// [callback] 结果回调
-  void sendRequest(int cmdId, GeneratedMessage message, Function callback) {
-    var header = new IMHeader();
-    header.setCommandId(cmdId);
-    header.setMsg(message);
-    header.setSeq(SeqGen.singleton.gen());
-
-    var data = header.getBuffer();
-    this.socket.write(data);
-
-    // add
-    if (callback != null) {
-      IMRequest req = new IMRequest(header, callback);
-      requestMap[header.seqNumber] = req;
-    }
-  }
-
   // 消息总处理
-  void onHandle(IMHeader header, List<int> data) {
+  void _onHandle(IMHeader header, List<int> data) {
     if (header.commandId == CIMCmdID.kCIM_CID_LOGIN_HEARTBEAT.value) {
       print("onHandle heartbeat");
       return null;
@@ -175,6 +210,8 @@ class ImClient {
     } else if (header.commandId ==
         CIMCmdID.kCIM_CID_LIST_RECENT_CONTACT_SESSION_RSP.value) {
       _handleRecentSessionList(header, data);
+    } else if (header.commandId == CIMCmdID.kCIM_CID_LIST_MSG_RSP.value) {
+      _handleGetMsgList(header, data);
     } else {
       print("unknown message,cmdId:${header.commandId}");
     }
@@ -188,6 +225,7 @@ class ImClient {
     if (requestMap.containsKey(header.seqNumber)) {
       IMRequest req = requestMap[header.seqNumber];
       req.callback(rsp);
+      requestMap.remove(header.seqNumber);
     } else {
       print("_handleAuthRsp err:can't find req:${header.seqNumber}");
     }
@@ -201,8 +239,22 @@ class ImClient {
     if (requestMap.containsKey(header.seqNumber)) {
       IMRequest req = requestMap[header.seqNumber];
       req.callback(rsp);
+      requestMap.remove(header.seqNumber);
     } else {
       print("_handleRecentSessionList err:can't find req:${header.seqNumber}");
+    }
+  }
+
+  void _handleGetMsgList(IMHeader header, List<int> data) {
+    var rsp = CIMGetMsgListRsp.fromBuffer(data);
+    print("_handleGetMsgList count:${rsp.msgList.length}");
+
+    if (requestMap.containsKey(header.seqNumber)) {
+      IMRequest req = requestMap[header.seqNumber];
+      req.callback(rsp);
+      requestMap.remove(header.seqNumber);
+    } else {
+      print("_handleGetMsgList err:can't find req:${header.seqNumber}");
     }
   }
 }

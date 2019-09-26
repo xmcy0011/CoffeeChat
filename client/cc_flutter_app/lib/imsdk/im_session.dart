@@ -19,7 +19,11 @@ class IMSession {
 
     var cmd = CIMCmdID.kCIM_CID_LIST_RECENT_CONTACT_SESSION_REQ.value;
     ImClient.singleton.sendRequest(cmd, req, (rsp) {
-      complete.complete(rsp);
+      if (rsp is CIMRecentContactSessionRsp){
+        complete.complete(rsp);
+      }else{
+        complete.completeError(rsp);
+      }
     });
     return complete.future;
   }
