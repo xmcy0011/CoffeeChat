@@ -30,9 +30,9 @@ class _PageMainStatefulAppState extends State<PageMainStatefulApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("CoffeeChat"),
-      ),
+//      appBar: AppBar(
+//        title: Text("CoffeeChat"),
+//      ),
       body: Center(
         child: _pages.elementAt(_selectedIndex),
       ),
