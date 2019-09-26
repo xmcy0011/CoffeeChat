@@ -107,12 +107,15 @@ func (tcp *TcpConn) OnRead(header *cim.ImHeader, buff []byte) {
 	case uint16(cim.CIMCmdID_kCIM_CID_LIST_RECENT_CONTACT_SESSION_REQ):
 		tcp.onHandleRecentContactSessionReq(header, buff)
 		break
+	case uint16(cim.CIMCmdID_kCIM_CID_LIST_MSG_REQ):
+		tcp.onHandleGetMsgListReq(header, buff)
+		break
 	case uint16(cim.CIMCmdID_kCIM_CID_MSG_DATA):
 		break
 	case uint16(cim.CIMCmdID_kCIM_CID_MSG_DATA_ACK):
 		break
 	default:
-		logger.Sugar.Error("unknown command_id=%d", header.CommandId)
+		logger.Sugar.Errorf("unknown command_id=%d", header.CommandId)
 		break
 	}
 }
@@ -251,6 +254,35 @@ func (tcp *TcpConn) onHandleRecentContactSessionReq(header *cim.ImHeader, buff [
 	logger.Sugar.Infof("onHandleRecentContactSessionReq user_id:%d,latest_update_time:%d,"+
 		"total_unread_count=%d,total_session_cnt=%d",
 		req.UserId, req.LatestUpdateTime, rsp.UnreadCounts, len(rsp.ContactSessionList))
+}
+
+func (tcp *TcpConn) onHandleGetMsgListReq(header *cim.ImHeader, buff []byte) {
+	req := &cim.CIMGetMsgListReq{}
+	err := proto.Unmarshal(buff, req)
+	if err != nil {
+		logger.Sugar.Error(err.Error())
+		return
+	}
+	logger.Sugar.Infof("onHandleGetMsgListReq user_id:%d,session_id:%d,"+
+		"session_type=%d,end_msg_id=%d,limit_count=%d",
+		req.UserId, req.SessionId, req.SessionType, req.EndMsgId, req.LimitCount)
+
+	conn := GetMessageConn()
+	ctx, cancelFun := context.WithTimeout(context.Background(), time.Second*kBusinessTimeOut)
+	defer cancelFun()
+
+	rsp, err := conn.GetMsgList(ctx, req)
+	if err != nil {
+		logger.Sugar.Error("err:", err.Error())
+		return
+	} else {
+		_, err = tcp.Send(header.SeqNum, uint16(cim.CIMCmdID_kCIM_CID_LIST_RECENT_CONTACT_SESSION_RSP), rsp)
+	}
+
+	logger.Sugar.Infof("onHandleGetMsgListReq gRPC GetMsgList,user_id:%d,session_id:%d,"+
+		"session_type=%d,end_msg_id=%d,limit_count=%d,count=%d",
+		req.UserId, req.SessionId, req.SessionType, req.EndMsgId, req.LimitCount,
+		len(rsp.MsgList))
 }
 
 // 发送消息
