@@ -20,9 +20,7 @@ class _HomePageStateWidgetState extends State<PageHomeStatefulWidget> {
           title: Text('Info'),
           content: SingleChildScrollView(
             child: ListBody(
-              children: <Widget>[
-                Text('You will never be satisfied.')
-              ],
+              children: <Widget>[Text('You will never be satisfied.')],
             ),
           ),
           actions: <Widget>[
@@ -40,24 +38,29 @@ class _HomePageStateWidgetState extends State<PageHomeStatefulWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        height: 80,
-        margin: EdgeInsets.all(20),
-        //alignment: AlignmentDirectional.center,
-        child: OutlineButton(
-          padding: EdgeInsets.all(10),
-          child: Column(
-            children: <Widget>[
-              Icon(
-                Icons.message,
-                color: Colors.grey,
-                size: 32,
-              ),
-              Text("客服", style: TextStyle(color: Colors.grey, fontSize: 20)),
-            ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("主页"),
+      ),
+      body: Center(
+        child: Container(
+          height: 80,
+          margin: EdgeInsets.all(20),
+          //alignment: AlignmentDirectional.center,
+          child: OutlineButton(
+            padding: EdgeInsets.all(10),
+            child: Column(
+              children: <Widget>[
+                Icon(
+                  Icons.message,
+                  color: Colors.grey,
+                  size: 32,
+                ),
+                Text("客服", style: TextStyle(color: Colors.grey, fontSize: 20)),
+              ],
+            ),
+            onPressed: _onPressedKefu,
           ),
-          onPressed: _onPressedKefu,
         ),
       ),
     );
