@@ -93,7 +93,7 @@ func TestLogicServer_GetMsgList(t *testing.T) {
 		SessionId:   1009, // 单聊用户，查询我和1009的会话下的聊天记录
 		SessionType: cim.CIMSessionType_kCIM_SESSION_TYPE_SINGLE,
 		LimitCount:  2,
-		EndMsgId:    0,
+		EndMsgId:    4,
 	})
 
 	if err != nil {
@@ -101,4 +101,8 @@ func TestLogicServer_GetMsgList(t *testing.T) {
 	}
 
 	logger.Sugar.Info("send msg res:", res.String())
+	for i := range res.MsgList {
+		item := res.MsgList[i]
+		logger.Sugar.Infof("%d->%d:%s", item.FromUserId, item.ToSessionId, string(item.MsgData))
+	}
 }

@@ -117,7 +117,7 @@ func (m *Message) GetSingleMsgList(userId uint64, sessionId uint64, sessionType 
 			sql = fmt.Sprintf("select msg_id,client_msg_id,from_id,to_id,group_id,msg_type,msg_content,"+
 				"msg_res_code,msg_feature,msg_status,created,updated from %s"+
 				" force index(ix_fromId_toId_msgStatus_created)"+
-				" where from_id=%d and to_id=%d and id<%d"+
+				" where from_id=%d and to_id=%d and msg_id<%d"+
 				" order by id desc,created limit %d",
 				tableNameA, userId, sessionId, endMsgId, limitCount)
 		}
@@ -150,7 +150,7 @@ func (m *Message) GetSingleMsgList(userId uint64, sessionId uint64, sessionType 
 				sql = fmt.Sprintf("select msg_id,client_msg_id,from_id,to_id,group_id,msg_type,msg_content,"+
 					"msg_res_code,msg_feature,msg_status,created,updated from %s "+
 					" force index(ix_fromId_toId_msgStatus_created)"+
-					" where from_id=%d and to_id=%d and id<%d"+
+					" where from_id=%d and to_id=%d and msg_id<%d"+
 					" order by id desc,created limit %d",
 					tableNameB, sessionId, userId, endMsgId, limitCount)
 			}
@@ -172,14 +172,14 @@ func (m *Message) GetSingleMsgList(userId uint64, sessionId uint64, sessionType 
 			}
 		}
 
-		// 排序
+		// 从小到大升序排序（最新消息放最后，符合自然浏览顺序）
 		sort.Slice(msgArr, func(i, j int) bool {
-			return msgArr[i].Created < msgArr[j].Created
+			return msgArr[i].Created < msgArr[j].Created && msgArr[i].MsgId < msgArr[j].MsgId
 		})
 
 		// 返回部分
 		if len(msgArr) > int(limitCount) {
-			return msgArr[0:limitCount], nil
+			return msgArr[len(msgArr)-int(limitCount):], nil
 		} else {
 			return msgArr, nil
 		}
