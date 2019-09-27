@@ -33,7 +33,33 @@ class _MsgItemState extends State<MsgItem> {
 
   // 生成聊天内容
   Widget _buildMsgContent() {
-    return null;
+    double maxWidth = MediaQuery.of(context).size.width * 0.7;
+    var text = msg.msgData;
+
+    if (text == '[图片]') {
+//      String url = imHelper.decodeToImage(msg.msgData);
+//      url = url.substring(10, url.length - 9);
+//      print("url:$url");
+//      return Card(
+//          child: Container(
+//              child: Image(
+//        image: NetworkImage(url),
+//        fit: BoxFit.cover,
+//        width: maxWidth,
+//      )));
+    }
+    return Card(
+      child: Container(
+        padding: EdgeInsets.all(10),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: maxWidth),
+          child: Text(text,
+              maxLines: 10,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.subhead),
+        ),
+      ),
+    );
   }
 
   // 头像
