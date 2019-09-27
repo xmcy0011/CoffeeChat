@@ -43,8 +43,17 @@ func (s *LogicServer) RecentContactSession(ctx context.Context, in *cim.CIMRecen
 		// query msg detail
 		msgInfo, err := dao.DefaultMessage.GetMessage(uint64(msgId), e.PeerId)
 		if err != nil {
-			logger.Sugar.Errorf("query msg detail failed,userId:%d,peerId:%d,error:%s", e.UserId, e.PeerId, err.Error())
-			continue
+			// 如果是单聊，还需找1遍
+			if e.SessionType == int(cim.CIMSessionType_kCIM_SESSION_TYPE_SINGLE) {
+				msgInfo, err = dao.DefaultMessage.GetMessage(uint64(msgId), e.UserId)
+				if err != nil {
+					logger.Sugar.Errorf("query msg detail failed,userId:%d,peerId:%d,error:%s", e.UserId, e.PeerId, err.Error())
+					continue
+				}
+			} else {
+				logger.Sugar.Errorf("query msg detail failed,userId:%d,peerId:%d,error:%s", e.UserId, e.PeerId, err.Error())
+				continue
+			}
 		}
 
 		info.MsgId = msgInfo.ClientMsgId

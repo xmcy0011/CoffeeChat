@@ -11,7 +11,8 @@ import (
 	"syscall"
 )
 
-const kDefaultConf = "app/logic/logic-example.toml"
+//const kDefaultConf = "app/logic/logic-example.toml"
+const kDefaultConf = "logic-example.toml"
 
 func waitExit(c chan os.Signal) {
 	for i := range c {

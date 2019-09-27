@@ -105,7 +105,7 @@ enum CIMMsgStatus {
 // 会话状态
 enum CIMSessionStatusType {
   kCIM_SESSION_STATUS_OK = 0;
-  // kCIM_SESSION_STATUS_DELETE = 1;
+  kCIM_SESSION_STATUS_DELETE = 1;
 }
 
 // 消息属性
@@ -165,7 +165,7 @@ message CIMMsgInfo {
   CIMSessionType session_type = 5;   // 会话类型
   uint64 from_user_id = 6;           // 来源会话ID
   uint64 to_session_id = 7;          // 目标会话ID
-  uint64 create_time = 8;            // 消息创建时间戳（毫秒）
+  uint32 create_time = 8;            // 消息创建时间戳（毫秒）
 
   CIMMsgType msg_type = 9;          // 消息类型
   CIMMsgStatus msg_status = 10; // 消息状态（预留）
