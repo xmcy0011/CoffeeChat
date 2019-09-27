@@ -276,7 +276,7 @@ func (tcp *TcpConn) onHandleGetMsgListReq(header *cim.ImHeader, buff []byte) {
 		logger.Sugar.Error("err:", err.Error())
 		return
 	} else {
-		_, err = tcp.Send(header.SeqNum, uint16(cim.CIMCmdID_kCIM_CID_LIST_RECENT_CONTACT_SESSION_RSP), rsp)
+		_, err = tcp.Send(header.SeqNum, uint16(cim.CIMCmdID_kCIM_CID_LIST_MSG_RSP), rsp)
 	}
 
 	logger.Sugar.Infof("onHandleGetMsgListReq gRPC GetMsgList,user_id:%d,session_id:%d,"+

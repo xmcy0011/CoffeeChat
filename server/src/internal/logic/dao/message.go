@@ -7,6 +7,7 @@ import (
 	"github.com/CoffeeChat/server/src/pkg/db"
 	"github.com/CoffeeChat/server/src/pkg/def"
 	"github.com/CoffeeChat/server/src/pkg/logger"
+	"sort"
 	"strconv"
 	"time"
 )
@@ -70,7 +71,7 @@ func (m *Message) GetMessage(msgId uint64, peerId uint64) (*model.MessageModel, 
 		err := row.Scan(&msgInfo.Id, &msgInfo.ClientMsgId, &msgInfo.FromId, &msgInfo.ToId, &msgInfo.GroupId, &msgInfo.MsgType,
 			&msgInfo.MsgContent, &msgInfo.MsgResCode, &msgInfo.MsgFeature, &msgInfo.MsgStatus, &msgInfo.Created, &msgInfo.Updated)
 		if err != nil {
-			logger.Sugar.Error(err.Error())
+			//logger.Sugar.Error(err.Error(), ",with sql:", sql)
 			return nil, err
 		} else {
 			msgInfo.MsgId = msgId
@@ -92,6 +93,100 @@ func (m *Message) getMsgId(msgId string, tableName string) int64 {
 		}
 	}
 	return 0
+}
+
+// 查询历史消息
+func (m *Message) GetSingleMsgList(userId uint64, sessionId uint64, sessionType cim.CIMSessionType,
+	endMsgId uint64, limitCount uint32) ([]*model.MessageModel, error) {
+	tableNameA := fmt.Sprintf("%s%d", kIMMessageSendTableName, userId%kIMMessageTableCount)
+	tableNameB := fmt.Sprintf("%s%d", kIMMessageSendTableName, sessionId%kIMMessageTableCount)
+
+	dbSlave := db.DefaultManager.GetDBSlave()
+	if dbSlave != nil {
+		msgArr := make([]*model.MessageModel, 0)
+		// 查询A发送的消息
+		sql := ""
+		if endMsgId == 0 {
+			sql = fmt.Sprintf("select msg_id,client_msg_id,from_id,to_id,group_id,msg_type,msg_content,"+
+				"msg_res_code,msg_feature,msg_status,created,updated from %s"+
+				" force index(ix_fromId_toId_msgStatus_created)"+
+				" where from_id=%d and to_id=%d"+
+				" order by id desc,created limit %d",
+				tableNameA, userId, sessionId, limitCount)
+		} else {
+			sql = fmt.Sprintf("select msg_id,client_msg_id,from_id,to_id,group_id,msg_type,msg_content,"+
+				"msg_res_code,msg_feature,msg_status,created,updated from %s"+
+				" force index(ix_fromId_toId_msgStatus_created)"+
+				" where from_id=%d and to_id=%d and id<%d"+
+				" order by id desc,created limit %d",
+				tableNameA, userId, sessionId, endMsgId, limitCount)
+		}
+
+		rowA, err := dbSlave.Query(sql)
+		if err != nil {
+			logger.Sugar.Error(err.Error())
+			return nil, err
+		} else {
+			for rowA.Next() {
+				msgInfo := &model.MessageModel{}
+				err := rowA.Scan(&msgInfo.MsgId, &msgInfo.ClientMsgId, &msgInfo.FromId, &msgInfo.ToId, &msgInfo.GroupId, &msgInfo.MsgType,
+					&msgInfo.MsgContent, &msgInfo.MsgResCode, &msgInfo.MsgFeature, &msgInfo.MsgStatus, &msgInfo.Created, &msgInfo.Updated)
+				if err != nil {
+					logger.Sugar.Error(err.Error())
+					return nil, err
+				}
+				msgArr = append(msgArr, msgInfo)
+			}
+
+			// 查询B发送的消息
+			if endMsgId == 0 {
+				sql = fmt.Sprintf("select msg_id,client_msg_id,from_id,to_id,group_id,msg_type,msg_content,"+
+					"msg_res_code,msg_feature,msg_status,created,updated from %s"+
+					" force index(ix_fromId_toId_msgStatus_created)"+
+					" where from_id=%d and to_id=%d"+
+					" order by id desc,created limit %d",
+					tableNameB, sessionId, userId, limitCount)
+			} else {
+				sql = fmt.Sprintf("select msg_id,client_msg_id,from_id,to_id,group_id,msg_type,msg_content,"+
+					"msg_res_code,msg_feature,msg_status,created,updated from %s "+
+					" force index(ix_fromId_toId_msgStatus_created)"+
+					" where from_id=%d and to_id=%d and id<%d"+
+					" order by id desc,created limit %d",
+					tableNameB, sessionId, userId, endMsgId, limitCount)
+			}
+			rowB, err := dbSlave.Query(sql)
+			if err != nil {
+				logger.Sugar.Error(err.Error())
+				return nil, err
+			}
+
+			for rowB.Next() {
+				msgInfo := &model.MessageModel{}
+				err := rowB.Scan(&msgInfo.MsgId, &msgInfo.ClientMsgId, &msgInfo.FromId, &msgInfo.ToId, &msgInfo.GroupId, &msgInfo.MsgType,
+					&msgInfo.MsgContent, &msgInfo.MsgResCode, &msgInfo.MsgFeature, &msgInfo.MsgStatus, &msgInfo.Created, &msgInfo.Updated)
+				if err != nil {
+					logger.Sugar.Error(err.Error())
+					return nil, err
+				}
+				msgArr = append(msgArr, msgInfo)
+			}
+		}
+
+		// 排序
+		sort.Slice(msgArr, func(i, j int) bool {
+			return msgArr[i].Created < msgArr[j].Created
+		})
+
+		// 返回部分
+		if len(msgArr) > int(limitCount) {
+			return msgArr[0:limitCount], nil
+		} else {
+			return msgArr, nil
+		}
+	} else {
+		logger.Sugar.Error("no db connect for master")
+	}
+	return nil, def.DefaultError
 }
 
 // 存储消息
