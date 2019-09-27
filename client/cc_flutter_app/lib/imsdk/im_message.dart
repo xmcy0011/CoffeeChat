@@ -54,6 +54,7 @@ class IMMessage {
     req.sessionId = toSessionId;
     req.sessionType = sessionType;
     req.limitCount = limitCount;
+    req.endMsgId = endMsgId;
 
     ImClient.singleton.sendRequest(CIMCmdID.kCIM_CID_LIST_MSG_REQ.value, req,
         (rsp) {

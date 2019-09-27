@@ -1,11 +1,15 @@
 import 'package:cc_flutter_app/gui/model/model.dart';
-import 'package:cc_flutter_app/gui/widget/msg_item_widget.dart';
+import 'package:cc_flutter_app/imsdk/im_client.dart';
 import 'package:cc_flutter_app/imsdk/im_message.dart';
+import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pbserver.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.List.pbserver.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:toast/toast.dart';
+
+// 单次拉取历史记录的最大数量
+const kMaxPullMsgLimitCount = 20;
 
 // 聊天详情页面
 class PageMessage extends StatefulWidget {
@@ -74,12 +78,18 @@ class _PageMessageState extends State<PageMessage> {
     MessageModel msg = _msgList[position];
 
     // FIXED ME
-    UserModel model = new UserModel();
-    model.userId = msg.fromUserId;
-    model.nickName = msg.fromUserId.toString();
-    model.avatarURL = "";
+    UserModel fromUser = new UserModel();
+    fromUser.userId = msg.fromUserId;
+    fromUser.nickName = msg.fromUserId.toString();
+    fromUser.avatarURL = "";
 
-    return MsgItem(msg, model);
+    //print("_onBuildMsgItem=${msg.serverMsgId},msg=${msg.msgData}");
+
+    //return MsgItem(msg, fromUser);
+    if (ImClient.singleton.isSelf(msg.fromUserId)) {
+      return _buildMeAvatarItem(msg, fromUser);
+    }
+    return _buildOtherAvatarItem(msg, fromUser);
   }
 
   // 生成发送消息界面
@@ -109,19 +119,144 @@ class _PageMessageState extends State<PageMessage> {
         ));
   }
 
+  // 生成聊天内容
+  Widget _buildMsgContent(MessageModel msg) {
+    double maxWidth = MediaQuery.of(context).size.width * 0.7;
+    var text = msg.msgData;
+
+    if (text == '[图片]') {
+//      String url = imHelper.decodeToImage(msg.msgData);
+//      url = url.substring(10, url.length - 9);
+//      print("url:$url");
+//      return Card(
+//          child: Container(
+//              child: Image(
+//        image: NetworkImage(url),
+//        fit: BoxFit.cover,
+//        width: maxWidth,
+//      )));
+    }
+    return Card(
+      child: Container(
+        padding: EdgeInsets.all(10),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: maxWidth),
+          child: Text(text,
+              maxLines: 10,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.subhead),
+        ),
+      ),
+    );
+  }
+
+  // 自己的消息
+  Widget _buildMeAvatarItem(MessageModel msg, UserModel fromUser) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              Text(fromUser.nickName,
+                  style: Theme.of(context).textTheme.subhead),
+              Row(
+                children: <Widget>[
+                  msg.msgStatus == CIMMsgStatus.kCIM_MSG_STATUS_SENDING
+                      ? CircularProgressIndicator(
+                          strokeWidth: 1.0,
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.black12),
+                        )
+                      : (msg.msgStatus == CIMMsgStatus.kCIM_MSG_STATUS_FAILED
+                          ? IconButton(
+                              icon: Icon(
+                                Icons.error,
+                                color: Colors.red,
+                              ),
+                              onPressed: () {
+                                _reSendMsg(msg);
+                              },
+                            )
+                          : Center()),
+                  _buildMsgContent(msg)
+                ],
+              )
+            ],
+          ),
+          _buildAvatar(fromUser, EdgeInsets.only(left: 8.0, top: 8.0))
+        ],
+      ),
+    );
+  }
+
+  // 别人的消息
+  Widget _buildOtherAvatarItem(MessageModel msg, UserModel fromUser) {
+    return Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            _buildAvatar(fromUser, EdgeInsets.only(right: 8.0, top: 8.0)),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(fromUser.nickName,
+                    style: Theme.of(context).textTheme.subhead),
+                _buildMsgContent(msg)
+              ],
+            ),
+          ],
+        ));
+  }
+
+  // 头像
+  Widget _buildAvatar(UserModel fromUser, edge) {
+    return Container(
+      width: 36,
+      margin: edge,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(3.0),
+        child: FadeInImage(
+          image: NetworkImage(fromUser.avatarURL),
+          placeholder: AssetImage("assets/default_avatar.png"),
+        ),
+      ),
+    );
+  }
+
+  // 失败重发
+  void _reSendMsg(MessageModel msg) {}
+
   // 刷新消息
   Future _onRefresh() async {
-    _msgList.clear();
     var msg = IMMessage();
     var id = sessionInfo.sessionId;
     var type = sessionInfo.sessionType;
-    msg.getMessageList(id, type, Int64(0), 20).then((rsp) {
+    Int64 endMsgId = Int64(0);
+    if (_msgList.length > 0) {
+      endMsgId = _msgList[0].serverMsgId;
+    }
+
+    msg.getMessageList(id, type, endMsgId, kMaxPullMsgLimitCount).then((rsp) {
       if (rsp is CIMGetMsgListRsp) {
+        List<MessageModel> msg = new List<MessageModel>();
         rsp.msgList.forEach((v) {
-          setState(() {
-            var msgModel = new MessageModel(v);
-            _msgList.add(msgModel);
-          });
+          var msgModel = new MessageModel(v);
+          print("msgId=${msgModel.serverMsgId},msg=${msgModel.msgData}");
+          msg.add(msgModel);
+        });
+
+        _msgList.insertAll(0, msg);
+        //_msgList.addAll(msg);
+        setState(() {
+          if (_msgList.length == 0) {
+            scrollEnd();
+          }
         });
       } else {
         print("getMessageList error,rsp is not CIMGetMsgListRsp");
@@ -129,6 +264,17 @@ class _PageMessageState extends State<PageMessage> {
     }).catchError((err) {
       Toast.show("刷新消息失败：${err.toString()}", context, duration: 3);
     });
+  }
+
+  scrollEnd([animationTime = 500]) {
+    double scrollValue = _scrollController.position.maxScrollExtent;
+    if (scrollValue < 10) {
+      scrollValue = 1000000;
+    }
+
+    //_controller.jumpTo(scrollValue);
+    _scrollController.animateTo(scrollValue,
+        duration: Duration(milliseconds: animationTime), curve: Curves.easeIn);
   }
 
   // 缩小消息输入框
