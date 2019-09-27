@@ -126,7 +126,24 @@ Redis生成ID可以看做数据库自增ID的升级版。Redis的所有命令操
 4、Twitter的snowflake算法。
 ```
 
-考虑到实现成本和复杂度，我们使用Redis来生成。我们为每一个用户维护一个ID，通过redis的INCRY自增长即可。
+考虑到实现成本和复杂度，我们使用Redis来生成。我们为每一对用户维护一个ID，每个群组维护一个ID，通过redis的INCRY自增长即可。  
+举例如下：
+> 单聊redis key规则：msg_id_single_[smallId]_[bigId]，如：msg_id_single_1008_1009  
+> 群聊redis key规则：msg_id_group_[groupId]，如果：msg_id_group_3  
+
+路由问题补充说明：
+> 针对群聊，永远根据groupId%4计算得到存储的im_message_rece_x表名  
+> 针对单聊，from_id%4存储到im_message_send_x表，to_id%4存储到im_message_rece_x表  
+> 
+> 会话查询的适合，如何得到最新的消息呢？  
+> 答：因为不知道最新的消息是放在send表还是recv表，所以需要查2遍，因为单聊共用1个msgId，所以不会命中2次
+
+至于单聊为何要如此计算，解释如下：
+> 因为涉及到2个userId，参考《瓜子IM》分表存储实施，一个消息存2份。举例A发给B的消息，根据A%4，在send表中存储“A发给B一条消息”，根据B%4在recv表中存储一份“B收到一条来自于A的消息”。反正B发给A也是一样的。这样会存在1个问题，就是
+> send表通过from_id%4路由，recv表通过to_id%4路由
+
+图解：  
+![图解消息分表](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/图解消息分表存储.png)
 
 当然，对于单聊和群聊都通过此方式实现。为何单聊不通过客户端的Seq来实现？  
 - 类似于Websocket没有存储功能，所以要需要服务端存储，增加额外的成本  
