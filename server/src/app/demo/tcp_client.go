@@ -7,16 +7,22 @@ import (
 	"github.com/CoffeeChat/server/src/api/cim"
 	"github.com/CoffeeChat/server/src/pkg/logger"
 	"github.com/golang/protobuf/proto"
+	uuid "github.com/satori/go.uuid"
 	"net"
 	"os"
+	"strconv"
+	"strings"
+	"sync"
 	"time"
 )
 
 var tcpConn *net.TCPConn
 var tcpBuffer = make([]byte, 10*1024)
 var heartBeatTicker *time.Ticker
+var seq uint16 = 0
+var seqMutex sync.Mutex
 
-const KUserId = 1008
+const KUserId = 1009
 const KUserToken = "12345"
 const KNickName = "demo"
 
@@ -41,7 +47,7 @@ func main() {
 	if err != nil {
 		logger.Sugar.Fatal("login error:", err.Error())
 	} else {
-		logger.Sugar.Info("login success")
+		logger.Sugar.Infof("login success,userId=%d,nickName=%s", KUserId, KNickName)
 
 		heartBeatTicker = time.NewTicker(30 * time.Second)
 		go heartBeat()
@@ -52,6 +58,7 @@ func main() {
 		logger.Sugar.Info("please select:")
 		logger.Sugar.Info("0:exit")
 		logger.Sugar.Info("1:show session list")
+		logger.Sugar.Info("2:Send message to user")
 
 		scanner := bufio.NewScanner(os.Stdin)
 		if scanner.Scan() {
@@ -60,8 +67,30 @@ func main() {
 			case "1":
 				reqRecentSessionList()
 				break
+			case "2":
+				logger.Sugar.Info("please input msg, example 1008:hello")
+				reader := bufio.NewReader(os.Stdin)
+				data, _, err := reader.ReadLine()
+				if err != nil {
+					logger.Sugar.Info("unknown format,please try again...")
+					break
+				}
+				text := string(data)
+				textArr := strings.Split(text, ":")
+				if len(textArr) != 2 {
+					logger.Sugar.Info("unknown format,please try again...")
+					break
+				} else {
+					userId, err := strconv.ParseInt(textArr[0], 10, 64)
+					if err != nil {
+						logger.Sugar.Info("invalid userId:", textArr[0])
+						break
+					}
+					sendMessage(uint64(userId), textArr[1])
+				}
 			default:
 				logger.Sugar.Info("unknown command,please try again...")
+				break
 			}
 		} else {
 			logger.Sugar.Info("exit...")
@@ -110,7 +139,7 @@ func login() error {
 func send(cimId uint16, message proto.Message) error {
 	header := &cim.ImHeader{}
 	header.CommandId = cimId
-	header.SeqNum = cim.GetSeq()
+	header.SeqNum = getSeq()
 	header.SetPduMsg(message)
 
 	_, err := tcpConn.Write(header.GetBuffer())
@@ -146,13 +175,22 @@ func read() {
 		case uint16(cim.CIMCmdID_kCIM_CID_LIST_RECENT_CONTACT_SESSION_RSP):
 			onHandleRecentSessionList(dataBuff)
 			break
+		case uint16(cim.CIMCmdID_kCIM_CID_MSG_DATA_ACK):
+			onHandleMsgDataAck(dataBuff)
+			break
 		default:
-			logger.Sugar.Error("unknown command:%d", header.CommandId)
+			logger.Sugar.Errorf("unknown command:%d", header.CommandId)
 			break
 		}
 	}
 }
 
+func getSeq() uint16 {
+	seqMutex.Lock()
+	defer seqMutex.Unlock()
+	seq++
+	return seq
+}
 
 func reqRecentSessionList() {
 	req := &cim.CIMRecentContactSessionReq{
@@ -164,6 +202,20 @@ func reqRecentSessionList() {
 		logger.Sugar.Error(err.Error())
 		return
 	}
+}
+
+func sendMessage(toId uint64, text string) {
+	data := &cim.CIMMsgData{
+		FromUserId:  KUserId,
+		ToSessionId: toId,
+		MsgId:       uuid.NewV4().String(),
+		CreateTime:  int32(time.Now().Unix()),
+		MsgType:     cim.CIMMsgType_kCIM_MSG_TYPE_TEXT,
+		SessionType: cim.CIMSessionType_kCIM_SESSION_TYPE_SINGLE,
+		MsgData:     []byte(text),
+	}
+	logger.Sugar.Infof("msgId:{%s} sending ...", data.MsgId)
+	_ = send(uint16(cim.CIMCmdID_kCIM_CID_MSG_DATA), data)
 }
 
 func onHandleRecentSessionList(dataBuff []byte) {
@@ -186,4 +238,15 @@ func onHandleRecentSessionList(dataBuff []byte) {
 			logger.Sugar.Infof("[%s][%d:%s][%s]", sessionText, item.MsgFromUserId, string(item.MsgData), tm.Format("2006-01-01 15:04:05 PM"))
 		}
 	}
+}
+
+func onHandleMsgDataAck(dataBuff []byte) {
+	ack := &cim.CIMMsgDataAck{}
+	err := proto.Unmarshal(dataBuff, ack)
+	if err != nil {
+		logger.Sugar.Error("onHandleMsgDataAck,", err.Error())
+		return
+	}
+
+	logger.Sugar.Errorf("send msgId:{%s} success", ack.MsgId)
 }

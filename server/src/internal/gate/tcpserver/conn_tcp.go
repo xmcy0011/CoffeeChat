@@ -6,6 +6,7 @@ import (
 	"github.com/CoffeeChat/server/src/api/cim"
 	"github.com/CoffeeChat/server/src/pkg/logger"
 	"github.com/golang/protobuf/proto"
+	"go.uber.org/atomic"
 	"net"
 	"sync"
 	"time"
@@ -14,6 +15,12 @@ import (
 const kLoginTimeOut = 15     // 登录超时时间(s)
 const kBusinessTimeOut = 5   // 常规业务超时时间(s)
 const kHeartBeatTimeOut = 60 // 心跳超时时间
+const kAckMsgTimeOut = 15    // 等待确认收到消息响应超时时间
+
+var upMsgTotalCount = atomic.NewUint64(0)   // 上行消息总数
+var upMissMsgCount = atomic.NewUint64(0)    // 上行消息丢失
+var downMsgTotalCount = atomic.NewUint64(0) // 下行消息总数
+var downMissMsgCount = atomic.NewUint64(0)  // 下行消息丢失
 
 type TcpConn struct {
 	Conn          *net.TCPConn      // 客户端的连接
@@ -111,8 +118,10 @@ func (tcp *TcpConn) OnRead(header *cim.ImHeader, buff []byte) {
 		tcp.onHandleGetMsgListReq(header, buff)
 		break
 	case uint16(cim.CIMCmdID_kCIM_CID_MSG_DATA):
+		tcp.onHandleMsgData(header, buff)
 		break
 	case uint16(cim.CIMCmdID_kCIM_CID_MSG_DATA_ACK):
+		tcp.onHandleMsgAck(header, buff)
 		break
 	default:
 		logger.Sugar.Errorf("unknown command_id=%d", header.CommandId)
@@ -139,9 +148,14 @@ func (tcp *TcpConn) OnTimer(tick int64) {
 		logger.Sugar.Info("login time out, close connect, address=", tcp.Conn.RemoteAddr().String())
 		tcp.OnClose()
 	} else if (tick - tcp.lastHeartBeatTime) > kHeartBeatTimeOut {
-		logger.Sugar.Errorf("heartbeat time out, close connect, address=%s,userId=%d,clientType:%d",
+		logger.Sugar.Errorf("heartbeat time out, close connect, address=%s,userId=%d,ClientType:%d",
 			tcp.Conn.RemoteAddr().String(), tcp.userId, tcp.clientType)
 		tcp.OnClose()
+	} else {
+		user := DefaultUserManager.FindUser(tcp.userId)
+		if user != nil {
+			user.OnCheckAckMessageTimerOut(tick)
+		}
 	}
 }
 
@@ -216,6 +230,7 @@ func (tcp *TcpConn) onHandleAuthReq(header *cim.ImHeader, buff []byte) {
 					userInfo = NewUser()
 					userInfo.UserId = tcp.userId
 					userInfo.NickName = req.NickName
+					userInfo.ClientType = tcp.clientType
 					DefaultUserManager.AddUser(userInfo.UserId, userInfo)
 				}
 				// save to user.connList
@@ -279,7 +294,7 @@ func (tcp *TcpConn) onHandleGetMsgListReq(header *cim.ImHeader, buff []byte) {
 		_, err = tcp.Send(header.SeqNum, uint16(cim.CIMCmdID_kCIM_CID_LIST_MSG_RSP), rsp)
 	}
 
-	logger.Sugar.Infof("onHandleGetMsgListReq gRPC GetMsgList,user_id:%d,session_id:%d,"+
+	logger.Sugar.Infof("onHandleGetMsgListReq GetMsgList(gRPC) res,user_id:%d,session_id:%d,"+
 		"session_type=%d,end_msg_id=%d,limit_count=%d,count=%d",
 		req.UserId, req.SessionId, req.SessionType, req.EndMsgId, req.LimitCount,
 		len(rsp.MsgList))
@@ -287,10 +302,67 @@ func (tcp *TcpConn) onHandleGetMsgListReq(header *cim.ImHeader, buff []byte) {
 
 // 发送消息
 func (tcp *TcpConn) onHandleMsgData(header *cim.ImHeader, buff []byte) {
+	req := &cim.CIMMsgData{}
+	err := proto.Unmarshal(buff, req)
+	if err != nil {
+		logger.Sugar.Error(err.Error())
+		return
+	}
 
+	if req.FromUserId == req.ToSessionId {
+		logger.Sugar.Error("onHandleMsgData from_id:%d is equals to_id:%d,"+
+			"session_type=%d,msg_id=%s,msg_type=%d",
+			req.FromUserId, req.ToSessionId, req.SessionType, req.MsgId, req.MsgType)
+		return
+	}
+
+	// fix time
+	req.CreateTime = int32(time.Now().Unix())
+	logger.Sugar.Infof("onHandleMsgData from_id:%d,to_id:%d,"+
+		"session_type=%d,msg_id=%s,msg_type=%d,create_time=%d",
+		req.FromUserId, req.ToSessionId, req.SessionType, req.MsgId, req.MsgType, req.CreateTime)
+	upMsgTotalCount.Inc()
+
+	conn := GetMessageConn()
+	ctx, cancelFun := context.WithTimeout(context.Background(), time.Second*kBusinessTimeOut)
+	defer cancelFun()
+
+	rsp, err := conn.SendMsgData(ctx, req)
+	if err != nil {
+		// 上行消息丢失计数+1
+		upMissMsgCount.Inc()
+		logger.Sugar.Error("err:", err.Error())
+		return
+	} else {
+		_, err = tcp.Send(header.SeqNum, uint16(cim.CIMCmdID_kCIM_CID_MSG_DATA_ACK), rsp)
+	}
+
+	logger.Sugar.Infof("onHandleMsgData SendMsgData(gRPC) res,from_id:%d,to_id:%d,"+
+		"session_type=%d,msg_id=%s,server_msg_id=%d,create_time=%d,res_code=%d",
+		rsp.FromUserId, rsp.ToSessionId, rsp.SessionType, rsp.MsgId, rsp.ServerMsgId, rsp.CreateTime, rsp.ResCode)
+
+	// send to peer
+	user := DefaultUserManager.FindUser(rsp.ToSessionId)
+	if user != nil {
+		user.BroadcastMessage(req)
+	}
 }
 
 // 消息收到确认
 func (tcp *TcpConn) onHandleMsgAck(header *cim.ImHeader, buff []byte) {
+	req := &cim.CIMMsgDataAck{}
+	err := proto.Unmarshal(buff, req)
+	if err != nil {
+		logger.Sugar.Infof("onHandleMsgAck error:", err.Error())
+		return
+	}
 
+	logger.Sugar.Infof("onHandleMsgAck from_id:%d,to_id:%d,"+
+		"session_type=%d,msg_id=%s,server_msg_id=%d,create_time=%d,res_code=%d",
+		req.FromUserId, req.ToSessionId, req.SessionType, req.MsgId, req.ServerMsgId, req.CreateTime, req.ResCode)
+
+	user := DefaultUserManager.FindUser(req.FromUserId)
+	if user != nil {
+		user.AckMessage(req)
+	}
 }
