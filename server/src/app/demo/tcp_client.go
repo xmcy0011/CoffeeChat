@@ -178,6 +178,9 @@ func read() {
 		case uint16(cim.CIMCmdID_kCIM_CID_MSG_DATA_ACK):
 			onHandleMsgDataAck(dataBuff)
 			break
+		case uint16(cim.CIMCmdID_kCIM_CID_MSG_DATA):
+			onHandleMsgData(dataBuff)
+			break
 		default:
 			logger.Sugar.Errorf("unknown command:%d", header.CommandId)
 			break
@@ -249,4 +252,32 @@ func onHandleMsgDataAck(dataBuff []byte) {
 	}
 
 	logger.Sugar.Errorf("send msgId:{%s} success", ack.MsgId)
+}
+
+func onHandleMsgData(dataBuff []byte) {
+	msg := &cim.CIMMsgData{}
+	err := proto.Unmarshal(dataBuff, msg)
+	if err != nil {
+		logger.Sugar.Error("onHandleMsgDataAck,", err.Error())
+		return
+	}
+
+	// ack
+	ack := &cim.CIMMsgDataAck{
+		FromUserId: KUserId,
+		//ToSessionId: msg.FromUserId,
+		MsgId:       msg.MsgId,
+		ServerMsgId: 0,
+		ResCode:     cim.CIMResCode_kCIM_RES_CODE_OK,
+		SessionType: msg.SessionType,
+		CreateTime:  int32(time.Now().Unix()),
+	}
+	if msg.SessionType == cim.CIMSessionType_kCIM_SESSION_TYPE_SINGLE {
+		ack.ToSessionId = msg.FromUserId
+	} else {
+		ack.ToSessionId = msg.ToSessionId
+	}
+	_ = send(uint16(cim.CIMCmdID_kCIM_CID_MSG_DATA_ACK), ack)
+
+	logger.Sugar.Errorf("recv [%d]:[%s]", msg.FromUserId, string(msg.MsgData))
 }

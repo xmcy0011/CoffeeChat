@@ -342,9 +342,11 @@ func (tcp *TcpConn) onHandleMsgData(header *cim.ImHeader, buff []byte) {
 		rsp.FromUserId, rsp.ToSessionId, rsp.SessionType, rsp.MsgId, rsp.ServerMsgId, rsp.CreateTime, rsp.ResCode)
 
 	// send to peer
-	user := DefaultUserManager.FindUser(rsp.ToSessionId)
-	if user != nil {
-		user.BroadcastMessage(req)
+	if req.SessionType == cim.CIMSessionType_kCIM_SESSION_TYPE_SINGLE {
+		user := DefaultUserManager.FindUser(rsp.ToSessionId)
+		if user != nil {
+			user.BroadcastMessage(req)
+		}
 	}
 }
 
