@@ -13,7 +13,7 @@ import 'package:fixnum/fixnum.dart';
 import 'package:toast/toast.dart';
 
 // 单次拉取历史记录的最大数量
-const kMaxPullMsgLimitCount = 20;
+const kMaxPullMsgLimitCount = 10;
 
 // 聊天详情页面
 class PageMessage extends StatefulWidget {
@@ -29,7 +29,7 @@ class _PageMessageState extends State<PageMessage> {
   SessionModel sessionInfo; // 聊天对应的会话信息
   List<MessageModel> _msgList = new List<MessageModel>(); // 历史消息
 
-  ScrollController _scrollController = new ScrollController(); // 历史消息滚动
+  ScrollController _scrollController; // 历史消息滚动
   TextEditingController _textController = new TextEditingController(); // 输入的文本
 
   _PageMessageState(this.sessionInfo);
@@ -289,14 +289,12 @@ class _PageMessageState extends State<PageMessage> {
           msg.add(msgModel);
         });
 
-        var needScroll = _msgList.length == 0;
         setState(() {
           _msgList.insertAll(0, msg);
+          if (_scrollController == null) {
+            _scrollController = new ScrollController(initialScrollOffset: 380);
+          }
         });
-
-        if (needScroll) {
-          scrollEnd();
-        }
       } else {
         print("getMessageList error,rsp is not CIMGetMsgListRsp");
       }
@@ -306,21 +304,21 @@ class _PageMessageState extends State<PageMessage> {
   }
 
   scrollEnd([animationTime = 200]) {
-    var timer = new Timer(Duration(milliseconds: 200), () {
-      setState(() {
-        if (_scrollController != null) {
-          double scrollValue = _scrollController.position.maxScrollExtent;
-          if (scrollValue < 10) {
-            scrollValue = 1000000;
-          }
+    if (_scrollController != null) {
+      double scrollValue = _scrollController.position.maxScrollExtent;
+      if (scrollValue < 10) {
+        scrollValue = 1000000;
+      }
 
-          //_controller.jumpTo(scrollValue);
+      var timer = new Timer(Duration(milliseconds: 100), () {
+        setState(() {
+          //_scrollController.jumpTo(scrollValue);
           _scrollController.animateTo(scrollValue,
               duration: Duration(milliseconds: animationTime),
               curve: Curves.easeIn);
-        }
+        });
       });
-    });
+    }
   }
 
   // 缩小消息输入框
