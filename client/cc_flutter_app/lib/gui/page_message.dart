@@ -241,7 +241,34 @@ class _PageMessageState extends State<PageMessage> {
   }
 
   // 失败重发
-  void _reSendMsg(MessageModel msg) {}
+  void _reSendMsg(MessageModel msg) {
+    var sId = sessionInfo.sessionId;
+    var sType = sessionInfo.sessionType;
+
+    setState(() {
+      if (_msgList.length == (_msgList.indexOf(msg) + 1)) {
+        msg.msgStatus = CIMMsgStatus.kCIM_MSG_STATUS_SENDING;
+      } else {
+        // 如果不是最后一条消息，重新添加到末尾
+        _msgList.remove(msg);
+        _msgList.add(msg);
+        scrollEnd();
+      }
+    });
+
+    IMMessage.singleton
+        .sendMessage(msg.clientMsgId, sId, CIMMsgType.kCIM_MSG_TYPE_TEXT, sType,
+            msg.msgData)
+        .then((app) {
+      setState(() {
+        msg.msgStatus = CIMMsgStatus.kCIM_MSG_STATUS_SENT;
+      });
+    }).catchError((err) {
+      setState(() {
+        msg.msgStatus = CIMMsgStatus.kCIM_MSG_STATUS_FAILED;
+      });
+    });
+  }
 
   // 刷新消息
   Future _onRefresh() async {
@@ -333,7 +360,9 @@ class _PageMessageState extends State<PageMessage> {
         model.msgStatus = CIMMsgStatus.kCIM_MSG_STATUS_SENT;
       });
     }).catchError((err) {
-      model.msgStatus = CIMMsgStatus.kCIM_MSG_STATUS_FAILED;
+      setState(() {
+        model.msgStatus = CIMMsgStatus.kCIM_MSG_STATUS_FAILED;
+      });
     });
   }
 

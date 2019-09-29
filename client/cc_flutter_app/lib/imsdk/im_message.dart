@@ -139,8 +139,7 @@ class IMMessage {
       var reqTime = v.requestTime;
       var timespan = DateTime.now().difference(reqTime).inSeconds;
       if (timespan >= kRequestMsgTimeout) {
-        print("timeout seqNumber=${v.header.seqNumber},"
-            "msgId=${v.msgId}");
+        print("timeout msgId=${v.msgId}");
         v.callback("timeout");
         if (tempList == null) {
           tempList = new Map<String, IMMsgRequest>();
