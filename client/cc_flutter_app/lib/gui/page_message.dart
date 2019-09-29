@@ -292,7 +292,12 @@ class _PageMessageState extends State<PageMessage> {
         setState(() {
           _msgList.insertAll(0, msg);
           if (_scrollController == null) {
-            _scrollController = new ScrollController(initialScrollOffset: 380);
+            if (_msgList.length > 6) {
+              _scrollController =
+                  new ScrollController(initialScrollOffset: 380);
+            } else {
+              _scrollController = new ScrollController();
+            }
           }
         });
       } else {
