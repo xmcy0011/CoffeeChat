@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:cc_flutter_app/imsdk/im_message.dart';
 import 'package:cc_flutter_app/imsdk/model/im_header.dart';
@@ -20,12 +21,20 @@ class ImClient {
   IMMessage msgService; // 消息处理
 
   var isLogin = false;
+  var isReLogin = false;
   Int64 userId;
+  var nickName;
+  var ip;
+  var port;
+  var userToken;
 
   var requestMap = new Map<int, IMRequest>(); // 请求列表
   var registerCallbackList = new List<int>();
   var cache = new List<int>(); // socket receive cache
   var cacheOffset = 0; // socket receive cache offset
+
+  var checkConnectTimeSpan = 1; // 重连间隔,指数退避算法,1s,2s,4s,8s
+  var checkConnectLastTick = 0;
 
   /// 单实例
   static final ImClient singleton = ImClient._internal();
@@ -36,6 +45,7 @@ class ImClient {
 
   ImClient._internal() {
     isLogin = false;
+    isReLogin = false;
 
     // send heartbeat
     Timer.periodic(Duration(seconds: 15), (timer) {
@@ -48,6 +58,7 @@ class ImClient {
     // timeout
     Timer.periodic(Duration(seconds: 1), (timer) {
       _checkRequestTimeout();
+      _checkConnect();
     });
   }
 
@@ -58,10 +69,16 @@ class ImClient {
   /// [ip] 服务器IP
   /// [port] 服务器端口
   /// [callback] (CIMAuthTokenRsp)
-  Future auth(int userId, var nickName, var userToken, var ip, var port) async {
+  Future auth(Int64 userId, var nick, var userToken, var ip, var port) async {
     if (socket != null) {
       socket.close();
     }
+
+    this.userId = userId;
+    this.nickName = nick;
+    this.userToken = userToken;
+    this.ip = ip;
+    this.port = port;
 
     var completer = new Completer();
     var feature = RawSocket.connect(ip, port, timeout: Duration(seconds: 5));
@@ -74,11 +91,11 @@ class ImClient {
       // auth request
       var req = new CIMAuthTokenReq();
       req.userId = Int64.parseInt(userId.toString());
-      req.nickName = nickName;
+      req.nickName = nick;
       req.userToken = userToken;
       req.clientType = CIMClientType.kCIM_CLIENT_TYPE_DEFAULT;
       req.clientVersion = "1.0/flutter";
-      print("auth req,userId=$userId,nickName=$nickName,token=$userToken");
+      print("auth req,userId=$userId,nickName=$nick,token=$userToken");
       sendRequest(CIMCmdID.kCIM_CID_LOGIN_AUTH_TOKEN_REQ.value, req, (rsp) {
         if (rsp is CIMAuthTokenRsp) {
           if (rsp.resultCode == CIMErrorCode.kCIM_ERR_SUCCSSE) {
@@ -183,6 +200,10 @@ class ImClient {
 
   void _onClose() {
     print("on close connection");
+    if (isLogin) {
+      isReLogin = true;
+    }
+    isLogin = false;
   }
 
   // 超时
@@ -191,10 +212,7 @@ class ImClient {
 
     requestMap.forEach((k, v) {
       var reqTime = v.requestTime;
-      var timespan = DateTime
-          .now()
-          .difference(reqTime)
-          .inSeconds;
+      var timespan = DateTime.now().difference(reqTime).inSeconds;
       if (timespan >= kRequestTimeout) {
         print("timeout seqNumber=${v.header.seqNumber},"
             "cmdId=${v.header.commandId}");
@@ -212,6 +230,34 @@ class ImClient {
         requestMap.remove(k);
       });
       tempList.clear();
+    }
+  }
+
+  void _checkConnect() {
+    if (isLogin) {
+      checkConnectLastTick = 0;
+      checkConnectTimeSpan = 1;
+      return;
+    }
+    if (!isReLogin) {
+      return;
+    }
+    var timeStamp = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+
+    if (checkConnectLastTick == 0) {
+      checkConnectLastTick = timeStamp;
+    }
+    if ((timeStamp - checkConnectLastTick) > checkConnectTimeSpan) {
+      checkConnectLastTick = timeStamp;
+      // 重新登录
+      auth(this.userId, this.nickName, this.userToken, this.ip, this.port);
+      print("time $timeStamp _checkConnect");
+
+      // 1s 2s 4s 8s
+      checkConnectTimeSpan *= 2;
+      if (checkConnectTimeSpan > 8) {
+        checkConnectTimeSpan = 1;
+      }
     }
   }
 

@@ -106,6 +106,13 @@ class IMMessage {
     req.limitCount = limitCount;
     req.endMsgId = endMsgId;
 
+    if (!ImClient.singleton.isLogin) {
+      new Timer(Duration(milliseconds: 200), () {
+        completer.completeError("network is unavailable");
+      });
+      return completer.future;
+    }
+
     ImClient.singleton.sendRequest(CIMCmdID.kCIM_CID_LIST_MSG_REQ.value, req,
         (rsp) {
       if (rsp is CIMGetMsgListRsp) {
