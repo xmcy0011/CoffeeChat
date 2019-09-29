@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:cc_flutter_app/gui/model/model.dart';
 import 'package:cc_flutter_app/imsdk/im_client.dart';
 import 'package:cc_flutter_app/imsdk/im_message.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pbserver.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.List.pbserver.dart';
+import 'package:cc_flutter_app/imsdk/proto/CIM.Message.pb.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fixnum/fixnum.dart';
@@ -25,7 +28,7 @@ class _PageMessageState extends State<PageMessage> {
   SessionModel sessionInfo; // 聊天对应的会话信息
   List<MessageModel> _msgList = new List<MessageModel>(); // 历史消息
 
-  ScrollController _scrollController; // 历史消息滚动
+  ScrollController _scrollController = new ScrollController(); // 历史消息滚动
   TextEditingController _textEditingController; // 输入的文本
 
   _PageMessageState(this.sessionInfo);
@@ -70,7 +73,14 @@ class _PageMessageState extends State<PageMessage> {
   @override
   void initState() {
     super.initState();
+    IMMessage.singleton.registerReceiveCallback("pageMessage", _onReceiveMsg);
     _onRefresh();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    IMMessage.singleton.unregisterReceiveCallback("pageMessage");
   }
 
   // 生成历史聊天记录
@@ -251,13 +261,18 @@ class _PageMessageState extends State<PageMessage> {
           msg.add(msgModel);
         });
 
-        _msgList.insertAll(0, msg);
-        //_msgList.addAll(msg);
+        var needScroll = _msgList.length == 0;
         setState(() {
-          if (_msgList.length == 0) {
-            scrollEnd();
-          }
+          _msgList.insertAll(0, msg);
         });
+
+        if (needScroll) {
+          var timer = new Timer(Duration(milliseconds: 200), () {
+            setState(() {
+              scrollEnd(200);
+            });
+          });
+        }
       } else {
         print("getMessageList error,rsp is not CIMGetMsgListRsp");
       }
@@ -267,14 +282,17 @@ class _PageMessageState extends State<PageMessage> {
   }
 
   scrollEnd([animationTime = 500]) {
-    double scrollValue = _scrollController.position.maxScrollExtent;
-    if (scrollValue < 10) {
-      scrollValue = 1000000;
-    }
+    if (_scrollController != null) {
+      double scrollValue = _scrollController.position.maxScrollExtent;
+      if (scrollValue < 10) {
+        scrollValue = 1000000;
+      }
 
-    //_controller.jumpTo(scrollValue);
-    _scrollController.animateTo(scrollValue,
-        duration: Duration(milliseconds: animationTime), curve: Curves.easeIn);
+      //_controller.jumpTo(scrollValue);
+      _scrollController.animateTo(scrollValue,
+          duration: Duration(milliseconds: animationTime),
+          curve: Curves.easeIn);
+    }
   }
 
   // 缩小消息输入框
@@ -282,4 +300,31 @@ class _PageMessageState extends State<PageMessage> {
 
   // 发送文本
   void _onSendMsg(String text) {}
+
+  // 接收一条消息
+  void _onReceiveMsg(CIMMsgData msg) {
+    if (msg.fromUserId == sessionInfo.sessionId) {
+      var msgInfo = new CIMMsgInfo();
+      msgInfo.toSessionId = msg.toSessionId;
+      msgInfo.fromUserId = msg.fromUserId;
+      msgInfo.msgType = msg.msgType;
+      msgInfo.msgData = msg.msgData;
+      msgInfo.msgStatus = CIMMsgStatus.kCIM_MSG_STATUS_SENT; // FIXED me
+      msgInfo.msgFeature = CIMMsgFeature.kCIM_MSG_FEATURE_DEFAULT; // FIXED me
+      msgInfo.msgResCode = CIMResCode.kCIM_RES_CODE_OK; // FIXED me
+      msgInfo.serverMsgId = Int64(0); // FIXED me
+      msgInfo.createTime = msg.createTime;
+      msgInfo.sessionType = msg.sessionType;
+
+      var model = new MessageModel(msgInfo);
+      setState(() {
+        _msgList.add(model);
+      });
+      var timer = new Timer(Duration(milliseconds: 200), () {
+        setState(() {
+          scrollEnd(200);
+        });
+      });
+    }
+  }
 }

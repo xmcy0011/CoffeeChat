@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:cc_flutter_app/imsdk/im_message.dart';
 import 'package:cc_flutter_app/imsdk/model/im_header.dart';
 import 'package:cc_flutter_app/imsdk/model/im_request.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
@@ -12,14 +13,17 @@ import 'package:fixnum/fixnum.dart';
 
 const kReadBufferSize = 1024; // Bytes
 const kRequestTimeout = 10; // 10秒请求超时
+const kRequestMsgTimeout = 10; // 10秒请求超时
 
 class ImClient {
   RawSocket socket; // socket
+  IMMessage msgService; // 消息处理
 
   var isLogin = false;
   Int64 userId;
 
   var requestMap = new Map<int, IMRequest>(); // 请求列表
+  var registerCallbackList = new List<int>();
   var cache = new List<int>(); // socket receive cache
   var cacheOffset = 0; // socket receive cache offset
 
@@ -43,29 +47,7 @@ class ImClient {
 
     // timeout
     Timer.periodic(Duration(seconds: 1), (timer) {
-      Map<int, IMRequest> tempList;
-
-      requestMap.forEach((k, v) {
-        var reqTime = v.requestTime;
-        var timespan = DateTime.now().difference(reqTime).inSeconds;
-        if (timespan >= kRequestTimeout) {
-          print("timeout seqNumber=${v.header.seqNumber},"
-              "cmdId=${v.header.commandId}");
-          v.callback(Future.error("timeout"));
-          if (tempList == null) {
-            tempList = new Map<int, IMRequest>();
-          }
-          tempList[v.header.seqNumber] = v;
-        }
-      });
-
-      // clear timeout request
-      if (tempList != null) {
-        tempList.forEach((k, v) {
-          requestMap.remove(k);
-        });
-        tempList.clear();
-      }
+      _checkRequestTimeout();
     });
   }
 
@@ -147,6 +129,11 @@ class ImClient {
     }
   }
 
+  /// 注册消息回调
+  void registerMessageService(IMMessage msg) {
+    this.msgService = msg;
+  }
+
   // 数据处理
   void _onRead(RawSocketEvent event) {
     if (event == RawSocketEvent.read) {
@@ -198,6 +185,36 @@ class ImClient {
     print("on close connection");
   }
 
+  // 超时
+  void _checkRequestTimeout() {
+    Map<int, IMRequest> tempList;
+
+    requestMap.forEach((k, v) {
+      var reqTime = v.requestTime;
+      var timespan = DateTime
+          .now()
+          .difference(reqTime)
+          .inSeconds;
+      if (timespan >= kRequestTimeout) {
+        print("timeout seqNumber=${v.header.seqNumber},"
+            "cmdId=${v.header.commandId}");
+        v.callback(Future.error("timeout"));
+        if (tempList == null) {
+          tempList = new Map<int, IMRequest>();
+        }
+        tempList[v.header.seqNumber] = v;
+      }
+    });
+
+    // clear timeout request
+    if (tempList != null) {
+      tempList.forEach((k, v) {
+        requestMap.remove(k);
+      });
+      tempList.clear();
+    }
+  }
+
   // 消息总处理
   void _onHandle(IMHeader header, List<int> data) {
     if (header.commandId == CIMCmdID.kCIM_CID_LOGIN_HEARTBEAT.value) {
@@ -205,13 +222,25 @@ class ImClient {
       return null;
     }
 
+    // 认证
     if (header.commandId == CIMCmdID.kCIM_CID_LOGIN_AUTH_TOKEN_RSP.value) {
       _handleAuthRsp(header, data);
-    } else if (header.commandId ==
+    }
+    // 会话列表
+    else if (header.commandId ==
         CIMCmdID.kCIM_CID_LIST_RECENT_CONTACT_SESSION_RSP.value) {
       _handleRecentSessionList(header, data);
-    } else if (header.commandId == CIMCmdID.kCIM_CID_LIST_MSG_RSP.value) {
+    }
+    // 历史消息
+    else if (header.commandId == CIMCmdID.kCIM_CID_LIST_MSG_RSP.value) {
       _handleGetMsgList(header, data);
+    }
+    // 消息收发
+    else if (header.commandId == CIMCmdID.kCIM_CID_MSG_DATA.value ||
+        header.commandId == CIMCmdID.kCIM_CID_MSG_DATA_ACK.value) {
+      if (msgService != null) {
+        msgService.onHandle(header, data);
+      }
     } else {
       print("unknown message,cmdId:${header.commandId}");
     }

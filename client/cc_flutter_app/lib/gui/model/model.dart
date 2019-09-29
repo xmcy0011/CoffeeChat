@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
+import 'package:cc_flutter_app/imsdk/proto/CIM.Message.pb.dart';
 import 'package:fixnum/fixnum.dart';
 
 class UserModel {
@@ -22,7 +23,7 @@ class MessageModel {
   CIMSessionType sessionType; // 会话类型
   Int64 fromUserId; // 来源会话ID
   Int64 toSessionId; // 目标会话ID
-  Int64 createTime; // 消息创建时间戳（毫秒）
+  int createTime; // 消息创建时间戳（毫秒）
 
   CIMMsgType msgType; // 消息类型
   CIMMsgStatus msgStatus; // 消息状态（预留）

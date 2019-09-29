@@ -10,3 +10,11 @@ class IMRequest {
 
   IMRequest(this.header, this.callback, this.requestTime);
 }
+
+/// 发送一条消息的请求
+class IMMsgRequest extends IMRequest {
+  String msgId;
+
+  IMMsgRequest(this.msgId, IMHeader header, Function callback, DateTime reqTime)
+      : super(header, callback, reqTime);
+}
