@@ -34,12 +34,13 @@ class IMMessage {
   }
 
   /// 发送一条消息
+  /// [msgId] 客户端消息ID（uuid），请使用generateMsgId()生成
   /// [toSessionId] 单聊，则为用户ID。群聊，则为群组ID
   /// [msgType] 消息类型
   /// [sessionType] 会话类型
   /// [msgData] 消息内容
   /// @return [Future] then(CIMMsgDataAck ack).error(String err)
-  Future sendMessage(Int64 toSessionId, CIMMsgType msgType,
+  Future sendMessage(String msgId, Int64 toSessionId, CIMMsgType msgType,
       CIMSessionType sessionType, String msgData) async {
     var completer = new Completer();
 
@@ -51,7 +52,8 @@ class IMMessage {
     msg.toSessionId = toSessionId;
 
     var uuid = new Uuid();
-    msg.msgId = uuid.v5(Uuid.NAMESPACE_URL, "www.coffeechat.cn");
+    //msg.msgId = uuid.v5(Uuid.NAMESPACE_URL, "www.coffeechat.cn");
+    msg.msgId = msgId;
     msg.createTime = DateTime.now().millisecondsSinceEpoch ~/ 1000;
     msg.msgType = msgType;
     msg.sessionType = sessionType;
@@ -77,6 +79,12 @@ class IMMessage {
     // 注意，CIM_CID_MSG_DATA对应的返回是kCIM_CID_MSG_DATA_ACK，且不能用序号
     ImClient.singleton.send(CIMCmdID.kCIM_CID_MSG_DATA.value, msg);
     return completer.future;
+  }
+
+  /// 生成客户端消息ID（UUID）
+  String generateMsgId() {
+    var uuid = new Uuid();
+    return uuid.v5(Uuid.NAMESPACE_URL, "www.coffeechat.cn");
   }
 
   /// 查询历史漫游消息

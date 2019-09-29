@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:cc_flutter_app/gui/model/model.dart';
 import 'package:cc_flutter_app/imsdk/im_client.dart';
@@ -29,7 +30,7 @@ class _PageMessageState extends State<PageMessage> {
   List<MessageModel> _msgList = new List<MessageModel>(); // 历史消息
 
   ScrollController _scrollController = new ScrollController(); // 历史消息滚动
-  TextEditingController _textEditingController; // 输入的文本
+  TextEditingController _textController = new TextEditingController(); // 输入的文本
 
   _PageMessageState(this.sessionInfo);
 
@@ -113,7 +114,7 @@ class _PageMessageState extends State<PageMessage> {
               Flexible(
                 child: TextField(
                   decoration: InputDecoration.collapsed(hintText: ""),
-                  controller: _textEditingController,
+                  controller: _textController,
                   onSubmitted: _onSendMsg,
                 ),
               ),
@@ -121,7 +122,7 @@ class _PageMessageState extends State<PageMessage> {
                 margin: const EdgeInsets.symmetric(horizontal: 16),
                 child: IconButton(
                   icon: Icon(Icons.send),
-                  onPressed: () => _onSendMsg(_textEditingController.text),
+                  onPressed: () => _onSendMsg(_textController.text),
                 ),
               )
             ],
@@ -267,11 +268,7 @@ class _PageMessageState extends State<PageMessage> {
         });
 
         if (needScroll) {
-          var timer = new Timer(Duration(milliseconds: 200), () {
-            setState(() {
-              scrollEnd(200);
-            });
-          });
+          scrollEnd();
         }
       } else {
         print("getMessageList error,rsp is not CIMGetMsgListRsp");
@@ -281,25 +278,64 @@ class _PageMessageState extends State<PageMessage> {
     });
   }
 
-  scrollEnd([animationTime = 500]) {
-    if (_scrollController != null) {
-      double scrollValue = _scrollController.position.maxScrollExtent;
-      if (scrollValue < 10) {
-        scrollValue = 1000000;
-      }
+  scrollEnd([animationTime = 200]) {
+    var timer = new Timer(Duration(milliseconds: 200), () {
+      setState(() {
+        if (_scrollController != null) {
+          double scrollValue = _scrollController.position.maxScrollExtent;
+          if (scrollValue < 10) {
+            scrollValue = 1000000;
+          }
 
-      //_controller.jumpTo(scrollValue);
-      _scrollController.animateTo(scrollValue,
-          duration: Duration(milliseconds: animationTime),
-          curve: Curves.easeIn);
-    }
+          //_controller.jumpTo(scrollValue);
+          _scrollController.animateTo(scrollValue,
+              duration: Duration(milliseconds: animationTime),
+              curve: Curves.easeIn);
+        }
+      });
+    });
   }
 
   // 缩小消息输入框
   void _hideBottomLayout() {}
 
   // 发送文本
-  void _onSendMsg(String text) {}
+  void _onSendMsg(String text) {
+    var sId = sessionInfo.sessionId;
+    var sType = sessionInfo.sessionType;
+
+    var msgInfo = new CIMMsgInfo();
+    msgInfo.clientMsgId = IMMessage.singleton.generateMsgId();
+    msgInfo.sessionType = sessionInfo.sessionType;
+    msgInfo.fromUserId = ImClient.singleton.userId;
+    msgInfo.toSessionId = sessionInfo.sessionId;
+    msgInfo.createTime = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+    msgInfo.msgResCode = CIMResCode.kCIM_RES_CODE_OK;
+    msgInfo.msgStatus = CIMMsgStatus.kCIM_MSG_STATUS_SENDING; // 发送中
+    msgInfo.msgFeature = CIMMsgFeature.kCIM_MSG_FEATURE_DEFAULT;
+    msgInfo.msgData = utf8.encode(text);
+    msgInfo.msgType = CIMMsgType.kCIM_MSG_TYPE_TEXT;
+    msgInfo.senderClientType = CIMClientType.kCIM_CLIENT_TYPE_DEFAULT;
+
+    //msgInfo.clientMsgId
+    MessageModel model = new MessageModel(msgInfo);
+    setState(() {
+      _msgList.add(model);
+      _textController.clear();
+    });
+    scrollEnd();
+
+    IMMessage.singleton
+        .sendMessage(msgInfo.clientMsgId, sId, CIMMsgType.kCIM_MSG_TYPE_TEXT,
+            sType, text)
+        .then((app) {
+      setState(() {
+        model.msgStatus = CIMMsgStatus.kCIM_MSG_STATUS_SENT;
+      });
+    }).catchError((err) {
+      model.msgStatus = CIMMsgStatus.kCIM_MSG_STATUS_FAILED;
+    });
+  }
 
   // 接收一条消息
   void _onReceiveMsg(CIMMsgData msg) {
@@ -320,11 +356,7 @@ class _PageMessageState extends State<PageMessage> {
       setState(() {
         _msgList.add(model);
       });
-      var timer = new Timer(Duration(milliseconds: 200), () {
-        setState(() {
-          scrollEnd(200);
-        });
-      });
+      scrollEnd();
     }
   }
 }
