@@ -166,7 +166,7 @@ class CIMMsgInfo extends $pb.GeneratedMessage {
     ..e<CIMSessionType>(5, 'sessionType', $pb.PbFieldType.OE, CIMSessionType.kCIM_SESSION_TYPE_Invalid, CIMSessionType.valueOf, CIMSessionType.values)
     ..a<Int64>(6, 'fromUserId', $pb.PbFieldType.OU6, Int64.ZERO)
     ..a<Int64>(7, 'toSessionId', $pb.PbFieldType.OU6, Int64.ZERO)
-    ..a<Int64>(8, 'createTime', $pb.PbFieldType.OU6, Int64.ZERO)
+    ..a<$core.int>(8, 'createTime', $pb.PbFieldType.OU3)
     ..e<CIMMsgType>(9, 'msgType', $pb.PbFieldType.OE, CIMMsgType.kCIM_MSG_TYPE_UNKNOWN, CIMMsgType.valueOf, CIMMsgType.values)
     ..e<CIMMsgStatus>(10, 'msgStatus', $pb.PbFieldType.OE, CIMMsgStatus.kCIM_MSG_STATUS_NONE, CIMMsgStatus.valueOf, CIMMsgStatus.values)
     ..a<$core.List<$core.int>>(11, 'msgData', $pb.PbFieldType.OY)
@@ -222,8 +222,8 @@ class CIMMsgInfo extends $pb.GeneratedMessage {
   $core.bool hasToSessionId() => $_has(6);
   void clearToSessionId() => clearField(7);
 
-  Int64 get createTime => $_getI64(7);
-  set createTime(Int64 v) { $_setInt64(7, v); }
+  $core.int get createTime => $_get(7, 0);
+  set createTime($core.int v) { $_setUnsignedInt32(7, v); }
   $core.bool hasCreateTime() => $_has(7);
   void clearCreateTime() => clearField(8);
 

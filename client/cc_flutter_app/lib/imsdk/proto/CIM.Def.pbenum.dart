@@ -187,9 +187,11 @@ class CIMMsgStatus extends $pb.ProtobufEnum {
 
 class CIMSessionStatusType extends $pb.ProtobufEnum {
   static const CIMSessionStatusType kCIM_SESSION_STATUS_OK = CIMSessionStatusType._(0, 'kCIM_SESSION_STATUS_OK');
+  static const CIMSessionStatusType kCIM_SESSION_STATUS_DELETE = CIMSessionStatusType._(1, 'kCIM_SESSION_STATUS_DELETE');
 
   static const $core.List<CIMSessionStatusType> values = <CIMSessionStatusType> [
     kCIM_SESSION_STATUS_OK,
+    kCIM_SESSION_STATUS_DELETE,
   ];
 
   static final $core.Map<$core.int, CIMSessionStatusType> _byValue = $pb.ProtobufEnum.initByValue(values);

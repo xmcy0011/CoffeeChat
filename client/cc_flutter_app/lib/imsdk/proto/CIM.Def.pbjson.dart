@@ -100,6 +100,7 @@ const CIMSessionStatusType$json = const {
   '1': 'CIMSessionStatusType',
   '2': const [
     const {'1': 'kCIM_SESSION_STATUS_OK', '2': 0},
+    const {'1': 'kCIM_SESSION_STATUS_DELETE', '2': 1},
   ],
 };
 
@@ -158,7 +159,7 @@ const CIMMsgInfo$json = const {
     const {'1': 'session_type', '3': 5, '4': 1, '5': 14, '6': '.CIM.Def.CIMSessionType', '10': 'sessionType'},
     const {'1': 'from_user_id', '3': 6, '4': 1, '5': 4, '10': 'fromUserId'},
     const {'1': 'to_session_id', '3': 7, '4': 1, '5': 4, '10': 'toSessionId'},
-    const {'1': 'create_time', '3': 8, '4': 1, '5': 4, '10': 'createTime'},
+    const {'1': 'create_time', '3': 8, '4': 1, '5': 13, '10': 'createTime'},
     const {'1': 'msg_type', '3': 9, '4': 1, '5': 14, '6': '.CIM.Def.CIMMsgType', '10': 'msgType'},
     const {'1': 'msg_status', '3': 10, '4': 1, '5': 14, '6': '.CIM.Def.CIMMsgStatus', '10': 'msgStatus'},
     const {'1': 'msg_data', '3': 11, '4': 1, '5': 12, '10': 'msgData'},
