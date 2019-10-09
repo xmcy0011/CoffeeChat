@@ -4,11 +4,15 @@ opensource im with server(go) and ios(swift)
 
 ## Features
 
+### 设计
+
 - [x] 架构设计：参考瓜子 IM
 - [x] 协议设计：参考网易云 IM、环信、TeamTalk
 - [x] 数据库设计
 - [x] 消息分表存储设计
 - [x] IM 消息 ID 生成设计
+
+### 单聊群聊
 
 - [x] flutter 客户端
 - [x] 单聊
@@ -23,6 +27,8 @@ opensource im with server(go) and ios(swift)
 - [ ] 群聊
 - [ ] 群管理
 - [ ] 群成员管理
+
+### 客服功能
 
 - [ ] 客服会话
 - [ ] 欢迎语
