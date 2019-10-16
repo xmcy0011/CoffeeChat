@@ -29,6 +29,7 @@ dependencies:
   shrine_images: ^1.0.0 # 有一些需要用到的产品和商店的元素
   toast: ^0.1.4         # 类似安卓的不阻塞提示
   uuid: 2.0.1           # msgID生成(使用uuid，确保消息唯一)
+  shared_preferences: ^0.5.2 # 保存键值对信息
 
 dev_dependencies:
   flutter_test:

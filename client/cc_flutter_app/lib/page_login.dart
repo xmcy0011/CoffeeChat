@@ -5,6 +5,7 @@ import 'package:cc_flutter_app/imsdk/proto/CIM.Login.pb.dart';
 import 'package:cc_flutter_app/page_main.dart';
 import 'package:flutter/material.dart';
 import 'package:fixnum/fixnum.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
 
 //const DefaultServerIp = "10.0.107.254";
@@ -108,8 +109,41 @@ class _PageLoginStatefulWidgetState extends State<PageLoginStatefulWidget> {
     );
   }
 
+  @override
+  void initState() {
+    _load();
+    super.initState();
+  }
+
+  void _load() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String ip = prefs.getString("local_server_ip");
+    String userId = prefs.getString("local_user_id");
+    String nick = prefs.getString("local_nick_name");
+    String token = prefs.getString("local_token");
+    setState(() {
+      _usernameController.text = userId;
+      _passwordController.text = token;
+      _nicknameController.text = nick;
+      _serverIpController.text = ip;
+    });
+  }
+
+  void _save() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (_serverIpController.text.isNotEmpty)
+      prefs.setString("local_server_ip", _serverIpController.text);
+    if (_usernameController.text.isNotEmpty)
+      prefs.setString("local_user_id", _usernameController.text);
+    if (_passwordController.text.isNotEmpty)
+      prefs.setString("local_token", _passwordController.text);
+    if (_nicknameController.text.isNotEmpty)
+      prefs.setString("local_nick_name", _nicknameController.text);
+  }
+
   void _onLogin() {
     _showLoading((closeDialog) {
+      _save();
       _login(closeDialog);
     });
   }
