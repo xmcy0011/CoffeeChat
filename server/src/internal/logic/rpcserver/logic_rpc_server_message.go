@@ -8,6 +8,7 @@ import (
 	"github.com/CoffeeChat/server/src/internal/logic/dao"
 	"github.com/CoffeeChat/server/src/pkg/db"
 	"github.com/CoffeeChat/server/src/pkg/logger"
+	"strings"
 )
 
 // 发消息
@@ -26,7 +27,6 @@ func (s *LogicServer) SendMsgData(ctx context.Context, in *cim.CIMMsgData) (*cim
 	}
 
 	// sync broadcast user
-	s.messageBroadcastSingle(in)
 
 	// return ack
 	ack := &cim.CIMMsgDataAck{
@@ -60,9 +60,10 @@ func (s *LogicServer) messageBroadcastSingle(in *cim.CIMMsgData) {
 		return
 	}
 
-	// serverIp:true/false
+	// serverIp:true/false 用 serverId:true/false代替是不是好一些，因为可以有多个ip
 	for i := range userMap {
-		if userMap[i] == "true" {
+		arr := strings.Split(userMap[i], ":")
+		if len(arr) >= 2 && arr[0] == "true" {
 			// find gate gRPC server
 			gateClient, ok := gateRpcClientMap[i]
 			if ok {
