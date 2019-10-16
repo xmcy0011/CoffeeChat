@@ -32,9 +32,13 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
         ],
       ),
       body: Center(
-        child: ListView.builder(
-          itemCount: _sessionList.length,
-          itemBuilder: _buildSession,
+        child: RefreshIndicator(
+          // 下拉刷新
+          onRefresh: _onRefresh,
+          child: ListView.builder(
+            itemCount: _sessionList.length,
+            itemBuilder: _buildSession,
+          ),
         ),
       ),
     );
@@ -44,22 +48,7 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
   void initState() {
     super.initState();
 
-    // 拉取会话列表
-    var session = new IMSession();
-    session.getRecentSessionList().then((data) {
-      if (data is CIMRecentContactSessionRsp) {
-        for (var i = 0; i < data.contactSessionList.length; i++) {
-          var sessionInfo = data.contactSessionList.elementAt(i);
-
-          SessionModel model = new SessionModel(
-              sessionInfo, sessionInfo.sessionId.toString(), "");
-          //subtitle = "[${sessionInfo.msgFromUserId}]" + subtitle;
-          setState(() {
-            _sessionList.add(model);
-          });
-        }
-      }
-    });
+    _onRefresh();
   }
 
   Widget _buildSession(context, index) {
@@ -94,6 +83,28 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
 
   void _onAdd() {
     _asyncInputDialog(context);
+  }
+
+  Future _onRefresh() async {
+    // 拉取会话列表
+    var session = new IMSession();
+    session.getRecentSessionList().then((data) {
+      setState(() {
+        _sessionList.clear();
+      });
+      if (data is CIMRecentContactSessionRsp) {
+        for (var i = 0; i < data.contactSessionList.length; i++) {
+          var sessionInfo = data.contactSessionList.elementAt(i);
+
+          SessionModel model = new SessionModel(
+              sessionInfo, sessionInfo.sessionId.toString(), "");
+          //subtitle = "[${sessionInfo.msgFromUserId}]" + subtitle;
+          setState(() {
+            _sessionList.add(model);
+          });
+        }
+      }
+    });
   }
 
   void _onTap(var index) {
