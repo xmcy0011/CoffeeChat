@@ -1,4 +1,4 @@
-ListenIp="127.0.0.1"
+ListenIp="10.0.107.254"
 ListenPort=8000
 ListenPortWebSocket=8001
 
