@@ -1,11 +1,12 @@
-import 'dart:convert';
-
 import 'package:cc_flutter_app/gui/helper.dart';
 import 'package:cc_flutter_app/gui/page_message.dart';
 import 'package:cc_flutter_app/imsdk/im_session.dart';
+import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.List.pb.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:toast/toast.dart';
+import 'package:fixnum/fixnum.dart';
 
 import 'model/model.dart';
 
@@ -91,10 +92,67 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
     ]);
   }
 
-  void _onAdd() {}
+  void _onAdd() {
+    _asyncInputDialog(context);
+  }
 
   void _onTap(var index) {
     SessionModel model = _sessionList[index];
     navigatePushPage(context, PageMessage(model));
+  }
+
+  void _onCreateSession(int userId) {
+    CIMContactSessionInfo info = new CIMContactSessionInfo();
+    info.sessionId = Int64(userId);
+    info.sessionType = CIMSessionType.kCIM_SESSION_TYPE_SINGLE;
+    info.sessionStatus = CIMSessionStatusType.kCIM_SESSION_STATUS_OK;
+    info.isRobotSession = false;
+
+    SessionModel model =
+        new SessionModel(info, userId.toString(), "assets/default_avatar.png");
+
+    _sessionList.add(model);
+    navigatePushPage(context, PageMessage(model));
+  }
+
+  Future<String> _asyncInputDialog(BuildContext context) async {
+    final textFieldController = TextEditingController();
+    return showDialog<String>(
+      context: context,
+      barrierDismissible: false,
+      // dialog is dismissible with a tap on the barrier
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('聊天'),
+          content: new Row(
+            children: <Widget>[
+              new Expanded(
+                  child: new TextField(
+                controller: textFieldController,
+                autofocus: true,
+                decoration: new InputDecoration(
+                  labelText: '请输入对方ID', /*hintText: DEFAULTLOGINSERVERURL*/
+                ),
+              ))
+            ],
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('确认'),
+              onPressed: () {
+                var text = textFieldController.text;
+                int userId = int.tryParse(text);
+                if (text.length > 0 && userId != null) {
+                  Navigator.of(context).pop();
+                  _onCreateSession(userId);
+                } else {
+                  Toast.show('用户ID无效', context, gravity: Toast.CENTER);
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
