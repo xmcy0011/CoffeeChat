@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:toast/toast.dart';
 
-const DefaultServerIp = "127.0.0.1";
+//const DefaultServerIp = "10.0.107.254";
 const DefaultServerPort = 8000;
 
 class PageLoginStatefulWidget extends StatefulWidget {
@@ -19,6 +19,7 @@ class _PageLoginStatefulWidgetState extends State<PageLoginStatefulWidget> {
   final _usernameController = TextEditingController(text: "1008");
   final _nicknameController = TextEditingController(text: "三生三世十里桃花");
   final _passwordController = TextEditingController(text: "12345");
+  final _serverIpController = TextEditingController(text: "10.0.107.254");
   static const kShrineBrown900 = Color(0xFF442B2D);
 
   @override
@@ -69,6 +70,16 @@ class _PageLoginStatefulWidgetState extends State<PageLoginStatefulWidget> {
                 ),
               ),
             ),
+            const SizedBox(height: 12.0),
+            PrimaryColorOverride(
+              color: kShrineBrown900,
+              child: TextField(
+                controller: _serverIpController,
+                decoration: const InputDecoration(
+                  labelText: 'Token',
+                ),
+              ),
+            ),
             ButtonBar(
               children: <Widget>[
                 /*FlatButton(
@@ -107,7 +118,7 @@ class _PageLoginStatefulWidgetState extends State<PageLoginStatefulWidget> {
     var userId = int.tryParse(_usernameController.value.text);
     var nick = _nicknameController.value.text;
     var token = _passwordController.value.text;
-    var ip = DefaultServerIp;
+    var ip = _serverIpController.value.text;
     var port = DefaultServerPort;
 
     if (int.tryParse(_usernameController.value.text) == null) {
@@ -120,6 +131,10 @@ class _PageLoginStatefulWidgetState extends State<PageLoginStatefulWidget> {
       return null;
     } else if (_passwordController.value.text.isEmpty) {
       Toast.show("请输入口令", context, gravity: Toast.CENTER, duration: 3);
+      closeDialog();
+      return null;
+    } else if (_serverIpController.value.text.isEmpty) {
+      Toast.show("请输入IP", context, gravity: Toast.CENTER, duration: 3);
       closeDialog();
       return null;
     }

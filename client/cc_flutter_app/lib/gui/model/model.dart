@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
-import 'package:cc_flutter_app/imsdk/proto/CIM.Message.pb.dart';
 import 'package:fixnum/fixnum.dart';
 
 class UserModel {
