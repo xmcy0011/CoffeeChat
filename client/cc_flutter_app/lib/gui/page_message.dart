@@ -115,7 +115,7 @@ class _PageMessageState extends State<PageMessage> {
                 child: TextField(
                   decoration: InputDecoration.collapsed(hintText: ""),
                   controller: _textController,
-                  onSubmitted: _onSendMsg,
+                  //onSubmitted: _onSendMsg,
                 ),
               ),
               Container(
@@ -331,6 +331,11 @@ class _PageMessageState extends State<PageMessage> {
 
   // 发送文本
   void _onSendMsg(String text) {
+    if (text.isEmpty) {
+      Toast.show("请输入文字", context);
+      return;
+    }
+
     var sId = sessionInfo.sessionId;
     var sType = sessionInfo.sessionType;
 
