@@ -308,6 +308,7 @@ class _PageMessageState extends State<PageMessage> {
     });
   }
 
+  // 延时滚动
   scrollEnd([animationTime = 200]) {
     if (_scrollController != null) {
       double scrollValue = _scrollController.position.maxScrollExtent;
@@ -322,6 +323,20 @@ class _PageMessageState extends State<PageMessage> {
               duration: Duration(milliseconds: animationTime),
               curve: Curves.easeIn);
         });
+      });
+    }
+  }
+
+  scrollEnd2([animationTime = 200]) {
+    if (_scrollController != null) {
+      double scrollValue = _scrollController.position.maxScrollExtent;
+      scrollValue = scrollValue + 60; // 偏移新消息的高度
+
+      setState(() {
+        //_scrollController.jumpTo(scrollValue);
+        _scrollController.animateTo(scrollValue,
+            duration: Duration(milliseconds: animationTime),
+            curve: Curves.easeIn);
       });
     }
   }
@@ -358,7 +373,7 @@ class _PageMessageState extends State<PageMessage> {
       _msgList.add(model);
       _textController.clear();
     });
-    scrollEnd();
+    scrollEnd2();
 
     IMMessage.singleton
         .sendMessage(msgInfo.clientMsgId, sId, CIMMsgType.kCIM_MSG_TYPE_TEXT,
