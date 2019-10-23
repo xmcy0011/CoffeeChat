@@ -13,6 +13,37 @@ import (
 var Logger *zap.Logger
 var Sugar *zap.SugaredLogger
 
+func timeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
+	enc.AppendString(t.Format("2006-01-02 15:04:05.000"))
+}
+
+func levelEncoder(l zapcore.Level, enc zapcore.PrimitiveArrayEncoder) {
+	var level string
+	switch l {
+	case zapcore.DebugLevel:
+		level = "[DEBUG]"
+	case zapcore.InfoLevel:
+		level = "[INFO]"
+	case zapcore.WarnLevel:
+		level = "[WARN]"
+	case zapcore.ErrorLevel:
+		level = "[ERROR]"
+	case zapcore.DPanicLevel:
+		level = "[DPANIC]"
+	case zapcore.PanicLevel:
+		level = "[PANIC]"
+	case zapcore.FatalLevel:
+		level = "[FATAL]"
+	default:
+		level = fmt.Sprintf("[LEVEL(%d)]", l)
+	}
+	enc.AppendString(level)
+}
+
+func shortCallerEncoder(caller zapcore.EntryCaller, enc zapcore.PrimitiveArrayEncoder) {
+	enc.AppendString(fmt.Sprintf("[%s]", caller.TrimmedPath()))
+}
+
 func NewEncoderConfig() zapcore.EncoderConfig {
 	return zapcore.EncoderConfig{
 		// Keys can be anything except the empty string.
@@ -23,15 +54,11 @@ func NewEncoderConfig() zapcore.EncoderConfig {
 		MessageKey:     "M",
 		StacktraceKey:  "S",
 		LineEnding:     zapcore.DefaultLineEnding,
-		EncodeLevel:    zapcore.CapitalLevelEncoder,
-		EncodeTime:     TimeEncoder,
+		EncodeLevel:    levelEncoder, //zapcore.CapitalLevelEncoder,
+		EncodeTime:     timeEncoder,
 		EncodeDuration: zapcore.StringDurationEncoder,
-		EncodeCaller:   zapcore.ShortCallerEncoder,
+		EncodeCaller:   shortCallerEncoder, //zapcore.ShortCallerEncoder,
 	}
-}
-
-func TimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
-	enc.AppendString(t.Format("2006-01-02 15:04:05.000"))
 }
 
 // filename: like "log/log.log"
