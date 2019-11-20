@@ -140,7 +140,7 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
               new Expanded(
                   child: new TextField(
                 controller: textFieldController,
-                autofocus: true,
+                autofocus: false,
                 decoration: new InputDecoration(
                   labelText: '请输入对方ID', /*hintText: DEFAULTLOGINSERVERURL*/
                 ),
