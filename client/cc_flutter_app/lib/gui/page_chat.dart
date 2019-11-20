@@ -134,7 +134,7 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
       // dialog is dismissible with a tap on the barrier
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('聊天'),
+          title: Text('发起聊天'),
           content: new Row(
             children: <Widget>[
               new Expanded(
@@ -159,6 +159,12 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
                 } else {
                   Toast.show('用户ID无效', context, gravity: Toast.CENTER);
                 }
+              },
+            ),
+            FlatButton(
+              child: Text('取消'),
+              onPressed: () {
+                Navigator.of(context).pop();
               },
             ),
           ],
