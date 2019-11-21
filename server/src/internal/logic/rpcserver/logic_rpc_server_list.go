@@ -6,6 +6,7 @@ import (
 	"github.com/CoffeeChat/server/src/api/cim"
 	"github.com/CoffeeChat/server/src/internal/logic/dao"
 	"github.com/CoffeeChat/server/src/pkg/logger"
+	"strconv"
 )
 
 const kMaxGetMessageListLimitCount = 100 // 单次拉取聊天历史记录最大消息数
@@ -23,8 +24,12 @@ func (s *LogicServer) RecentContactSession(ctx context.Context, in *cim.CIMRecen
 		return nil, err
 	}
 
+	// load user all unread
+	unreadMap := dao.DefaultUnread.GetUnreadCount(in.UserId)
+
 	rsp := &cim.CIMRecentContactSessionRsp{}
 	rsp.ContactSessionList = make([]*cim.CIMContactSessionInfo, 0, 5)
+	rsp.UnreadCounts = 0
 	for i := range sessionList {
 		e := sessionList[i]
 		info := &cim.CIMContactSessionInfo{
@@ -59,6 +64,32 @@ func (s *LogicServer) RecentContactSession(ctx context.Context, in *cim.CIMRecen
 			}
 		}
 
+		// load unread count
+		if unreadMap != nil {
+			// peer_userId / group_userId
+			var value string
+			var ok bool
+			if info.SessionType == cim.CIMSessionType_kCIM_SESSION_TYPE_SINGLE {
+				value, ok = unreadMap["peer_"+strconv.FormatUint(info.SessionId, 10)]
+			} else if info.SessionType == cim.CIMSessionType_kCIM_SESSION_TYPE_GROUP {
+				value, ok = unreadMap["group_"+strconv.FormatUint(info.SessionId, 10)]
+			} else {
+				ok = false
+				logger.Sugar.Warn("not support")
+			}
+			if ok {
+				count, err := strconv.Atoi(value)
+				if err == nil {
+					info.UnreadCnt = uint32(count)
+				} else {
+					info.UnreadCnt = 0
+				}
+			} else {
+				info.UnreadCnt = 0
+			}
+			rsp.UnreadCounts += info.UnreadCnt
+		}
+
 		info.MsgId = msgInfo.ClientMsgId
 		info.ServerMsgId = msgInfo.MsgId
 		info.MsgTimeStamp = uint32(msgInfo.Created)
@@ -73,11 +104,9 @@ func (s *LogicServer) RecentContactSession(ctx context.Context, in *cim.CIMRecen
 		rsp.ContactSessionList = append(rsp.ContactSessionList, info)
 	}
 	rsp.UserId = in.UserId
-	// FIXED ME
-	rsp.UnreadCounts = 0
 
-	logger.Sugar.Infof("RecentContactSession userId=%d,LatestUpdateTime=%d,total_session_cnt=%d", in.UserId,
-		in.LatestUpdateTime, len(rsp.ContactSessionList))
+	logger.Sugar.Infof("RecentContactSession userId=%d,LatestUpdateTime=%d,total_session_cnt=%d,unread_cnt=%d", in.UserId,
+		in.LatestUpdateTime, len(rsp.ContactSessionList), rsp.UnreadCounts)
 
 	return rsp, nil
 }

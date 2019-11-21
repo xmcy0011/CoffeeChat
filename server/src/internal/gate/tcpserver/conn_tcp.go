@@ -267,8 +267,8 @@ func (tcp *TcpConn) onHandleRecentContactSessionReq(header *cim.ImHeader, buff [
 	}
 
 	logger.Sugar.Infof("onHandleRecentContactSessionReq user_id:%d,latest_update_time:%d,"+
-		"total_unread_count=%d,total_session_cnt=%d",
-		req.UserId, req.LatestUpdateTime, rsp.UnreadCounts, len(rsp.ContactSessionList))
+		"total_unread_count=%d,total_session_cnt=%d,unread_cnt=%d",
+		req.UserId, req.LatestUpdateTime, rsp.UnreadCounts, len(rsp.ContactSessionList), rsp.UnreadCounts)
 }
 
 func (tcp *TcpConn) onHandleGetMsgListReq(header *cim.ImHeader, buff []byte) {

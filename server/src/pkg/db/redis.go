@@ -118,6 +118,68 @@ func (conn *RedisConnect) Incr(key string) *redis.IntCmd {
 }
 
 // hash
+
+// 删除hash中某个元素
+func (conn *RedisConnect) HDel(key string, fields ...string) *redis.IntCmd {
+	return conn.redisClient.HDel(redisKeyPrefix+key, fields...)
+}
+
+// hash中某个元素是否存在
+func (conn *RedisConnect) HExists(key, field string) *redis.BoolCmd {
+	return conn.redisClient.HExists(redisKeyPrefix+key, field)
+}
+
+// 获取hash中某个key的值
+func (conn *RedisConnect) HGet(key, field string) *redis.StringCmd {
+	return conn.redisClient.HGet(redisKeyPrefix+key, field)
+}
+
+// 获取所有hash元素
 func (conn *RedisConnect) HGetAll(key string) *redis.StringStringMapCmd {
 	return conn.redisClient.HGetAll(redisKeyPrefix + key)
+}
+
+// 自增hash中某个元素
+func (conn *RedisConnect) HIncrBy(key, field string, incr int64) *redis.IntCmd {
+	return conn.redisClient.HIncrBy(redisKeyPrefix+key, field, incr)
+}
+
+//
+func (conn *RedisConnect) HIncrByFloat(key, field string, incr float64) *redis.FloatCmd {
+	return conn.redisClient.HIncrByFloat(redisKeyPrefix+key, field, incr)
+}
+
+// 获取hash中所有元素的key
+func (conn *RedisConnect) HKeys(key string) *redis.StringSliceCmd {
+	return conn.redisClient.HKeys(redisKeyPrefix + key)
+}
+
+// 获取hash元素大小
+func (conn *RedisConnect) HLen(key string) *redis.IntCmd {
+	return conn.redisClient.HLen(redisKeyPrefix + key)
+}
+
+// 获取hash中一个或多个key的值，一次传输，提高性能
+func (conn *RedisConnect) HMGet(key string, fields ...string) *redis.SliceCmd {
+	return conn.redisClient.HMGet(redisKeyPrefix+key, fields...)
+}
+
+// 设置hash中一个或多个key的值，一次传输，提高性能
+func (conn *RedisConnect) HMSet(key string, fields map[string]interface{}) *redis.StatusCmd {
+	return conn.redisClient.HMSet(redisKeyPrefix+key, fields)
+}
+
+// 设置hash中某个key的值
+func (conn *RedisConnect) HSet(key, field string, value interface{}) *redis.BoolCmd {
+	return conn.redisClient.HSet(redisKeyPrefix+key, field, value)
+}
+
+// 设置hash中某个不存在key的值
+func (conn *RedisConnect) HSetNX(key, field string, value interface{}) *redis.BoolCmd {
+	return conn.redisClient.HSetNX(redisKeyPrefix+key, field, value)
+}
+
+// 获取hash表中所有的值
+func (conn *RedisConnect) HVals(key string) *redis.StringSliceCmd {
+	return conn.redisClient.HVals(redisKeyPrefix + key)
 }

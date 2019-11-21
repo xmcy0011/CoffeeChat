@@ -257,6 +257,10 @@ func (m *Message) saveSingleMessage(fromId uint64, toId uint64, clientMsgId stri
 				logger.Sugar.Errorf("exec failed,sql:%s,error:%s", sql, err.Error())
 				return 0, err
 			}
+
+			// 增加未读消息计数(对方)
+			DefaultUnread.IncUnreadCount(toId, fromId, cim.CIMSessionType_kCIM_SESSION_TYPE_SINGLE)
+
 			return uint64(msgId), nil
 		}
 	} else {
