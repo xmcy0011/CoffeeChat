@@ -84,7 +84,8 @@ class IMMessage {
   /// 生成客户端消息ID（UUID）
   String generateMsgId() {
     var uuid = new Uuid();
-    return uuid.v5(Uuid.NAMESPACE_URL, "www.coffeechat.cn");
+    //return uuid.v5(Uuid.NAMESPACE_URL, "www.coffeechat.cn");
+    return uuid.v4();
   }
 
   /// 查询历史漫游消息
