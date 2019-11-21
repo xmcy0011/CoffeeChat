@@ -1,8 +1,13 @@
+import 'dart:convert';
+
 import 'package:cc_flutter_app/gui/helper.dart';
 import 'package:cc_flutter_app/gui/page_message.dart';
+import 'package:cc_flutter_app/imsdk/im_client.dart';
+import 'package:cc_flutter_app/imsdk/im_message.dart';
 import 'package:cc_flutter_app/imsdk/im_session.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.List.pb.dart';
+import 'package:cc_flutter_app/imsdk/proto/CIM.Message.pb.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:toast/toast.dart';
@@ -48,6 +53,8 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
   void initState() {
     super.initState();
 
+    IMMessage.singleton
+        .registerReceiveCallback("_PageChatStateWidgetState", _onReceiveMsg);
     _onRefresh();
   }
 
@@ -105,6 +112,25 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
         }
       }
     });
+  }
+
+  // 接收一条消息
+  void _onReceiveMsg(CIMMsgData msg) {
+    for (var i = 0; i < _sessionList.length; i++) {
+      if (msg.sessionType == CIMSessionType.kCIM_SESSION_TYPE_SINGLE) {
+        if (msg.fromUserId == _sessionList[i].sessionId) {
+          setState(() {
+            _sessionList[i].msgData = utf8.decode(msg.msgData);
+            _sessionList[i].clientMsgId = msg.msgId;
+            _sessionList[i].msgTimeStamp = msg.createTime;
+            _sessionList[i].msgStatus = CIMMsgStatus.kCIM_MSG_STATUS_RECEIPT;
+            _sessionList[i].msgType = msg.msgType;
+            _sessionList[i].msgFromUserId = msg.fromUserId;
+            //_sessionList[i].msgAttach
+          });
+        }
+      }
+    }
   }
 
   void _onTap(var index) {
