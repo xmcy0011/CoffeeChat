@@ -408,7 +408,7 @@ class _PageMessageState extends State<PageMessage> {
       setState(() {
         _msgList.add(model);
       });
-      scrollEnd();
+      scrollEnd2();
     }
   }
 }
