@@ -76,13 +76,13 @@ enum CIMMsgType {
   kCIM_MSG_TYPE_UNKNOWN = 0; // 未知类型消息，本地使用，发送时请勿使用
   kCIM_MSG_TYPE_TEXT = 1;  // 文本
   kCIM_MSG_TYPE_IMAGE = 2; // 图片
-  kCIM_MSG_TYPE_Audio = 3; // 声音
+  kCIM_MSG_TYPE_AUDIO = 3; // 声音
   // kCIM_MSG_TYPE_VIDEO = 4;        // 视频
   // kCIM_MSG_TYPE_LOCATION = 5;     // 位置
   // kCIM_MSG_TYPE_NOTIFACATION = 6; // 系统通知（包括入群出群通知等）
   // kCIM_MSG_TYPE_FILE = 7;         // 文件
   kCIM_MSG_TYPE_TIPS = 8;  // 提醒类型
-  kCIM_MSG_TYPE_Robot = 9; // 图灵机器人消息
+  kCIM_MSG_TYPE_ROBOT = 9; // 图灵机器人消息
 
   // kCIM_MSG_TYPE_CUSTOM = 100; // 自定义
 }

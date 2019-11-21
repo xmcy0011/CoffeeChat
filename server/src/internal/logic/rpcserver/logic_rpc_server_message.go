@@ -42,7 +42,7 @@ func (s *LogicServer) SendMsgData(ctx context.Context, in *cim.CIMMsgData) (*cim
 }
 
 // 消息收到ACK
-func (s *LogicServer) AckMsgData(ctx context.Context, in *cim.CIMMsgDataAck) (*cim.Empty, error) {
+func (s *LogicServer) ReacAckMsgData(ctx context.Context, in *cim.CIMMsgDataAck) (*cim.Empty, error) {
 	return nil, nil
 }
 
