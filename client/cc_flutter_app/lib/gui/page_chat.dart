@@ -180,8 +180,13 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
                 var text = textFieldController.text;
                 int userId = int.tryParse(text);
                 if (text.length > 0 && userId != null) {
-                  Navigator.of(context).pop();
-                  _onCreateSession(userId);
+                  if (Int64(userId) == ImClient.singleton.userId) {
+                    Toast.show('用户ID无效，不能和自己聊天', context,
+                        gravity: Toast.CENTER);
+                  } else {
+                    Navigator.of(context).pop();
+                    _onCreateSession(userId);
+                  }
                 } else {
                   Toast.show('用户ID无效', context, gravity: Toast.CENTER);
                 }
