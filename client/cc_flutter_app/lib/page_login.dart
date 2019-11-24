@@ -77,7 +77,7 @@ class _PageLoginStatefulWidgetState extends State<PageLoginStatefulWidget> {
               child: TextField(
                 controller: _serverIpController,
                 decoration: const InputDecoration(
-                  labelText: 'Token',
+                  labelText: 'ServerIp',
                 ),
               ),
             ),
