@@ -310,7 +310,7 @@ func (tcp *TcpConn) onHandleMsgData(header *cim.ImHeader, buff []byte) {
 	}
 
 	if req.FromUserId == req.ToSessionId {
-		logger.Sugar.Error("onHandleMsgData from_id:%d is equals to_id:%d,"+
+		logger.Sugar.Errorf("onHandleMsgData from_id:%d is equals to_id:%d,"+
 			"session_type=%d,msg_id=%s,msg_type=%d",
 			req.FromUserId, req.ToSessionId, req.SessionType, req.MsgId, req.MsgType)
 		return
