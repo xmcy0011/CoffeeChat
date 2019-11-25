@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:cc_flutter_app/imsdk/im_message.dart';
 import 'package:cc_flutter_app/imsdk/model/im_header.dart';
@@ -8,7 +7,6 @@ import 'package:cc_flutter_app/imsdk/model/im_request.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.List.pb.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Login.pbserver.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:protobuf/protobuf.dart';
 import 'package:fixnum/fixnum.dart';
 

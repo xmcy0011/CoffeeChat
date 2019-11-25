@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:toast/toast.dart';
 import 'package:fixnum/fixnum.dart';
 
-import 'model/model.dart';
+import '../imsdk/core/model/model.dart';
 
 // 会话列表，聊天首页
 class PageChatStateWidget extends StatefulWidget {
