@@ -368,3 +368,8 @@ func (tcp *TcpConn) onHandleMsgAck(header *cim.ImHeader, buff []byte) {
 		user.AckMessage(req)
 	}
 }
+
+// 清除会话未读计数
+func (tcp *TcpConn) onClearUnreadCount(header *cim.ImHeader, buff []byte)  {
+
+}
