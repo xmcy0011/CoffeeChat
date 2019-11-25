@@ -12,13 +12,13 @@ class IMSession {
     var complete = new Completer();
 
     var req = new CIMRecentContactSessionReq();
-    req.userId = ImClient.singleton.userId;
+    req.userId = IMClient.singleton.userId;
     req.latestUpdateTime = DateTime.now().millisecondsSinceEpoch ~/ 1000;
 
     print("getRecentSessionList userId=${req.userId}");
 
     var cmd = CIMCmdID.kCIM_CID_LIST_RECENT_CONTACT_SESSION_REQ.value;
-    ImClient.singleton.sendRequest(cmd, req, (rsp) {
+    IMClient.singleton.sendRequest(cmd, req, (rsp) {
       if (rsp is CIMRecentContactSessionRsp){
         complete.complete(rsp);
       }else{

@@ -173,7 +173,7 @@ class _PageLoginStatefulWidgetState extends State<PageLoginStatefulWidget> {
       return null;
     }
 
-    ImClient.singleton.auth(Int64(userId), nick, token, ip, port).then((rsp) {
+    IMClient.singleton.auth(Int64(userId), nick, token, ip, port).then((rsp) {
       closeDialog();
 
       if (rsp is CIMAuthTokenRsp) {

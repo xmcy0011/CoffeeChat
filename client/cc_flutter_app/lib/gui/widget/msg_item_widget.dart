@@ -13,7 +13,7 @@ class MsgItem extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    if (ImClient.singleton.isSelf(fromUser.userId)) {
+    if (IMClient.singleton.isSelf(fromUser.userId)) {
       return MsgItemMeState(msg, fromUser);
     }
     return MsgItemOtherState(msg, fromUser);

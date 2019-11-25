@@ -97,7 +97,7 @@ class _PageMessageState extends State<PageMessage> {
     //print("_onBuildMsgItem=${msg.serverMsgId},msg=${msg.msgData}");
 
     //return MsgItem(msg, fromUser);
-    if (ImClient.singleton.isSelf(msg.fromUserId)) {
+    if (IMClient.singleton.isSelf(msg.fromUserId)) {
       return _buildMeAvatarItem(msg, fromUser);
     }
     return _buildOtherAvatarItem(msg, fromUser);
@@ -357,7 +357,7 @@ class _PageMessageState extends State<PageMessage> {
     var msgInfo = new CIMMsgInfo();
     msgInfo.clientMsgId = IMMessage.singleton.generateMsgId();
     msgInfo.sessionType = sessionInfo.sessionType;
-    msgInfo.fromUserId = ImClient.singleton.userId;
+    msgInfo.fromUserId = IMClient.singleton.userId;
     msgInfo.toSessionId = sessionInfo.sessionId;
     msgInfo.createTime = DateTime.now().millisecondsSinceEpoch ~/ 1000;
     msgInfo.msgResCode = CIMResCode.kCIM_RES_CODE_OK;

@@ -25,7 +25,7 @@ class IMMessage {
 
   IMMessage._internal() {
     // 注册消息业务回调
-    ImClient.singleton.registerMessageService(this);
+    IMClient.singleton.registerMessageService(this);
 
     // timeout
     Timer.periodic(Duration(seconds: 1), (timer) {
@@ -48,7 +48,7 @@ class IMMessage {
         "sessionType=$sessionType,msgData=$msgData");
 
     var msg = new CIMMsgData();
-    msg.fromUserId = ImClient.singleton.userId;
+    msg.fromUserId = IMClient.singleton.userId;
     msg.toSessionId = toSessionId;
 
     var uuid = new Uuid();
@@ -77,7 +77,7 @@ class IMMessage {
     }
 
     // 注意，CIM_CID_MSG_DATA对应的返回是kCIM_CID_MSG_DATA_ACK，且不能用序号
-    ImClient.singleton.send(CIMCmdID.kCIM_CID_MSG_DATA.value, msg);
+    IMClient.singleton.send(CIMCmdID.kCIM_CID_MSG_DATA.value, msg);
     return completer.future;
   }
 
@@ -101,20 +101,20 @@ class IMMessage {
     var completer = new Completer();
 
     var req = new CIMGetMsgListReq();
-    req.userId = ImClient.singleton.userId;
+    req.userId = IMClient.singleton.userId;
     req.sessionId = toSessionId;
     req.sessionType = sessionType;
     req.limitCount = limitCount;
     req.endMsgId = endMsgId;
 
-    if (!ImClient.singleton.isLogin) {
+    if (!IMClient.singleton.isLogin) {
       new Timer(Duration(milliseconds: 200), () {
         completer.completeError("network is unavailable");
       });
       return completer.future;
     }
 
-    ImClient.singleton.sendRequest(CIMCmdID.kCIM_CID_LIST_MSG_REQ.value, req,
+    IMClient.singleton.sendRequest(CIMCmdID.kCIM_CID_LIST_MSG_REQ.value, req,
         (rsp) {
       if (rsp is CIMGetMsgListRsp) {
         completer.complete(rsp);
@@ -188,11 +188,11 @@ class IMMessage {
     } else {
       ack.toSessionId = msg.toSessionId;
     }
-    ack.fromUserId = ImClient.singleton.userId;
+    ack.fromUserId = IMClient.singleton.userId;
     ack.sessionType = msg.sessionType;
     ack.createTime = msg.createTime;
     ack.serverMsgId = Int64(0); // 不用填
-    ImClient.singleton.send(CIMCmdID.kCIM_CID_MSG_DATA_ACK.value, ack);
+    IMClient.singleton.send(CIMCmdID.kCIM_CID_MSG_DATA_ACK.value, ack);
 
     // 回调
     onReceiveMsgCbMap.forEach((name, callback) {

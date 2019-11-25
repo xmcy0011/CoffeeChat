@@ -16,7 +16,7 @@ const kReadBufferSize = 1024; // Bytes
 const kRequestTimeout = 10; // 10秒请求超时
 const kRequestMsgTimeout = 10; // 10秒请求超时
 
-class ImClient {
+class IMClient {
   RawSocket socket; // socket
   IMMessage msgService; // 消息处理
 
@@ -37,13 +37,13 @@ class ImClient {
   var checkConnectLastTick = 0;
 
   /// 单实例
-  static final ImClient singleton = ImClient._internal();
+  static final IMClient singleton = IMClient._internal();
 
-  factory ImClient() {
+  factory IMClient() {
     return singleton;
   }
 
-  ImClient._internal() {
+  IMClient._internal() {
     isLogin = false;
     isReLogin = false;
 
