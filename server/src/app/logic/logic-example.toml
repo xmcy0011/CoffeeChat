@@ -9,7 +9,9 @@ Host="10.0.59.117"
 Port=3306
 DbName="coffeechat"
 UserName="cim"
+#UserName="root"
 Password="12345"
+#Password="123456"
 MaxConnCnt=16
 
 [[Db]]
@@ -21,7 +23,9 @@ Host="10.0.59.117"
 Port=3306
 DbName="coffeechat"
 UserName="cim"
+#UserName="root"
 Password="12345"
+#Password="123456"
 MaxConnCnt=16
 
 [Kafka]
@@ -36,6 +40,7 @@ Ip="10.0.59.117"
 Port=6379
 KeyPrefix="cim|"  # redis中key的统一前缀
 Password="12345"  # redis的密码，不允许为空
+#Password="coffeechat"  # redis的密码，不允许为空
 [[Redis.Pool]]
 Name="unread"
 DbNum=1
