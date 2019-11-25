@@ -81,6 +81,8 @@ opensource im with server(go) and ios(swift)
 - [ ] 客服正在输入提醒
 - [ ] 回头客
 
+### 智能问答功能
+
 ## Architecture
 
 ## Quick Start
