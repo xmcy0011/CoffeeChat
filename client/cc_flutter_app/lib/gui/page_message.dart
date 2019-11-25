@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:cc_flutter_app/gui/model/model.dart';
-import 'package:cc_flutter_app/imsdk/im_client.dart';
+import 'package:cc_flutter_app/imsdk/core/im_client.dart';
 import 'package:cc_flutter_app/imsdk/im_message.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pbserver.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.List.pbserver.dart';

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:cc_flutter_app/imsdk/im_client.dart';
+import 'package:cc_flutter_app/imsdk/core/im_client.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.List.pb.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
 
