@@ -31,20 +31,22 @@ class MessageModel {
   String attach; // 消息附件（预留）
   CIMClientType senderClientType; // 发送者客户端类型
 
-  MessageModel(CIMMsgInfo msgInfo) {
-    this.clientMsgId = msgInfo.clientMsgId;
-    this.serverMsgId = msgInfo.serverMsgId;
-    this.msgResCode = msgInfo.msgResCode;
-    this.msgFeature = msgInfo.msgFeature;
-    this.sessionType = msgInfo.sessionType;
-    this.fromUserId = msgInfo.fromUserId;
-    this.toSessionId = msgInfo.toSessionId;
-    this.createTime = msgInfo.createTime;
-    this.msgType = msgInfo.msgType;
-    this.msgStatus = msgInfo.msgStatus;
-    this.msgData = utf8.decode(msgInfo.msgData);
-    this.attach = msgInfo.attach;
-    this.senderClientType = msgInfo.senderClientType;
+  static MessageModel copyFrom(CIMMsgInfo msgInfo) {
+    MessageModel messageModel = new MessageModel();
+    messageModel.clientMsgId = msgInfo.clientMsgId;
+    messageModel.serverMsgId = msgInfo.serverMsgId;
+    messageModel.msgResCode = msgInfo.msgResCode;
+    messageModel.msgFeature = msgInfo.msgFeature;
+    messageModel.sessionType = msgInfo.sessionType;
+    messageModel.fromUserId = msgInfo.fromUserId;
+    messageModel.toSessionId = msgInfo.toSessionId;
+    messageModel.createTime = msgInfo.createTime;
+    messageModel.msgType = msgInfo.msgType;
+    messageModel.msgStatus = msgInfo.msgStatus;
+    messageModel.msgData = utf8.decode(msgInfo.msgData);
+    messageModel.attach = msgInfo.attach;
+    messageModel.senderClientType = msgInfo.senderClientType;
+    return messageModel;
   }
 }
 

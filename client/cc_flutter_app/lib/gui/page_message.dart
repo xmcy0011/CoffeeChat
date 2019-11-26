@@ -284,7 +284,7 @@ class _PageMessageState extends State<PageMessage> {
       if (rsp is CIMGetMsgListRsp) {
         List<MessageModel> msg = new List<MessageModel>();
         rsp.msgList.forEach((v) {
-          var msgModel = new MessageModel(v);
+          var msgModel = MessageModel.copyFrom(v);
           print("msgId=${msgModel.serverMsgId},msg=${msgModel.msgData}");
           msg.add(msgModel);
         });
@@ -368,7 +368,7 @@ class _PageMessageState extends State<PageMessage> {
     msgInfo.senderClientType = CIMClientType.kCIM_CLIENT_TYPE_DEFAULT;
 
     //msgInfo.clientMsgId
-    MessageModel model = new MessageModel(msgInfo);
+    MessageModel model = MessageModel.copyFrom(msgInfo);
     setState(() {
       _msgList.add(model);
       _textController.clear();
@@ -404,7 +404,7 @@ class _PageMessageState extends State<PageMessage> {
       msgInfo.createTime = msg.createTime;
       msgInfo.sessionType = msg.sessionType;
 
-      var model = new MessageModel(msgInfo);
+      var model = MessageModel.copyFrom(msgInfo);
       setState(() {
         _msgList.add(model);
       });
