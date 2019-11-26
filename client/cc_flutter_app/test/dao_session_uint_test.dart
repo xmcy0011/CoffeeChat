@@ -26,7 +26,7 @@ void main() {
     c.msgStatus = CIMMsgStatus.kCIM_MSG_STATUS_FAILED;
 
     // 插入一条
-    session.insert(new SessionModel(c, "unit_test", "")).then((v) {
+    session.insert(SessionModel.copyFrom(c, "unit_test", "")).then((v) {
       print("insert session success");
     }).catchError((e) {
       print(e);
@@ -38,7 +38,7 @@ void main() {
         print("sessionId=${results[i].sessionId},"
             "sessionType=${results[i].sessionType},"
             "sessionName=${results[i].sessionName},"
-            "msgDate=${results[i].msgData}");
+            "msgDate=${results[i].latestMsg.msgData}");
       }
       expect(results.length, 1);
     }).catchError((e) {

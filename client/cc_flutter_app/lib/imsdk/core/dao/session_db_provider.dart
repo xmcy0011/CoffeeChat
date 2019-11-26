@@ -72,11 +72,11 @@ class SessionDbProvider extends BaseDbProvider {
       session.sessionType.value,
       session.sessionStatus.value,
       session.updatedTime,
-      session.clientMsgId,
-      session.serverMsgId,
-      session.msgData,
-      session.msgFromUserId,
-      session.msgStatus.value,
+      session.latestMsg.clientMsgId,
+      session.latestMsg.serverMsgId,
+      session.latestMsg.msgData,
+      session.latestMsg.fromUserId,
+      session.latestMsg.msgStatus.value,
     ]);
   }
 
@@ -119,7 +119,7 @@ class SessionDbProvider extends BaseDbProvider {
         //sessionInfo.msgAttach
 
         SessionModel model =
-            new SessionModel(sessionInfo, maps[i]["session_id"], "");
+            SessionModel.copyFrom(sessionInfo, maps[i]["session_id"], "");
         list.add(model);
       }
     }

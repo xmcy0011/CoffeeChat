@@ -58,41 +58,37 @@ class SessionModel {
   int unreadCnt; // 该会话未读消息数量
   int updatedTime; // 更新时间
 
-  String clientMsgId; // 最新一条消息的id（UUID）
-  Int64 serverMsgId; // 最新一条消息服务端的id（顺序递增）
-  int msgTimeStamp; // 最新一条消息时间戳（毫秒）
-  String msgData; // 最新一条消息的内容
-  CIMMsgType msgType; // 最新一条消息的类型
-  Int64 msgFromUserId; // 最新一条消息的发送者
-  CIMMsgStatus msgStatus; // 最新一条消息的状态（预留）
-  /*optional*/
-  String msgAttach; // 最新一条消息的附件（预留）
-  /*optional*/
-  String extendData; // 本地扩展字段（限制4096）
-  /*optional*/
-  bool isRobotSession; // 是否为机器人会话
+  MessageModel latestMsg; // 最新的消息
+
+  String extendData; // 扩展信息，本地使用
+  bool isRobotSession; // 是否机器人会话
 
   String sessionName; // 会话名称
   String avatarUrl; // 会话头像
 
-  SessionModel(
-      CIMContactSessionInfo sessionInfo, this.sessionName, this.avatarUrl) {
-    this.sessionId = sessionInfo.sessionId;
-    this.sessionType = sessionInfo.sessionType;
-    this.sessionStatus = sessionInfo.sessionStatus;
+  static SessionModel copyFrom(
+      CIMContactSessionInfo sessionInfo, String sessionName, String avatarUrl) {
+    SessionModel sessionModel = new SessionModel();
+    sessionModel.sessionId = sessionInfo.sessionId;
+    sessionModel.sessionType = sessionInfo.sessionType;
+    sessionModel.sessionStatus = sessionInfo.sessionStatus;
 
-    this.unreadCnt = sessionInfo.unreadCnt;
-    this.updatedTime = sessionInfo.updatedTime;
+    sessionModel.unreadCnt = sessionInfo.unreadCnt;
+    sessionModel.updatedTime = sessionInfo.updatedTime;
 
-    this.clientMsgId = sessionInfo.msgId;
-    this.serverMsgId = sessionInfo.serverMsgId;
-    this.msgTimeStamp = sessionInfo.msgTimeStamp;
-    this.msgData = utf8.decode(sessionInfo.msgData);
-    this.msgType = sessionInfo.msgType;
-    this.msgFromUserId = sessionInfo.msgFromUserId;
-    this.msgStatus = sessionInfo.msgStatus;
-    this.msgAttach = sessionInfo.msgAttach;
-    this.extendData = sessionInfo.extendData;
-    this.isRobotSession = sessionInfo.isRobotSession;
+    sessionModel.latestMsg = new MessageModel();
+    sessionModel.latestMsg.clientMsgId = sessionInfo.msgId;
+    sessionModel.latestMsg.serverMsgId = sessionInfo.serverMsgId;
+    sessionModel.latestMsg.createTime = sessionInfo.msgTimeStamp;
+    sessionModel.latestMsg.msgData = utf8.decode(sessionInfo.msgData);
+    sessionModel.latestMsg.msgType = sessionInfo.msgType;
+    sessionModel.latestMsg.fromUserId = sessionInfo.msgFromUserId;
+    sessionModel.latestMsg.msgStatus = sessionInfo.msgStatus;
+    sessionModel.latestMsg.attach = sessionInfo.msgAttach;
+
+    sessionModel.extendData = sessionInfo.extendData;
+    sessionModel.isRobotSession = sessionInfo.isRobotSession;
+
+    return sessionModel;
   }
 }

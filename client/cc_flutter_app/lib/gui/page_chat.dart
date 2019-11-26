@@ -76,7 +76,7 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
           title: Text(session.sessionName,
               style: Theme.of(context).textTheme.subhead),
           // 副标题
-          subtitle: new Text(session.msgData, maxLines: 1),
+          subtitle: new Text(session.latestMsg.msgData, maxLines: 1),
           trailing: Icon(
             Icons.arrow_forward_ios,
           ),
@@ -103,7 +103,7 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
         for (var i = 0; i < data.contactSessionList.length; i++) {
           var sessionInfo = data.contactSessionList.elementAt(i);
 
-          SessionModel model = new SessionModel(
+          SessionModel model = SessionModel.copyFrom(
               sessionInfo, sessionInfo.sessionId.toString(), "");
           //subtitle = "[${sessionInfo.msgFromUserId}]" + subtitle;
           setState(() {
@@ -120,12 +120,13 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
       if (msg.sessionType == CIMSessionType.kCIM_SESSION_TYPE_SINGLE) {
         if (msg.fromUserId == _sessionList[i].sessionId) {
           setState(() {
-            _sessionList[i].msgData = utf8.decode(msg.msgData);
-            _sessionList[i].clientMsgId = msg.msgId;
-            _sessionList[i].msgTimeStamp = msg.createTime;
-            _sessionList[i].msgStatus = CIMMsgStatus.kCIM_MSG_STATUS_RECEIPT;
-            _sessionList[i].msgType = msg.msgType;
-            _sessionList[i].msgFromUserId = msg.fromUserId;
+            _sessionList[i].latestMsg.msgData = utf8.decode(msg.msgData);
+            _sessionList[i].latestMsg.clientMsgId = msg.msgId;
+            _sessionList[i].latestMsg.createTime = msg.createTime;
+            _sessionList[i].latestMsg.msgStatus =
+                CIMMsgStatus.kCIM_MSG_STATUS_RECEIPT;
+            _sessionList[i].latestMsg.msgType = msg.msgType;
+            _sessionList[i].latestMsg.fromUserId = msg.fromUserId;
             //_sessionList[i].msgAttach
           });
         }
@@ -145,8 +146,8 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
     info.sessionStatus = CIMSessionStatusType.kCIM_SESSION_STATUS_OK;
     info.isRobotSession = false;
 
-    SessionModel model =
-        new SessionModel(info, userId.toString(), "assets/default_avatar.png");
+    SessionModel model = SessionModel.copyFrom(
+        info, userId.toString(), "assets/default_avatar.png");
 
     _sessionList.add(model);
     navigatePushPage(context, PageMessage(model));
