@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:cc_flutter_app/imsdk/core/dao/session_db_provider.dart';
-import 'package:cc_flutter_app/imsdk/core/im_client.dart';
+import 'package:cc_flutter_app/imsdk/core/business/im_client.dart';
 import 'package:cc_flutter_app/imsdk/im_session.dart';
+import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
+import 'package:cc_flutter_app/imsdk/proto/CIM.Login.pb.dart';
 import 'package:fixnum/fixnum.dart';
 
 import 'im_user_config.dart';
@@ -40,7 +44,21 @@ class IMManager {
   /// [port] 服务器端口
   /// [callback] (CIMAuthTokenRsp)
   Future login(Int64 userId, var nick, var userToken, var ip, var port) {
-    return IMClient.singleton.auth(userId, nick, userToken, ip, port);
+    var com = new Completer();
+    IMClient.singleton.auth(userId, nick, userToken, ip, port).then((value) {
+      com.complete(value);
+
+      if (value is CIMAuthTokenRsp) {
+        // 登录成功
+        if (value.resultCode == CIMErrorCode.kCIM_ERR_SUCCSSE) {
+          // 同步会话列表
+          _syncSessionAndUnread();
+        }
+      }
+    }).catchError((e) {
+      com.completeError(e);
+    });
+    return com.future;
   }
 
   /// 注销
@@ -51,4 +69,12 @@ class IMManager {
     sessionDbProvider.getAllSession();
     return null;
   }
+
+
+
+  // 同步会话列表和未读计数
+  void _syncSessionAndUnread() {}
+
+  // 同步历史消息
+  void _syncMessage() {}
 }

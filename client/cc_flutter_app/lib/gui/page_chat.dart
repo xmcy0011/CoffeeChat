@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:cc_flutter_app/gui/helper.dart';
 import 'package:cc_flutter_app/gui/page_message.dart';
-import 'package:cc_flutter_app/imsdk/core/im_client.dart';
+import 'package:cc_flutter_app/imsdk/core/business/im_client.dart';
 import 'package:cc_flutter_app/imsdk/im_message.dart';
 import 'package:cc_flutter_app/imsdk/im_session.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
