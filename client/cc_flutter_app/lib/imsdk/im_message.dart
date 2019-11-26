@@ -2,14 +2,14 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:cc_flutter_app/imsdk/core/im_client.dart';
-import 'package:cc_flutter_app/imsdk/model/im_header.dart';
+import 'package:cc_flutter_app/imsdk/proto/im_header.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.List.pb.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Message.pb.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:uuid/uuid.dart';
 
-import 'model/im_request.dart';
+import 'proto/im_request.dart';
 
 /// 消息收发
 class IMMessage {
