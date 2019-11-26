@@ -1,5 +1,5 @@
 import 'package:cc_flutter_app/gui/helper.dart';
-import 'package:cc_flutter_app/imsdk/core/business/im_client.dart';
+import 'package:cc_flutter_app/imsdk/core/im_manager.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Login.pb.dart';
 import 'package:cc_flutter_app/page_main.dart';
@@ -173,7 +173,7 @@ class _PageLoginStatefulWidgetState extends State<PageLoginStatefulWidget> {
       return null;
     }
 
-    IMClient.singleton.auth(Int64(userId), nick, token, ip, port).then((rsp) {
+    IMManager.singleton.login(Int64(userId), nick, token, ip, port).then((rsp) {
       closeDialog();
 
       if (rsp is CIMAuthTokenRsp) {

@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:cc_flutter_app/gui/helper.dart';
 import 'package:cc_flutter_app/gui/page_message.dart';
-import 'package:cc_flutter_app/imsdk/core/business/im_client.dart';
+import 'package:cc_flutter_app/imsdk/core/im_manager.dart';
 import 'package:cc_flutter_app/imsdk/im_message.dart';
 import 'package:cc_flutter_app/imsdk/im_session.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
@@ -181,7 +181,7 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
                 var text = textFieldController.text;
                 int userId = int.tryParse(text);
                 if (text.length > 0 && userId != null) {
-                  if (Int64(userId) == IMClient.singleton.userId) {
+                  if (Int64(userId) == IMManager.singleton.userId) {
                     Toast.show('用户ID无效，不能和自己聊天', context,
                         gravity: Toast.CENTER);
                   } else {

@@ -13,7 +13,13 @@ import 'im_user_config.dart';
 class IMManager {
   var isInit = false;
   var sessionDbProvider = new SessionDbProvider();
-  var userConfig;
+  IMUserConfig userConfig;
+
+  Int64 userId;
+  var nickName;
+  var ip;
+  var port;
+  var userToken;
 
   /// 单实例
   static final IMManager singleton = IMManager._internal();
@@ -44,7 +50,14 @@ class IMManager {
   /// [port] 服务器端口
   /// [callback] (CIMAuthTokenRsp)
   Future login(Int64 userId, var nick, var userToken, var ip, var port) {
+    this.userId = userId;
+    this.nickName = nick;
+    this.userToken = userToken;
+    this.ip = ip;
+    this.port = port;
+
     var com = new Completer();
+    IMClient.singleton.onDisconnect = userConfig.onDisconnected; // 绑定回调
     IMClient.singleton.auth(userId, nick, userToken, ip, port).then((value) {
       com.complete(value);
 
@@ -64,13 +77,16 @@ class IMManager {
   /// 注销
   void logout() {}
 
+  /// 判断是否是来自于自己的消息
+  bool isSelf(Int64 fromUserId) {
+    return this.userId == fromUserId;
+  }
+
   /// 获取所有会话
   List<IMSession> getSessionList() {
     sessionDbProvider.getAllSession();
     return null;
   }
-
-
 
   // 同步会话列表和未读计数
   void _syncSessionAndUnread() {}

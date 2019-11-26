@@ -1,5 +1,5 @@
+import 'package:cc_flutter_app/imsdk/core/im_manager.dart';
 import 'package:cc_flutter_app/imsdk/core/model/model.dart';
-import 'package:cc_flutter_app/imsdk/core/business/im_client.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +13,7 @@ class MsgItem extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    if (IMClient.singleton.isSelf(fromUser.userId)) {
+    if (IMManager.singleton.isSelf(fromUser.userId)) {
       return MsgItemMeState(msg, fromUser);
     }
     return MsgItemOtherState(msg, fromUser);

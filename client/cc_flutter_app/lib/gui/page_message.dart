@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:cc_flutter_app/imsdk/core/im_manager.dart';
 import 'package:cc_flutter_app/imsdk/core/model/model.dart';
-import 'package:cc_flutter_app/imsdk/core/business/im_client.dart';
 import 'package:cc_flutter_app/imsdk/im_message.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pbserver.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.List.pbserver.dart';
@@ -97,7 +97,7 @@ class _PageMessageState extends State<PageMessage> {
     //print("_onBuildMsgItem=${msg.serverMsgId},msg=${msg.msgData}");
 
     //return MsgItem(msg, fromUser);
-    if (IMClient.singleton.isSelf(msg.fromUserId)) {
+    if (IMManager.singleton.isSelf(msg.fromUserId)) {
       return _buildMeAvatarItem(msg, fromUser);
     }
     return _buildOtherAvatarItem(msg, fromUser);
@@ -357,7 +357,7 @@ class _PageMessageState extends State<PageMessage> {
     var msgInfo = new CIMMsgInfo();
     msgInfo.clientMsgId = IMMessage.singleton.generateMsgId();
     msgInfo.sessionType = sessionInfo.sessionType;
-    msgInfo.fromUserId = IMClient.singleton.userId;
+    msgInfo.fromUserId = IMManager.singleton.userId;
     msgInfo.toSessionId = sessionInfo.sessionId;
     msgInfo.createTime = DateTime.now().millisecondsSinceEpoch ~/ 1000;
     msgInfo.msgResCode = CIMResCode.kCIM_RES_CODE_OK;

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:cc_flutter_app/imsdk/core/business/im_client.dart';
+import 'package:cc_flutter_app/imsdk/core/im_manager.dart';
 import 'package:cc_flutter_app/imsdk/proto/im_header.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.List.pb.dart';
@@ -48,7 +49,7 @@ class IMMessage {
         "sessionType=$sessionType,msgData=$msgData");
 
     var msg = new CIMMsgData();
-    msg.fromUserId = IMClient.singleton.userId;
+    msg.fromUserId = IMManager.singleton.userId;
     msg.toSessionId = toSessionId;
 
     var uuid = new Uuid();
@@ -101,7 +102,7 @@ class IMMessage {
     var completer = new Completer();
 
     var req = new CIMGetMsgListReq();
-    req.userId = IMClient.singleton.userId;
+    req.userId = IMManager.singleton.userId;
     req.sessionId = toSessionId;
     req.sessionType = sessionType;
     req.limitCount = limitCount;
@@ -188,7 +189,7 @@ class IMMessage {
     } else {
       ack.toSessionId = msg.toSessionId;
     }
-    ack.fromUserId = IMClient.singleton.userId;
+    ack.fromUserId = IMManager.singleton.userId;
     ack.sessionType = msg.sessionType;
     ack.createTime = msg.createTime;
     ack.serverMsgId = Int64(0); // 不用填
