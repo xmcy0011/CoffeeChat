@@ -27,7 +27,7 @@ class PageMessage extends StatefulWidget {
 
 class _PageMessageState extends State<PageMessage> {
   SessionModel sessionInfo; // 聊天对应的会话信息
-  List<MessageModel> _msgList = new List<MessageModel>(); // 历史消息
+  List<MessageModelBase> _msgList = new List<MessageModelBase>(); // 历史消息
 
   ScrollController _scrollController; // 历史消息滚动
   TextEditingController _textController = new TextEditingController(); // 输入的文本
@@ -86,7 +86,7 @@ class _PageMessageState extends State<PageMessage> {
 
   // 生成历史聊天记录
   Widget _onBuildMsgItem(context, position) {
-    MessageModel msg = _msgList[position];
+    MessageModelBase msg = _msgList[position];
 
     // FIXED ME
     UserModel fromUser = new UserModel();
@@ -131,7 +131,7 @@ class _PageMessageState extends State<PageMessage> {
   }
 
   // 生成聊天内容
-  Widget _buildMsgContent(MessageModel msg) {
+  Widget _buildMsgContent(MessageModelBase msg) {
     double maxWidth = MediaQuery.of(context).size.width * 0.7;
     var text = msg.msgData;
 
@@ -162,7 +162,7 @@ class _PageMessageState extends State<PageMessage> {
   }
 
   // 自己的消息
-  Widget _buildMeAvatarItem(MessageModel msg, UserModel fromUser) {
+  Widget _buildMeAvatarItem(MessageModelBase msg, UserModel fromUser) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Row(
@@ -205,7 +205,7 @@ class _PageMessageState extends State<PageMessage> {
   }
 
   // 别人的消息
-  Widget _buildOtherAvatarItem(MessageModel msg, UserModel fromUser) {
+  Widget _buildOtherAvatarItem(MessageModelBase msg, UserModel fromUser) {
     return Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
@@ -241,7 +241,7 @@ class _PageMessageState extends State<PageMessage> {
   }
 
   // 失败重发
-  void _reSendMsg(MessageModel msg) {
+  void _reSendMsg(MessageModelBase msg) {
     var sId = sessionInfo.sessionId;
     var sType = sessionInfo.sessionType;
 
@@ -282,9 +282,9 @@ class _PageMessageState extends State<PageMessage> {
 
     msg.getMessageList(id, type, endMsgId, kMaxPullMsgLimitCount).then((rsp) {
       if (rsp is CIMGetMsgListRsp) {
-        List<MessageModel> msg = new List<MessageModel>();
+        List<MessageModelBase> msg = new List<MessageModelBase>();
         rsp.msgList.forEach((v) {
-          var msgModel = MessageModel.copyFrom(v);
+          var msgModel = MessageModelBase.copyFrom(v);
           print("msgId=${msgModel.serverMsgId},msg=${msgModel.msgData}");
           msg.add(msgModel);
         });
@@ -368,7 +368,7 @@ class _PageMessageState extends State<PageMessage> {
     msgInfo.senderClientType = CIMClientType.kCIM_CLIENT_TYPE_DEFAULT;
 
     //msgInfo.clientMsgId
-    MessageModel model = MessageModel.copyFrom(msgInfo);
+    MessageModelBase model = MessageModelBase.copyFrom(msgInfo);
     setState(() {
       _msgList.add(model);
       _textController.clear();
@@ -404,7 +404,7 @@ class _PageMessageState extends State<PageMessage> {
       msgInfo.createTime = msg.createTime;
       msgInfo.sessionType = msg.sessionType;
 
-      var model = MessageModel.copyFrom(msgInfo);
+      var model = MessageModelBase.copyFrom(msgInfo);
       setState(() {
         _msgList.add(model);
       });

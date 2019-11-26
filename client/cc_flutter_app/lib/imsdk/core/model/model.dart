@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
 import 'package:fixnum/fixnum.dart';
 
+/// 用户信息
 class UserModel {
   Int64 userId; // 用户ID
 
@@ -13,7 +14,8 @@ class UserModel {
   String avatarURL; // 头像URL
 }
 
-class MessageModel {
+/// 消息基类（所有消息类型都具有这些属性）
+class MessageModelBase {
   String clientMsgId; // 客户端消息ID（UUID）
   Int64 serverMsgId; // 服务端消息ID
 
@@ -31,8 +33,8 @@ class MessageModel {
   String attach; // 消息附件（预留）
   CIMClientType senderClientType; // 发送者客户端类型
 
-  static MessageModel copyFrom(CIMMsgInfo msgInfo) {
-    MessageModel messageModel = new MessageModel();
+  static MessageModelBase copyFrom(CIMMsgInfo msgInfo) {
+    MessageModelBase messageModel = new MessageModelBase();
     messageModel.clientMsgId = msgInfo.clientMsgId;
     messageModel.serverMsgId = msgInfo.serverMsgId;
     messageModel.msgResCode = msgInfo.msgResCode;
@@ -50,6 +52,7 @@ class MessageModel {
   }
 }
 
+/// 会话
 class SessionModel {
   Int64 sessionId; // 会话id
   CIMSessionType sessionType; // 会话类型
@@ -58,7 +61,7 @@ class SessionModel {
   int unreadCnt; // 该会话未读消息数量
   int updatedTime; // 更新时间
 
-  MessageModel latestMsg; // 最新的消息
+  MessageModelBase latestMsg; // 最新的消息
 
   String extendData; // 扩展信息，本地使用
   bool isRobotSession; // 是否机器人会话
@@ -76,7 +79,7 @@ class SessionModel {
     sessionModel.unreadCnt = sessionInfo.unreadCnt;
     sessionModel.updatedTime = sessionInfo.updatedTime;
 
-    sessionModel.latestMsg = new MessageModel();
+    sessionModel.latestMsg = new MessageModelBase();
     sessionModel.latestMsg.clientMsgId = sessionInfo.msgId;
     sessionModel.latestMsg.serverMsgId = sessionInfo.serverMsgId;
     sessionModel.latestMsg.createTime = sessionInfo.msgTimeStamp;
