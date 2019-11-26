@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:cc_flutter_app/imsdk/core/business/im_client.dart';
-import 'package:cc_flutter_app/imsdk/core/im_manager.dart';
+import 'package:cc_flutter_app/imsdk/im_manager.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.List.pb.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
 

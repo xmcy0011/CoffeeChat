@@ -7,7 +7,7 @@ import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Login.pb.dart';
 import 'package:fixnum/fixnum.dart';
 
-import 'im_user_config.dart';
+import 'core/im_user_config.dart';
 
 /// 核心类，负责IM SDK的基本操作，初始化、登录、注销、创建会话等
 class IMManager {
@@ -89,7 +89,9 @@ class IMManager {
   }
 
   // 同步会话列表和未读计数
-  void _syncSessionAndUnread() {}
+  void _syncSessionAndUnread() {
+    
+  }
 
   // 同步历史消息
   void _syncMessage() {}

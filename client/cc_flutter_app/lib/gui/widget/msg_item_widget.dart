@@ -1,4 +1,4 @@
-import 'package:cc_flutter_app/imsdk/core/im_manager.dart';
+import 'package:cc_flutter_app/imsdk/im_manager.dart';
 import 'package:cc_flutter_app/imsdk/core/model/model.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
 import 'package:flutter/cupertino.dart';
