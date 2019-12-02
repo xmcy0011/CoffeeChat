@@ -1,19 +1,19 @@
+import 'package:cc_flutter_app/imsdk/im_manager.dart';
 import 'package:cc_flutter_app/imsdk/core/model/model.dart';
-import 'package:cc_flutter_app/imsdk/core/im_client.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 /// 代表一条消息的组件
 class MsgItem extends StatefulWidget {
-  final MessageModel msg;
+  final MessageModelBase msg;
   final UserModel fromUser;
 
   MsgItem(this.msg, this.fromUser);
 
   @override
   State<StatefulWidget> createState() {
-    if (IMClient.singleton.isSelf(fromUser.userId)) {
+    if (IMManager.singleton.isSelf(fromUser.userId)) {
       return MsgItemMeState(msg, fromUser);
     }
     return MsgItemOtherState(msg, fromUser);
@@ -21,7 +21,7 @@ class MsgItem extends StatefulWidget {
 }
 
 class _MsgItemState extends State<MsgItem> {
-  final MessageModel msg;
+  final MessageModelBase msg;
   final UserModel fromUser;
 
   _MsgItemState(this.msg, this.fromUser);
@@ -82,7 +82,7 @@ class _MsgItemState extends State<MsgItem> {
 
 /// 别人的消息
 class MsgItemOtherState extends _MsgItemState {
-  MsgItemOtherState(MessageModel msg, UserModel fromUser)
+  MsgItemOtherState(MessageModelBase msg, UserModel fromUser)
       : super(msg, fromUser);
 
   @override
@@ -110,7 +110,7 @@ class MsgItemOtherState extends _MsgItemState {
 
 /// 自己的消息
 class MsgItemMeState extends _MsgItemState {
-  MsgItemMeState(MessageModel msg, UserModel fromUser) : super(msg, fromUser);
+  MsgItemMeState(MessageModelBase msg, UserModel fromUser) : super(msg, fromUser);
 
   @override
   Widget build(BuildContext context) {
