@@ -1,8 +1,9 @@
 import 'dart:convert';
 
 import 'package:cc_flutter_app/gui/helper.dart';
+import 'package:cc_flutter_app/gui/imsdk_helper.dart';
 import 'package:cc_flutter_app/gui/page_message.dart';
-import 'package:cc_flutter_app/imsdk/core/im_client.dart';
+import 'package:cc_flutter_app/imsdk/im_manager.dart';
 import 'package:cc_flutter_app/imsdk/im_message.dart';
 import 'package:cc_flutter_app/imsdk/im_session.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
@@ -53,9 +54,15 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
   void initState() {
     super.initState();
 
-    IMMessage.singleton
-        .registerReceiveCallback("_PageChatStateWidgetState", _onReceiveMsg);
-    _onRefresh();
+    IMMessage.singleton.registerReceiveCallback("_PageChatStateWidgetState", _onReceiveMsg);
+    IMSDKHelper.singleton.registerOnRefresh("_PageChatStateWidgetState", _onRefreshSession);
+    _onRefreshSession();
+  }
+
+  @override
+  void dispose() {
+    IMSDKHelper.singleton.unRegisterOnRefresh("_PageChatStateWidgetState");
+    super.dispose();
   }
 
   Widget _buildSession(context, index) {
@@ -68,15 +75,16 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
           // 头像
           leading: ClipOval(
             child: FadeInImage(
-              image: NetworkImage(session.avatarUrl),
+              //FIXED ME
+              //image: NetworkImage(session.avatarUrl),
+              image: AssetImage('assets/default_avatar.png'),
               placeholder: AssetImage('assets/default_avatar.png'),
             ),
           ),
           // 标题
-          title: Text(session.sessionName,
-              style: Theme.of(context).textTheme.subhead),
+          title: Text(session.sessionName, style: Theme.of(context).textTheme.subhead),
           // 副标题
-          subtitle: new Text(session.msgData, maxLines: 1),
+          subtitle: new Text(session.latestMsg.msgData, maxLines: 1),
           trailing: Icon(
             Icons.arrow_forward_ios,
           ),
@@ -94,23 +102,40 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
 
   Future _onRefresh() async {
     // 拉取会话列表
-    var session = new IMSession();
-    session.getRecentSessionList().then((data) {
-      setState(() {
-        _sessionList.clear();
-      });
-      if (data is CIMRecentContactSessionRsp) {
-        for (var i = 0; i < data.contactSessionList.length; i++) {
-          var sessionInfo = data.contactSessionList.elementAt(i);
+//    var session = new IMSession();
+//    session.getRecentSessionList().then((data) {
+//      setState(() {
+//        _sessionList.clear();
+//      });
+//      if (data is CIMRecentContactSessionRsp) {
+//        for (var i = 0; i < data.contactSessionList.length; i++) {
+//          var sessionInfo = data.contactSessionList.elementAt(i);
+//
+//          SessionModel model = SessionModel.copyFrom(sessionInfo, sessionInfo.sessionId.toString(), "");
+//          //subtitle = "[${sessionInfo.msgFromUserId}]" + subtitle;
+//          setState(() {
+//            _sessionList.add(model);
+//          });
+//        }
+//      }
+//    });
+  }
 
-          SessionModel model = new SessionModel(
-              sessionInfo, sessionInfo.sessionId.toString(), "");
-          //subtitle = "[${sessionInfo.msgFromUserId}]" + subtitle;
-          setState(() {
-            _sessionList.add(model);
-          });
-        }
+  Future _onRefreshSession() async {
+    // FIXED ME
+    setState(() {
+      _sessionList.clear();
+    });
+
+    IMManager.singleton.getSessionList().then((value) {
+      List<SessionModel> list = value;
+      for (var i = 0; list != null && i < list.length; i++) {
+        setState(() {
+          _sessionList.add(list[i]);
+        });
       }
+    }).catchError((e) {
+      print("_onRefreshSession 获取会话列表失败：" + e);
     });
   }
 
@@ -120,12 +145,12 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
       if (msg.sessionType == CIMSessionType.kCIM_SESSION_TYPE_SINGLE) {
         if (msg.fromUserId == _sessionList[i].sessionId) {
           setState(() {
-            _sessionList[i].msgData = utf8.decode(msg.msgData);
-            _sessionList[i].clientMsgId = msg.msgId;
-            _sessionList[i].msgTimeStamp = msg.createTime;
-            _sessionList[i].msgStatus = CIMMsgStatus.kCIM_MSG_STATUS_RECEIPT;
-            _sessionList[i].msgType = msg.msgType;
-            _sessionList[i].msgFromUserId = msg.fromUserId;
+            _sessionList[i].latestMsg.msgData = utf8.decode(msg.msgData);
+            _sessionList[i].latestMsg.clientMsgId = msg.msgId;
+            _sessionList[i].latestMsg.createTime = msg.createTime;
+            _sessionList[i].latestMsg.msgStatus = CIMMsgStatus.kCIM_MSG_STATUS_RECEIPT;
+            _sessionList[i].latestMsg.msgType = msg.msgType;
+            _sessionList[i].latestMsg.fromUserId = msg.fromUserId.toInt();
             //_sessionList[i].msgAttach
           });
         }
@@ -145,8 +170,7 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
     info.sessionStatus = CIMSessionStatusType.kCIM_SESSION_STATUS_OK;
     info.isRobotSession = false;
 
-    SessionModel model =
-        new SessionModel(info, userId.toString(), "assets/default_avatar.png");
+    SessionModel model = SessionModel.copyFrom(info, userId.toString(), "assets/default_avatar.png");
 
     _sessionList.add(model);
     navigatePushPage(context, PageMessage(model));
@@ -180,9 +204,8 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
                 var text = textFieldController.text;
                 int userId = int.tryParse(text);
                 if (text.length > 0 && userId != null) {
-                  if (Int64(userId) == IMClient.singleton.userId) {
-                    Toast.show('用户ID无效，不能和自己聊天', context,
-                        gravity: Toast.CENTER);
+                  if (Int64(userId) == IMManager.singleton.userId) {
+                    Toast.show('用户ID无效，不能和自己聊天', context, gravity: Toast.CENTER);
                   } else {
                     Navigator.of(context).pop();
                     _onCreateSession(userId);
