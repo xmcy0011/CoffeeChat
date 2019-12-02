@@ -73,7 +73,9 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
         onTap: () => _onTap(index),
         child: ListTile(
           // 头像
-          leading: ClipOval(
+          leading: ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            clipBehavior: Clip.antiAlias, // 抗锯齿
             child: FadeInImage(
               //FIXED ME
               //image: NetworkImage(session.avatarUrl),
