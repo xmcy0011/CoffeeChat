@@ -172,16 +172,12 @@ class BadgeBottomTabBar extends StatefulWidget {
   })  : assert(items != null),
         assert(items.length >= 2),
         assert(
-          items.every((BadgeBottomTabBarItem item) => item.title != null) ==
-              true,
+          items.every((BadgeBottomTabBarItem item) => item.title != null) == true,
           'Every item must have a non-null title',
         ),
         assert(0 <= currentIndex && currentIndex < items.length),
         assert(iconSize != null),
-        type = type ??
-            (items.length <= 3
-                ? BottomTabBarType.fixed
-                : BottomTabBarType.shifting),
+        type = type ?? (items.length <= 3 ? BottomTabBarType.fixed : BottomTabBarType.shifting),
         super(key: key);
 
   /// Is animation avilable, default true
@@ -372,11 +368,9 @@ class _BottomNavigationTile extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(0, 2, 0, 2),
       alignment: Alignment.center,
       decoration: BoxDecoration(
-          color: badgeColor,
-          shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.all(Radius.circular(10))),
+          color: badgeColor, shape: BoxShape.rectangle, borderRadius: BorderRadius.all(Radius.circular(10))),
       child: Text(
-        '99+',
+        item.badgeNo,
         style: TextStyle(fontSize: 10, color: Colors.white),
       ),
     );
@@ -437,12 +431,12 @@ class _BottomNavigationTile extends StatelessWidget {
         selected: selected,
         child: Stack(
           children: <Widget>[
-            Positioned(right: 24, top: 4, child: _buildBadge()),
             //Center(child: _buildBadge()),
             _buildInkWidget(label),
             Semantics(
               label: indexLabel,
-            )
+            ),
+            Positioned(right: 24, top: 4, child: _buildBadge()),
           ],
         ),
       ),
@@ -450,8 +444,7 @@ class _BottomNavigationTile extends StatelessWidget {
   }
 }
 
-class _BadgeBottomTabBarState extends State<BadgeBottomTabBar>
-    with TickerProviderStateMixin {
+class _BadgeBottomTabBarState extends State<BadgeBottomTabBar> with TickerProviderStateMixin {
   List<AnimationController> _controllers = <AnimationController>[];
   List<CurvedAnimation> _animations;
 
@@ -462,23 +455,20 @@ class _BadgeBottomTabBarState extends State<BadgeBottomTabBar>
   // animation is complete.
   Color _backgroundColor;
 
-  static final Animatable<double> _flexTween =
-      Tween<double>(begin: 1.0, end: 1.5);
+  static final Animatable<double> _flexTween = Tween<double>(begin: 1.0, end: 1.5);
 
   void _resetState() {
     for (AnimationController controller in _controllers) controller.dispose();
     for (_Circle circle in _circles) circle.dispose();
     _circles.clear();
 
-    _controllers =
-        List<AnimationController>.generate(widget.items.length, (int index) {
+    _controllers = List<AnimationController>.generate(widget.items.length, (int index) {
       return AnimationController(
         duration: kThemeAnimationDuration,
         vsync: this,
       )..addListener(_rebuild);
     });
-    _animations =
-        List<CurvedAnimation>.generate(widget.items.length, (int index) {
+    _animations = List<CurvedAnimation>.generate(widget.items.length, (int index) {
       return CurvedAnimation(
         parent: _controllers[index],
         curve: Curves.fastOutSlowIn,
@@ -509,8 +499,7 @@ class _BadgeBottomTabBarState extends State<BadgeBottomTabBar>
     super.dispose();
   }
 
-  double _evaluateFlex(Animation<double> animation) =>
-      _flexTween.evaluate(animation);
+  double _evaluateFlex(Animation<double> animation) => _flexTween.evaluate(animation);
 
   void _pushCircle(int index) {
     if (widget.items[index].backgroundColor != null) {
@@ -568,8 +557,7 @@ class _BadgeBottomTabBarState extends State<BadgeBottomTabBar>
   }
 
   List<Widget> _createTiles() {
-    final MaterialLocalizations localizations =
-        MaterialLocalizations.of(context);
+    final MaterialLocalizations localizations = MaterialLocalizations.of(context);
     assert(localizations != null);
     final List<Widget> children = <Widget>[];
     switch (widget.type) {
@@ -601,13 +589,10 @@ class _BadgeBottomTabBarState extends State<BadgeBottomTabBar>
               },
               colorTween: colorTween,
               selected: i == widget.currentIndex,
-              indexLabel: localizations.tabLabel(
-                  tabIndex: i + 1, tabCount: widget.items.length),
+              indexLabel: localizations.tabLabel(tabIndex: i + 1, tabCount: widget.items.length),
               isAnimation: widget.isAnimation,
               isInkResponse: widget.isInkResponse,
-              badgeColor: widget.badgeColor == null
-                  ? widget.fixedColor
-                  : widget.badgeColor,
+              badgeColor: widget.badgeColor == null ? widget.fixedColor : widget.badgeColor,
             ),
           );
         }
@@ -625,13 +610,10 @@ class _BadgeBottomTabBarState extends State<BadgeBottomTabBar>
               },
               flex: _evaluateFlex(_animations[i]),
               selected: i == widget.currentIndex,
-              indexLabel: localizations.tabLabel(
-                  tabIndex: i + 1, tabCount: widget.items.length),
+              indexLabel: localizations.tabLabel(tabIndex: i + 1, tabCount: widget.items.length),
               isAnimation: widget.isAnimation,
               isInkResponse: widget.isInkResponse,
-              badgeColor: widget.badgeColor == null
-                  ? widget.fixedColor
-                  : widget.badgeColor,
+              badgeColor: widget.badgeColor == null ? widget.fixedColor : widget.badgeColor,
             ),
           );
         }
@@ -656,8 +638,7 @@ class _BadgeBottomTabBarState extends State<BadgeBottomTabBar>
     assert(debugCheckHasMaterialLocalizations(context));
 
     // Labels apply up to _bottomMargin padding. Remainder is media padding.
-    final double additionalBottomPadding =
-        math.max(MediaQuery.of(context).padding.bottom - _kBottomMargin, 0.0);
+    final double additionalBottomPadding = math.max(MediaQuery.of(context).padding.bottom - _kBottomMargin, 0.0);
     Color backgroundColor;
     switch (widget.type) {
       case BottomTabBarType.fixed:
@@ -679,9 +660,7 @@ class _BadgeBottomTabBarState extends State<BadgeBottomTabBar>
             ),
           ),
           ConstrainedBox(
-            constraints: BoxConstraints(
-                minHeight:
-                    kBottomNavigationBarHeight + additionalBottomPadding),
+            constraints: BoxConstraints(minHeight: kBottomNavigationBarHeight + additionalBottomPadding),
             child: Stack(
               children: <Widget>[
                 Positioned.fill(
@@ -744,20 +723,15 @@ class _Circle {
     double weightSum(Iterable<Animation<double>> animations) {
       // We're adding flex values instead of animation values to produce correct
       // ratios.
-      return animations
-          .map<double>(state._evaluateFlex)
-          .fold<double>(0.0, (double sum, double value) => sum + value);
+      return animations.map<double>(state._evaluateFlex).fold<double>(0.0, (double sum, double value) => sum + value);
     }
 
     final double allWeights = weightSum(state._animations);
     // These weights sum to the start edge of the indexed item.
-    final double leadingWeights =
-        weightSum(state._animations.sublist(0, index));
+    final double leadingWeights = weightSum(state._animations.sublist(0, index));
 
     // Add half of its flex value in order to get to the center.
-    return (leadingWeights +
-            state._evaluateFlex(state._animations[index]) / 2.0) /
-        allWeights;
+    return (leadingWeights + state._evaluateFlex(state._animations[index]) / 2.0) / allWeights;
   }
 
   void dispose() {
@@ -791,8 +765,7 @@ class _RadialPainter extends CustomPainter {
     if (textDirection != oldPainter.textDirection) return true;
     if (circles == oldPainter.circles) return false;
     if (circles.length != oldPainter.circles.length) return true;
-    for (int i = 0; i < circles.length; i += 1)
-      if (circles[i] != oldPainter.circles[i]) return true;
+    for (int i = 0; i < circles.length; i += 1) if (circles[i] != oldPainter.circles[i]) return true;
     return false;
   }
 
@@ -811,8 +784,7 @@ class _RadialPainter extends CustomPainter {
           leftFraction = circle.horizontalLeadingOffset;
           break;
       }
-      final Offset center =
-          Offset(leftFraction * size.width, size.height / 2.0);
+      final Offset center = Offset(leftFraction * size.width, size.height / 2.0);
       final Tween<double> radiusTween = Tween<double>(
         begin: 0.0,
         end: _maxRadius(center, size),
