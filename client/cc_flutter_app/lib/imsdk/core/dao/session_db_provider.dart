@@ -120,7 +120,7 @@ class SessionDbProvider extends BaseDbProvider {
   Future<List<SessionModel>> getAllSession() async {
     Database db = await getDataBase();
     //List<Map<String, dynamic>> maps = await db.rawQuery("select * from $name where session_status != 1");
-    List<Map<String, dynamic>> maps = await db.rawQuery("select * from $name");
+    List<Map<String, dynamic>> maps = await db.rawQuery("select * from $name order by $columnUpdatedTime desc");
     if (maps.length > 0) {
       List<SessionModel> list = new List<SessionModel>();
       for (var i = 0; i < maps.length; i++) {

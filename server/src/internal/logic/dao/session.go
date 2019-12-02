@@ -45,7 +45,7 @@ func (t *Session) GetSessionList(userId uint64) ([]model.SessionModel, error) {
 	session := db.DefaultManager.GetDBSlave()
 	if session != nil {
 		sql := fmt.Sprintf("select id,user_id,peer_id,session_type,session_status,"+
-			"is_robot_session,created,updated from %s where user_id=%d and session_status=%d",
+			"is_robot_session,created,updated from %s where user_id=%d and session_status=%d order by updated desc",
 			kSessionTableName, userId, cim.CIMSessionStatusType_kCIM_SESSION_STATUS_OK)
 		rows, err := session.Query(sql)
 		if err != nil {
