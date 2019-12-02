@@ -6,6 +6,8 @@ import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
 import 'package:sqflite/sqlite_api.dart';
 import 'package:fixnum/fixnum.dart';
 
+import '../../im_session.dart';
+
 class SessionDbProvider extends BaseDbProvider {
   ///表名
   final String name = 'im_session';
@@ -16,6 +18,7 @@ class SessionDbProvider extends BaseDbProvider {
   final String columnLatestClientMsgId = "latest_client_msg_id";
   final String columnLatestServerMsgId = "latest_server_msg_id";
   final String columnLatestMsgData = "latest_msg_data";
+  final String columnLatestMsgType = "latest_msg_type";
   final String columnLatestMsgFromId = "latest_msg_from_id";
   final String columnLatestMsgStatus = "latest_msg_status";
   final String columnUnreadCount = "unread_count";
@@ -39,6 +42,7 @@ class SessionDbProvider extends BaseDbProvider {
         $columnLatestClientMsgId text not null,
         $columnLatestServerMsgId integer default 0,
         $columnLatestMsgData text default null,
+        $columnLatestMsgType integer default 0,
         $columnLatestMsgFromId text default null,
         $columnLatestMsgStatus integer default 0,
         $columnUnreadCount integer default 0,
@@ -62,7 +66,7 @@ class SessionDbProvider extends BaseDbProvider {
   }
 
   ///插入到数据库
-  Future insert(SessionModel session) async {
+  Future insert(IMSession session) async {
     Database db = await getDataBase();
     var userProvider = await _getPersonProvider(db, session.sessionId);
     if (userProvider != null && userProvider.length > 0) {
@@ -72,18 +76,19 @@ class SessionDbProvider extends BaseDbProvider {
     var sql = '''
     insert into $name ($columnSessionId,$columnSessionType,$columnSessionStatus,
     $columnUpdatedTime,$columnLatestClientMsgId,$columnLatestServerMsgId,
-    $columnLatestMsgData,$columnLatestMsgFromId,$columnLatestMsgStatus,$columnUnreadCount) 
-    values (?,?,?,?,?,?,?,?,?,?)
+    $columnLatestMsgData,$columnLatestMsgType,$columnLatestMsgFromId,$columnLatestMsgStatus,$columnUnreadCount) 
+    values (?,?,?,?,?,?,?,?,?,?,?)
     ''';
     int result = await db.rawInsert(sql, [
-      session.sessionId,
+      session.sessionId.toString(),
       session.sessionType.value,
-      session.sessionStatus.value,
+      CIMSessionStatusType.kCIM_SESSION_STATUS_OK.value,
       session.updatedTime,
       session.latestMsg.clientMsgId,
       session.latestMsg.serverMsgId,
       session.latestMsg.msgData,
-      session.latestMsg.fromUserId,
+      session.latestMsg.msgType.value,
+      session.latestMsg.fromUserId.toString(),
       session.latestMsg.msgStatus.value,
       session.unreadCnt,
     ]);
@@ -91,20 +96,21 @@ class SessionDbProvider extends BaseDbProvider {
   }
 
   ///更新数据库
-  Future<void> update(int sessionId, int sessionType, SessionModel session) async {
+  Future<void> update(int sessionId, int sessionType, IMSession session) async {
     Database database = await getDataBase();
     var sql = '''
     update $name set $columnSessionStatus = ?,
     $columnUpdatedTime = ?,$columnLatestClientMsgId = ?,$columnLatestServerMsgId = ?,
-    $columnLatestMsgData = ?,$columnLatestMsgFromId = ?,$columnLatestMsgStatus = ?,
+    $columnLatestMsgData = ?,$columnLatestMsgType = ?,$columnLatestMsgFromId = ?,$columnLatestMsgStatus = ?,
     $columnUnreadCount = ? where $columnSessionId = ? and $columnSessionType = ?
     ''';
     int result = await database.rawUpdate(sql, [
-      session.sessionStatus.value,
+      CIMSessionStatusType.kCIM_SESSION_STATUS_OK.value,
       session.updatedTime,
       session.latestMsg.clientMsgId,
       session.latestMsg.serverMsgId,
       session.latestMsg.msgData,
+      session.latestMsg.msgType.value,
       session.latestMsg.fromUserId,
       session.latestMsg.msgStatus.value,
       session.unreadCnt,
@@ -117,32 +123,30 @@ class SessionDbProvider extends BaseDbProvider {
   Future<void> updateUnreadCount(int sessionId, int sessionType) async {}
 
   /// 获取所有会话
-  Future<List<SessionModel>> getAllSession() async {
+  Future<List<IMSession>> getAllSession() async {
     Database db = await getDataBase();
     //List<Map<String, dynamic>> maps = await db.rawQuery("select * from $name where session_status != 1");
     List<Map<String, dynamic>> maps = await db.rawQuery("select * from $name order by $columnUpdatedTime desc");
     if (maps.length > 0) {
-      List<SessionModel> list = new List<SessionModel>();
+      List<IMSession> list = new List<IMSession>();
       for (var i = 0; i < maps.length; i++) {
-        CIMContactSessionInfo sessionInfo = new CIMContactSessionInfo();
-        sessionInfo.sessionId = Int64(int.parse(maps[i][columnSessionId])); // text
-        // 会话类型
-        sessionInfo.sessionType = CIMSessionType.valueOf(maps[i][columnSessionType]);
-        sessionInfo.sessionStatus = CIMSessionStatusType.valueOf(maps[i][columnSessionStatus]);
-        sessionInfo.updatedTime = maps[i][columnUpdatedTime];
-        sessionInfo.unreadCnt = maps[i][columnUnreadCount];
+        MessageModelBase msg = new MessageModelBase();
+        msg.clientMsgId = maps[i][columnLatestClientMsgId];
+        msg.serverMsgId = maps[i][columnLatestServerMsgId];
+        msg.createTime = maps[i][columnUpdatedTime];
+        msg.msgData = maps[i][columnLatestMsgData];
+        msg.msgType = CIMMsgType.valueOf(maps[i][columnLatestMsgType]);
+        msg.fromUserId = int.parse(maps[i][columnLatestMsgFromId]); // String
+        msg.msgStatus = CIMMsgStatus.valueOf(maps[i][columnLatestMsgStatus]);
 
-        sessionInfo.msgId = maps[i][columnLatestClientMsgId];
-        sessionInfo.serverMsgId = Int64(maps[i][columnLatestServerMsgId]);
-        sessionInfo.msgTimeStamp = sessionInfo.updatedTime;
-        sessionInfo.msgData = utf8.encode(maps[i][columnLatestMsgData]);
-        //sessionInfo.msgType =
-        sessionInfo.msgFromUserId = Int64(int.parse(maps[i][columnLatestMsgFromId])); // text
-        sessionInfo.msgStatus = CIMMsgStatus.valueOf(maps[i][columnLatestMsgStatus]);
-        //sessionInfo.msgAttach
-
-        SessionModel model = SessionModel.copyFrom(sessionInfo, maps[i]["session_id"], "");
-        list.add(model);
+        IMSession session = new IMSession(
+            int.parse(maps[i][columnSessionId]), // String
+            "",
+            CIMSessionType.valueOf(maps[i][columnSessionType]),
+            maps[i][columnUnreadCount],
+            maps[i][columnUpdatedTime],
+            msg);
+        list.add(session);
       }
       return list;
     }

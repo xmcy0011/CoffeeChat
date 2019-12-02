@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:cc_flutter_app/imsdk/im_manager.dart';
 import 'package:cc_flutter_app/imsdk/core/model/model.dart';
 import 'package:cc_flutter_app/imsdk/im_message.dart';
+import 'package:cc_flutter_app/imsdk/im_session.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pbserver.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.List.pbserver.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Message.pb.dart';
@@ -17,7 +18,7 @@ const kMaxPullMsgLimitCount = 10;
 
 // 聊天详情页面
 class PageMessage extends StatefulWidget {
-  final SessionModel sessionInfo;
+  final IMSession sessionInfo;
 
   PageMessage(this.sessionInfo);
 
@@ -26,7 +27,7 @@ class PageMessage extends StatefulWidget {
 }
 
 class _PageMessageState extends State<PageMessage> {
-  SessionModel sessionInfo; // 聊天对应的会话信息
+  IMSession sessionInfo; // 聊天对应的会话信息
   List<MessageModelBase> _msgList = new List<MessageModelBase>(); // 历史消息
 
   ScrollController _scrollController; // 历史消息滚动

@@ -23,7 +23,7 @@ class PageChatStateWidget extends StatefulWidget {
 }
 
 class _PageChatStateWidgetState extends State<PageChatStateWidget> {
-  List<SessionModel> _sessionList = new List<SessionModel>();
+  List<IMSession> _sessionList = new List<IMSession>();
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +65,7 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
     super.dispose();
   }
 
-  Widget _buildBadge(SessionModel session) {
+  Widget _buildBadge(IMSession session) {
     if (session.unreadCnt == 0) {
       return Container();
     }
@@ -86,7 +86,7 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
   }
 
   Widget _buildSession(context, index) {
-    SessionModel session = _sessionList[index];
+    IMSession session = _sessionList[index];
 
     return Column(children: <Widget>[
       GestureDetector(
@@ -124,7 +124,7 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
                 style: Theme.of(context).textTheme.subhead,
               ),
               new Text(
-                session.updateTimeFormat,
+                IMSession.timeFormat(session.updatedTime),
                 style: new TextStyle(color: Colors.grey, fontSize: 14.0),
               ),
             ],
@@ -171,7 +171,7 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
     });
 
     IMManager.singleton.getSessionList().then((value) {
-      List<SessionModel> list = value;
+      List<IMSession> list = value;
       for (var i = 0; list != null && i < list.length; i++) {
         setState(() {
           _sessionList.add(list[i]);
@@ -202,7 +202,7 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
   }
 
   void _onTap(var index) {
-    SessionModel model = _sessionList[index];
+    IMSession model = _sessionList[index];
     navigatePushPage(context, PageMessage(model));
   }
 
@@ -213,7 +213,17 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
     info.sessionStatus = CIMSessionStatusType.kCIM_SESSION_STATUS_OK;
     info.isRobotSession = false;
 
-    SessionModel model = SessionModel.copyFrom(info, userId.toString(), "assets/default_avatar.png");
+    MessageModelBase msg = new MessageModelBase();
+    msg.msgData = "";
+
+    IMSession model = new IMSession(
+      userId,
+      userId.toString(),
+      CIMSessionType.kCIM_SESSION_TYPE_SINGLE,
+      0,
+      DateTime.now().millisecondsSinceEpoch ~/ 1000,
+      new MessageModelBase(),
+    );
 
     _sessionList.add(model);
     navigatePushPage(context, PageMessage(model));

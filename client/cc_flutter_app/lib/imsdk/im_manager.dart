@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:cc_flutter_app/imsdk/core/business/session_business.dart';
 import 'package:cc_flutter_app/imsdk/core/dao/session_db_provider.dart';
 import 'package:cc_flutter_app/imsdk/core/business/im_client.dart';
+import 'package:cc_flutter_app/imsdk/core/dao/sql_manager.dart';
 import 'package:cc_flutter_app/imsdk/core/log_util.dart';
 import 'package:cc_flutter_app/imsdk/core/model/model.dart';
 import 'package:cc_flutter_app/imsdk/im_session.dart';
@@ -38,6 +40,7 @@ class IMManager {
   /// 初始化
   bool init() {
     isInit = true;
+    SQLManager.init();
     return true;
   }
 
@@ -93,7 +96,7 @@ class IMManager {
   }
 
   /// 获取所有会话
-  Future<List<SessionModel>> getSessionList() async {
+  Future<List<IMSession>> getSessionList() async {
     return sessionDbProvider.getAllSession();
   }
 
@@ -106,12 +109,23 @@ class IMManager {
         var session = result.contactSessionList[i];
         int count = await sessionDbProvider.existSession(session.sessionId.toInt(), session.sessionType.value);
 
+        MessageModelBase msg = new MessageModelBase();
+        msg.clientMsgId = session.msgId;
+        msg.serverMsgId = session.serverMsgId.toInt();
+        msg.createTime = session.updatedTime;
+        msg.msgData = utf8.decode(session.msgData);
+        msg.msgType = session.msgType;
+        msg.fromUserId = session.msgFromUserId.toInt();
+        msg.msgStatus = session.msgStatus;
+
+        IMSession model = new IMSession(
+            session.sessionId.toInt(), "", session.sessionType, session.unreadCnt, session.updatedTime.toInt(), msg);
+
         // 存在更新
         if (count > 0) {
-          var model = SessionModel.copyFrom(session, "", "");
           sessionDbProvider.update(session.sessionId.toInt(), session.sessionType.value, model);
         } else {
-          sessionDbProvider.insert(SessionModel.copyFrom(session, "", ""));
+          sessionDbProvider.insert(model);
         }
       }
 
@@ -123,6 +137,6 @@ class IMManager {
     }
   }
 
-// 同步历史消息
+  // 同步历史消息
   void _syncMessage() {}
 }

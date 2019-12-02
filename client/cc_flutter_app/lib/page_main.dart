@@ -2,6 +2,7 @@ import 'package:cc_flutter_app/gui/imsdk_helper.dart';
 import 'package:cc_flutter_app/gui/widget/badge_bottom_tab_bar.dart';
 import 'package:cc_flutter_app/gui/widget/badge_bottom_tab_bar_item.dart';
 import 'package:cc_flutter_app/imsdk/im_manager.dart';
+import 'package:cc_flutter_app/imsdk/im_session.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -70,7 +71,7 @@ class _PageMainStatefulAppState extends State<PageMainStatefulApp> {
 
   void _onRefresh() {
     IMManager.singleton.getSessionList().then((v) {
-      List<SessionModel> list = v;
+      List<IMSession> list = v;
       var totalUnreadCount = 0;
       if (list != null) {
         for (var i = 0; i < list.length; i++) {
