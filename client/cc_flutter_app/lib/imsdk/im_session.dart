@@ -1,7 +1,6 @@
 import 'dart:async';
 
-import 'package:cc_flutter_app/imsdk/core/business/im_client.dart';
-import 'package:cc_flutter_app/imsdk/im_manager.dart';
+import 'package:cc_flutter_app/imsdk/core/im_client.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.List.pb.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
 
@@ -13,7 +12,7 @@ class IMSession {
     var complete = new Completer();
 
     var req = new CIMRecentContactSessionReq();
-    req.userId = IMManager.singleton.userId;
+    req.userId = IMClient.singleton.userId;
     req.latestUpdateTime = DateTime.now().millisecondsSinceEpoch ~/ 1000;
 
     print("getRecentSessionList userId=${req.userId}");

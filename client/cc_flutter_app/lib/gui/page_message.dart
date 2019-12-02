@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:cc_flutter_app/imsdk/im_manager.dart';
 import 'package:cc_flutter_app/imsdk/core/model/model.dart';
+import 'package:cc_flutter_app/imsdk/core/im_client.dart';
 import 'package:cc_flutter_app/imsdk/im_message.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pbserver.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.List.pbserver.dart';
@@ -27,7 +27,7 @@ class PageMessage extends StatefulWidget {
 
 class _PageMessageState extends State<PageMessage> {
   SessionModel sessionInfo; // 聊天对应的会话信息
-  List<MessageModelBase> _msgList = new List<MessageModelBase>(); // 历史消息
+  List<MessageModel> _msgList = new List<MessageModel>(); // 历史消息
 
   ScrollController _scrollController; // 历史消息滚动
   TextEditingController _textController = new TextEditingController(); // 输入的文本
@@ -86,7 +86,7 @@ class _PageMessageState extends State<PageMessage> {
 
   // 生成历史聊天记录
   Widget _onBuildMsgItem(context, position) {
-    MessageModelBase msg = _msgList[position];
+    MessageModel msg = _msgList[position];
 
     // FIXED ME
     UserModel fromUser = new UserModel();
@@ -97,7 +97,7 @@ class _PageMessageState extends State<PageMessage> {
     //print("_onBuildMsgItem=${msg.serverMsgId},msg=${msg.msgData}");
 
     //return MsgItem(msg, fromUser);
-    if (IMManager.singleton.isSelf(msg.fromUserId)) {
+    if (IMClient.singleton.isSelf(msg.fromUserId)) {
       return _buildMeAvatarItem(msg, fromUser);
     }
     return _buildOtherAvatarItem(msg, fromUser);
@@ -131,7 +131,7 @@ class _PageMessageState extends State<PageMessage> {
   }
 
   // 生成聊天内容
-  Widget _buildMsgContent(MessageModelBase msg) {
+  Widget _buildMsgContent(MessageModel msg) {
     double maxWidth = MediaQuery.of(context).size.width * 0.7;
     var text = msg.msgData;
 
@@ -152,14 +152,17 @@ class _PageMessageState extends State<PageMessage> {
         padding: EdgeInsets.all(10),
         child: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: maxWidth),
-          child: Text(text, maxLines: 10, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.subhead),
+          child: Text(text,
+              maxLines: 10,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.subhead),
         ),
       ),
     );
   }
 
   // 自己的消息
-  Widget _buildMeAvatarItem(MessageModelBase msg, UserModel fromUser) {
+  Widget _buildMeAvatarItem(MessageModel msg, UserModel fromUser) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Row(
@@ -169,13 +172,15 @@ class _PageMessageState extends State<PageMessage> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
-              Text(fromUser.nickName, style: Theme.of(context).textTheme.subhead),
+              Text(fromUser.nickName,
+                  style: Theme.of(context).textTheme.subhead),
               Row(
                 children: <Widget>[
                   msg.msgStatus == CIMMsgStatus.kCIM_MSG_STATUS_SENDING
                       ? CircularProgressIndicator(
                           strokeWidth: 1.0,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.black12),
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.black12),
                         )
                       : (msg.msgStatus == CIMMsgStatus.kCIM_MSG_STATUS_FAILED
                           ? IconButton(
@@ -200,7 +205,7 @@ class _PageMessageState extends State<PageMessage> {
   }
 
   // 别人的消息
-  Widget _buildOtherAvatarItem(MessageModelBase msg, UserModel fromUser) {
+  Widget _buildOtherAvatarItem(MessageModel msg, UserModel fromUser) {
     return Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
@@ -211,7 +216,8 @@ class _PageMessageState extends State<PageMessage> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(fromUser.nickName, style: Theme.of(context).textTheme.subhead),
+                Text(fromUser.nickName,
+                    style: Theme.of(context).textTheme.subhead),
                 _buildMsgContent(msg)
               ],
             ),
@@ -235,7 +241,7 @@ class _PageMessageState extends State<PageMessage> {
   }
 
   // 失败重发
-  void _reSendMsg(MessageModelBase msg) {
+  void _reSendMsg(MessageModel msg) {
     var sId = sessionInfo.sessionId;
     var sType = sessionInfo.sessionType;
 
@@ -251,7 +257,8 @@ class _PageMessageState extends State<PageMessage> {
     });
 
     IMMessage.singleton
-        .sendMessage(msg.clientMsgId, sId, CIMMsgType.kCIM_MSG_TYPE_TEXT, sType, msg.msgData)
+        .sendMessage(msg.clientMsgId, sId, CIMMsgType.kCIM_MSG_TYPE_TEXT, sType,
+            msg.msgData)
         .then((app) {
       setState(() {
         msg.msgStatus = CIMMsgStatus.kCIM_MSG_STATUS_SENT;
@@ -268,16 +275,16 @@ class _PageMessageState extends State<PageMessage> {
     var msg = IMMessage();
     var id = sessionInfo.sessionId;
     var type = sessionInfo.sessionType;
-    int endMsgId = 0;
+    Int64 endMsgId = Int64(0);
     if (_msgList.length > 0) {
       endMsgId = _msgList[0].serverMsgId;
     }
 
     msg.getMessageList(id, type, endMsgId, kMaxPullMsgLimitCount).then((rsp) {
       if (rsp is CIMGetMsgListRsp) {
-        List<MessageModelBase> msg = new List<MessageModelBase>();
+        List<MessageModel> msg = new List<MessageModel>();
         rsp.msgList.forEach((v) {
-          var msgModel = MessageModelBase.copyFrom(v);
+          var msgModel = new MessageModel(v);
           print("msgId=${msgModel.serverMsgId},msg=${msgModel.msgData}");
           msg.add(msgModel);
         });
@@ -286,7 +293,8 @@ class _PageMessageState extends State<PageMessage> {
           _msgList.insertAll(0, msg);
           if (_scrollController == null) {
             if (_msgList.length > 6) {
-              _scrollController = new ScrollController(initialScrollOffset: 380);
+              _scrollController =
+                  new ScrollController(initialScrollOffset: 380);
             } else {
               _scrollController = new ScrollController();
             }
@@ -312,7 +320,8 @@ class _PageMessageState extends State<PageMessage> {
         setState(() {
           //_scrollController.jumpTo(scrollValue);
           _scrollController.animateTo(scrollValue,
-              duration: Duration(milliseconds: animationTime), curve: Curves.easeIn);
+              duration: Duration(milliseconds: animationTime),
+              curve: Curves.easeIn);
         });
       });
     }
@@ -325,7 +334,9 @@ class _PageMessageState extends State<PageMessage> {
 
       setState(() {
         //_scrollController.jumpTo(scrollValue);
-        _scrollController.animateTo(scrollValue, duration: Duration(milliseconds: animationTime), curve: Curves.easeIn);
+        _scrollController.animateTo(scrollValue,
+            duration: Duration(milliseconds: animationTime),
+            curve: Curves.easeIn);
       });
     }
   }
@@ -346,8 +357,8 @@ class _PageMessageState extends State<PageMessage> {
     var msgInfo = new CIMMsgInfo();
     msgInfo.clientMsgId = IMMessage.singleton.generateMsgId();
     msgInfo.sessionType = sessionInfo.sessionType;
-    msgInfo.fromUserId = IMManager.singleton.userId;
-    msgInfo.toSessionId = Int64(sessionInfo.sessionId);
+    msgInfo.fromUserId = IMClient.singleton.userId;
+    msgInfo.toSessionId = sessionInfo.sessionId;
     msgInfo.createTime = DateTime.now().millisecondsSinceEpoch ~/ 1000;
     msgInfo.msgResCode = CIMResCode.kCIM_RES_CODE_OK;
     msgInfo.msgStatus = CIMMsgStatus.kCIM_MSG_STATUS_SENDING; // 发送中
@@ -357,14 +368,17 @@ class _PageMessageState extends State<PageMessage> {
     msgInfo.senderClientType = CIMClientType.kCIM_CLIENT_TYPE_DEFAULT;
 
     //msgInfo.clientMsgId
-    MessageModelBase model = MessageModelBase.copyFrom(msgInfo);
+    MessageModel model = new MessageModel(msgInfo);
     setState(() {
       _msgList.add(model);
       _textController.clear();
     });
     scrollEnd2();
 
-    IMMessage.singleton.sendMessage(msgInfo.clientMsgId, sId, CIMMsgType.kCIM_MSG_TYPE_TEXT, sType, text).then((app) {
+    IMMessage.singleton
+        .sendMessage(msgInfo.clientMsgId, sId, CIMMsgType.kCIM_MSG_TYPE_TEXT,
+            sType, text)
+        .then((app) {
       setState(() {
         model.msgStatus = CIMMsgStatus.kCIM_MSG_STATUS_SENT;
       });
@@ -390,7 +404,7 @@ class _PageMessageState extends State<PageMessage> {
       msgInfo.createTime = msg.createTime;
       msgInfo.sessionType = msg.sessionType;
 
-      var model = MessageModelBase.copyFrom(msgInfo);
+      var model = new MessageModel(msgInfo);
       setState(() {
         _msgList.add(model);
       });

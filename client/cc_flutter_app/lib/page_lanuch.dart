@@ -2,8 +2,6 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:cc_flutter_app/gui/helper.dart';
-import 'package:cc_flutter_app/gui/imsdk_helper.dart';
-import 'package:cc_flutter_app/imsdk/im_manager.dart';
 import 'package:cc_flutter_app/page_login.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +15,7 @@ class PageLaunchStatefulWidget extends StatefulWidget {
 /// 显示一张欢迎图片
 /// 随机1-3秒后跳转到主界面
 class _PageLaunchStatefulWidgetState extends State<PageLaunchStatefulWidget> {
+
   @override
   Widget build(BuildContext context) {
 //    Image.asset(
@@ -67,10 +66,6 @@ class _PageLaunchStatefulWidgetState extends State<PageLaunchStatefulWidget> {
     var sleep = Random(DateTime.now().millisecondsSinceEpoch).nextInt(2) + 1;
     var tempMs = Random(DateTime.now().millisecondsSinceEpoch).nextDouble();
     var sleepMs = (tempMs * 1000).toInt();
-
-    // 初始化IM SDK
-    IMManager.singleton.setUserConfig(IMSDKHelper.singleton);
-    IMManager.singleton.init();
 
     /*Timer _timer =*/
     new Timer(Duration(seconds: sleep, milliseconds: sleepMs), () {

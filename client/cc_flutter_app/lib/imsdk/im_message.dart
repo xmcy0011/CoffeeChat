@@ -1,16 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:cc_flutter_app/imsdk/core/business/im_client.dart';
-import 'package:cc_flutter_app/imsdk/im_manager.dart';
-import 'package:cc_flutter_app/imsdk/proto/im_header.dart';
+import 'package:cc_flutter_app/imsdk/core/im_client.dart';
+import 'package:cc_flutter_app/imsdk/model/im_header.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.List.pb.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Message.pb.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:uuid/uuid.dart';
 
-import 'proto/im_request.dart';
+import 'model/im_request.dart';
 
 /// 消息收发
 class IMMessage {
@@ -41,16 +40,16 @@ class IMMessage {
   /// [sessionType] 会话类型
   /// [msgData] 消息内容
   /// @return [Future] then(CIMMsgDataAck ack).error(String err)
-  Future sendMessage(
-      String msgId, int toSessionId, CIMMsgType msgType, CIMSessionType sessionType, String msgData) async {
+  Future sendMessage(String msgId, Int64 toSessionId, CIMMsgType msgType,
+      CIMSessionType sessionType, String msgData) async {
     var completer = new Completer();
 
     print("sendMessage toSessionId=$toSessionId,msgType=$msgType,"
         "sessionType=$sessionType,msgData=$msgData");
 
     var msg = new CIMMsgData();
-    msg.fromUserId = IMManager.singleton.userId;
-    msg.toSessionId = Int64(toSessionId);
+    msg.fromUserId = IMClient.singleton.userId;
+    msg.toSessionId = toSessionId;
 
     var uuid = new Uuid();
     //msg.msgId = uuid.v5(Uuid.NAMESPACE_URL, "www.coffeechat.cn");
@@ -94,18 +93,19 @@ class IMMessage {
   /// [sessionType] 会话类型
   /// [endMsgId] 结束服务器消息id(不包含在查询结果中)，第一次请求设置为0
   /// [limitCount] 本次查询消息的条数上线(最多100条)
-  Future getMessageList(int toSessionId, CIMSessionType sessionType, int endMsgId, int limitCount) async {
+  Future getMessageList(Int64 toSessionId, CIMSessionType sessionType,
+      Int64 endMsgId, int limitCount) async {
     print("getMessageList toSessionId=$toSessionId,sessionType=$sessionType,"
         "endMsgId=$endMsgId,limitCount=$limitCount");
 
     var completer = new Completer();
 
     var req = new CIMGetMsgListReq();
-    req.userId = IMManager.singleton.userId;
-    req.sessionId = Int64(toSessionId);
+    req.userId = IMClient.singleton.userId;
+    req.sessionId = toSessionId;
     req.sessionType = sessionType;
     req.limitCount = limitCount;
-    req.endMsgId = Int64(endMsgId);
+    req.endMsgId = endMsgId;
 
     if (!IMClient.singleton.isLogin) {
       new Timer(Duration(milliseconds: 200), () {
@@ -114,7 +114,8 @@ class IMMessage {
       return completer.future;
     }
 
-    IMClient.singleton.sendRequest(CIMCmdID.kCIM_CID_LIST_MSG_REQ.value, req, (rsp) {
+    IMClient.singleton.sendRequest(CIMCmdID.kCIM_CID_LIST_MSG_REQ.value, req,
+        (rsp) {
       if (rsp is CIMGetMsgListRsp) {
         completer.complete(rsp);
       } else {
@@ -187,7 +188,7 @@ class IMMessage {
     } else {
       ack.toSessionId = msg.toSessionId;
     }
-    ack.fromUserId = IMManager.singleton.userId;
+    ack.fromUserId = IMClient.singleton.userId;
     ack.sessionType = msg.sessionType;
     ack.createTime = msg.createTime;
     ack.serverMsgId = Int64(0); // 不用填

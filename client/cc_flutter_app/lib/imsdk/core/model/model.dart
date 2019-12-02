@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
+import 'package:fixnum/fixnum.dart';
 
-/// 用户信息
 class UserModel {
-  int userId; // 用户ID
+  Int64 userId; // 用户ID
 
   String nickName; // 用户昵称
   /*optional*/
@@ -13,16 +13,15 @@ class UserModel {
   String avatarURL; // 头像URL
 }
 
-/// 消息基类（所有消息类型都具有这些属性）
-class MessageModelBase {
+class MessageModel {
   String clientMsgId; // 客户端消息ID（UUID）
-  int serverMsgId; // 服务端消息ID
+  Int64 serverMsgId; // 服务端消息ID
 
   CIMResCode msgResCode; // 消息错误码
   CIMMsgFeature msgFeature; // 消息属性
   CIMSessionType sessionType; // 会话类型
-  int fromUserId; // 来源会话ID
-  int toSessionId; // 目标会话ID
+  Int64 fromUserId; // 来源会话ID
+  Int64 toSessionId; // 目标会话ID
   int createTime; // 消息创建时间戳（毫秒）
 
   CIMMsgType msgType; // 消息类型
@@ -32,66 +31,66 @@ class MessageModelBase {
   String attach; // 消息附件（预留）
   CIMClientType senderClientType; // 发送者客户端类型
 
-  static MessageModelBase copyFrom(CIMMsgInfo msgInfo) {
-    MessageModelBase messageModel = new MessageModelBase();
-    messageModel.clientMsgId = msgInfo.clientMsgId;
-    messageModel.serverMsgId = msgInfo.serverMsgId.toInt();
-    messageModel.msgResCode = msgInfo.msgResCode;
-    messageModel.msgFeature = msgInfo.msgFeature;
-    messageModel.sessionType = msgInfo.sessionType;
-    messageModel.fromUserId = msgInfo.fromUserId.toInt();
-    messageModel.toSessionId = msgInfo.toSessionId.toInt();
-    messageModel.createTime = msgInfo.createTime;
-    messageModel.msgType = msgInfo.msgType;
-    messageModel.msgStatus = msgInfo.msgStatus;
-    messageModel.msgData = utf8.decode(msgInfo.msgData);
-    messageModel.attach = msgInfo.attach;
-    messageModel.senderClientType = msgInfo.senderClientType;
-    return messageModel;
+  MessageModel(CIMMsgInfo msgInfo) {
+    this.clientMsgId = msgInfo.clientMsgId;
+    this.serverMsgId = msgInfo.serverMsgId;
+    this.msgResCode = msgInfo.msgResCode;
+    this.msgFeature = msgInfo.msgFeature;
+    this.sessionType = msgInfo.sessionType;
+    this.fromUserId = msgInfo.fromUserId;
+    this.toSessionId = msgInfo.toSessionId;
+    this.createTime = msgInfo.createTime;
+    this.msgType = msgInfo.msgType;
+    this.msgStatus = msgInfo.msgStatus;
+    this.msgData = utf8.decode(msgInfo.msgData);
+    this.attach = msgInfo.attach;
+    this.senderClientType = msgInfo.senderClientType;
   }
 }
 
-/// 会话
 class SessionModel {
-  int sessionId; // 会话id
+  Int64 sessionId; // 会话id
   CIMSessionType sessionType; // 会话类型
   CIMSessionStatusType sessionStatus; // 会话修改命令，预留
 
   int unreadCnt; // 该会话未读消息数量
   int updatedTime; // 更新时间
 
-  MessageModelBase latestMsg; // 最新的消息
-
-  String extendData; // 扩展信息，本地使用
-  bool isRobotSession; // 是否机器人会话
+  String clientMsgId; // 最新一条消息的id（UUID）
+  Int64 serverMsgId; // 最新一条消息服务端的id（顺序递增）
+  int msgTimeStamp; // 最新一条消息时间戳（毫秒）
+  String msgData; // 最新一条消息的内容
+  CIMMsgType msgType; // 最新一条消息的类型
+  Int64 msgFromUserId; // 最新一条消息的发送者
+  CIMMsgStatus msgStatus; // 最新一条消息的状态（预留）
+  /*optional*/
+  String msgAttach; // 最新一条消息的附件（预留）
+  /*optional*/
+  String extendData; // 本地扩展字段（限制4096）
+  /*optional*/
+  bool isRobotSession; // 是否为机器人会话
 
   String sessionName; // 会话名称
   String avatarUrl; // 会话头像
 
-  static SessionModel copyFrom(CIMContactSessionInfo sessionInfo, String sessionName, String avatarUrl) {
-    SessionModel sessionModel = new SessionModel();
-    sessionModel.sessionId = sessionInfo.sessionId.toInt();
-    sessionModel.sessionType = sessionInfo.sessionType;
-    sessionModel.sessionStatus = sessionInfo.sessionStatus;
-    sessionModel.sessionName = sessionName;
-    sessionModel.avatarUrl = avatarUrl;
+  SessionModel(
+      CIMContactSessionInfo sessionInfo, this.sessionName, this.avatarUrl) {
+    this.sessionId = sessionInfo.sessionId;
+    this.sessionType = sessionInfo.sessionType;
+    this.sessionStatus = sessionInfo.sessionStatus;
 
-    sessionModel.unreadCnt = sessionInfo.unreadCnt;
-    sessionModel.updatedTime = sessionInfo.updatedTime;
+    this.unreadCnt = sessionInfo.unreadCnt;
+    this.updatedTime = sessionInfo.updatedTime;
 
-    sessionModel.latestMsg = new MessageModelBase();
-    sessionModel.latestMsg.clientMsgId = sessionInfo.msgId;
-    sessionModel.latestMsg.serverMsgId = sessionInfo.serverMsgId.toInt();
-    sessionModel.latestMsg.createTime = sessionInfo.msgTimeStamp;
-    sessionModel.latestMsg.msgData = utf8.decode(sessionInfo.msgData);
-    sessionModel.latestMsg.msgType = sessionInfo.msgType;
-    sessionModel.latestMsg.fromUserId = sessionInfo.msgFromUserId.toInt();
-    sessionModel.latestMsg.msgStatus = sessionInfo.msgStatus;
-    sessionModel.latestMsg.attach = sessionInfo.msgAttach;
-
-    sessionModel.extendData = sessionInfo.extendData;
-    sessionModel.isRobotSession = sessionInfo.isRobotSession;
-
-    return sessionModel;
+    this.clientMsgId = sessionInfo.msgId;
+    this.serverMsgId = sessionInfo.serverMsgId;
+    this.msgTimeStamp = sessionInfo.msgTimeStamp;
+    this.msgData = utf8.decode(sessionInfo.msgData);
+    this.msgType = sessionInfo.msgType;
+    this.msgFromUserId = sessionInfo.msgFromUserId;
+    this.msgStatus = sessionInfo.msgStatus;
+    this.msgAttach = sessionInfo.msgAttach;
+    this.extendData = sessionInfo.extendData;
+    this.isRobotSession = sessionInfo.isRobotSession;
   }
 }
