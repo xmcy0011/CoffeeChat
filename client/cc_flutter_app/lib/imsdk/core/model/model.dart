@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
+import 'package:intl/intl.dart';
 
 /// 用户信息
 class UserModel {
@@ -59,6 +60,7 @@ class SessionModel {
 
   int unreadCnt; // 该会话未读消息数量
   int updatedTime; // 更新时间
+  String updateTimeFormat; // 更新时间（美化）
 
   MessageModelBase latestMsg; // 最新的消息
 
@@ -78,6 +80,7 @@ class SessionModel {
 
     sessionModel.unreadCnt = sessionInfo.unreadCnt;
     sessionModel.updatedTime = sessionInfo.updatedTime;
+    sessionModel.updateTimeFormat = timeFormat(sessionInfo.updatedTime);
 
     sessionModel.latestMsg = new MessageModelBase();
     sessionModel.latestMsg.clientMsgId = sessionInfo.msgId;
@@ -93,5 +96,29 @@ class SessionModel {
     sessionModel.isRobotSession = sessionInfo.isRobotSession;
 
     return sessionModel;
+  }
+
+  static String timeFormat(int time) {
+    var dateTime = DateTime.fromMillisecondsSinceEpoch(time * 1000);
+    var now = DateTime.now();
+
+    // 今天，显示时分
+    // 昨天，显示昨天
+    // 其他，显示年月日
+    if (dateTime.day == now.day) {
+      //
+      var formatter = new DateFormat('HH:mm');
+      String formatted = formatter.format(dateTime);
+      return formatted;
+    }
+
+    var yesterday = now.subtract(Duration(days: 1));
+    if (dateTime.day == yesterday.day) {
+      return "昨天";
+    }
+
+    var formatter = new DateFormat('yyyy-MM-dd');
+    String formatted = formatter.format(dateTime);
+    return formatted;
   }
 }

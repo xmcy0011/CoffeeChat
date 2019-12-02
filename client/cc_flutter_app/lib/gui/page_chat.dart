@@ -84,12 +84,22 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
             ),
           ),
           // 标题
-          title: Text(session.sessionName, style: Theme.of(context).textTheme.subhead),
+          //title: Text(session.sessionName, style: Theme.of(context).textTheme.subhead),
+          title: new Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              new Text(
+                session.sessionName,
+                style: Theme.of(context).textTheme.subhead,
+              ),
+              new Text(
+                session.updateTimeFormat,
+                style: new TextStyle(color: Colors.grey, fontSize: 14.0),
+              ),
+            ],
+          ),
           // 副标题
           subtitle: new Text(session.latestMsg.msgData, maxLines: 1),
-          trailing: Icon(
-            Icons.arrow_forward_ios,
-          ),
         ),
       ),
       Divider(

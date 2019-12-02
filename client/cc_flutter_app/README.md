@@ -39,6 +39,7 @@ samples, guidance on mobile development, and a full API reference.
     -[x] 自动重连（可能有BUG）
 -[x] 会话列表
     -[x] 最新消息
+    -[x] 圆角头像
     -[x] 未读计数（没有显示出来，半成品）
 -[x] 聊天
     -[x] 收发文本
