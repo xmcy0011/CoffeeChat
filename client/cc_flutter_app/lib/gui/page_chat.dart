@@ -65,6 +65,26 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
     super.dispose();
   }
 
+  Widget _buildBadge(SessionModel session) {
+    if (session.unreadCnt == 0) {
+      return Container();
+    }
+
+    var textUnread = session.unreadCnt > 99 ? "99+" : session.unreadCnt.toString();
+
+    return Container(
+      width: 24,
+      padding: EdgeInsets.fromLTRB(0, 2, 0, 2),
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+          color: Colors.red, shape: BoxShape.rectangle, borderRadius: BorderRadius.all(Radius.circular(10))),
+      child: Text(
+        textUnread,
+        style: TextStyle(fontSize: 10, color: Colors.white),
+      ),
+    );
+  }
+
   Widget _buildSession(context, index) {
     SessionModel session = _sessionList[index];
 
@@ -73,18 +93,29 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
         onTap: () => _onTap(index),
         child: ListTile(
           // 头像
-          leading: ClipRRect(
-            borderRadius: BorderRadius.circular(4),
-            clipBehavior: Clip.antiAlias, // 抗锯齿
-            child: FadeInImage(
-              //FIXED ME
-              //image: NetworkImage(session.avatarUrl),
-              image: AssetImage('assets/default_avatar.png'),
-              placeholder: AssetImage('assets/default_avatar.png'),
-            ),
+          leading: Stack(
+            children: <Widget>[
+              Padding(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  clipBehavior: Clip.antiAlias, // 抗锯齿
+                  child: FadeInImage(
+                    //FIXED ME
+                    //image: NetworkImage(session.avatarUrl),
+                    image: AssetImage('assets/default_avatar.png'),
+                    placeholder: AssetImage('assets/default_avatar.png'),
+                  ),
+                ),
+                padding: EdgeInsets.only(right: 10, top: 3),
+              ),
+              Positioned(
+                right: 1,
+                top: 0,
+                child: _buildBadge(session),
+              ),
+            ],
           ),
           // 标题
-          //title: Text(session.sessionName, style: Theme.of(context).textTheme.subhead),
           title: new Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[

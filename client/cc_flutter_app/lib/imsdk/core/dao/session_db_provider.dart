@@ -130,6 +130,7 @@ class SessionDbProvider extends BaseDbProvider {
         sessionInfo.sessionType = CIMSessionType.valueOf(maps[i][columnSessionType]);
         sessionInfo.sessionStatus = CIMSessionStatusType.valueOf(maps[i][columnSessionStatus]);
         sessionInfo.updatedTime = maps[i][columnUpdatedTime];
+        sessionInfo.unreadCnt = maps[i][columnUnreadCount];
 
         sessionInfo.msgId = maps[i][columnLatestClientMsgId];
         sessionInfo.serverMsgId = Int64(maps[i][columnLatestServerMsgId]);
