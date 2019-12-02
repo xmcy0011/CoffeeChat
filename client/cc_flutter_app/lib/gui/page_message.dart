@@ -152,10 +152,7 @@ class _PageMessageState extends State<PageMessage> {
         padding: EdgeInsets.all(10),
         child: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: maxWidth),
-          child: Text(text,
-              maxLines: 10,
-              overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.subhead),
+          child: Text(text, maxLines: 10, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.subhead),
         ),
       ),
     );
@@ -172,15 +169,13 @@ class _PageMessageState extends State<PageMessage> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
-              Text(fromUser.nickName,
-                  style: Theme.of(context).textTheme.subhead),
+              Text(fromUser.nickName, style: Theme.of(context).textTheme.subhead),
               Row(
                 children: <Widget>[
                   msg.msgStatus == CIMMsgStatus.kCIM_MSG_STATUS_SENDING
                       ? CircularProgressIndicator(
                           strokeWidth: 1.0,
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.black12),
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.black12),
                         )
                       : (msg.msgStatus == CIMMsgStatus.kCIM_MSG_STATUS_FAILED
                           ? IconButton(
@@ -216,8 +211,7 @@ class _PageMessageState extends State<PageMessage> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(fromUser.nickName,
-                    style: Theme.of(context).textTheme.subhead),
+                Text(fromUser.nickName, style: Theme.of(context).textTheme.subhead),
                 _buildMsgContent(msg)
               ],
             ),
@@ -257,8 +251,7 @@ class _PageMessageState extends State<PageMessage> {
     });
 
     IMMessage.singleton
-        .sendMessage(msg.clientMsgId, sId, CIMMsgType.kCIM_MSG_TYPE_TEXT, sType,
-            msg.msgData)
+        .sendMessage(msg.clientMsgId, sId, CIMMsgType.kCIM_MSG_TYPE_TEXT, sType, msg.msgData)
         .then((app) {
       setState(() {
         msg.msgStatus = CIMMsgStatus.kCIM_MSG_STATUS_SENT;
@@ -275,7 +268,7 @@ class _PageMessageState extends State<PageMessage> {
     var msg = IMMessage();
     var id = sessionInfo.sessionId;
     var type = sessionInfo.sessionType;
-    Int64 endMsgId = Int64(0);
+    int endMsgId = 0;
     if (_msgList.length > 0) {
       endMsgId = _msgList[0].serverMsgId;
     }
@@ -293,8 +286,7 @@ class _PageMessageState extends State<PageMessage> {
           _msgList.insertAll(0, msg);
           if (_scrollController == null) {
             if (_msgList.length > 6) {
-              _scrollController =
-                  new ScrollController(initialScrollOffset: 380);
+              _scrollController = new ScrollController(initialScrollOffset: 380);
             } else {
               _scrollController = new ScrollController();
             }
@@ -320,8 +312,7 @@ class _PageMessageState extends State<PageMessage> {
         setState(() {
           //_scrollController.jumpTo(scrollValue);
           _scrollController.animateTo(scrollValue,
-              duration: Duration(milliseconds: animationTime),
-              curve: Curves.easeIn);
+              duration: Duration(milliseconds: animationTime), curve: Curves.easeIn);
         });
       });
     }
@@ -334,9 +325,7 @@ class _PageMessageState extends State<PageMessage> {
 
       setState(() {
         //_scrollController.jumpTo(scrollValue);
-        _scrollController.animateTo(scrollValue,
-            duration: Duration(milliseconds: animationTime),
-            curve: Curves.easeIn);
+        _scrollController.animateTo(scrollValue, duration: Duration(milliseconds: animationTime), curve: Curves.easeIn);
       });
     }
   }
@@ -358,7 +347,7 @@ class _PageMessageState extends State<PageMessage> {
     msgInfo.clientMsgId = IMMessage.singleton.generateMsgId();
     msgInfo.sessionType = sessionInfo.sessionType;
     msgInfo.fromUserId = IMManager.singleton.userId;
-    msgInfo.toSessionId = sessionInfo.sessionId;
+    msgInfo.toSessionId = Int64(sessionInfo.sessionId);
     msgInfo.createTime = DateTime.now().millisecondsSinceEpoch ~/ 1000;
     msgInfo.msgResCode = CIMResCode.kCIM_RES_CODE_OK;
     msgInfo.msgStatus = CIMMsgStatus.kCIM_MSG_STATUS_SENDING; // 发送中
@@ -375,10 +364,7 @@ class _PageMessageState extends State<PageMessage> {
     });
     scrollEnd2();
 
-    IMMessage.singleton
-        .sendMessage(msgInfo.clientMsgId, sId, CIMMsgType.kCIM_MSG_TYPE_TEXT,
-            sType, text)
-        .then((app) {
+    IMMessage.singleton.sendMessage(msgInfo.clientMsgId, sId, CIMMsgType.kCIM_MSG_TYPE_TEXT, sType, text).then((app) {
       setState(() {
         model.msgStatus = CIMMsgStatus.kCIM_MSG_STATUS_SENT;
       });

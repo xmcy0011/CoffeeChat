@@ -1,11 +1,10 @@
 import 'dart:convert';
 
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
-import 'package:fixnum/fixnum.dart';
 
 /// 用户信息
 class UserModel {
-  Int64 userId; // 用户ID
+  int userId; // 用户ID
 
   String nickName; // 用户昵称
   /*optional*/
@@ -17,13 +16,13 @@ class UserModel {
 /// 消息基类（所有消息类型都具有这些属性）
 class MessageModelBase {
   String clientMsgId; // 客户端消息ID（UUID）
-  Int64 serverMsgId; // 服务端消息ID
+  int serverMsgId; // 服务端消息ID
 
   CIMResCode msgResCode; // 消息错误码
   CIMMsgFeature msgFeature; // 消息属性
   CIMSessionType sessionType; // 会话类型
-  Int64 fromUserId; // 来源会话ID
-  Int64 toSessionId; // 目标会话ID
+  int fromUserId; // 来源会话ID
+  int toSessionId; // 目标会话ID
   int createTime; // 消息创建时间戳（毫秒）
 
   CIMMsgType msgType; // 消息类型
@@ -36,12 +35,12 @@ class MessageModelBase {
   static MessageModelBase copyFrom(CIMMsgInfo msgInfo) {
     MessageModelBase messageModel = new MessageModelBase();
     messageModel.clientMsgId = msgInfo.clientMsgId;
-    messageModel.serverMsgId = msgInfo.serverMsgId;
+    messageModel.serverMsgId = msgInfo.serverMsgId.toInt();
     messageModel.msgResCode = msgInfo.msgResCode;
     messageModel.msgFeature = msgInfo.msgFeature;
     messageModel.sessionType = msgInfo.sessionType;
-    messageModel.fromUserId = msgInfo.fromUserId;
-    messageModel.toSessionId = msgInfo.toSessionId;
+    messageModel.fromUserId = msgInfo.fromUserId.toInt();
+    messageModel.toSessionId = msgInfo.toSessionId.toInt();
     messageModel.createTime = msgInfo.createTime;
     messageModel.msgType = msgInfo.msgType;
     messageModel.msgStatus = msgInfo.msgStatus;
@@ -54,7 +53,7 @@ class MessageModelBase {
 
 /// 会话
 class SessionModel {
-  Int64 sessionId; // 会话id
+  int sessionId; // 会话id
   CIMSessionType sessionType; // 会话类型
   CIMSessionStatusType sessionStatus; // 会话修改命令，预留
 
@@ -69,23 +68,24 @@ class SessionModel {
   String sessionName; // 会话名称
   String avatarUrl; // 会话头像
 
-  static SessionModel copyFrom(
-      CIMContactSessionInfo sessionInfo, String sessionName, String avatarUrl) {
+  static SessionModel copyFrom(CIMContactSessionInfo sessionInfo, String sessionName, String avatarUrl) {
     SessionModel sessionModel = new SessionModel();
-    sessionModel.sessionId = sessionInfo.sessionId;
+    sessionModel.sessionId = sessionInfo.sessionId.toInt();
     sessionModel.sessionType = sessionInfo.sessionType;
     sessionModel.sessionStatus = sessionInfo.sessionStatus;
+    sessionModel.sessionName = sessionName;
+    sessionModel.avatarUrl = avatarUrl;
 
     sessionModel.unreadCnt = sessionInfo.unreadCnt;
     sessionModel.updatedTime = sessionInfo.updatedTime;
 
     sessionModel.latestMsg = new MessageModelBase();
     sessionModel.latestMsg.clientMsgId = sessionInfo.msgId;
-    sessionModel.latestMsg.serverMsgId = sessionInfo.serverMsgId;
+    sessionModel.latestMsg.serverMsgId = sessionInfo.serverMsgId.toInt();
     sessionModel.latestMsg.createTime = sessionInfo.msgTimeStamp;
     sessionModel.latestMsg.msgData = utf8.decode(sessionInfo.msgData);
     sessionModel.latestMsg.msgType = sessionInfo.msgType;
-    sessionModel.latestMsg.fromUserId = sessionInfo.msgFromUserId;
+    sessionModel.latestMsg.fromUserId = sessionInfo.msgFromUserId.toInt();
     sessionModel.latestMsg.msgStatus = sessionInfo.msgStatus;
     sessionModel.latestMsg.attach = sessionInfo.msgAttach;
 

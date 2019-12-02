@@ -1,11 +1,16 @@
 import 'dart:async';
 
+import 'package:cc_flutter_app/imsdk/core/business/session_business.dart';
 import 'package:cc_flutter_app/imsdk/core/dao/session_db_provider.dart';
 import 'package:cc_flutter_app/imsdk/core/business/im_client.dart';
+import 'package:cc_flutter_app/imsdk/core/log_util.dart';
+import 'package:cc_flutter_app/imsdk/core/model/model.dart';
 import 'package:cc_flutter_app/imsdk/im_session.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
+import 'package:cc_flutter_app/imsdk/proto/CIM.List.pb.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Login.pb.dart';
 import 'package:fixnum/fixnum.dart';
+import 'package:flutter/material.dart';
 
 import 'core/im_user_config.dart';
 
@@ -50,14 +55,19 @@ class IMManager {
   /// [port] 服务器端口
   /// [callback] (CIMAuthTokenRsp)
   Future login(Int64 userId, var nick, var userToken, var ip, var port) {
+    var com = new Completer();
+    if (userConfig == null) {
+      com.completeError("please call setUserConfig() set user config!");
+      return com.future;
+    }
+
     this.userId = userId;
     this.nickName = nick;
     this.userToken = userToken;
     this.ip = ip;
     this.port = port;
 
-    var com = new Completer();
-    IMClient.singleton.onDisconnect = userConfig.onDisconnected; // 绑定回调
+    IMClient.singleton.onDisconnect = userConfig.funcOnDisconnected; // 绑定回调
     IMClient.singleton.auth(userId, nick, userToken, ip, port).then((value) {
       com.complete(value);
 
@@ -78,21 +88,41 @@ class IMManager {
   void logout() {}
 
   /// 判断是否是来自于自己的消息
-  bool isSelf(Int64 fromUserId) {
+  bool isSelf(int fromUserId) {
     return this.userId == fromUserId;
   }
 
   /// 获取所有会话
-  List<IMSession> getSessionList() {
-    sessionDbProvider.getAllSession();
-    return null;
+  Future<List<SessionModel>> getSessionList() async {
+    return sessionDbProvider.getAllSession();
   }
 
   // 同步会话列表和未读计数
-  void _syncSessionAndUnread() {
-    
+  void _syncSessionAndUnread() async {
+    LogUtil.info("_syncSessionAndUnread", "start sync session list...");
+    var result = await SessionBusiness.singleton.getRecentSessionList();
+    if (result is CIMRecentContactSessionRsp) {
+      for (var i = 0; i < result.contactSessionList.length; i++) {
+        var session = result.contactSessionList[i];
+        int count = await sessionDbProvider.existSession(session.sessionId.toInt(), session.sessionType.value);
+
+        // 存在更新
+        if (count > 0) {
+          var model = SessionModel.copyFrom(session, "", "");
+          sessionDbProvider.update(session.sessionId.toInt(), session.sessionType.value, model);
+        } else {
+          sessionDbProvider.insert(SessionModel.copyFrom(session, "", ""));
+        }
+      }
+
+      // 回调
+      userConfig.funcOnRefresh();
+      LogUtil.info("_syncSessionAndUnread", "sync session success");
+    } else {
+      LogUtil.error("_syncSessionAndUnread", "sync session error:$result");
+    }
   }
 
-  // 同步历史消息
+// 同步历史消息
   void _syncMessage() {}
 }
