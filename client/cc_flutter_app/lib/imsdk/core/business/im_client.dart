@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:cc_flutter_app/imsdk/im_message.dart';
-import 'package:cc_flutter_app/imsdk/model/im_header.dart';
-import 'package:cc_flutter_app/imsdk/model/im_request.dart';
+import 'package:cc_flutter_app/imsdk/proto/im_header.dart';
+import 'package:cc_flutter_app/imsdk/proto/im_request.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.List.pb.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Login.pbserver.dart';
@@ -20,11 +20,6 @@ class IMClient {
 
   var isLogin = false;
   var isReLogin = false;
-  Int64 userId;
-  var nickName;
-  var ip;
-  var port;
-  var userToken;
 
   var requestMap = new Map<int, IMRequest>(); // 请求列表
   var registerCallbackList = new List<int>();
@@ -33,6 +28,8 @@ class IMClient {
 
   var checkConnectTimeSpan = 1; // 重连间隔,指数退避算法,1s,2s,4s,8s
   var checkConnectLastTick = 0;
+
+  Function onDisconnect;
 
   /// 单实例
   static final IMClient singleton = IMClient._internal();
@@ -56,7 +53,6 @@ class IMClient {
     // timeout
     Timer.periodic(Duration(seconds: 1), (timer) {
       _checkRequestTimeout();
-      _checkConnect();
     });
   }
 
@@ -71,12 +67,6 @@ class IMClient {
     if (socket != null) {
       socket.close();
     }
-
-    this.userId = userId;
-    this.nickName = nick;
-    this.userToken = userToken;
-    this.ip = ip;
-    this.port = port;
 
     var completer = new Completer();
     var feature = RawSocket.connect(ip, port, timeout: Duration(seconds: 5));
@@ -98,7 +88,6 @@ class IMClient {
         if (rsp is CIMAuthTokenRsp) {
           if (rsp.resultCode == CIMErrorCode.kCIM_ERR_SUCCSSE) {
             this.isLogin = true;
-            this.userId = rsp.userInfo.userId;
           }
           completer.complete(rsp);
         } else {
@@ -110,11 +99,6 @@ class IMClient {
       print("connect error:" + err.toString());
     });
     return completer.future;
-  }
-
-  /// 判断是否是来自于自己的消息
-  bool isSelf(Int64 fromUserId) {
-    return this.userId == fromUserId;
   }
 
   /// 发送通知，没有响应
@@ -199,7 +183,10 @@ class IMClient {
   void _onClose() {
     print("on close connection");
     if (isLogin) {
-      isReLogin = true;
+      isReLogin = false;
+      if (onDisconnect != null) {
+        onDisconnect();
+      }
     }
     isLogin = false;
   }
@@ -228,34 +215,6 @@ class IMClient {
         requestMap.remove(k);
       });
       tempList.clear();
-    }
-  }
-
-  void _checkConnect() {
-    if (isLogin) {
-      checkConnectLastTick = 0;
-      checkConnectTimeSpan = 1;
-      return;
-    }
-    if (!isReLogin) {
-      return;
-    }
-    var timeStamp = DateTime.now().millisecondsSinceEpoch ~/ 1000;
-
-    if (checkConnectLastTick == 0) {
-      checkConnectLastTick = timeStamp;
-    }
-    if ((timeStamp - checkConnectLastTick) > checkConnectTimeSpan) {
-      checkConnectLastTick = timeStamp;
-      // 重新登录
-      auth(this.userId, this.nickName, this.userToken, this.ip, this.port);
-      print("time $timeStamp _checkConnect");
-
-      // 1s 2s 4s 8s
-      checkConnectTimeSpan *= 2;
-      if (checkConnectTimeSpan > 8) {
-        checkConnectTimeSpan = 1;
-      }
     }
   }
 

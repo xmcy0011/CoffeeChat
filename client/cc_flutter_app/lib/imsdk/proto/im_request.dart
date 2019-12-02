@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:cc_flutter_app/imsdk/model/im_header.dart';
+import 'package:cc_flutter_app/imsdk/proto/im_header.dart';
 
 /// 请求消息
 class IMRequest {

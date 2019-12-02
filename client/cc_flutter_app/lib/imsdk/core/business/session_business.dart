@@ -1,14 +1,23 @@
 import 'dart:async';
 
-import 'package:cc_flutter_app/imsdk/core/business/im_client.dart';
-import 'package:cc_flutter_app/imsdk/im_manager.dart';
+import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pbenum.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.List.pb.dart';
-import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
+
+import '../../im_manager.dart';
+import 'im_client.dart';
 
 /// 会话业务
-class IMSession {
+class SessionBusiness {
+  static final SessionBusiness singleton = SessionBusiness._internal();
+
+  factory SessionBusiness() {
+    return singleton;
+  }
+
+  SessionBusiness._internal();
+
   /// 查询最近会话列表
-  /// [Future] CIMRecentContactSessionReq
+  /// [Future] CIMRecentContactSessionRsp
   Future getRecentSessionList() async {
     var complete = new Completer();
 
@@ -20,9 +29,9 @@ class IMSession {
 
     var cmd = CIMCmdID.kCIM_CID_LIST_RECENT_CONTACT_SESSION_REQ.value;
     IMClient.singleton.sendRequest(cmd, req, (rsp) {
-      if (rsp is CIMRecentContactSessionRsp){
+      if (rsp is CIMRecentContactSessionRsp) {
         complete.complete(rsp);
-      }else{
+      } else {
         complete.completeError(rsp);
       }
     });
