@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:cc_flutter_app/imsdk/core/business/message_business.dart';
 import 'package:cc_flutter_app/imsdk/core/business/session_business.dart';
 import 'package:cc_flutter_app/imsdk/core/dao/session_db_provider.dart';
 import 'package:cc_flutter_app/imsdk/core/business/im_client.dart';
@@ -11,16 +12,20 @@ import 'package:cc_flutter_app/imsdk/im_session.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.List.pb.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Login.pb.dart';
+import 'package:cc_flutter_app/imsdk/proto/CIM.Message.pb.dart';
+import 'package:cc_flutter_app/imsdk/proto/im_header.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 
 import 'core/im_user_config.dart';
 
 /// 核心类，负责IM SDK的基本操作，初始化、登录、注销、创建会话等
-class IMManager {
+class IMManager extends IMessage {
   var isInit = false;
   var sessionDbProvider = new SessionDbProvider();
   IMUserConfig userConfig;
+
+  var messageListenerCbMap = new Map<String, Function>(); // 收到一条消息的回调队列
 
   Int64 userId;
   var nickName;
@@ -41,6 +46,8 @@ class IMManager {
   bool init() {
     isInit = true;
     SQLManager.init();
+    IMClient.singleton.registerMessageService("IMManager", this);
+
     return true;
   }
 
@@ -99,6 +106,34 @@ class IMManager {
   Future<List<IMSession>> getSessionList() async {
     return sessionDbProvider.getAllSession(userId.toInt());
   }
+
+  /// 增加收到新消息监听器
+  /// [name] 唯一标志
+  /// [**未实现**listener**] 原型：void onNewMessage(List<IMMessage> msgList)
+  /// [listener] 原型：void onNewMessage(CIMMsgData msg)
+  void addMessageListener(String name, Function listener) {
+    if (!messageListenerCbMap.containsKey(name)) {
+      messageListenerCbMap[name] = listener;
+    }
+  }
+
+  /// 移除新消息监听器
+  /// [name] 唯一标志
+  void removeMessageListener(String name) {
+    messageListenerCbMap.remove(name);
+  }
+
+  // interface IMessage
+  void onHandleMsgData(IMHeader header, CIMMsgData msg) {
+    // 回调
+    messageListenerCbMap.forEach((k, v) {
+      Function callback = v;
+      callback(msg);
+    });
+  }
+
+  // interface IMessage
+  void onHandleMsgDataAck(IMHeader header, CIMMsgDataAck ack) {}
 
   // 同步会话列表和未读计数
   void _syncSessionAndUnread() async {

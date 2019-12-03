@@ -3,7 +3,6 @@ import 'dart:convert';
 
 import 'package:cc_flutter_app/imsdk/im_manager.dart';
 import 'package:cc_flutter_app/imsdk/core/model/model.dart';
-import 'package:cc_flutter_app/imsdk/im_message.dart';
 import 'package:cc_flutter_app/imsdk/im_session.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pbserver.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.List.pbserver.dart';
@@ -75,14 +74,14 @@ class _PageMessageState extends State<PageMessage> {
   @override
   void initState() {
     super.initState();
-    IMMessage.singleton.registerReceiveCallback("pageMessage", _onReceiveMsg);
+    IMManager.singleton.addMessageListener("pageMessage", _onReceiveMsg);
     _onRefresh();
   }
 
   @override
   void dispose() {
     super.dispose();
-    IMMessage.singleton.unregisterReceiveCallback("pageMessage");
+    IMManager.singleton.removeMessageListener("pageMessage");
   }
 
   // 生成历史聊天记录
@@ -251,9 +250,7 @@ class _PageMessageState extends State<PageMessage> {
       }
     });
 
-    IMMessage.singleton
-        .sendMessage(msg.clientMsgId, sId, CIMMsgType.kCIM_MSG_TYPE_TEXT, sType, msg.msgData)
-        .then((app) {
+    sessionInfo.sendMessage(msg.clientMsgId, sId, CIMMsgType.kCIM_MSG_TYPE_TEXT, sType, msg.msgData).then((app) {
       setState(() {
         msg.msgStatus = CIMMsgStatus.kCIM_MSG_STATUS_SENT;
       });
@@ -266,7 +263,6 @@ class _PageMessageState extends State<PageMessage> {
 
   // 刷新消息
   Future _onRefresh() async {
-    var msg = IMMessage();
     var id = sessionInfo.sessionId;
     var type = sessionInfo.sessionType;
     int endMsgId = 0;
@@ -274,7 +270,7 @@ class _PageMessageState extends State<PageMessage> {
       endMsgId = _msgList[0].serverMsgId;
     }
 
-    msg.getMessageList(id, type, endMsgId, kMaxPullMsgLimitCount).then((rsp) {
+    sessionInfo.getMessage(id, type, endMsgId, kMaxPullMsgLimitCount).then((rsp) {
       if (rsp is CIMGetMsgListRsp) {
         List<MessageModelBase> msg = new List<MessageModelBase>();
         rsp.msgList.forEach((v) {
@@ -345,7 +341,7 @@ class _PageMessageState extends State<PageMessage> {
     var sType = sessionInfo.sessionType;
 
     var msgInfo = new CIMMsgInfo();
-    msgInfo.clientMsgId = IMMessage.singleton.generateMsgId();
+    msgInfo.clientMsgId = IMSession.generateMsgId();
     msgInfo.sessionType = sessionInfo.sessionType;
     msgInfo.fromUserId = IMManager.singleton.userId;
     msgInfo.toSessionId = Int64(sessionInfo.sessionId);
@@ -365,7 +361,7 @@ class _PageMessageState extends State<PageMessage> {
     });
     scrollEnd2();
 
-    IMMessage.singleton.sendMessage(msgInfo.clientMsgId, sId, CIMMsgType.kCIM_MSG_TYPE_TEXT, sType, text).then((app) {
+    sessionInfo.sendMessage(msgInfo.clientMsgId, sId, CIMMsgType.kCIM_MSG_TYPE_TEXT, sType, text).then((app) {
       setState(() {
         model.msgStatus = CIMMsgStatus.kCIM_MSG_STATUS_SENT;
       });

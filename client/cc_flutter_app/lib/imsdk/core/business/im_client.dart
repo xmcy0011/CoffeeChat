@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:cc_flutter_app/imsdk/im_message.dart';
+import 'package:cc_flutter_app/imsdk/proto/CIM.Message.pb.dart';
 import 'package:cc_flutter_app/imsdk/proto/im_header.dart';
 import 'package:cc_flutter_app/imsdk/proto/im_request.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
@@ -14,9 +14,16 @@ const kReadBufferSize = 1024; // Bytes
 const kRequestTimeout = 10; // 10秒请求超时
 const kRequestMsgTimeout = 10; // 10秒请求超时
 
+/// 消息接口
+abstract class IMessage {
+  void onHandleMsgData(IMHeader header, CIMMsgData data);
+
+  void onHandleMsgDataAck(IMHeader header, CIMMsgDataAck ack);
+}
+
 class IMClient {
   RawSocket socket; // socket
-  IMMessage msgService; // 消息处理
+  var msgService = new Map<String, IMessage>(); // 消息处理
 
   var isLogin = false;
   var isReLogin = false;
@@ -128,9 +135,11 @@ class IMClient {
     }
   }
 
-  /// 注册消息回调
-  void registerMessageService(IMMessage msg) {
-    this.msgService = msg;
+  /// 注册收到新消息回调
+  /// [name] 唯一标志
+  /// [msg] 回调对象
+  void registerMessageService(String name, IMessage msg) {
+    this.msgService[name] = msg;
   }
 
   // 数据处理
@@ -230,8 +239,7 @@ class IMClient {
       _handleAuthRsp(header, data);
     }
     // 会话列表
-    else if (header.commandId ==
-        CIMCmdID.kCIM_CID_LIST_RECENT_CONTACT_SESSION_RSP.value) {
+    else if (header.commandId == CIMCmdID.kCIM_CID_LIST_RECENT_CONTACT_SESSION_RSP.value) {
       _handleRecentSessionList(header, data);
     }
     // 历史消息
@@ -239,11 +247,10 @@ class IMClient {
       _handleGetMsgList(header, data);
     }
     // 消息收发
-    else if (header.commandId == CIMCmdID.kCIM_CID_MSG_DATA.value ||
-        header.commandId == CIMCmdID.kCIM_CID_MSG_DATA_ACK.value) {
-      if (msgService != null) {
-        msgService.onHandle(header, data);
-      }
+    else if (header.commandId == CIMCmdID.kCIM_CID_MSG_DATA.value) {
+      _handleMsgData(header, data);
+    } else if (header.commandId == CIMCmdID.kCIM_CID_MSG_DATA_ACK.value) {
+      _handleMsgDataAck(header, data);
     } else {
       print("unknown message,cmdId:${header.commandId}");
     }
@@ -288,5 +295,27 @@ class IMClient {
     } else {
       print("_handleGetMsgList err:can't find req:${header.seqNumber}");
     }
+  }
+
+  void _handleMsgData(IMHeader header, List<int> data) {
+    var msg = CIMMsgData.fromBuffer(data);
+    print("_handleMsgData fromId=${msg.fromUserId},toId=${msg.toSessionId},"
+        "msgType=${msg.msgType},msgId=${msg.msgId}"
+        "sessionType=${msg.sessionType}");
+
+    msgService.forEach((k, v) {
+      IMessage item = v;
+      item.onHandleMsgData(header, msg);
+    });
+  }
+
+  void _handleMsgDataAck(IMHeader header, List<int> data) {
+    var ack = CIMMsgDataAck.fromBuffer(data);
+    print("_handleMsgDataAck msgId=${ack.msgId}");
+
+    msgService.forEach((k, v) {
+      IMessage msg = v;
+      msg.onHandleMsgDataAck(header, ack);
+    });
   }
 }

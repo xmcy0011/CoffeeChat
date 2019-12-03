@@ -4,10 +4,8 @@ import 'package:cc_flutter_app/gui/helper.dart';
 import 'package:cc_flutter_app/gui/imsdk_helper.dart';
 import 'package:cc_flutter_app/gui/page_message.dart';
 import 'package:cc_flutter_app/imsdk/im_manager.dart';
-import 'package:cc_flutter_app/imsdk/im_message.dart';
 import 'package:cc_flutter_app/imsdk/im_session.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
-import 'package:cc_flutter_app/imsdk/proto/CIM.List.pb.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Message.pb.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -54,7 +52,7 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
   void initState() {
     super.initState();
 
-    IMMessage.singleton.registerReceiveCallback("_PageChatStateWidgetState", _onReceiveMsg);
+    IMManager.singleton.addMessageListener("_PageChatStateWidgetState", _onReceiveMsg);
     IMSDKHelper.singleton.registerOnRefresh("_PageChatStateWidgetState", _onRefreshSession);
     _onRefreshSession();
   }

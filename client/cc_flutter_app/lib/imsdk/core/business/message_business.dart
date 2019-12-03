@@ -7,26 +7,25 @@ import 'package:cc_flutter_app/imsdk/proto/im_header.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.List.pb.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Message.pb.dart';
+import 'package:cc_flutter_app/imsdk/proto/im_request.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:uuid/uuid.dart';
 
-import 'proto/im_request.dart';
-
 /// 消息收发
-class IMMessage {
+class MessageBusiness extends IMessage {
   var ackMsgMap = new Map<String, IMMsgRequest>(); // 消息待收到成功响应队列
   var onReceiveMsgCbMap = new Map<String, Function>(); // 收到一条消息的回调队列
 
   /// 单实例
-  static final IMMessage singleton = IMMessage._internal();
+  static final MessageBusiness singleton = MessageBusiness._internal();
 
-  factory IMMessage() {
+  factory MessageBusiness() {
     return singleton;
   }
 
-  IMMessage._internal() {
+  MessageBusiness._internal() {
     // 注册消息业务回调
-    IMClient.singleton.registerMessageService(this);
+    IMClient.singleton.registerMessageService("MessageBusiness", this);
 
     // timeout
     Timer.periodic(Duration(seconds: 1), (timer) {
@@ -164,21 +163,8 @@ class IMMessage {
     }
   }
 
-  void onHandle(IMHeader header, List<int> data) {
-    if (header.commandId == CIMCmdID.kCIM_CID_MSG_DATA.value) {
-      _handleMsgData(header, data);
-    } else if (header.commandId == CIMCmdID.kCIM_CID_MSG_DATA_ACK.value) {
-      _handleMsgDataAck(header, data);
-    } else {
-      print("unknow command:${header.commandId}");
-    }
-  }
-
-  void _handleMsgData(IMHeader header, List<int> data) {
-    var msg = CIMMsgData.fromBuffer(data);
-    print("_handleMsgData fromId=${msg.fromUserId},toId=${msg.toSessionId},"
-        "msgType=${msg.msgType},msgId=${msg.msgId}"
-        "sessionType=${msg.sessionType}");
+  /// interface IMMessage
+  void onHandleMsgData(IMHeader header, CIMMsgData msg) {
     // 回复ack
     var ack = new CIMMsgDataAck();
     ack.msgId = msg.msgId;
@@ -199,9 +185,8 @@ class IMMessage {
     });
   }
 
-  void _handleMsgDataAck(IMHeader header, List<int> data) {
-    var ack = CIMMsgDataAck.fromBuffer(data);
-
+  /// interface IMMessage
+  void onHandleMsgDataAck(IMHeader header, CIMMsgDataAck ack) {
     if (ackMsgMap.containsKey(ack.msgId)) {
       print("_handleMsgDataAck msgId=${ack.msgId} send success");
       ackMsgMap[ack.msgId].callback(ack);
