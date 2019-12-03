@@ -97,7 +97,7 @@ class IMManager {
 
   /// 获取所有会话
   Future<List<IMSession>> getSessionList() async {
-    return sessionDbProvider.getAllSession();
+    return sessionDbProvider.getAllSession(userId.toInt());
   }
 
   // 同步会话列表和未读计数
@@ -107,7 +107,8 @@ class IMManager {
     if (result is CIMRecentContactSessionRsp) {
       for (var i = 0; i < result.contactSessionList.length; i++) {
         var session = result.contactSessionList[i];
-        int count = await sessionDbProvider.existSession(session.sessionId.toInt(), session.sessionType.value);
+        int count =
+            await sessionDbProvider.existSession(userId.toInt(), session.sessionId.toInt(), session.sessionType.value);
 
         MessageModelBase msg = new MessageModelBase();
         msg.clientMsgId = session.msgId;
@@ -123,9 +124,9 @@ class IMManager {
 
         // 存在更新
         if (count > 0) {
-          sessionDbProvider.update(session.sessionId.toInt(), session.sessionType.value, model);
+          sessionDbProvider.update(userId.toInt(), session.sessionId.toInt(), session.sessionType.value, model);
         } else {
-          sessionDbProvider.insert(model);
+          sessionDbProvider.insert(userId.toInt(), model);
         }
       }
 

@@ -11,6 +11,7 @@ import '../../im_session.dart';
 class SessionDbProvider extends BaseDbProvider {
   ///表名
   final String name = 'im_session';
+  final String columnUserId = "owner_user_id"; // 这个会话属于那个用户
   final String columnSessionId = "session_id";
   final String columnSessionType = "session_type";
   final String columnSessionStatus = "session_status";
@@ -35,6 +36,7 @@ class SessionDbProvider extends BaseDbProvider {
     return '''
         create table $name (
         id integer primary key AUTOINCREMENT,
+        $columnUserId integer not null,
         $columnSessionId text not null,
         $columnSessionType integer not null,
         $columnSessionStatus integer not null,
@@ -53,33 +55,35 @@ class SessionDbProvider extends BaseDbProvider {
   }
 
   ///查询数据库
-  Future<List<Map<String, dynamic>>> _getPersonProvider(Database db, int sessionId) async {
-    List<Map<String, dynamic>> maps = await db.rawQuery("select * from $name where $columnSessionId = $sessionId");
+  Future<List<Map<String, dynamic>>> _getPersonProvider(Database db, int userId, int sessionId) async {
+    List<Map<String, dynamic>> maps =
+        await db.rawQuery("select * from $name where $columnUserId=$userId and $columnSessionId = $sessionId");
     return maps;
   }
 
-  Future<int> existSession(int sessionId, int sessionType) async {
+  Future<int> existSession(int userId, int sessionId, int sessionType) async {
     Database database = await getDataBase();
-    List<Map<String, dynamic>> maps = await database
-        .rawQuery("select count(1) from $name where $columnSessionId=$sessionId and $columnSessionType=$sessionType");
+    List<Map<String, dynamic>> maps = await database.rawQuery(
+        "select count(1) from $name where $columnUserId=$userId and $columnSessionId=$sessionId and $columnSessionType=$sessionType");
     return maps[0]["count(1)"];
   }
 
   ///插入到数据库
-  Future insert(IMSession session) async {
+  Future insert(int userId, IMSession session) async {
     Database db = await getDataBase();
-    var userProvider = await _getPersonProvider(db, session.sessionId);
+    var userProvider = await _getPersonProvider(db, userId, session.sessionId);
     if (userProvider != null && userProvider.length > 0) {
       print("alread exist session with sessionId:${session.sessionId}");
       return null;
     }
     var sql = '''
-    insert into $name ($columnSessionId,$columnSessionType,$columnSessionStatus,
+    insert into $name ($columnUserId,$columnSessionId,$columnSessionType,$columnSessionStatus,
     $columnUpdatedTime,$columnLatestClientMsgId,$columnLatestServerMsgId,
     $columnLatestMsgData,$columnLatestMsgType,$columnLatestMsgFromId,$columnLatestMsgStatus,$columnUnreadCount) 
-    values (?,?,?,?,?,?,?,?,?,?,?)
+    values (?,?,?,?,?,?,?,?,?,?,?,?)
     ''';
     int result = await db.rawInsert(sql, [
+      userId,
       session.sessionId.toString(),
       session.sessionType.value,
       CIMSessionStatusType.kCIM_SESSION_STATUS_OK.value,
@@ -96,13 +100,13 @@ class SessionDbProvider extends BaseDbProvider {
   }
 
   ///更新数据库
-  Future<void> update(int sessionId, int sessionType, IMSession session) async {
+  Future<void> update(int userId, int sessionId, int sessionType, IMSession session) async {
     Database database = await getDataBase();
     var sql = '''
     update $name set $columnSessionStatus = ?,
     $columnUpdatedTime = ?,$columnLatestClientMsgId = ?,$columnLatestServerMsgId = ?,
     $columnLatestMsgData = ?,$columnLatestMsgType = ?,$columnLatestMsgFromId = ?,$columnLatestMsgStatus = ?,
-    $columnUnreadCount = ? where $columnSessionId = ? and $columnSessionType = ?
+    $columnUnreadCount = ? where $columnUserId = ? and $columnSessionId = ? and $columnSessionType = ?
     ''';
     int result = await database.rawUpdate(sql, [
       CIMSessionStatusType.kCIM_SESSION_STATUS_OK.value,
@@ -114,19 +118,21 @@ class SessionDbProvider extends BaseDbProvider {
       session.latestMsg.fromUserId,
       session.latestMsg.msgStatus.value,
       session.unreadCnt,
+      userId,
       session.sessionId,
       session.sessionType.value
     ]);
     //print(result);
   }
 
-  Future<void> updateUnreadCount(int sessionId, int sessionType) async {}
+  Future<void> updateUnreadCount(int userId, int sessionId, int sessionType) async {}
 
   /// 获取所有会话
-  Future<List<IMSession>> getAllSession() async {
+  Future<List<IMSession>> getAllSession(int userId) async {
     Database db = await getDataBase();
     //List<Map<String, dynamic>> maps = await db.rawQuery("select * from $name where session_status != 1");
-    List<Map<String, dynamic>> maps = await db.rawQuery("select * from $name order by $columnUpdatedTime desc");
+    List<Map<String, dynamic>> maps =
+        await db.rawQuery("select * from $name where $columnUserId=$userId order by $columnUpdatedTime desc");
     if (maps.length > 0) {
       List<IMSession> list = new List<IMSession>();
       for (var i = 0; i < maps.length; i++) {
