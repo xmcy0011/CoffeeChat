@@ -99,12 +99,13 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(4),
                   clipBehavior: Clip.antiAlias, // 抗锯齿
-                  child: FadeInImage(
-                    //FIXED ME
-                    //image: NetworkImage(session.avatarUrl),
-                    image: AssetImage('assets/default_avatar.png'),
-                    placeholder: AssetImage('assets/default_avatar.png'),
-                  ),
+//                  child: FadeInImage(
+//                    //FIXED ME
+//                    //image: NetworkImage(session.avatarUrl),
+//                    image: AssetImage('assets/default_avatar.png'),
+//                    placeholder: AssetImage('assets/default_avatar.png'),
+//                  ),
+                  child: Image(image: AssetImage('assets/default_avatar.png')),
                 ),
                 padding: EdgeInsets.only(right: 10, top: 3),
               ),
