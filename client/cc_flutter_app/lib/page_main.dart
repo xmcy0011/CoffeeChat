@@ -1,4 +1,5 @@
 import 'package:cc_flutter_app/gui/imsdk_helper.dart';
+import 'package:cc_flutter_app/gui/page_settings.dart';
 import 'package:cc_flutter_app/gui/widget/badge_bottom_tab_bar.dart';
 import 'package:cc_flutter_app/gui/widget/badge_bottom_tab_bar_item.dart';
 import 'package:cc_flutter_app/imsdk/im_manager.dart';
@@ -26,6 +27,7 @@ class _PageMainStatefulAppState extends State<PageMainStatefulApp> {
     PageHomeStatefulWidget(),
     PageChatStateWidget(),
     PageMeStatefulWidget(),
+    PageSettingsStatefulWidget(),
   ];
 
   void _onTapItem(int index) {
