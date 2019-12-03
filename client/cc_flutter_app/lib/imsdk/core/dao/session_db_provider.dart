@@ -141,7 +141,7 @@ class SessionDbProvider extends BaseDbProvider {
 
         IMSession session = new IMSession(
             int.parse(maps[i][columnSessionId]), // String
-            "",
+            maps[i][columnSessionId],
             CIMSessionType.valueOf(maps[i][columnSessionType]),
             maps[i][columnUnreadCount],
             maps[i][columnUpdatedTime],

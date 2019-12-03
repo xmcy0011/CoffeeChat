@@ -118,8 +118,8 @@ class IMManager {
         msg.fromUserId = session.msgFromUserId.toInt();
         msg.msgStatus = session.msgStatus;
 
-        IMSession model = new IMSession(
-            session.sessionId.toInt(), "", session.sessionType, session.unreadCnt, session.updatedTime.toInt(), msg);
+        IMSession model = new IMSession(session.sessionId.toInt(), session.sessionId.toString(), session.sessionType,
+            session.unreadCnt, session.updatedTime.toInt(), msg);
 
         // 存在更新
         if (count > 0) {
