@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cc_flutter_app/gui/helper.dart';
 import 'package:cc_flutter_app/gui/imsdk_helper.dart';
+import 'package:cc_flutter_app/gui/imsdk_helper.dart' as prefix0;
 import 'package:cc_flutter_app/gui/page_message.dart';
 import 'package:cc_flutter_app/imsdk/im_manager.dart';
 import 'package:cc_flutter_app/imsdk/im_message.dart';
@@ -53,7 +54,6 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
   @override
   void initState() {
     super.initState();
-
     IMManager.singleton.addMessageListener("_PageChatStateWidgetState", _onReceiveMsg);
     IMSDKHelper.singleton.registerOnRefresh("_PageChatStateWidgetState", _onRefreshSession);
     _onRefreshSession();
@@ -61,6 +61,7 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
 
   @override
   void dispose() {
+    IMManager.singleton.removeMessageListener("_PageChatStateWidgetState");
     IMSDKHelper.singleton.unRegisterOnRefresh("_PageChatStateWidgetState");
     super.dispose();
   }
@@ -198,6 +199,8 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
             if (_selectedSessionIndex != i) {
               _sessionList[i].unreadCnt++;
             }
+            // 通知tab更新总的未读计数
+            IMSDKHelper.singleton.onTotalUnreadMsgCb(true, 1);
           });
         }
       }
@@ -208,13 +211,17 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
     IMSession model = _sessionList[index];
     _selectedSessionIndex = index;
     if (model.unreadCnt != 0) {
+      // 通知tab更新总的未读计数
+      IMSDKHelper.singleton.onTotalUnreadMsgCb(false, model.unreadCnt);
       model.setReadMessage(model.sessionId, model.sessionType, model.latestMsg.serverMsgId);
       setState(() {
         model.unreadCnt = 0;
       });
     }
 
-    navigatePushPage(context, PageMessage(model));
+    navigatePushPage(context, PageMessage(model)).then((v) {
+      _selectedSessionIndex = -1;
+    });
   }
 
   void _onCreateSession(int userId) {

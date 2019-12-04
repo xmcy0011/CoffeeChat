@@ -15,12 +15,12 @@ void navigatePage(BuildContext context, Widget widget) {
 }
 
 /// 跳转某个页面，放入到路由表中，可以返回
-void navigatePushPage(BuildContext context, Widget widget) {
+Future navigatePushPage(BuildContext context, Widget widget) {
   var pageRoute = new MaterialPageRoute(builder: (BuildContext context) => widget);
-
-  try {
-    Navigator.of(context).push(pageRoute);
-  } catch (e) {
-    print(e);
-  }
+//  try {
+//    Navigator.of(context).push(pageRoute);
+//  } catch (e) {
+//    print(e);
+//  }
+  return Navigator.of(context).push(pageRoute);
 }

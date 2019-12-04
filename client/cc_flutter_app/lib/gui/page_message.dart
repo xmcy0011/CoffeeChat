@@ -75,14 +75,14 @@ class _PageMessageState extends State<PageMessage> {
   @override
   void initState() {
     super.initState();
-    IMManager.singleton.addMessageListener("pageMessage", _onReceiveMsg);
+    IMManager.singleton.addMessageListener("_PageMessageState", _onReceiveMsg);
     _onRefresh();
   }
 
   @override
   void dispose() {
     super.dispose();
-    IMManager.singleton.removeMessageListener("pageMessage");
+    IMManager.singleton.removeMessageListener("_PageMessageState");
   }
 
   // 生成历史聊天记录
