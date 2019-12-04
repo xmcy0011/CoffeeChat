@@ -28,5 +28,5 @@ service Logic {
     // 发消息
     rpc SendMsgData(CIM.Message.CIMMsgData) returns(CIM.Message.CIMMsgDataAck) {}
     // 已读消息回执
-    rpc ReacAckMsgData(CIM.Message.CIMMsgDataReadAck) returns(Empty) {}
+    rpc ReadAckMsgData(CIM.Message.CIMMsgDataReadAck) returns(Empty) {}
 }
