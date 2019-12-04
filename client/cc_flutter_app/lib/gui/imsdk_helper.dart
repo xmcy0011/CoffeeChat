@@ -6,6 +6,7 @@ import 'package:cc_flutter_app/imsdk/im_session.dart';
 class IMSDKHelper extends IMUserConfig {
   var _onRefreshCbMap = new Map<String, Function>(); // 数据刷新通知回调（如未读计数，会话列表等）
   var _onRefreshConversationCbMap = new Map<String, Function>(); // 部分会话刷新（包括多终端已读上报同步）
+  var __onRecvReceiptCbMap = new Map<String, Function>(); // 已读消息回调
 
   /// 单实例
   static final IMSDKHelper singleton = IMSDKHelper._internal();
@@ -17,6 +18,7 @@ class IMSDKHelper extends IMUserConfig {
   IMSDKHelper._internal() {
     // 注册supper的回调
     this.setRefreshListener(_onRefresh, _onRefreshConversation);
+    this.setMessageReceiptListener(_onRecvReceipt);
   }
 
   // SDK会话更新回调
@@ -32,7 +34,11 @@ class IMSDKHelper extends IMUserConfig {
     });
   }
 
-
+  void _onRecvReceipt(IMSession session, int endMsgId) {
+    __onRecvReceiptCbMap.forEach((k, v) {
+      v(session, endMsgId);
+    });
+  }
 
   /// 部分会话刷新（包括多终端已读上报同步）
   void registerOnRefreshConversation(String key, Function callback) {
@@ -50,5 +56,14 @@ class IMSDKHelper extends IMUserConfig {
 
   void unRegisterOnRefresh(String key) {
     _onRefreshCbMap.remove(key);
+  }
+
+  /// 已读消息
+  void registerOnRecvReceipt(String key, Function callback) {
+    __onRecvReceiptCbMap[key] = callback;
+  }
+
+  void unRegisterOnRecvReceipt(String key) {
+    __onRecvReceiptCbMap.remove(key);
   }
 }

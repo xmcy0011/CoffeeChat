@@ -19,6 +19,8 @@ abstract class IMessage {
   void onHandleMsgData(IMHeader header, CIMMsgData data);
 
   void onHandleMsgDataAck(IMHeader header, CIMMsgDataAck ack);
+
+  void onHandleReadNotify(IMHeader header, CIMMsgDataReadNotify readNotify);
 }
 
 class IMClient {
@@ -111,28 +113,30 @@ class IMClient {
   /// 发送通知，没有响应
   /// [commandId] 命令ID
   /// [message] 数据部
-  void send(int cmdId, GeneratedMessage message) {
-    sendRequest(cmdId, message, null);
+  int send(int cmdId, GeneratedMessage message) {
+    return sendRequest(cmdId, message, null);
   }
 
   /// 发送请求，获得响应后回调
   /// [commandId] 命令ID
   /// [message] 数据部
   /// [callback] 结果回调
-  void sendRequest(int cmdId, GeneratedMessage message, Function callback) {
+  int sendRequest(int cmdId, GeneratedMessage message, Function callback) {
     var header = new IMHeader();
     header.setCommandId(cmdId);
     header.setMsg(message);
     header.setSeq(SeqGen.singleton.gen());
 
     var data = header.getBuffer();
-    this.socket.write(data);
+    var len = this.socket.write(data);
 
     // add
     if (callback != null) {
       IMRequest req = new IMRequest(header, callback, DateTime.now());
       requestMap[header.seqNumber] = req;
     }
+
+    return len;
   }
 
   /// 注册收到新消息回调
@@ -249,8 +253,14 @@ class IMClient {
     // 消息收发
     else if (header.commandId == CIMCmdID.kCIM_CID_MSG_DATA.value) {
       _handleMsgData(header, data);
-    } else if (header.commandId == CIMCmdID.kCIM_CID_MSG_DATA_ACK.value) {
+    }
+    // 消息收到ACK
+    else if (header.commandId == CIMCmdID.kCIM_CID_MSG_DATA_ACK.value) {
       _handleMsgDataAck(header, data);
+    }
+    // 已读消息通知
+    else if (header.commandId == CIMCmdID.kCIM_CID_MSG_READ_NOTIFY.value) {
+      _handleMsgReadNotify(header, data);
     } else {
       print("unknown message,cmdId:${header.commandId}");
     }
@@ -311,11 +321,21 @@ class IMClient {
 
   void _handleMsgDataAck(IMHeader header, List<int> data) {
     var ack = CIMMsgDataAck.fromBuffer(data);
-    print("_handleMsgDataAck msgId=${ack.msgId}");
+    print("_handleMsgDataAck userId=${ack.fromUserId},msgId=${ack.msgId},sessionId=${ack.toSessionId}");
 
     msgService.forEach((k, v) {
       IMessage msg = v;
       msg.onHandleMsgDataAck(header, ack);
+    });
+  }
+
+  void _handleMsgReadNotify(IMHeader header, List<int> data) {
+    var notify = CIMMsgDataReadNotify.fromBuffer(data);
+    print("_handleMsgReadNotify userId=${notify.userId},sessionId=${notify.sessionId},msgId=${notify.msgId}");
+
+    msgService.forEach((k, v) {
+      IMessage msg = v;
+      msg.onHandleReadNotify(header, notify);
     });
   }
 }

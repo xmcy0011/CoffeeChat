@@ -22,11 +22,13 @@ import 'im_message.dart';
 
 /// 核心类，负责IM SDK的基本操作，初始化、登录、注销、创建会话等
 class IMManager extends IMessage {
-  var isInit = false;
-  var sessionDbProvider = new SessionDbProvider();
-  IMUserConfig userConfig;
+  var _isInit = false;
+  var _sessionDbProvider = new SessionDbProvider();
+  IMUserConfig _userConfig;
+  var totalUnreadCount = 0; // 总的未读消息计数
 
-  var messageListenerCbMap = new Map<String, Function>(); // 收到一条消息的回调队列
+  var _messageListenerCbMap = new Map<String, Function>(); // 收到一条消息的回调队列
+  var sessions = new List<IMSession>(); // 用户所有的会话列表
 
   Int64 userId;
   var nickName;
@@ -45,7 +47,7 @@ class IMManager extends IMessage {
 
   /// 初始化
   bool init() {
-    isInit = true;
+    _isInit = true;
     SQLManager.init();
     IMClient.singleton.registerMessageService("IMManager", this);
 
@@ -55,7 +57,7 @@ class IMManager extends IMessage {
   /// 设置当前用户的用户配置，登录前设置
   /// [userConfig] 用户配置
   void setUserConfig(IMUserConfig userConfig) {
-    this.userConfig = userConfig;
+    this._userConfig = userConfig;
   }
 
   /// 登录认证
@@ -67,7 +69,7 @@ class IMManager extends IMessage {
   /// [callback] (CIMAuthTokenRsp)
   Future login(Int64 userId, var nick, var userToken, var ip, var port) {
     var com = new Completer();
-    if (userConfig == null) {
+    if (_userConfig == null) {
       com.completeError("please call setUserConfig() set user config!");
       return com.future;
     }
@@ -78,7 +80,7 @@ class IMManager extends IMessage {
     this.ip = ip;
     this.port = port;
 
-    IMClient.singleton.onDisconnect = userConfig.funcOnDisconnected; // 绑定回调
+    IMClient.singleton.onDisconnect = _userConfig.funcOnDisconnected; // 绑定回调
     IMClient.singleton.auth(userId, nick, userToken, ip, port).then((value) {
       com.complete(value);
 
@@ -105,7 +107,17 @@ class IMManager extends IMessage {
 
   /// 获取所有会话
   Future<List<IMSession>> getSessionList() async {
-    return sessionDbProvider.getAllSession(userId.toInt());
+    var completer = new Completer<List<IMSession>>();
+
+    _sessionDbProvider.getAllSession(userId.toInt()).then((v) {
+      sessions.clear();
+      sessions.addAll(v);
+      completer.complete(v);
+    }).catchError((e) {
+      completer.completeError(e);
+    });
+
+    return completer.future;
   }
 
   /// 增加收到新消息监听器
@@ -113,21 +125,21 @@ class IMManager extends IMessage {
   /// [**未实现**listener**] 原型：void onNewMessage(List<IMMessage> msgList)
   /// [listener] 原型：void onNewMessage(CIMMsgData msg)
   void addMessageListener(String name, Function listener) {
-    if (!messageListenerCbMap.containsKey(name)) {
-      messageListenerCbMap[name] = listener;
+    if (!_messageListenerCbMap.containsKey(name)) {
+      _messageListenerCbMap[name] = listener;
     }
   }
 
   /// 移除新消息监听器
   /// [name] 唯一标志
   void removeMessageListener(String name) {
-    messageListenerCbMap.remove(name);
+    _messageListenerCbMap.remove(name);
   }
 
   // interface IMessage
   void onHandleMsgData(IMHeader header, CIMMsgData msg) {
     // 回调
-    messageListenerCbMap.forEach((k, v) {
+    _messageListenerCbMap.forEach((k, v) {
       Function callback = v;
       callback(msg);
     });
@@ -135,6 +147,20 @@ class IMManager extends IMessage {
 
   // interface IMessage
   void onHandleMsgDataAck(IMHeader header, CIMMsgDataAck ack) {}
+
+  // interface IMessage
+  void onHandleReadNotify(IMHeader header, CIMMsgDataReadNotify readNotify) {
+    IMSession session;
+    for (var i = 0; i < sessions.length; i++) {
+      if (sessions[i].sessionId == readNotify.sessionId.toInt() && sessions[i].sessionType == readNotify.sessionType) {
+        session = sessions[i];
+        break;
+      }
+    }
+    if (_userConfig.funcOnRecvReceipt != null) {
+      _userConfig.funcOnRecvReceipt(session, readNotify.msgId);
+    }
+  }
 
   // 同步会话列表和未读计数
   void _syncSessionAndUnread() async {
@@ -144,7 +170,7 @@ class IMManager extends IMessage {
       for (var i = 0; i < result.contactSessionList.length; i++) {
         var session = result.contactSessionList[i];
         int count =
-            await sessionDbProvider.existSession(userId.toInt(), session.sessionId.toInt(), session.sessionType.value);
+            await _sessionDbProvider.existSession(userId.toInt(), session.sessionId.toInt(), session.sessionType.value);
 
         IMMessage msg = new IMMessage();
         msg.clientMsgId = session.msgId;
@@ -160,14 +186,15 @@ class IMManager extends IMessage {
 
         // 存在更新
         if (count > 0) {
-          sessionDbProvider.update(userId.toInt(), session.sessionId.toInt(), session.sessionType.value, model);
+          _sessionDbProvider.update(userId.toInt(), session.sessionId.toInt(), session.sessionType.value, model);
         } else {
-          sessionDbProvider.insert(userId.toInt(), model);
+          _sessionDbProvider.insert(userId.toInt(), model);
         }
       }
 
+      totalUnreadCount = result.unreadCounts;
       // 回调
-      userConfig.funcOnRefresh();
+      _userConfig.funcOnRefresh();
       LogUtil.info("_syncSessionAndUnread", "sync session success");
     } else {
       LogUtil.error("_syncSessionAndUnread", "sync session error:$result");

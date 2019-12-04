@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:cc_flutter_app/imsdk/core/business/message_business.dart';
+import 'package:cc_flutter_app/imsdk/core/business/session_business.dart';
+import 'package:cc_flutter_app/imsdk/im_manager.dart';
 import 'package:cc_flutter_app/imsdk/im_message.dart';
 import 'package:cc_flutter_app/imsdk/im_message.dart' as prefix0;
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
@@ -65,7 +67,7 @@ class IMSession {
   /// @return [Future] then(CIMMsgDataAck ack).error(String err)
   Future sendMessage(
       String msgId, int toSessionId, CIMMsgType msgType, CIMSessionType sessionType, String msgData) async {
-    MessageBusiness.singleton.sendMessage(msgId, toSessionId, msgType, sessionType, msgData);
+    return MessageBusiness.singleton.sendMessage(msgId, toSessionId, msgType, sessionType, msgData);
   }
 
   /// 从本地数据库中获取历史消息，拉取不到时，可调用getMessage拉取云端消息
@@ -115,7 +117,25 @@ class IMSession {
     return completer.future;
   }
 
-//  Future setReadMessage( msg, TIMCallBack callback) async {
-//
-//  }
+  /// 设置消息已读，针对真个会话，而不是某一条消息
+  /// [toSessionId] 会话ID
+  /// [sessionType] 会话类型
+  /// [endMsgId] 最新客户端消息id，在该ID之前的所有消息被标记为已读。设置为0，则整个会话已读
+  setReadMessage(int toSessionId, CIMSessionType sessionType, int endMsgId) async {
+    var result = await SessionBusiness.singleton.setReadMessage(toSessionId, sessionType, endMsgId);
+    if (result) {
+      // 重制会读消息计数
+      var sessionList = IMManager.singleton.sessions;
+      for (var i = 0; i < sessionList.length; i++) {
+        if (sessionList[i].sessionId == toSessionId && sessionList[i].sessionType == sessionType) {
+          // 总的未读消息计数
+          IMManager.singleton.totalUnreadCount -= sessionList[i].unreadCnt;
+          // 会读消息计数
+          sessionList[i].unreadCnt = 0;
+          break;
+        }
+      }
+    }
+    return result;
+  }
 }

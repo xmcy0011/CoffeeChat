@@ -10,11 +10,12 @@ class IMUserConfig {
   Function funcOnRefresh; // 数据刷新通知回调（如未读计数，会话列表等）
   Function funcOnRefreshConversation; // 部分会话刷新（包括多终端已读上报同步）
 
+  Function funcOnRecvReceipt; // 已读回执回调
+
   /// 设置用户状态变更事件回调对象
   /// [onForceOffline] void onForceOffline() 被其他终端踢下线
   /// [onUserSigExpired] void onUserSigExpired() 用户签名过期了，需要刷新 userSig 重新登录 IM SDK
-  void setUserStatusListener(
-      Function onForceOffline, Function onUserSigExpired) {
+  void setUserStatusListener(Function onForceOffline, Function onUserSigExpired) {
     this.funcOnForceOffline = onForceOffline;
     this.funcOnUserSigExpired = onUserSigExpired;
   }
@@ -23,8 +24,7 @@ class IMUserConfig {
   /// [onConnected] void onConnected() 连接上IM服务器
   /// [onDisconnected] void onDisconnected(int code, String desc) 与IM服务器连接断开
   /// [onWifiNeedAuth] void onWifiNeedAuth(String name) WIFI需要密码认证
-  void setConnectionListener(
-      Function onConnected, Function onDisconnected, Function onWifiNeedAuth) {
+  void setConnectionListener(Function onConnected, Function onDisconnected, Function onWifiNeedAuth) {
     this.funcOnConnected = onConnected;
     this.funcOnDisconnected = onDisconnected;
     this.funcOnWifiNeedAuth = onWifiNeedAuth;
@@ -40,5 +40,11 @@ class IMUserConfig {
   void setRefreshListener(Function onRefresh, Function onRefreshConversation) {
     this.funcOnRefresh = onRefresh;
     this.funcOnRefreshConversation = onRefreshConversation;
+  }
+
+  /// 设置已读回执监听器
+  /// [onRecvReceipt] void callback(IMSession session,int endMsgId)
+  void setMessageReceiptListener(Function onRecvReceipt) {
+    this.funcOnRecvReceipt = onRecvReceipt;
   }
 }

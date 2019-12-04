@@ -23,6 +23,7 @@ class PageChatStateWidget extends StatefulWidget {
 
 class _PageChatStateWidgetState extends State<PageChatStateWidget> {
   List<IMSession> _sessionList = new List<IMSession>();
+  var _selectedSessionIndex = -1;
 
   @override
   Widget build(BuildContext context) {
@@ -194,7 +195,9 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
             _sessionList[i].latestMsg.msgStatus = CIMMsgStatus.kCIM_MSG_STATUS_RECEIPT;
             _sessionList[i].latestMsg.msgType = msg.msgType;
             _sessionList[i].latestMsg.fromUserId = msg.fromUserId.toInt();
-            //_sessionList[i].msgAttach
+            if (_selectedSessionIndex != i) {
+              _sessionList[i].unreadCnt++;
+            }
           });
         }
       }
@@ -203,6 +206,14 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
 
   void _onTap(var index) {
     IMSession model = _sessionList[index];
+    _selectedSessionIndex = index;
+    if (model.unreadCnt != 0) {
+      model.setReadMessage(model.sessionId, model.sessionType, model.latestMsg.serverMsgId);
+      setState(() {
+        model.unreadCnt = 0;
+      });
+    }
+
     navigatePushPage(context, PageMessage(model));
   }
 

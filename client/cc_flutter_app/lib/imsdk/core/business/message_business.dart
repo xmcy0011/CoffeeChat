@@ -196,4 +196,7 @@ class MessageBusiness extends IMessage {
       print("_handleMsgDataAck msgId=${ack.msgId} not find");
     }
   }
+
+  /// interface IMMessage
+  void onHandleReadNotify(IMHeader header, CIMMsgDataReadNotify readNotify) {}
 }
