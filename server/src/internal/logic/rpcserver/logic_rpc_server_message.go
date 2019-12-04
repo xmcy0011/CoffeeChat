@@ -13,7 +13,7 @@ import (
 
 // 发消息
 func (s *LogicServer) SendMsgData(ctx context.Context, in *cim.CIMMsgData) (*cim.CIMMsgDataAck, error) {
-	logger.Sugar.Infof("sendMsgData,fromId=%d,toId=%d,msgId=%s,createTime=%d,msgType=%d,sessionType=%d",
+	logger.Sugar.Infof("SendMsgData,fromId=%d,toId=%d,msgId=%s,createTime=%d,msgType=%d,sessionType=%d",
 		in.FromUserId, in.ToSessionId, in.MsgId, in.CreateTime, in.MsgType, in.SessionType)
 
 	if in.FromUserId == in.ToSessionId {
@@ -42,8 +42,13 @@ func (s *LogicServer) SendMsgData(ctx context.Context, in *cim.CIMMsgData) (*cim
 }
 
 // 消息收到ACK
-func (s *LogicServer) ReacAckMsgData(ctx context.Context, in *cim.CIMMsgDataReadAck) (*cim.Empty, error) {
-	return nil, nil
+func (s *LogicServer) ReadAckMsgData(ctx context.Context, in *cim.CIMMsgDataReadAck) (*cim.Empty, error) {
+	logger.Sugar.Infof("ReadAckMsgData,userId=%d,toSessionId=%d,msgId=%d,sessionType=%d",
+		in.UserId, in.SessionId, in.MsgId, in.SessionType)
+
+	// 清除该用户的未读消息计数
+	dao.DefaultUnread.ClearUnreadCount(in.UserId, in.SessionId, in.SessionType)
+	return &cim.Empty{}, nil
 }
 
 func (s *LogicServer) messageBroadcastSingle(in *cim.CIMMsgData) {

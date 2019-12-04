@@ -65,6 +65,16 @@ func (u *User) BroadcastMessage(data *cim.CIMMsgData) {
 	}
 }
 
+func (u *User) BroadcastReadMessage(data *cim.CIMMsgDataReadNotify) {
+	for item := u.conn.Front(); item != nil; item = item.Next() {
+		conn := item.Value.(CImConn)
+		_, err := conn.Send(0, uint16(cim.CIMCmdID_kCIM_CID_MSG_READ_NOTIFY), data)
+		if err != nil {
+			logger.Sugar.Error("BroadcastReadMessage error:", err.Error())
+		}
+	}
+}
+
 func (u *User) OnCheckAckMessageTimerOut(tick int64) {
 	for i := range u.ackMsgMap {
 		if math.Abs(float64(int32(tick)-u.ackMsgMap[i].CreateTime)) > kAckMsgTimeOut {

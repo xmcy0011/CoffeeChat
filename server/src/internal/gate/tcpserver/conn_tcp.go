@@ -123,6 +123,9 @@ func (tcp *TcpConn) OnRead(header *cim.ImHeader, buff []byte) {
 	case uint16(cim.CIMCmdID_kCIM_CID_MSG_DATA_ACK):
 		tcp.onHandleMsgAck(header, buff)
 		break
+	case uint16(cim.CIMCmdID_kCIM_CID_MSG_READ_ACK):
+		tcp.onHandleSetReadMessaged(header, buff)
+		break
 	default:
 		logger.Sugar.Errorf("unknown command_id=%d", header.CommandId)
 		break
@@ -199,7 +202,7 @@ func (tcp *TcpConn) onHandleAuthReq(header *cim.ImHeader, buff []byte) {
 		req := &cim.CIMAuthTokenReq{}
 		err := proto.Unmarshal(buff, req)
 		if err != nil {
-			logger.Sugar.Error(err.Error())
+			logger.Sugar.Warn(err.Error())
 			return
 		}
 
@@ -210,7 +213,7 @@ func (tcp *TcpConn) onHandleAuthReq(header *cim.ImHeader, buff []byte) {
 		rsp, err := conn.AuthToken(ctx, req)
 
 		if err != nil {
-			logger.Sugar.Error("err:", err.Error())
+			logger.Sugar.Warnf("err:%s", err.Error())
 			rsp = &cim.CIMAuthTokenRsp{
 				ResultCode:   cim.CIMErrorCode_kCIM_ERR_INTERNAL_ERROR,
 				ResultString: "服务器内部错误",
@@ -250,7 +253,7 @@ func (tcp *TcpConn) onHandleRecentContactSessionReq(header *cim.ImHeader, buff [
 	req := &cim.CIMRecentContactSessionReq{}
 	err := proto.Unmarshal(buff, req)
 	if err != nil {
-		logger.Sugar.Error(err.Error())
+		logger.Sugar.Warn(err.Error())
 		return
 	}
 
@@ -260,7 +263,7 @@ func (tcp *TcpConn) onHandleRecentContactSessionReq(header *cim.ImHeader, buff [
 	rsp, err := conn.RecentContactSession(ctx, req)
 
 	if err != nil {
-		logger.Sugar.Error("err:", err.Error())
+		logger.Sugar.Warnf("err:%s", err.Error())
 		return
 	} else {
 		_, err = tcp.Send(header.SeqNum, uint16(cim.CIMCmdID_kCIM_CID_LIST_RECENT_CONTACT_SESSION_RSP), rsp)
@@ -271,11 +274,12 @@ func (tcp *TcpConn) onHandleRecentContactSessionReq(header *cim.ImHeader, buff [
 		req.UserId, req.LatestUpdateTime, rsp.UnreadCounts, len(rsp.ContactSessionList), rsp.UnreadCounts)
 }
 
+// 拉取历史消息
 func (tcp *TcpConn) onHandleGetMsgListReq(header *cim.ImHeader, buff []byte) {
 	req := &cim.CIMGetMsgListReq{}
 	err := proto.Unmarshal(buff, req)
 	if err != nil {
-		logger.Sugar.Error(err.Error())
+		logger.Sugar.Warn(err.Error())
 		return
 	}
 	logger.Sugar.Infof("onHandleGetMsgListReq user_id:%d,session_id:%d,"+
@@ -305,12 +309,12 @@ func (tcp *TcpConn) onHandleMsgData(header *cim.ImHeader, buff []byte) {
 	req := &cim.CIMMsgData{}
 	err := proto.Unmarshal(buff, req)
 	if err != nil {
-		logger.Sugar.Error(err.Error())
+		logger.Sugar.Warn(err.Error())
 		return
 	}
 
 	if req.FromUserId == req.ToSessionId {
-		logger.Sugar.Errorf("onHandleMsgData from_id:%d is equals to_id:%d,"+
+		logger.Sugar.Warnf("onHandleMsgData from_id:%d is equals to_id:%d,"+
 			"session_type=%d,msg_id=%s,msg_type=%d",
 			req.FromUserId, req.ToSessionId, req.SessionType, req.MsgId, req.MsgType)
 		return
@@ -331,7 +335,7 @@ func (tcp *TcpConn) onHandleMsgData(header *cim.ImHeader, buff []byte) {
 	if err != nil {
 		// 上行消息丢失计数+1
 		upMissMsgCount.Inc()
-		logger.Sugar.Error("err:", err.Error())
+		logger.Sugar.Warnf("err:", err.Error())
 		return
 	} else {
 		_, err = tcp.Send(header.SeqNum, uint16(cim.CIMCmdID_kCIM_CID_MSG_DATA_ACK), rsp)
@@ -355,7 +359,7 @@ func (tcp *TcpConn) onHandleMsgAck(header *cim.ImHeader, buff []byte) {
 	req := &cim.CIMMsgDataAck{}
 	err := proto.Unmarshal(buff, req)
 	if err != nil {
-		logger.Sugar.Infof("onHandleMsgAck error:", err.Error())
+		logger.Sugar.Warnf("onHandleMsgAck error:%s", err.Error())
 		return
 	}
 
@@ -369,7 +373,45 @@ func (tcp *TcpConn) onHandleMsgAck(header *cim.ImHeader, buff []byte) {
 	}
 }
 
-// 清除会话未读计数
-func (tcp *TcpConn) onClearUnreadCount(header *cim.ImHeader, buff []byte)  {
+// 设置会话消息已读
+func (tcp *TcpConn) onHandleSetReadMessaged(header *cim.ImHeader, buff []byte) {
+	req := &cim.CIMMsgDataReadAck{}
+	err := proto.Unmarshal(buff, req)
+	if err != nil {
+		logger.Sugar.Warnf("onHandleSetReadMessaged error:%s", err.Error())
+		return
+	}
 
+	if req.MsgId == 0 {
+		logger.Sugar.Warn("onHandleSetReadMessaged invalid msgId=0")
+		return
+	}
+
+	logger.Sugar.Infof("onHandleSetReadMessaged user_id:%d,session_id:%d,msg_id=%d,session_type=%d",
+		req.UserId, req.SessionId, req.MsgId, req.SessionType)
+
+	conn := GetMessageConn()
+	ctx, cancelFun := context.WithTimeout(context.Background(), time.Second*kBusinessTimeOut)
+	defer cancelFun()
+
+	_, err = conn.ReadAckMsgData(ctx, req)
+	if err != nil {
+		logger.Sugar.Infof("onHandleSetReadMessaged ReadAckMsgData(Grpc) user_id:%d,session_id:%d,msg_id=%d,"+
+			"session_type=%d,error=%s", req.UserId, req.SessionId, req.MsgId, req.SessionType, err.Error())
+	} else {
+		logger.Sugar.Infof("onHandleMsgAck ReadAckMsgData(Grpc) user_id:%d,session_id:%d,msg_id=%d,"+
+			"session_type=%d", req.UserId, req.SessionId, req.MsgId, req.SessionType)
+	}
+
+	// 给对方发送已读通知
+	user := DefaultUserManager.FindUser(req.SessionId)
+	if user != nil {
+		notify := &cim.CIMMsgDataReadNotify{
+			UserId:      req.UserId,
+			SessionId:   req.SessionId,
+			MsgId:       req.MsgId,
+			SessionType: req.SessionType,
+		}
+		user.BroadcastReadMessage(notify)
+	}
 }
