@@ -128,8 +128,6 @@ class IMSession {
       var sessionList = IMManager.singleton.sessions;
       for (var i = 0; i < sessionList.length; i++) {
         if (sessionList[i].sessionId == toSessionId && sessionList[i].sessionType == sessionType) {
-          // 总的未读消息计数
-          IMManager.singleton.totalUnreadCount -= sessionList[i].unreadCnt;
           // 会读消息计数
           sessionList[i].unreadCnt = 0;
           break;

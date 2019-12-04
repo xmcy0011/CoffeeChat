@@ -25,7 +25,6 @@ class IMManager extends IMessage {
   var _isInit = false;
   var _sessionDbProvider = new SessionDbProvider();
   IMUserConfig _userConfig;
-  var totalUnreadCount = 0; // 总的未读消息计数
 
   var _messageListenerCbMap = new Map<String, Function>(); // 收到一条消息的回调队列
   var sessions = new List<IMSession>(); // 用户所有的会话列表
@@ -192,7 +191,6 @@ class IMManager extends IMessage {
         }
       }
 
-      totalUnreadCount = result.unreadCounts;
       // 回调
       _userConfig.funcOnRefresh();
       LogUtil.info("_syncSessionAndUnread", "sync session success");

@@ -21,6 +21,7 @@ class PageMainStatefulApp extends StatefulWidget {
 /// 主页、消息、我
 class _PageMainStatefulAppState extends State<PageMainStatefulApp> {
   var _selectedIndex = 0;
+  var totalUnreadCount = 0;
   String messageBadgeCount = "89";
 
   static List<Widget> _pages = <Widget>[
@@ -39,7 +40,8 @@ class _PageMainStatefulAppState extends State<PageMainStatefulApp> {
   @override
   void initState() {
     IMSDKHelper.singleton.registerOnRefresh("_PageMainStatefulAppState", _onRefresh);
-    _onRefresh();
+    //IMSDKHelper.singleton.registerOnRecvReceipt("_PageMainStatefulAppState", _onRecvReceipt);
+    IMSDKHelper.singleton.onTotalUnreadMsgCb = _onUpdateTotalUnreadCount;
     super.initState();
   }
 
@@ -74,15 +76,34 @@ class _PageMainStatefulAppState extends State<PageMainStatefulApp> {
   void _onRefresh() {
     IMManager.singleton.getSessionList().then((v) {
       List<IMSession> list = v;
-      var totalUnreadCount = 0;
       if (list != null) {
         for (var i = 0; i < list.length; i++) {
           totalUnreadCount += list[i].unreadCnt;
         }
       }
-      setState(() {
-        this.messageBadgeCount = totalUnreadCount > 99 ? "99+" : totalUnreadCount.toString();
-      });
+      updateTotalUnreadCount(totalUnreadCount);
+    });
+  }
+
+  void _onUpdateTotalUnreadCount(bool add, int count) {
+    if (add) {
+      totalUnreadCount += count;
+      updateTotalUnreadCount(totalUnreadCount);
+    } else {
+      totalUnreadCount -= count;
+      updateTotalUnreadCount(totalUnreadCount);
+    }
+  }
+
+  //void _onRecvReceipt(var session, int msgId) {}
+
+  void updateTotalUnreadCount(int total) {
+    setState(() {
+      if (total > 0) {
+        this.messageBadgeCount = total > 99 ? "99+" : total.toString();
+      } else {
+        this.messageBadgeCount = null;
+      }
     });
   }
 }
