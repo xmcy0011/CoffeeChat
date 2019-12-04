@@ -35,7 +35,7 @@ message CIMMsgDataReadAck {
   // cmd id:		0x0303
   uint64 user_id = 1; // 消息发送方
   uint64 session_id = 2;
-  string msg_id = 3; // 消息ID，唯一（UUID）
+  uint64 msg_id = 3; // 服务器消息ID，在该ID之前的所有消息被标记为已读
   CIM.Def.CIMSessionType session_type = 4;
 }
 
@@ -44,7 +44,7 @@ message CIMMsgDataReadNotify {
   // cmd id:		0x0304
   uint64 user_id = 1; // 消息发送方
   uint64 session_id = 2;
-  string msg_id = 3;
+  uint64 msg_id = 3; // 服务器消息ID，在该ID之前的所有消息需要被标记为已读
   CIM.Def.CIMSessionType session_type = 4;
 }
 

@@ -137,7 +137,7 @@ class CIMMsgDataReadAck extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('CIMMsgDataReadAck', package: const $pb.PackageName('CIM.Message'))
     ..a<Int64>(1, 'userId', $pb.PbFieldType.OU6, Int64.ZERO)
     ..a<Int64>(2, 'sessionId', $pb.PbFieldType.OU6, Int64.ZERO)
-    ..aOS(3, 'msgId')
+    ..a<Int64>(3, 'msgId', $pb.PbFieldType.OU6, Int64.ZERO)
     ..e<$0.CIMSessionType>(4, 'sessionType', $pb.PbFieldType.OE, $0.CIMSessionType.kCIM_SESSION_TYPE_Invalid, $0.CIMSessionType.valueOf, $0.CIMSessionType.values)
     ..hasRequiredFields = false
   ;
@@ -164,8 +164,8 @@ class CIMMsgDataReadAck extends $pb.GeneratedMessage {
   $core.bool hasSessionId() => $_has(1);
   void clearSessionId() => clearField(2);
 
-  $core.String get msgId => $_getS(2, '');
-  set msgId($core.String v) { $_setString(2, v); }
+  Int64 get msgId => $_getI64(2);
+  set msgId(Int64 v) { $_setInt64(2, v); }
   $core.bool hasMsgId() => $_has(2);
   void clearMsgId() => clearField(3);
 
@@ -179,7 +179,7 @@ class CIMMsgDataReadNotify extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('CIMMsgDataReadNotify', package: const $pb.PackageName('CIM.Message'))
     ..a<Int64>(1, 'userId', $pb.PbFieldType.OU6, Int64.ZERO)
     ..a<Int64>(2, 'sessionId', $pb.PbFieldType.OU6, Int64.ZERO)
-    ..aOS(3, 'msgId')
+    ..a<Int64>(3, 'msgId', $pb.PbFieldType.OU6, Int64.ZERO)
     ..e<$0.CIMSessionType>(4, 'sessionType', $pb.PbFieldType.OE, $0.CIMSessionType.kCIM_SESSION_TYPE_Invalid, $0.CIMSessionType.valueOf, $0.CIMSessionType.values)
     ..hasRequiredFields = false
   ;
@@ -206,8 +206,8 @@ class CIMMsgDataReadNotify extends $pb.GeneratedMessage {
   $core.bool hasSessionId() => $_has(1);
   void clearSessionId() => clearField(2);
 
-  $core.String get msgId => $_getS(2, '');
-  set msgId($core.String v) { $_setString(2, v); }
+  Int64 get msgId => $_getI64(2);
+  set msgId(Int64 v) { $_setInt64(2, v); }
   $core.bool hasMsgId() => $_has(2);
   void clearMsgId() => clearField(3);
 

@@ -35,7 +35,7 @@ const CIMMsgDataReadAck$json = const {
   '2': const [
     const {'1': 'user_id', '3': 1, '4': 1, '5': 4, '10': 'userId'},
     const {'1': 'session_id', '3': 2, '4': 1, '5': 4, '10': 'sessionId'},
-    const {'1': 'msg_id', '3': 3, '4': 1, '5': 9, '10': 'msgId'},
+    const {'1': 'msg_id', '3': 3, '4': 1, '5': 4, '10': 'msgId'},
     const {'1': 'session_type', '3': 4, '4': 1, '5': 14, '6': '.CIM.Def.CIMSessionType', '10': 'sessionType'},
   ],
 };
@@ -45,7 +45,7 @@ const CIMMsgDataReadNotify$json = const {
   '2': const [
     const {'1': 'user_id', '3': 1, '4': 1, '5': 4, '10': 'userId'},
     const {'1': 'session_id', '3': 2, '4': 1, '5': 4, '10': 'sessionId'},
-    const {'1': 'msg_id', '3': 3, '4': 1, '5': 9, '10': 'msgId'},
+    const {'1': 'msg_id', '3': 3, '4': 1, '5': 4, '10': 'msgId'},
     const {'1': 'session_type', '3': 4, '4': 1, '5': 14, '6': '.CIM.Def.CIMSessionType', '10': 'sessionType'},
   ],
 };
