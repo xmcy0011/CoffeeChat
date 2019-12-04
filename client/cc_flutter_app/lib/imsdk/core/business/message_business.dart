@@ -93,6 +93,7 @@ class MessageBusiness extends IMessage {
   /// [sessionType] 会话类型
   /// [endMsgId] 结束服务器消息id(不包含在查询结果中)，第一次请求设置为0
   /// [limitCount] 本次查询消息的条数上线(最多100条)
+  /// [return] void callback(CIMGetMsgListRsp)
   Future getMessageList(int toSessionId, CIMSessionType sessionType, int endMsgId, int limitCount) async {
     print("getMessageList toSessionId=$toSessionId,sessionType=$sessionType,"
         "endMsgId=$endMsgId,limitCount=$limitCount");

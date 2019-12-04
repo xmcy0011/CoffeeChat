@@ -37,4 +37,8 @@ class SessionBusiness {
     });
     return complete.future;
   }
+
+  Future setReadMessage() async{
+
+  }
 }

@@ -1,12 +1,13 @@
 import 'package:cc_flutter_app/imsdk/im_manager.dart';
 import 'package:cc_flutter_app/imsdk/core/model/model.dart';
+import 'package:cc_flutter_app/imsdk/im_message.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 /// 代表一条消息的组件
 class MsgItem extends StatefulWidget {
-  final MessageModelBase msg;
+  final IMMessage msg;
   final UserModel fromUser;
 
   MsgItem(this.msg, this.fromUser);
@@ -21,7 +22,7 @@ class MsgItem extends StatefulWidget {
 }
 
 class _MsgItemState extends State<MsgItem> {
-  final MessageModelBase msg;
+  final IMMessage msg;
   final UserModel fromUser;
 
   _MsgItemState(this.msg, this.fromUser);
@@ -82,7 +83,7 @@ class _MsgItemState extends State<MsgItem> {
 
 /// 别人的消息
 class MsgItemOtherState extends _MsgItemState {
-  MsgItemOtherState(MessageModelBase msg, UserModel fromUser)
+  MsgItemOtherState(IMMessage msg, UserModel fromUser)
       : super(msg, fromUser);
 
   @override
@@ -110,7 +111,7 @@ class MsgItemOtherState extends _MsgItemState {
 
 /// 自己的消息
 class MsgItemMeState extends _MsgItemState {
-  MsgItemMeState(MessageModelBase msg, UserModel fromUser) : super(msg, fromUser);
+  MsgItemMeState(IMMessage msg, UserModel fromUser) : super(msg, fromUser);
 
   @override
   Widget build(BuildContext context) {

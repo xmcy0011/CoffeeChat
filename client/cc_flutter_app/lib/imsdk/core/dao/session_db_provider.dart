@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cc_flutter_app/imsdk/core/dao/base_db_provider.dart';
 import 'package:cc_flutter_app/imsdk/core/model/model.dart';
+import 'package:cc_flutter_app/imsdk/im_message.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
 import 'package:sqflite/sqlite_api.dart';
 import 'package:fixnum/fixnum.dart';
@@ -136,14 +137,28 @@ class SessionDbProvider extends BaseDbProvider {
     if (maps.length > 0) {
       List<IMSession> list = new List<IMSession>();
       for (var i = 0; i < maps.length; i++) {
-        MessageModelBase msg = new MessageModelBase();
-        msg.clientMsgId = maps[i][columnLatestClientMsgId];
-        msg.serverMsgId = maps[i][columnLatestServerMsgId];
-        msg.createTime = maps[i][columnUpdatedTime];
-        msg.msgData = maps[i][columnLatestMsgData];
-        msg.msgType = CIMMsgType.valueOf(maps[i][columnLatestMsgType]);
-        msg.fromUserId = int.parse(maps[i][columnLatestMsgFromId]); // String
-        msg.msgStatus = CIMMsgStatus.valueOf(maps[i][columnLatestMsgStatus]);
+        var msgType = CIMMsgType.valueOf(maps[i][columnLatestMsgType]);
+        var msg;
+
+        if (msgType == CIMMsgType.kCIM_MSG_TYPE_TEXT) {
+          msg = new IMMessageText();
+          msg.clientMsgId = maps[i][columnLatestClientMsgId];
+          msg.serverMsgId = maps[i][columnLatestServerMsgId];
+          msg.createTime = maps[i][columnUpdatedTime];
+          msg.msgData = maps[i][columnLatestMsgData];
+          msg.msgType = CIMMsgType.valueOf(maps[i][columnLatestMsgType]);
+          msg.fromUserId = int.parse(maps[i][columnLatestMsgFromId]); // String
+          msg.msgStatus = CIMMsgStatus.valueOf(maps[i][columnLatestMsgStatus]);
+        } else {
+          msg = new IMMessage();
+          msg.clientMsgId = maps[i][columnLatestClientMsgId];
+          msg.serverMsgId = maps[i][columnLatestServerMsgId];
+          msg.createTime = maps[i][columnUpdatedTime];
+          msg.msgData = maps[i][columnLatestMsgData];
+          msg.msgType = CIMMsgType.valueOf(maps[i][columnLatestMsgType]);
+          msg.fromUserId = int.parse(maps[i][columnLatestMsgFromId]); // String
+          msg.msgStatus = CIMMsgStatus.valueOf(maps[i][columnLatestMsgStatus]);
+        }
 
         IMSession session = new IMSession(
             int.parse(maps[i][columnSessionId]), // String

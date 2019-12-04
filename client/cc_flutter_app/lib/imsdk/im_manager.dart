@@ -18,6 +18,7 @@ import 'package:fixnum/fixnum.dart';
 import 'package:flutter/material.dart';
 
 import 'core/im_user_config.dart';
+import 'im_message.dart';
 
 /// 核心类，负责IM SDK的基本操作，初始化、登录、注销、创建会话等
 class IMManager extends IMessage {
@@ -145,7 +146,7 @@ class IMManager extends IMessage {
         int count =
             await sessionDbProvider.existSession(userId.toInt(), session.sessionId.toInt(), session.sessionType.value);
 
-        MessageModelBase msg = new MessageModelBase();
+        IMMessage msg = new IMMessage();
         msg.clientMsgId = session.msgId;
         msg.serverMsgId = session.serverMsgId.toInt();
         msg.createTime = session.updatedTime;

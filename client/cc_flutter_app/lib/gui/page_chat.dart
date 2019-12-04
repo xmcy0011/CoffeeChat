@@ -4,6 +4,7 @@ import 'package:cc_flutter_app/gui/helper.dart';
 import 'package:cc_flutter_app/gui/imsdk_helper.dart';
 import 'package:cc_flutter_app/gui/page_message.dart';
 import 'package:cc_flutter_app/imsdk/im_manager.dart';
+import 'package:cc_flutter_app/imsdk/im_message.dart';
 import 'package:cc_flutter_app/imsdk/im_session.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Message.pb.dart';
@@ -212,7 +213,7 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
     info.sessionStatus = CIMSessionStatusType.kCIM_SESSION_STATUS_OK;
     info.isRobotSession = false;
 
-    MessageModelBase msg = new MessageModelBase();
+    IMMessage msg = new IMMessage();
     msg.msgData = "";
 
     IMSession model = new IMSession(
@@ -221,7 +222,7 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
       CIMSessionType.kCIM_SESSION_TYPE_SINGLE,
       0,
       DateTime.now().millisecondsSinceEpoch ~/ 1000,
-      new MessageModelBase(),
+      new IMMessage(),
     );
 
     _sessionList.add(model);

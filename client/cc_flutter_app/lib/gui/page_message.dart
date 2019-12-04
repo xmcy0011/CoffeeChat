@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:cc_flutter_app/imsdk/im_manager.dart';
 import 'package:cc_flutter_app/imsdk/core/model/model.dart';
+import 'package:cc_flutter_app/imsdk/im_message.dart';
 import 'package:cc_flutter_app/imsdk/im_session.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pbserver.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.List.pbserver.dart';
@@ -27,7 +28,7 @@ class PageMessage extends StatefulWidget {
 
 class _PageMessageState extends State<PageMessage> {
   IMSession sessionInfo; // 聊天对应的会话信息
-  List<MessageModelBase> _msgList = new List<MessageModelBase>(); // 历史消息
+  List<IMMessage> _msgList = new List<IMMessage>(); // 历史消息
 
   ScrollController _scrollController; // 历史消息滚动
   TextEditingController _textController = new TextEditingController(); // 输入的文本
@@ -86,7 +87,7 @@ class _PageMessageState extends State<PageMessage> {
 
   // 生成历史聊天记录
   Widget _onBuildMsgItem(context, position) {
-    MessageModelBase msg = _msgList[position];
+    IMMessage msg = _msgList[position];
 
     // FIXED ME
     UserModel fromUser = new UserModel();
@@ -131,7 +132,7 @@ class _PageMessageState extends State<PageMessage> {
   }
 
   // 生成聊天内容
-  Widget _buildMsgContent(MessageModelBase msg) {
+  Widget _buildMsgContent(IMMessage msg) {
     double maxWidth = MediaQuery.of(context).size.width * 0.7;
     var text = msg.msgData;
 
@@ -159,7 +160,7 @@ class _PageMessageState extends State<PageMessage> {
   }
 
   // 自己的消息
-  Widget _buildMeAvatarItem(MessageModelBase msg, UserModel fromUser) {
+  Widget _buildMeAvatarItem(IMMessage msg, UserModel fromUser) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Row(
@@ -200,7 +201,7 @@ class _PageMessageState extends State<PageMessage> {
   }
 
   // 别人的消息
-  Widget _buildOtherAvatarItem(MessageModelBase msg, UserModel fromUser) {
+  Widget _buildOtherAvatarItem(IMMessage msg, UserModel fromUser) {
     return Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
@@ -235,7 +236,7 @@ class _PageMessageState extends State<PageMessage> {
   }
 
   // 失败重发
-  void _reSendMsg(MessageModelBase msg) {
+  void _reSendMsg(IMMessage msg) {
     var sId = sessionInfo.sessionId;
     var sType = sessionInfo.sessionType;
 
@@ -270,17 +271,14 @@ class _PageMessageState extends State<PageMessage> {
       endMsgId = _msgList[0].serverMsgId;
     }
 
-    sessionInfo.getMessage(id, type, endMsgId, kMaxPullMsgLimitCount).then((rsp) {
-      if (rsp is CIMGetMsgListRsp) {
-        List<MessageModelBase> msg = new List<MessageModelBase>();
-        rsp.msgList.forEach((v) {
-          var msgModel = MessageModelBase.copyFrom(v);
-          print("msgId=${msgModel.serverMsgId},msg=${msgModel.msgData}");
-          msg.add(msgModel);
+    sessionInfo.getMessage(id, type, endMsgId, kMaxPullMsgLimitCount).then((msgList) {
+      if (msgList is List<IMMessage>) {
+        msgList.forEach((v) {
+          print("msgId=${v.serverMsgId},msg=${v.msgData}");
         });
 
         setState(() {
-          _msgList.insertAll(0, msg);
+          _msgList.insertAll(0, msgList);
           if (_scrollController == null) {
             if (_msgList.length > 6) {
               _scrollController = new ScrollController(initialScrollOffset: 380);
@@ -340,34 +338,33 @@ class _PageMessageState extends State<PageMessage> {
     var sId = sessionInfo.sessionId;
     var sType = sessionInfo.sessionType;
 
-    var msgInfo = new CIMMsgInfo();
+    var msgInfo = new IMMessage();
     msgInfo.clientMsgId = IMSession.generateMsgId();
     msgInfo.sessionType = sessionInfo.sessionType;
-    msgInfo.fromUserId = IMManager.singleton.userId;
-    msgInfo.toSessionId = Int64(sessionInfo.sessionId);
+    msgInfo.fromUserId = IMManager.singleton.userId.toInt();
+    msgInfo.toSessionId = sessionInfo.sessionId;
     msgInfo.createTime = DateTime.now().millisecondsSinceEpoch ~/ 1000;
     msgInfo.msgResCode = CIMResCode.kCIM_RES_CODE_OK;
     msgInfo.msgStatus = CIMMsgStatus.kCIM_MSG_STATUS_SENDING; // 发送中
     msgInfo.msgFeature = CIMMsgFeature.kCIM_MSG_FEATURE_DEFAULT;
-    msgInfo.msgData = utf8.encode(text);
+    msgInfo.msgData = text;
     msgInfo.msgType = CIMMsgType.kCIM_MSG_TYPE_TEXT;
     msgInfo.senderClientType = CIMClientType.kCIM_CLIENT_TYPE_DEFAULT;
 
     //msgInfo.clientMsgId
-    MessageModelBase model = MessageModelBase.copyFrom(msgInfo);
     setState(() {
-      _msgList.add(model);
+      _msgList.add(msgInfo);
       _textController.clear();
     });
     scrollEnd2();
 
     sessionInfo.sendMessage(msgInfo.clientMsgId, sId, CIMMsgType.kCIM_MSG_TYPE_TEXT, sType, text).then((app) {
       setState(() {
-        model.msgStatus = CIMMsgStatus.kCIM_MSG_STATUS_SENT;
+        msgInfo.msgStatus = CIMMsgStatus.kCIM_MSG_STATUS_SENT;
       });
     }).catchError((err) {
       setState(() {
-        model.msgStatus = CIMMsgStatus.kCIM_MSG_STATUS_FAILED;
+        msgInfo.msgStatus = CIMMsgStatus.kCIM_MSG_STATUS_FAILED;
       });
     });
   }
@@ -375,21 +372,20 @@ class _PageMessageState extends State<PageMessage> {
   // 接收一条消息
   void _onReceiveMsg(CIMMsgData msg) {
     if (msg.fromUserId == sessionInfo.sessionId) {
-      var msgInfo = new CIMMsgInfo();
-      msgInfo.toSessionId = msg.toSessionId;
-      msgInfo.fromUserId = msg.fromUserId;
+      var msgInfo = new IMMessage();
+      msgInfo.toSessionId = msg.toSessionId.toInt();
+      msgInfo.fromUserId = msg.fromUserId.toInt();
       msgInfo.msgType = msg.msgType;
-      msgInfo.msgData = msg.msgData;
+      msgInfo.msgData = utf8.decode(msg.msgData);
       msgInfo.msgStatus = CIMMsgStatus.kCIM_MSG_STATUS_SENT; // FIXED me
       msgInfo.msgFeature = CIMMsgFeature.kCIM_MSG_FEATURE_DEFAULT; // FIXED me
       msgInfo.msgResCode = CIMResCode.kCIM_RES_CODE_OK; // FIXED me
-      msgInfo.serverMsgId = Int64(0); // FIXED me
+      msgInfo.serverMsgId = 0; // FIXED me
       msgInfo.createTime = msg.createTime;
       msgInfo.sessionType = msg.sessionType;
 
-      var model = MessageModelBase.copyFrom(msgInfo);
       setState(() {
-        _msgList.add(model);
+        _msgList.add(msgInfo);
       });
       scrollEnd2();
     }
