@@ -27,7 +27,7 @@ class IMManager extends IMessage {
   IMUserConfig _userConfig;
 
   var _messageListenerCbMap = new Map<String, Function>(); // 收到一条消息的回调队列
-  var sessions = new List<IMSession>(); // 用户所有的会话列表
+  var sessions = new Map<String, IMSession>(); // 用户所有的会话列表
 
   Int64 userId;
   var nickName;
@@ -99,6 +99,11 @@ class IMManager extends IMessage {
   /// 注销
   void logout() {}
 
+  /// 清理，本地数据缓存等，如聊天记录
+  void cleanup() {
+
+  }
+
   /// 判断是否是来自于自己的消息
   bool isSelf(int fromUserId) {
     return this.userId == fromUserId;
@@ -110,7 +115,16 @@ class IMManager extends IMessage {
 
     _sessionDbProvider.getAllSession(userId.toInt()).then((v) {
       sessions.clear();
-      sessions.addAll(v);
+      v.forEach((item) {
+        if (item.sessionType == CIMSessionType.kCIM_SESSION_TYPE_SINGLE) {
+          sessions["PEER_" + item.sessionId.toString()] = item;
+        } else if (item.sessionType == CIMSessionType.kCIM_SESSION_TYPE_SINGLE) {
+          sessions["GROUP_" + item.sessionId.toString()] = item;
+        } else {
+          LogUtil.error("IMManager", "unknow session type load to sessions map.");
+        }
+      });
+
       completer.complete(v);
     }).catchError((e) {
       completer.completeError(e);
@@ -137,6 +151,19 @@ class IMManager extends IMessage {
 
   // interface IMessage
   void onHandleMsgData(IMHeader header, CIMMsgData msg) {
+    // 更新该未读消息计数
+    var key;
+    if (msg.sessionType == CIMSessionType.kCIM_SESSION_TYPE_GROUP) {
+      key = "GROUP_" + msg.toSessionId.toString();
+    } else if (msg.sessionType == CIMSessionType.kCIM_SESSION_TYPE_SINGLE) {
+      key = "PEER_" + msg.toSessionId.toString();
+    } else {
+      LogUtil.error("IMManager onHandleReadNotify", "unknow sessionType");
+    }
+    if (sessions.containsKey(key)) {
+      sessions[key].unreadCnt++;
+    }
+
     // 回调
     _messageListenerCbMap.forEach((k, v) {
       Function callback = v;
@@ -150,12 +177,20 @@ class IMManager extends IMessage {
   // interface IMessage
   void onHandleReadNotify(IMHeader header, CIMMsgDataReadNotify readNotify) {
     IMSession session;
-    for (var i = 0; i < sessions.length; i++) {
-      if (sessions[i].sessionId == readNotify.sessionId.toInt() && sessions[i].sessionType == readNotify.sessionType) {
-        session = sessions[i];
-        break;
-      }
+
+    var key;
+    if (readNotify.sessionType == CIMSessionType.kCIM_SESSION_TYPE_GROUP) {
+      key = "GROUP_" + readNotify.sessionId.toString();
+    } else if (readNotify.sessionType == CIMSessionType.kCIM_SESSION_TYPE_SINGLE) {
+      key = "PEER_" + readNotify.sessionId.toString();
+    } else {
+      LogUtil.error("IMManager onHandleReadNotify", "unknow sessionType");
     }
+
+    if (sessions.containsKey(key)) {
+      session = sessions[key];
+    }
+
     if (_userConfig.funcOnRecvReceipt != null) {
       _userConfig.funcOnRecvReceipt(session, readNotify.msgId);
     }

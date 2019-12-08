@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:cc_flutter_app/imsdk/im_manager.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Message.pb.dart';
 import 'package:cc_flutter_app/imsdk/proto/im_header.dart';
 import 'package:cc_flutter_app/imsdk/proto/im_request.dart';
@@ -313,9 +314,16 @@ class IMClient {
         "msgType=${msg.msgType},msgId=${msg.msgId}"
         "sessionType=${msg.sessionType}");
 
+    // 优先激发，更新未读会话等
+    if (msgService.containsKey("IMManager")) {
+      msgService["IMManager"].onHandleMsgData(header, msg);
+    }
+
     msgService.forEach((k, v) {
-      IMessage item = v;
-      item.onHandleMsgData(header, msg);
+      if (k != "IMManager") {
+        IMessage item = v;
+        item.onHandleMsgData(header, msg);
+      }
     });
   }
 

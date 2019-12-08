@@ -126,7 +126,19 @@ class SessionDbProvider extends BaseDbProvider {
     //print(result);
   }
 
-  Future<void> updateUnreadCount(int userId, int sessionId, int sessionType) async {}
+  /// 更新未读消息计数
+  void updateUnreadCount(int userId, int sessionId, int sessionType, int count) async {
+    Database database = await getDataBase();
+    var sql = '''
+    update $name set $columnUnreadCount = ? where $columnUserId = ? and $columnSessionId = ? and $columnSessionType = ?
+    ''';
+    int result = await database.rawUpdate(sql, [
+      count,
+      userId,
+      sessionId,
+      sessionType,
+    ]);
+  }
 
   /// 获取所有会话
   Future<List<IMSession>> getAllSession(int userId) async {

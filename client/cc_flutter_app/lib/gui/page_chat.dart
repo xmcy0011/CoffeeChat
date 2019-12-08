@@ -189,6 +189,11 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
     for (var i = 0; i < _sessionList.length; i++) {
       if (msg.sessionType == CIMSessionType.kCIM_SESSION_TYPE_SINGLE) {
         if (msg.fromUserId == _sessionList[i].sessionId) {
+          // 因为SDK会自己更新计数，所以为了使UI刷新，手动更改计数
+          if (_selectedSessionIndex != i) {
+            _sessionList[i].unreadCnt--;
+          }
+
           setState(() {
             _sessionList[i].latestMsg.msgData = utf8.decode(msg.msgData);
             _sessionList[i].latestMsg.clientMsgId = msg.msgId;

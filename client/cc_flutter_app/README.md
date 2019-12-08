@@ -49,7 +49,6 @@ samples, guidance on mobile development, and a full API reference.
     - [x] 下拉查询加载历史消息
 - [ ] SDK
     - [x] SQFilte缓存会话列表
-    - [ ] 
 
 - [ ] 闪屏全屏
 - [ ] 搜索
@@ -59,7 +58,7 @@ samples, guidance on mobile development, and a full API reference.
 - [ ] 联系人功能
 - [ ] 自动登录
 - [ ] 会话自动刷新（第一次、新会话）
-- [ ] 清除未读计数
+- [x] 清除未读计数
 - [ ] tab不好点击
 - [ ] 消息时间
 - [ ] emotion存储乱码

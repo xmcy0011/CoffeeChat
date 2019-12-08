@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:cc_flutter_app/imsdk/core/business/message_business.dart';
 import 'package:cc_flutter_app/imsdk/core/business/session_business.dart';
+import 'package:cc_flutter_app/imsdk/core/dao/session_db_provider.dart';
 import 'package:cc_flutter_app/imsdk/im_manager.dart';
 import 'package:cc_flutter_app/imsdk/im_message.dart';
 import 'package:cc_flutter_app/imsdk/im_message.dart' as prefix0;
@@ -130,6 +131,9 @@ class IMSession {
         if (sessionList[i].sessionId == toSessionId && sessionList[i].sessionType == sessionType) {
           // 会读消息计数
           sessionList[i].unreadCnt = 0;
+          // 清除本地SQlite中会话未读计数
+          SessionDbProvider session = new SessionDbProvider();
+          session.updateUnreadCount(IMManager.singleton.userId.toInt(), sessionId, sessionType.value, 0);
           break;
         }
       }
