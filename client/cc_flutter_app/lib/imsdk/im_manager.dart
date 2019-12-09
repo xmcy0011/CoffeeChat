@@ -101,7 +101,7 @@ class IMManager extends IMessage {
 
   /// 清理，本地数据缓存等，如聊天记录
   void cleanup() {
-
+    SQLManager.cleanup();
   }
 
   /// 判断是否是来自于自己的消息

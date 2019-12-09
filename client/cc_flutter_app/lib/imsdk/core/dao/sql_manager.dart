@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cc_flutter_app/imsdk/core/dao/session_db_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
@@ -49,5 +51,16 @@ class SQLManager {
   static close() {
     _database?.close();
     _database = null;
+  }
+
+  /// 清理数据库
+  static cleanup() async {
+    var databasesPath = await getDatabasesPath();
+
+    String path = join(databasesPath, _NAME);
+    File file = new File(path);
+    if (await file.exists()) {
+      file.deleteSync();
+    }
   }
 }
