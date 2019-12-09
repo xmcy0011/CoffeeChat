@@ -111,3 +111,5 @@ opensource im with server(go) and client(flutter+swift)
 ## Benchmark
 
 ## LICENSE
+
+CoffeeChat is provided under the [mit license](https://github.com/xmcy0011/CoffeeChat/blob/master/LICENSE).
