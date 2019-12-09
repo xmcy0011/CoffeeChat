@@ -72,10 +72,10 @@ class _PageSettingsStatefulWidgetState extends State<PageSettingsStatefulWidget>
                     prefs.clear();
 
                     // 清理SDK缓存
-                    IMManager.singleton.cleanup();
-
-                    Navigator.of(context).pop();
-                    navigatePage(this.context, PageLoginStatefulWidget());
+                    IMManager.singleton.cleanup().then((e) {
+                      Navigator.of(context).pop();
+                      navigatePage(this.context, PageLoginStatefulWidget());
+                    });
                     //Navigator.of(context).pushReplacementNamed('/signIn');
                   },
                 )

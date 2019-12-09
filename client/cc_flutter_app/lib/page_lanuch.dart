@@ -48,6 +48,7 @@ class _PageLaunchStatefulWidgetState extends State<PageLaunchStatefulWidget> {
 
     // 剧中显示一张图片
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Center(
           child: Column(

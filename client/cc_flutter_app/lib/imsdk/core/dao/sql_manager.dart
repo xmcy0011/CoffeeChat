@@ -17,6 +17,8 @@ class SQLManager {
 
   /// 初始化
   static init() async {
+    close();
+
     _isInit = true;
     var databasesPath = await getDatabasesPath();
 

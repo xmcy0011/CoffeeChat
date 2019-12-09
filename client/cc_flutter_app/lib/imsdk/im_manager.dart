@@ -47,7 +47,6 @@ class IMManager extends IMessage {
   /// 初始化
   bool init() {
     _isInit = true;
-    SQLManager.init();
     IMClient.singleton.registerMessageService("IMManager", this);
 
     return true;
@@ -66,7 +65,7 @@ class IMManager extends IMessage {
   /// [ip] 服务器IP
   /// [port] 服务器端口
   /// [callback] (CIMAuthTokenRsp)
-  Future login(Int64 userId, var nick, var userToken, var ip, var port) {
+  Future login(Int64 userId, var nick, var userToken, var ip, var port) async {
     var com = new Completer();
     if (_userConfig == null) {
       com.completeError("please call setUserConfig() set user config!");
@@ -78,6 +77,8 @@ class IMManager extends IMessage {
     this.userToken = userToken;
     this.ip = ip;
     this.port = port;
+
+    await SQLManager.init();
 
     IMClient.singleton.onDisconnect = _userConfig.funcOnDisconnected; // 绑定回调
     IMClient.singleton.auth(userId, nick, userToken, ip, port).then((value) {
@@ -100,8 +101,8 @@ class IMManager extends IMessage {
   void logout() {}
 
   /// 清理，本地数据缓存等，如聊天记录
-  void cleanup() {
-    SQLManager.cleanup();
+  Future cleanup() async {
+    await SQLManager.cleanup();
   }
 
   /// 判断是否是来自于自己的消息

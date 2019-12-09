@@ -66,7 +66,7 @@ class SessionDbProvider extends BaseDbProvider {
     Database database = await getDataBase();
     List<Map<String, dynamic>> maps = await database.rawQuery(
         "select count(1) from $name where $columnUserId=$userId and $columnSessionId=$sessionId and $columnSessionType=$sessionType");
-    return maps[0]["count(1)"];
+    return maps.length > 0 ? maps[0]["count(1)"] : 0;
   }
 
   ///插入到数据库

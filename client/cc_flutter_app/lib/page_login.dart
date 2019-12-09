@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cc_flutter_app/gui/helper.dart';
 import 'package:cc_flutter_app/imsdk/im_manager.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
@@ -7,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
+
+import 'gui/imsdk_helper.dart';
 
 //const DefaultServerIp = "10.0.107.254";
 const DefaultServerPort = 8000;
@@ -131,14 +135,10 @@ class _PageLoginStatefulWidgetState extends State<PageLoginStatefulWidget> {
 
   void _save() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (_serverIpController.text.isNotEmpty)
-      prefs.setString("local_server_ip", _serverIpController.text);
-    if (_usernameController.text.isNotEmpty)
-      prefs.setString("local_user_id", _usernameController.text);
-    if (_passwordController.text.isNotEmpty)
-      prefs.setString("local_token", _passwordController.text);
-    if (_nicknameController.text.isNotEmpty)
-      prefs.setString("local_nick_name", _nicknameController.text);
+    if (_serverIpController.text.isNotEmpty) prefs.setString("local_server_ip", _serverIpController.text);
+    if (_usernameController.text.isNotEmpty) prefs.setString("local_user_id", _usernameController.text);
+    if (_passwordController.text.isNotEmpty) prefs.setString("local_token", _passwordController.text);
+    if (_nicknameController.text.isNotEmpty) prefs.setString("local_nick_name", _nicknameController.text);
   }
 
   void _onLogin() {
@@ -180,8 +180,7 @@ class _PageLoginStatefulWidgetState extends State<PageLoginStatefulWidget> {
         if (rsp.resultCode == CIMErrorCode.kCIM_ERR_SUCCSSE) {
           navigatePage(context, PageMainStatefulApp());
         } else {
-          Toast.show(rsp.resultString, context,
-              gravity: Toast.CENTER, duration: 3);
+          Toast.show(rsp.resultString, context, gravity: Toast.CENTER, duration: 3);
         }
       } else {
         Toast.show("系统错误", context, gravity: Toast.CENTER, duration: 3);
@@ -237,8 +236,7 @@ class _PageLoginStatefulWidgetState extends State<PageLoginStatefulWidget> {
 
 /// 自定义颜色
 class PrimaryColorOverride extends StatelessWidget {
-  const PrimaryColorOverride({Key key, this.color, this.child})
-      : super(key: key);
+  const PrimaryColorOverride({Key key, this.color, this.child}) : super(key: key);
 
   final Color color;
   final Widget child;
@@ -260,11 +258,7 @@ class NetLoadingDialog extends StatefulWidget {
 
   Function dismissDialog;
 
-  NetLoadingDialog(
-      {Key key,
-      this.loadingText = "loading...",
-      this.outsideDismiss = true,
-      this.dismissDialog})
+  NetLoadingDialog({Key key, this.loadingText = "loading...", this.outsideDismiss = true, this.dismissDialog})
       : super(key: key);
 
   @override
