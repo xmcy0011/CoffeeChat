@@ -1,4 +1,5 @@
 import 'package:cc_flutter_app/gui/imsdk_helper.dart';
+import 'package:cc_flutter_app/gui/page_address.dart';
 import 'package:cc_flutter_app/gui/page_settings.dart';
 import 'package:cc_flutter_app/gui/widget/badge_bottom_tab_bar.dart';
 import 'package:cc_flutter_app/gui/widget/badge_bottom_tab_bar_item.dart';
@@ -8,9 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'gui/page_home.dart';
-import 'gui/page_me.dart';
 import 'gui/page_chat.dart';
-import 'imsdk/core/model/model.dart';
 
 class PageMainStatefulApp extends StatefulWidget {
   @override
@@ -27,7 +26,7 @@ class _PageMainStatefulAppState extends State<PageMainStatefulApp> {
   static List<Widget> _pages = <Widget>[
     PageHomeStatefulWidget(),
     PageChatStateWidget(),
-    PageMeStatefulWidget(),
+    PageAddressStatefulWidget(),
     PageSettingsStatefulWidget(),
   ];
 
