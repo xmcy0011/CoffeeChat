@@ -24,7 +24,7 @@ opensource im with server(go) and client(flutter+swift)
 - [ ] 离线消息（用户离线重新上线后收到最近 30 天的未读消息）
 - [ ] 多媒体消息：表情
 - [ ] 多媒体消息：图片
-- [ ] 未读消息计数
+- [x] 未读消息计数
 - [ ] 消息推送(APNS)
 
 - [ ] 群聊
@@ -50,7 +50,7 @@ opensource im with server(go) and client(flutter+swift)
 - [ ] 图片管理器
 - [ ] 查找聊天记录
 - [ ] 消息同步缓存
-- [ ] 会话同步缓存
+- [x] 会话同步缓存
 - [ ] 头像同步缓存
 - [ ] 未读计数桌面角标
 - [ ] 免打扰模式
@@ -69,6 +69,7 @@ opensource im with server(go) and client(flutter+swift)
 - [ ] 语音通话
 - [ ] 视频通话
 - [ ] electron跨平台桌面客户端
+- [x] flutter跨平台移动端
 - [ ] swift/iOS客户端+SDK
 - [ ] kotlin/Android客户端+SDK
 - [ ] vue/Web客户端+SDK
@@ -82,6 +83,12 @@ opensource im with server(go) and client(flutter+swift)
 - [ ] 回头客
 
 ### 智能问答功能
+
+- [ ] AnyQ百度开源FAQ问答系统接入
+
+### 聊天机器人功能
+
+- [ ] 图灵机器人接入
 
 ## Architecture
 
