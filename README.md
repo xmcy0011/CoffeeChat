@@ -1,6 +1,6 @@
 # CoffeeChat
 
-opensource im with server(go) and ios(swift)
+opensource im with server(go) and client(flutter+swift)
 
 ## Features
 
