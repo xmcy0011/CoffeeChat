@@ -12,6 +12,7 @@ import 'package:cc_flutter_app/imsdk/proto/CIM.List.pb.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
+import 'core/log_util.dart';
 import 'core/model/model.dart';
 
 /// 会话业务
@@ -126,11 +127,22 @@ class IMSession {
     var result = await SessionBusiness.singleton.setReadMessage(toSessionId, sessionType, endMsgId);
     if (result) {
       // 重制会读消息计数
-      var sessionList = IMManager.singleton.sessions;
-      for (var i = 0; i < sessionList.length; i++) {
-        if (sessionList[i].sessionId == toSessionId && sessionList[i].sessionType == sessionType) {
+      var sessionMap = IMManager.singleton.sessions;
+      for (var i = 0; i < sessionMap.length; i++) {
+        var key;
+        if (sessionType == CIMSessionType.kCIM_SESSION_TYPE_GROUP) {
+          key = "GROUP_" + sessionId.toString();
+        } else if (sessionType == CIMSessionType.kCIM_SESSION_TYPE_SINGLE) {
+          key = "PEER_" + sessionId.toString();
+        } else {
+          LogUtil.error("IMSession setReadMessage", "unknow sessionType");
+        }
+
+        if (sessionMap[key] != null &&
+            sessionMap[key].sessionId == toSessionId &&
+            sessionMap[key].sessionType == sessionType) {
           // 会读消息计数
-          sessionList[i].unreadCnt = 0;
+          sessionMap[key].unreadCnt = 0;
           // 清除本地SQlite中会话未读计数
           SessionDbProvider session = new SessionDbProvider();
           session.updateUnreadCount(IMManager.singleton.userId.toInt(), sessionId, sessionType.value, 0);
