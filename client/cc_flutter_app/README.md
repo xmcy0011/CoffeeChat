@@ -60,7 +60,7 @@ samples, guidance on mobile development, and a full API reference.
 - [ ] 会话自动刷新（第一次、新会话）
 - [x] 清除未读计数
 - [ ] tab不好点击
-- [ ] 消息时间
+- [x] 消息时间
 - [ ] emotion存储乱码
 - [ ] 消息标题栏显示未读总数
 

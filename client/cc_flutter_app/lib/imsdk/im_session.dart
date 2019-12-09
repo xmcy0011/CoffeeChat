@@ -53,6 +53,58 @@ class IMSession {
     return formatted;
   }
 
+  /// 格式化时间2
+  /// "时分"；"昨天 时分"；上周 "星期几 时分"；其他，显示"年月日 时分"
+  static String timeFormatEx(int time) {
+    var dateTime = DateTime.fromMillisecondsSinceEpoch(time * 1000);
+    var now = DateTime.now();
+
+    // 今天，显示时分
+    // 昨天，显示昨天
+    // 其他，显示年月日
+    var formatter = new DateFormat('HH:mm');
+    String formatted = formatter.format(dateTime);
+    if (dateTime.day == now.day) {
+      return formatted;
+    }
+
+    var yesterday = now.subtract(Duration(days: 1));
+    if (dateTime.day == yesterday.day) {
+      return "昨天 " + formatted;
+    }
+
+    var week = now.subtract(Duration(days: 7));
+    if (dateTime.millisecondsSinceEpoch > week.millisecondsSinceEpoch) {
+      var weekday = "星期一";
+      switch (dateTime.weekday) {
+        case 2:
+          weekday = "星期二";
+          break;
+        case 3:
+          weekday = "星期三";
+          break;
+        case 4:
+          weekday = "星期四";
+          break;
+        case 5:
+          weekday = "星期五";
+          break;
+        case 6:
+          weekday = "星期六";
+          break;
+        case 7:
+          weekday = "星期日";
+          break;
+      }
+
+      return weekday + " " + formatted;
+    }
+
+    formatter = new DateFormat('yyyy年MM月dd日 HH:mm');
+    formatted = formatter.format(dateTime);
+    return formatted;
+  }
+
   /// 生成客户端消息ID（UUID）
   static String generateMsgId() {
     var uuid = new Uuid();

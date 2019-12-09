@@ -33,6 +33,8 @@ class _PageMessageState extends State<PageMessage> {
   ScrollController _scrollController; // 历史消息滚动
   TextEditingController _textController = new TextEditingController(); // 输入的文本
 
+  var nearTime = 0;
+
   _PageMessageState(this.sessionInfo);
 
   @override
@@ -99,9 +101,31 @@ class _PageMessageState extends State<PageMessage> {
 
     //return MsgItem(msg, fromUser);
     if (IMManager.singleton.isSelf(msg.fromUserId)) {
-      return _buildMeAvatarItem(msg, fromUser);
+      return _buildMeAvatarItem(position, msg, fromUser);
     }
-    return _buildOtherAvatarItem(msg, fromUser);
+    return _buildOtherAvatarItem(position, msg, fromUser);
+  }
+
+  Widget _onBuildTime(index) {
+    if (index != 0) {
+      // 10分钟内的，显示在一起，否则显示时间
+      var timeDiff = _msgList[index].createTime - _msgList[index - 1].createTime;
+      if (timeDiff < 10 * 60) {
+        return Container();
+      }
+    }
+
+    nearTime = _msgList[index].createTime;
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(4),
+      child: Container(
+        child: Text(IMSession.timeFormatEx(nearTime)),
+        height: 30,
+        padding: EdgeInsets.only(top: 7, left: 5, right: 5),
+        color: Color.fromARGB(0x44, 0x66, 0x66, 0x66),
+      ),
+    );
   }
 
   // 生成发送消息界面
@@ -166,64 +190,71 @@ class _PageMessageState extends State<PageMessage> {
   }
 
   // 自己的消息
-  Widget _buildMeAvatarItem(IMMessage msg, UserModel fromUser) {
+  Widget _buildMeAvatarItem(int index, IMMessage msg, UserModel fromUser) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: <Widget>[
-              Text(fromUser.nickName, style: Theme.of(context).textTheme.subhead),
-              Row(
-                children: <Widget>[
-                  msg.msgStatus == CIMMsgStatus.kCIM_MSG_STATUS_SENDING
-                      ? CircularProgressIndicator(
-                          strokeWidth: 1.0,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.black12),
-                        )
-                      : (msg.msgStatus == CIMMsgStatus.kCIM_MSG_STATUS_FAILED
-                          ? IconButton(
-                              icon: Icon(
-                                Icons.error,
-                                color: Colors.red,
-                              ),
-                              onPressed: () {
-                                _reSendMsg(msg);
-                              },
-                            )
-                          : Center()),
-                  _buildMsgContent(msg)
-                ],
-              )
-            ],
-          ),
-          _buildAvatar(fromUser, EdgeInsets.only(left: 8.0, top: 8.0))
-        ],
-      ),
-    );
-  }
-
-  // 别人的消息
-  Widget _buildOtherAvatarItem(IMMessage msg, UserModel fromUser) {
-    return Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
           children: <Widget>[
-            _buildAvatar(fromUser, EdgeInsets.only(right: 8.0, top: 8.0)),
-            Column(
+            _onBuildTime(index),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(fromUser.nickName, style: Theme.of(context).textTheme.subhead),
-                _buildMsgContent(msg)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: <Widget>[
+                    Text(fromUser.nickName, style: Theme.of(context).textTheme.subhead),
+                    Row(
+                      children: <Widget>[
+                        msg.msgStatus == CIMMsgStatus.kCIM_MSG_STATUS_SENDING
+                            ? CircularProgressIndicator(
+                                strokeWidth: 1.0,
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.black12),
+                              )
+                            : (msg.msgStatus == CIMMsgStatus.kCIM_MSG_STATUS_FAILED
+                                ? IconButton(
+                                    icon: Icon(
+                                      Icons.error,
+                                      color: Colors.red,
+                                    ),
+                                    onPressed: () {
+                                      _reSendMsg(msg);
+                                    },
+                                  )
+                                : Center()),
+                        _buildMsgContent(msg)
+                      ],
+                    )
+                  ],
+                ),
+                _buildAvatar(fromUser, EdgeInsets.only(left: 8.0, top: 8.0))
               ],
             ),
           ],
         ));
+  }
+
+  // 别人的消息
+  Widget _buildOtherAvatarItem(int index, IMMessage msg, UserModel fromUser) {
+    return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(children: <Widget>[
+          _onBuildTime(index),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              _buildAvatar(fromUser, EdgeInsets.only(right: 8.0, top: 8.0)),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(fromUser.nickName, style: Theme.of(context).textTheme.subhead),
+                  _buildMsgContent(msg)
+                ],
+              ),
+            ],
+          )
+        ]));
   }
 
   // 头像
