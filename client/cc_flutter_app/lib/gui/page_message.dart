@@ -148,9 +148,15 @@ class _PageMessageState extends State<PageMessage> {
 //        width: maxWidth,
 //      )));
     }
+
+    var isSelf = IMManager.singleton.isSelf(msg.fromUserId);
+
     return Card(
       child: Container(
         padding: EdgeInsets.all(10),
+        decoration: new BoxDecoration(
+          color: isSelf ? Color.fromARGB(0xBf, 0x57, 0xc2, 0x64) : Colors.white,
+        ),
         child: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: maxWidth),
           child: Text(text, maxLines: 10, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.subhead),
