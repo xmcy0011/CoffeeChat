@@ -74,7 +74,7 @@ func (s *SessionMysql) Init(config DatabaseConfig) error {
 	s.config = config
 
 	// interpolateParams：解决sql注入的问题，启用后可使用'?'传参，否则报错
-	dataSourceName := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8&interpolateParams=true", config.Username,
+	dataSourceName := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&interpolateParams=true", config.Username,
 		config.Password, config.Host, config.Port, config.DbName)
 	db, err := sql.Open(kDriveName, dataSourceName)
 	if err != nil {

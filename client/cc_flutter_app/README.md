@@ -61,7 +61,7 @@ samples, guidance on mobile development, and a full API reference.
 - [x] 清除未读计数
 - [x] tab不好点击
 - [x] 消息时间
-- [ ] emotion存储乱码问题解决
+- [x] emotion存储乱码问题解决
 - [ ] 消息标题栏显示未读总数
 
 ## 预览
