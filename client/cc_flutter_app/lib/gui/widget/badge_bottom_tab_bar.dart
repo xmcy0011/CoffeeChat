@@ -393,15 +393,17 @@ class _BottomNavigationTile extends StatelessWidget {
     }
     return GestureDetector(
         onTap: onTap,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            _buildIcon(),
-            label,
-          ],
-        ));
+        child: Container(
+            color: Colors.transparent,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                _buildIcon(),
+                label,
+              ],
+            )));
   }
 
   @override

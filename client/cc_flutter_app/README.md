@@ -50,18 +50,18 @@ samples, guidance on mobile development, and a full API reference.
 - [ ] SDK
     - [x] SQFilte缓存会话列表
 
-- [ ] 闪屏全屏
+- [x] 闪屏全屏
 - [ ] 搜索
-- [ ] 聊天框我-对方颜色区分显示
+- [x] 聊天框我-对方颜色区分显示
 - [ ] 昵称
 - [ ] 头像
 - [ ] 联系人功能
 - [ ] 自动登录
 - [ ] 会话自动刷新（第一次、新会话）
 - [x] 清除未读计数
-- [ ] tab不好点击
+- [x] tab不好点击
 - [x] 消息时间
-- [ ] emotion存储乱码
+- [ ] emotion存储乱码问题解决
 - [ ] 消息标题栏显示未读总数
 
 ## 预览
