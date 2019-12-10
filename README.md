@@ -143,6 +143,12 @@ export PATH=$PATH:$GOBIN:$GOROOT/bin
 
 source ~/.bash_profile # 生效
 go env # 确认goroot和gopath正确
+
+# git clone 
+cd /Users/xuyc/repo/go #注意gopath一定要和上面环境变量对应
+mkdir -p src/github.com
+cd src/github.com
+git clone https://github.com/xmcy0011/CoffeeChat.git
 ```
 
 2. gate 网关服务编译
