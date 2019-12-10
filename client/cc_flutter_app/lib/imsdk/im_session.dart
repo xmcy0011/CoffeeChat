@@ -6,14 +6,12 @@ import 'package:cc_flutter_app/imsdk/core/business/session_business.dart';
 import 'package:cc_flutter_app/imsdk/core/dao/session_db_provider.dart';
 import 'package:cc_flutter_app/imsdk/im_manager.dart';
 import 'package:cc_flutter_app/imsdk/im_message.dart';
-import 'package:cc_flutter_app/imsdk/im_message.dart' as prefix0;
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.List.pb.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
 import 'core/log_util.dart';
-import 'core/model/model.dart';
 
 /// 会话业务
 class IMSession {
@@ -121,7 +119,7 @@ class IMSession {
   /// @return [Future] then(CIMMsgDataAck ack).error(String err)
   Future sendMessage(
       String msgId, int toSessionId, CIMMsgType msgType, CIMSessionType sessionType, String msgData) async {
-    return MessageBusiness.singleton.sendMessage(msgId, toSessionId, msgType, sessionType, msgData);
+    return IMManager.singleton.sendMessage(msgId, toSessionId, msgType, sessionType, msgData);
   }
 
   /// 从本地数据库中获取历史消息，拉取不到时，可调用getMessage拉取云端消息

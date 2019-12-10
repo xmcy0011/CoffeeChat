@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:cc_flutter_app/imsdk/core/business/im_client.dart';
+import 'package:cc_flutter_app/imsdk/core/dao/session_db_provider.dart';
 import 'package:cc_flutter_app/imsdk/im_manager.dart';
 import 'package:cc_flutter_app/imsdk/proto/im_header.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
@@ -15,6 +16,7 @@ import 'package:uuid/uuid.dart';
 class MessageBusiness extends IMessage {
   var ackMsgMap = new Map<String, IMMsgRequest>(); // 消息待收到成功响应队列
   var onReceiveMsgCbMap = new Map<String, Function>(); // 收到一条消息的回调队列
+  var _sessionDbProvider = new SessionDbProvider();
 
   /// 单实例
   static final MessageBusiness singleton = MessageBusiness._internal();
@@ -26,7 +28,6 @@ class MessageBusiness extends IMessage {
   MessageBusiness._internal() {
     // 注册消息业务回调
     IMClient.singleton.registerMessageService("MessageBusiness", this);
-
     // timeout
     Timer.periodic(Duration(seconds: 1), (timer) {
       _checkMsgAckTimeout();
@@ -51,7 +52,7 @@ class MessageBusiness extends IMessage {
     msg.fromUserId = IMManager.singleton.userId;
     msg.toSessionId = Int64(toSessionId);
 
-    var uuid = new Uuid();
+    //var uuid = new Uuid();
     //msg.msgId = uuid.v5(Uuid.NAMESPACE_URL, "www.coffeechat.cn");
     msg.msgId = msgId;
     msg.createTime = DateTime.now().millisecondsSinceEpoch ~/ 1000;

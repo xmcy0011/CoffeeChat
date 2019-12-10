@@ -80,7 +80,7 @@ class IMManager extends IMessage {
 
     await SQLManager.init();
 
-    IMClient.singleton.onDisconnect = _userConfig.funcOnDisconnected; // 绑定回调
+    IMClient.singleton.onDisconnect = _userConfig.onDisconnected; // 绑定回调
     IMClient.singleton.auth(userId, nick, userToken, ip, port).then((value) {
       com.complete(value);
 
@@ -134,6 +134,77 @@ class IMManager extends IMessage {
     return completer.future;
   }
 
+  /// 获取单个会话信息
+  IMSession getSession(int sessionId, CIMSessionType sessionType) {
+    var key = _getSessionKey(sessionId, sessionType);
+    if (sessions.containsKey(key)) {
+      return sessions[key];
+    }
+    return null;
+  }
+
+  /// 发起一个会话
+  IMSession createSession(int sessionId, CIMSessionType sessionType) {
+    IMSession session = new IMSession(
+      sessionId,
+      userId.toString(),
+      CIMSessionType.kCIM_SESSION_TYPE_SINGLE,
+      0,
+      DateTime.now().millisecondsSinceEpoch ~/ 1000,
+      new IMMessage(),
+    );
+
+    // added to map
+    sessions[_getSessionKey(sessionId, sessionType)] = session;
+    return session;
+  }
+
+  /// 发送一条消息
+  /// [msgId] 客户端消息ID（uuid），请使用generateMsgId()生成
+  /// [toSessionId] 单聊，则为用户ID。群聊，则为群组ID
+  /// [msgType] 消息类型
+  /// [sessionType] 会话类型
+  /// [msgData] 消息内容
+  /// @return [Future] then(CIMMsgDataAck ack).error(String err)
+  Future sendMessage(
+      String msgId, int toSessionId, CIMMsgType msgType, CIMSessionType sessionType, String msgData) async {
+    var completer = new Completer();
+
+    var session = getSession(toSessionId, sessionType);
+    session.updatedTime = session.latestMsg.createTime;
+    session.latestMsg.clientMsgId = msgId;
+    session.latestMsg.fromUserId = userId.toInt();
+    session.latestMsg.createTime = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+    session.latestMsg.msgType = msgType;
+    session.latestMsg.msgData = msgData;
+    session.latestMsg.senderClientType = CIMClientType.kCIM_CLIENT_TYPE_DEFAULT;
+
+    MessageBusiness.singleton.sendMessage(msgId, toSessionId, msgType, sessionType, msgData).then((v) {
+      if (v is CIMMsgDataAck) {
+        session.latestMsg.createTime = v.createTime;
+        session.latestMsg.serverMsgId = v.serverMsgId.toInt();
+        session.latestMsg.msgResCode = v.resCode;
+        // 更新会话最新消息
+        _sessionDbProvider.update(IMManager.singleton.userId.toInt(), toSessionId, sessionType.value, session);
+        // 会话刷新
+        var list = new List<IMSession>();
+        list.add(session);
+        _userConfig.onRefreshConversation(list);
+      }
+      completer.complete(v);
+    }).catchError((e) {
+      LogUtil.error("IMManager", "发送消息失败:" + e);
+      // 更新会话最新消息
+      _sessionDbProvider.update(IMManager.singleton.userId.toInt(), toSessionId, sessionType.value, session);
+      // 会话刷新
+      var list = new List<IMSession>();
+      list.add(session);
+      _userConfig.onRefreshConversation(list);
+      completer.completeError(e);
+    });
+    return completer.future;
+  }
+
   /// 增加收到新消息监听器
   /// [name] 唯一标志
   /// [**未实现**listener**] 原型：void onNewMessage(List<IMMessage> msgList)
@@ -152,17 +223,28 @@ class IMManager extends IMessage {
 
   // interface IMessage
   void onHandleMsgData(IMHeader header, CIMMsgData msg) {
-    // 更新该未读消息计数
+    // 更新该未读消息计数和最新消息
     var key;
-    if (msg.sessionType == CIMSessionType.kCIM_SESSION_TYPE_GROUP) {
-      key = "GROUP_" + msg.toSessionId.toString();
-    } else if (msg.sessionType == CIMSessionType.kCIM_SESSION_TYPE_SINGLE) {
-      key = "PEER_" + msg.toSessionId.toString();
+    if (msg.sessionType == CIMSessionType.kCIM_SESSION_TYPE_SINGLE) {
+      // 单聊，注意sessionID
+      key = _getSessionKey(msg.fromUserId.toInt(), msg.sessionType);
     } else {
-      LogUtil.error("IMManager onHandleReadNotify", "unknow sessionType");
+      key = _getSessionKey(msg.toSessionId.toInt(), msg.sessionType);
     }
     if (sessions.containsKey(key)) {
       sessions[key].unreadCnt++;
+      sessions[key].updatedTime = msg.createTime;
+      sessions[key].latestMsg.clientMsgId = msg.msgId;
+      sessions[key].latestMsg.fromUserId = msg.fromUserId.toInt();
+      sessions[key].latestMsg.createTime = msg.createTime;
+      sessions[key].latestMsg.msgType = msg.msgType;
+      sessions[key].latestMsg.msgData = utf8.decode(msg.msgData);
+      sessions[key].latestMsg.senderClientType = CIMClientType.kCIM_CLIENT_TYPE_DEFAULT;
+
+      // 通知会话刷新
+      var list = new List<IMSession>();
+      list.add(sessions[key]);
+      _userConfig.onRefreshConversation(list);
     }
 
     // 回调
@@ -179,21 +261,13 @@ class IMManager extends IMessage {
   void onHandleReadNotify(IMHeader header, CIMMsgDataReadNotify readNotify) {
     IMSession session;
 
-    var key;
-    if (readNotify.sessionType == CIMSessionType.kCIM_SESSION_TYPE_GROUP) {
-      key = "GROUP_" + readNotify.sessionId.toString();
-    } else if (readNotify.sessionType == CIMSessionType.kCIM_SESSION_TYPE_SINGLE) {
-      key = "PEER_" + readNotify.sessionId.toString();
-    } else {
-      LogUtil.error("IMManager onHandleReadNotify", "unknow sessionType");
-    }
-
+    var key = _getSessionKey(readNotify.sessionId.toInt(), readNotify.sessionType);
     if (sessions.containsKey(key)) {
       session = sessions[key];
     }
 
-    if (_userConfig.funcOnRecvReceipt != null) {
-      _userConfig.funcOnRecvReceipt(session, readNotify.msgId);
+    if (_userConfig.onRecvReceipt != null) {
+      _userConfig.onRecvReceipt(session, readNotify.msgId.toInt());
     }
   }
 
@@ -228,10 +302,22 @@ class IMManager extends IMessage {
       }
 
       // 回调
-      _userConfig.funcOnRefresh();
+      _userConfig.onRefresh();
       LogUtil.info("_syncSessionAndUnread", "sync session success");
     } else {
       LogUtil.error("_syncSessionAndUnread", "sync session error:$result");
+    }
+  }
+
+  // 获取key
+  String _getSessionKey(int toSessionId, CIMSessionType sessionType) {
+    if (sessionType == CIMSessionType.kCIM_SESSION_TYPE_GROUP) {
+      return "GROUP_" + toSessionId.toString();
+    } else if (sessionType == CIMSessionType.kCIM_SESSION_TYPE_SINGLE) {
+      return "PEER_" + toSessionId.toString();
+    } else {
+      LogUtil.error("IMManager onHandleReadNotify", "unknow sessionType");
+      return "UNKNOWN" + toSessionId.toString();
     }
   }
 

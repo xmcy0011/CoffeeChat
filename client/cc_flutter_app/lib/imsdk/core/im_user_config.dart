@@ -1,33 +1,48 @@
+import 'package:cc_flutter_app/imsdk/im_session.dart';
+
+typedef ForceOfflineCallback = void Function();
+typedef UserSigExpiredCallback = void Function();
+
+typedef ConnectedCallback = void Function();
+typedef DisconnectedCallback = void Function(int code, String desc);
+typedef WifiNeedAuthCallback = void Function(String name);
+
+typedef RefreshCallback = void Function();
+typedef RefreshConversationCallback = void Function(List<IMSession> sessions);
+
+typedef RecvReceiptCallback = void Function(IMSession session, int endMsgId);
+
 /// IM 用户配置（登录前设置）
 class IMUserConfig {
-  Function funcOnForceOffline; // 被其他终端踢下线
-  Function funcOnUserSigExpired; // 用户签名过期了，需要刷新 userSig 重新登录 IM SDK
+  ForceOfflineCallback onForceOffline; // 被其他终端踢下线
+  UserSigExpiredCallback onUserSigExpired; // 用户签名过期了，需要刷新 userSig 重新登录 IM SDK
 
-  Function funcOnConnected; // 连接上IM服务器
-  Function funcOnDisconnected; // 与IM服务器连接断开
-  Function funcOnWifiNeedAuth; // WIFI需要密码认证
+  ConnectedCallback onConnected; // 连接上IM服务器
+  DisconnectedCallback onDisconnected; // 与IM服务器连接断开
+  WifiNeedAuthCallback onWifiNeedAuth; // WIFI需要密码认证
 
-  Function funcOnRefresh; // 数据刷新通知回调（如未读计数，会话列表等）
-  Function funcOnRefreshConversation; // 部分会话刷新（包括多终端已读上报同步）
+  RefreshCallback onRefresh; // 数据刷新通知回调（如未读计数，会话列表等）
+  RefreshConversationCallback onRefreshConversation; // 部分会话刷新（包括多终端已读上报同步）
 
-  Function funcOnRecvReceipt; // 已读回执回调
+  RecvReceiptCallback onRecvReceipt; // 已读回执回调
 
   /// 设置用户状态变更事件回调对象
-  /// [onForceOffline] void onForceOffline() 被其他终端踢下线
-  /// [onUserSigExpired] void onUserSigExpired() 用户签名过期了，需要刷新 userSig 重新登录 IM SDK
-  void setUserStatusListener(Function onForceOffline, Function onUserSigExpired) {
-    this.funcOnForceOffline = onForceOffline;
-    this.funcOnUserSigExpired = onUserSigExpired;
+  /// [onForceOffline] 被其他终端踢下线
+  /// [onUserSigExpired] 用户签名过期了，需要刷新 userSig 重新登录 IM SDK
+  void setUserStatusListener(ForceOfflineCallback onForceOffline, UserSigExpiredCallback onUserSigExpired) {
+    this.onForceOffline = onForceOffline;
+    this.onUserSigExpired = onUserSigExpired;
   }
 
   /// 设置连接状态变更事件回调对象
-  /// [onConnected] void onConnected() 连接上IM服务器
-  /// [onDisconnected] void onDisconnected(int code, String desc) 与IM服务器连接断开
-  /// [onWifiNeedAuth] void onWifiNeedAuth(String name) WIFI需要密码认证
-  void setConnectionListener(Function onConnected, Function onDisconnected, Function onWifiNeedAuth) {
-    this.funcOnConnected = onConnected;
-    this.funcOnDisconnected = onDisconnected;
-    this.funcOnWifiNeedAuth = onWifiNeedAuth;
+  /// [onConnected] 连接上IM服务器
+  /// [onDisconnected] 与IM服务器连接断开
+  /// [onWifiNeedAuth] WIFI需要密码认证
+  void setConnectionListener(
+      ConnectedCallback onConnected, DisconnectedCallback onDisconnected, WifiNeedAuthCallback onWifiNeedAuth) {
+    this.onConnected = onConnected;
+    this.onDisconnected = onDisconnected;
+    this.onWifiNeedAuth = onWifiNeedAuth;
   }
 
   /// 设置群组事件回调对象
@@ -35,16 +50,16 @@ class IMUserConfig {
 //void setGroupEventListener(Function onGroupTipsEvent) {}
 
   /// 设置会话刷新回调对象
-  /// [onRefresh] void onRefresh() 数据刷新通知回调（如未读计数，会话列表等）
-  /// [onRefreshConversation] void onRefreshConversation(List<IMSession> sessions) 部分会话刷新（包括多终端已读上报同步）
-  void setRefreshListener(Function onRefresh, Function onRefreshConversation) {
-    this.funcOnRefresh = onRefresh;
-    this.funcOnRefreshConversation = onRefreshConversation;
+  /// [onRefresh] 数据刷新通知回调（如未读计数，会话列表等）
+  /// [onRefreshConversation] 部分会话刷新（包括多终端已读上报同步、会话最新消息更新等）
+  void setRefreshListener(RefreshCallback onRefresh, RefreshConversationCallback onRefreshConversation) {
+    this.onRefresh = onRefresh;
+    this.onRefreshConversation = onRefreshConversation;
   }
 
   /// 设置已读回执监听器
-  /// [onRecvReceipt] void callback(IMSession session,int endMsgId)
-  void setMessageReceiptListener(Function onRecvReceipt) {
-    this.funcOnRecvReceipt = onRecvReceipt;
+  /// [onRecvReceipt] 回调
+  void setMessageReceiptListener(RecvReceiptCallback onRecvReceipt) {
+    this.onRecvReceipt = onRecvReceipt;
   }
 }

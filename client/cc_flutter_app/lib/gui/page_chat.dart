@@ -4,6 +4,7 @@ import 'package:cc_flutter_app/gui/helper.dart';
 import 'package:cc_flutter_app/gui/imsdk_helper.dart';
 import 'package:cc_flutter_app/gui/imsdk_helper.dart' as prefix0;
 import 'package:cc_flutter_app/gui/page_message.dart';
+import 'package:cc_flutter_app/gui/viewmodel/session.dart';
 import 'package:cc_flutter_app/imsdk/im_manager.dart';
 import 'package:cc_flutter_app/imsdk/im_message.dart';
 import 'package:cc_flutter_app/imsdk/im_session.dart';
@@ -23,7 +24,7 @@ class PageChatStateWidget extends StatefulWidget {
 }
 
 class _PageChatStateWidgetState extends State<PageChatStateWidget> {
-  List<IMSession> _sessionList = new List<IMSession>();
+  List<SessionViewModel> _sessionList = new List<SessionViewModel>();
   var _selectedSessionIndex = -1;
 
   @override
@@ -54,9 +55,9 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
   @override
   void initState() {
     super.initState();
-    IMManager.singleton.addMessageListener("_PageChatStateWidgetState", _onReceiveMsg);
-    IMSDKHelper.singleton.registerOnRefresh("_PageChatStateWidgetState", _onRefreshSession);
-    _onRefreshSession();
+    IMSDKHelper.singleton.registerOnRefresh("_PageChatStateWidgetState", _onRefreshSessionAll);
+    IMSDKHelper.singleton.registerOnRefreshConversation("_PageChatStateWidgetState", _onRefreshSession);
+    _onRefreshSessionAll();
   }
 
   @override
@@ -66,7 +67,7 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
     super.dispose();
   }
 
-  Widget _buildBadge(IMSession session) {
+  Widget _buildBadge(SessionViewModel session) {
     if (session.unreadCnt == 0) {
       return Container();
     }
@@ -87,7 +88,7 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
   }
 
   Widget _buildSession(context, index) {
-    IMSession session = _sessionList[index];
+    SessionViewModel session = _sessionList[index];
 
     return Column(children: <Widget>[
       GestureDetector(
@@ -166,7 +167,7 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
 //    });
   }
 
-  Future _onRefreshSession() async {
+  Future _onRefreshSessionAll() async {
     // FIXED ME
     setState(() {
       _sessionList.clear();
@@ -176,7 +177,9 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
       List<IMSession> list = value;
       for (var i = 0; list != null && i < list.length; i++) {
         setState(() {
-          _sessionList.add(list[i]);
+          SessionViewModel model = new SessionViewModel(list[i].sessionId, list[i].sessionName, list[i].sessionType,
+              list[i].unreadCnt, list[i].updatedTime, list[i].latestMsg);
+          _sessionList.add(model);
         });
       }
     }).catchError((e) {
@@ -184,47 +187,53 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
     });
   }
 
-  // 接收一条消息
-  void _onReceiveMsg(CIMMsgData msg) {
-    for (var i = 0; i < _sessionList.length; i++) {
-      if (msg.sessionType == CIMSessionType.kCIM_SESSION_TYPE_SINGLE) {
-        if (msg.fromUserId == _sessionList[i].sessionId) {
-          // 因为SDK会自己更新计数，所以为了使UI刷新，手动更改计数
-          if (_selectedSessionIndex != i) {
-            _sessionList[i].unreadCnt--;
-          }
+  void _onRefreshSession(List<IMSession> session) {
+    session.forEach((v) {
+      for (var i = 0; i < _sessionList.length; i++) {
+        if (v.sessionType == CIMSessionType.kCIM_SESSION_TYPE_SINGLE) {
+          if (v.sessionId == _sessionList[i].sessionId) {
+            setState(() {
+              if (_sessionList[i].latestMsg.clientMsgId != v.latestMsg.clientMsgId) {
+                _sessionList[i].latestMsg.msgData = v.latestMsg.msgData;
+                _sessionList[i].latestMsg.clientMsgId = v.latestMsg.clientMsgId;
+                _sessionList[i].latestMsg.createTime = v.latestMsg.createTime;
+                _sessionList[i].latestMsg.msgStatus = CIMMsgStatus.kCIM_MSG_STATUS_RECEIPT;
+                _sessionList[i].latestMsg.msgType = v.latestMsg.msgType;
+                _sessionList[i].latestMsg.fromUserId = v.latestMsg.fromUserId.toInt();
+              }
 
-          setState(() {
-            _sessionList[i].latestMsg.msgData = utf8.decode(msg.msgData);
-            _sessionList[i].latestMsg.clientMsgId = msg.msgId;
-            _sessionList[i].latestMsg.createTime = msg.createTime;
-            _sessionList[i].latestMsg.msgStatus = CIMMsgStatus.kCIM_MSG_STATUS_RECEIPT;
-            _sessionList[i].latestMsg.msgType = msg.msgType;
-            _sessionList[i].latestMsg.fromUserId = msg.fromUserId.toInt();
-            if (_selectedSessionIndex != i) {
-              _sessionList[i].unreadCnt++;
-            }
-            // 通知tab更新总的未读计数
-            IMSDKHelper.singleton.onTotalUnreadMsgCb(true, 1);
-          });
+              // 更新未读计数
+              if (_sessionList[i].unreadCnt != v.unreadCnt) {
+                if (_selectedSessionIndex != i) {
+                  _sessionList[i].unreadCnt = v.unreadCnt;
+                }
+                // 通知tab更新总的未读计数
+                IMSDKHelper.singleton.onTotalUnreadMsgCb(true, 1);
+              }
+            });
+
+            break;
+          }
         }
       }
-    }
+    });
   }
 
   void _onTap(var index) {
-    IMSession model = _sessionList[index];
+    SessionViewModel model = _sessionList[index];
+    var imSession = IMManager.singleton.getSession(model.sessionId, model.sessionType);
+
     _selectedSessionIndex = index;
-    if (model.unreadCnt != 0) {
+    if (imSession.unreadCnt != 0) {
       // 通知tab更新总的未读计数
       IMSDKHelper.singleton.onTotalUnreadMsgCb(false, model.unreadCnt);
-      model.setReadMessage(model.sessionId, model.sessionType, model.latestMsg.serverMsgId);
+      imSession.setReadMessage(model.sessionId, model.sessionType, model.latestMsg.serverMsgId);
       setState(() {
         model.unreadCnt = 0;
       });
     }
 
-    navigatePushPage(context, PageMessage(model)).then((v) {
+    navigatePushPage(context, PageMessage(imSession)).then((v) {
       _selectedSessionIndex = -1;
     });
   }
@@ -239,7 +248,9 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
     IMMessage msg = new IMMessage();
     msg.msgData = "";
 
-    IMSession model = new IMSession(
+    var session = IMManager.singleton.createSession(userId, CIMSessionType.kCIM_SESSION_TYPE_SINGLE);
+
+    SessionViewModel model = new SessionViewModel(
       userId,
       userId.toString(),
       CIMSessionType.kCIM_SESSION_TYPE_SINGLE,
@@ -249,7 +260,7 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
     );
 
     _sessionList.add(model);
-    navigatePushPage(context, PageMessage(model));
+    navigatePushPage(context, PageMessage(session));
   }
 
   Future<String> _asyncInputDialog(BuildContext context) async {
