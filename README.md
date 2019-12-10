@@ -4,11 +4,11 @@ opensource im with server(go) and client(flutter+swift)
 
 ## Preview
 
-![登录界面](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/flutter/login.jpg =400)  
-![会话界面](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/flutter/session.jpg =400)  
-![设置界面](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/flutter/setting.jpg =400)  
-![聊天界面](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/flutter/chat.jpg =400)  
-![发起聊天](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/flutter/invite_chat.jpg =400)  
+![登录界面](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/flutter/login.jpg)  
+![会话界面](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/flutter/session.jpg)  
+![设置界面](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/flutter/setting.jpg)  
+![聊天界面](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/flutter/chat.jpg)  
+![发起聊天](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/flutter/invite_chat.jpg)  
 
 ## Features
 
