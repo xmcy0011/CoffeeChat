@@ -351,7 +351,7 @@ class _PageMessageState extends State<PageMessage> {
   }
 
   scrollEnd2([animationTime = 200]) {
-    if (_scrollController != null) {
+    if (_scrollController != null && _msgList.length > 9) {
       double scrollValue = _scrollController.position.maxScrollExtent;
       scrollValue = scrollValue + 60; // 偏移新消息的高度
 

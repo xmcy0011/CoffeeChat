@@ -245,9 +245,6 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
     info.sessionStatus = CIMSessionStatusType.kCIM_SESSION_STATUS_OK;
     info.isRobotSession = false;
 
-    IMMessage msg = new IMMessage();
-    msg.msgData = "";
-
     var session = IMManager.singleton.createSession(userId, CIMSessionType.kCIM_SESSION_TYPE_SINGLE);
 
     SessionViewModel model = new SessionViewModel(
@@ -256,10 +253,10 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
       CIMSessionType.kCIM_SESSION_TYPE_SINGLE,
       0,
       DateTime.now().millisecondsSinceEpoch ~/ 1000,
-      new IMMessage(),
+      session.latestMsg,
     );
 
-    _sessionList.add(model);
+    _sessionList.insert(0, model);
     navigatePushPage(context, PageMessage(session));
   }
 

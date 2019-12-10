@@ -145,17 +145,30 @@ class IMManager extends IMessage {
 
   /// 发起一个会话
   IMSession createSession(int sessionId, CIMSessionType sessionType) {
+    var msg = new IMMessage();
+    msg.msgData = "";
+    msg.msgType = CIMMsgType.kCIM_MSG_TYPE_UNKNOWN;
+    msg.msgStatus = CIMMsgStatus.kCIM_MSG_STATUS_NONE;
+    msg.sessionType = sessionType;
+    msg.toSessionId = sessionId;
+    msg.msgResCode = CIMResCode.kCIM_RES_CODE_OK;
+    msg.clientMsgId = "";
+    msg.serverMsgId = 0;
+    msg.fromUserId = userId.toInt();
+
     IMSession session = new IMSession(
       sessionId,
       userId.toString(),
       CIMSessionType.kCIM_SESSION_TYPE_SINGLE,
       0,
       DateTime.now().millisecondsSinceEpoch ~/ 1000,
-      new IMMessage(),
+      msg,
     );
 
     // added to map
     sessions[_getSessionKey(sessionId, sessionType)] = session;
+    // add to sqlite
+    _sessionDbProvider.insert(userId.toInt(), session);
     return session;
   }
 
