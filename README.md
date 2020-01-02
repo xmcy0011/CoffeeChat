@@ -117,6 +117,8 @@ See More [architecture](https://github.com/xmcy0011/CoffeeChat/blob/master/docs/
 
 ### Build
 
+> PS：请切换到**release**分支，编译和运行！
+
 #### client
 
 目前仅支持 Flutter 客户端，在 ios11 模拟器下测试通过。仅测试了登录登出、单聊、发文本、未读消息计数等功能。
