@@ -213,6 +213,10 @@ protoc --go_out=. helloworld.proto
 
 ## Benchmark
 
+## Contact
+
+email:xmcy0011@sina.com
+
 ## LICENSE
 
 CoffeeChat is provided under the [mit license](https://github.com/xmcy0011/CoffeeChat/blob/master/LICENSE).
