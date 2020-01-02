@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	defaultConf string
+	defaultConf = flag.String("conf", "logic-example.toml", "the config path")
 	pidFileName = "server.pid"
 )
 
@@ -32,16 +32,12 @@ func waitExit(c chan os.Signal) {
 	}
 }
 
-func init() {
-	flag.String("conf", "logic-example.toml", defaultConf)
-}
-
 func main() {
 
 	logger.InitLogger("log/log.log", "debug")
 	defer logger.Sugar.Sync()
 
-	_, err := toml.DecodeFile(defaultConf, conf.DefaultLogicConfig)
+	_, err := toml.DecodeFile(*defaultConf, conf.DefaultLogicConfig)
 	if err != nil {
 		_, err := toml.DecodeFile("logic-example.toml", conf.DefaultLogicConfig)
 		if err != nil {

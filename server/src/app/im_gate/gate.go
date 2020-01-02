@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	configFile  string
+	configFile  = flag.String("conf", "logic-example.toml", "the config path")
 	pidFileName = "server.pid"
 )
 
@@ -27,10 +27,6 @@ func waitExit(c chan os.Signal) {
 	}
 }
 
-func init() {
-	flag.String("conf", "gate-example.toml", configFile)
-}
-
 func main() {
 	flag.Parse()
 
@@ -38,7 +34,7 @@ func main() {
 	defer logger.Logger.Sync() // flushes buffer, if any
 
 	// resolve gate.conf
-	_, err := toml.DecodeFile(configFile, conf.DefaultConfig)
+	_, err := toml.DecodeFile(*configFile, conf.DefaultConfig)
 	if err != nil {
 		_, err := toml.DecodeFile("gate-example.toml", conf.DefaultConfig)
 		if err != nil {
