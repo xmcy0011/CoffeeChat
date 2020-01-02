@@ -1,18 +1,21 @@
 package main
 
 import (
+	"flag"
 	"github.com/BurntSushi/toml"
 	"github.com/CoffeeChat/server/src/internal/gate/conf"
 	"github.com/CoffeeChat/server/src/internal/gate/tcpserver"
+	"github.com/CoffeeChat/server/src/pkg/helper"
 	"github.com/CoffeeChat/server/src/pkg/logger"
 	"os"
 	"os/signal"
 	"syscall"
 )
 
-//const configFile = "app/gate/gate-example.toml"
-
-const configFile = "gate-example.toml"
+var (
+	configFile  string
+	pidFileName = "server.pid"
+)
 
 func waitExit(c chan os.Signal) {
 	for i := range c {
@@ -24,8 +27,12 @@ func waitExit(c chan os.Signal) {
 	}
 }
 
+func init() {
+	flag.String("conf", "gate-example.toml", configFile)
+}
+
 func main() {
-	//flag.Parse()
+	flag.Parse()
 
 	logger.InitLogger("log/log.log", "debug")
 	defer logger.Logger.Sync() // flushes buffer, if any
@@ -33,7 +40,16 @@ func main() {
 	// resolve gate.conf
 	_, err := toml.DecodeFile(configFile, conf.DefaultConfig)
 	if err != nil {
-		logger.Sugar.Error("load config error:", err.Error(), "exit...")
+		_, err := toml.DecodeFile("gate-example.toml", conf.DefaultConfig)
+		if err != nil {
+			logger.Sugar.Error("load config error:", err.Error(), ",exit...")
+			return
+		}
+	}
+
+	// 记录进程id
+	if err := helper.WritePid(pidFileName); err != nil {
+		logger.Sugar.Error("write pid file error:", err.Error(), ",exit...")
 		return
 	}
 

@@ -1,18 +1,22 @@
 package main
 
 import (
+	"flag"
 	"github.com/BurntSushi/toml"
 	"github.com/CoffeeChat/server/src/internal/logic/conf"
 	"github.com/CoffeeChat/server/src/internal/logic/rpcserver"
 	"github.com/CoffeeChat/server/src/pkg/db"
+	"github.com/CoffeeChat/server/src/pkg/helper"
 	"github.com/CoffeeChat/server/src/pkg/logger"
 	"os"
 	"os/signal"
 	"syscall"
 )
 
-//const kDefaultConf = "app/logic/logic-example.toml"
-const kDefaultConf = "logic-example.toml"
+var (
+	defaultConf string
+	pidFileName = "server.pid"
+)
 
 func waitExit(c chan os.Signal) {
 	for i := range c {
@@ -28,14 +32,28 @@ func waitExit(c chan os.Signal) {
 	}
 }
 
+func init() {
+	flag.String("conf", "logic-example.toml", defaultConf)
+}
+
 func main() {
 
 	logger.InitLogger("log/log.log", "debug")
 	defer logger.Sugar.Sync()
 
-	_, err := toml.DecodeFile(kDefaultConf, conf.DefaultLogicConfig)
+	_, err := toml.DecodeFile(defaultConf, conf.DefaultLogicConfig)
 	if err != nil {
-		logger.Sugar.Fatal("load conf file err:", err.Error())
+		_, err := toml.DecodeFile("logic-example.toml", conf.DefaultLogicConfig)
+		if err != nil {
+			logger.Sugar.Fatal("load conf file err:", err.Error())
+			return
+		}
+	}
+
+	// 记录进程id
+	if err := helper.WritePid(pidFileName); err != nil {
+		logger.Sugar.Error("write pid file error:", err.Error(), ",exit...")
+		return
 	}
 
 	// init db
