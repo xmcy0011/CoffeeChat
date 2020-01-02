@@ -17,6 +17,7 @@ func init() {
 
 func (d *Manager) Init(server []DatabaseConfig) error {
 	for i := 0; i < len(server); i++ {
+		logger.Sugar.Infof("init db connection %s:%s,address:%s", server[i].DbName, server[i].ServerName, server[i].Host)
 		session := NewSessionMysql()
 		err := session.Init(server[i])
 		if err != nil {
@@ -25,7 +26,7 @@ func (d *Manager) Init(server []DatabaseConfig) error {
 		if err := session.Ping(); err != nil {
 			return err
 		} else {
-			logger.Sugar.Infof("init db connection %s:%s,address:%s", server[i].DbName, server[i].ServerName, server[i].Host)
+			logger.Sugar.Infof("init db connection success %s:%s,address:%s", server[i].DbName, server[i].ServerName, server[i].Host)
 		}
 		// insert to dbList
 		d.dbList[server[i].ServerName] = session
