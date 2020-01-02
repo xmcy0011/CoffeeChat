@@ -33,7 +33,8 @@ func waitExit(c chan os.Signal) {
 }
 
 func main() {
-
+	flag.Parse()
+	
 	logger.InitLogger("log/log.log", "debug")
 	defer logger.Sugar.Sync()
 
