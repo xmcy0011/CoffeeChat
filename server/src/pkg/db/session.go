@@ -7,9 +7,11 @@
 package db
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
+	"time"
 )
 
 const beginStatus = 1
@@ -88,9 +90,10 @@ func (s *SessionMysql) Init(config DatabaseConfig) error {
 	return nil
 }
 
-// check connect status
+// check connect status(timeout 3s)
 func (s *SessionMysql) Ping() error {
-	return s.DB.Ping()
+	ctx, _ := context.WithTimeout(context.Background(), time.Second*3)
+	return s.DB.PingContext(ctx)
 }
 
 // Begin 开启事务
