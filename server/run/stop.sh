@@ -24,27 +24,12 @@ stop(){
   fi
 }
 
-start(){
-  cd $1
-  files=$(ls *.toml 2> /dev/null | wc -l)
-  if [[ "$files" == "0" ]] ;then
-    #if [[ ! -e "*.toml" ]] ;then
-    echo "no config file"
-    cd ..
-    return
-  fi
-
-  ./daemon ./im_$1 $2
-}
-
 case $1 in
   gate)
     stop $1
-    start $1 conf=im_gate.conf
     ;;
   logic)
     stop $1
-    start $1 conf=im_logic.conf
     ;;
   *)
     print_help

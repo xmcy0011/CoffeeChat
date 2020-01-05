@@ -6,6 +6,13 @@
 
 ...
 
+1. 增加权限
+```sql
+insert into mysql.user(Host,User,Password) values("localhost","cim",password("12345"));
+grant all privileges on coffeechat.* to cim@127.0.0.1 identified by '12345';
+flush privileges;
+```
+
 #### 支持 emoji 设置
 
 参考https://blog.csdn.net/alinyua/article/details/79599540
@@ -21,7 +28,7 @@ default-character-set = utf8mb4
 character-set-client-handshake = FALSE
 character-set-server = utf8mb4
 collation-server = utf8mb4_unicode_ci
-init_connect=’SET NAMES utf8mb4’
+init_connect='SET NAMES utf8mb4'
 ```
 
 2. 重启并检查变量

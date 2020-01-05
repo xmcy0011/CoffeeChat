@@ -22,7 +22,7 @@ func main() {
 		}
 	}
 
-	fmt.Println(flag.Args())
+	//fmt.Println(flag.Args())
 	if appPath == "" {
 		fmt.Println("Usage:./daemon [appPath] [args]")
 		return
