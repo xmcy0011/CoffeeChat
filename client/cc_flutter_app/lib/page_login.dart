@@ -308,8 +308,12 @@ class _LoadingDialog extends State<NetLoadingDialog> {
     return PrimaryColorOverride(
       color: Colors.transparent,
       child: Center(
-        child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(Colors.black12),
+//        child: CircularProgressIndicator(
+//          valueColor: AlwaysStoppedAnimation<Color>(Colors.black12),
+//        ),
+        child: CupertinoActivityIndicator( // ios style 菊花
+          radius: 20.0,
+          animating: false,
         ),
       ),
     );
