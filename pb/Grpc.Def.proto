@@ -10,3 +10,10 @@ message Hello {
     string ip = 1;
     int32 port = 2;
 }
+
+// 创建用户账户授权信息
+message CreateUserAccountInfo {
+    uint64 user_id = 1;          // 用户ID
+    string user_nick_name = 2;   // 用户昵称
+    string user_token = 3;       // 口令，最小6位
+}

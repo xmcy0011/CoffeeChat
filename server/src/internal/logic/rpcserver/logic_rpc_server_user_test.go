@@ -7,13 +7,12 @@ import (
 	"github.com/CoffeeChat/server/src/internal/logic/conf"
 	"github.com/CoffeeChat/server/src/pkg/db"
 	"github.com/CoffeeChat/server/src/pkg/logger"
-	uuid "github.com/satori/go.uuid"
 	"google.golang.org/grpc"
 	"testing"
 	"time"
 )
 
-func TestLogicServer_SendMsgData(t *testing.T) {
+func TestLogicServer_CreateUser(t *testing.T) {
 	logger.InitLogger("../../../log/log.log", "debug")
 	_, err := toml.DecodeFile("../../../app/im_logic/logic-example.toml", conf.DefaultLogicConfig)
 	if err != nil {
@@ -45,19 +44,16 @@ func TestLogicServer_SendMsgData(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
 	defer cancel()
 
-	res, err := clientConn.SendMsgData(ctx, &cim.CIMMsgData{
-		FromUserId:  1008,
-		ToSessionId: 1009,
-		SessionType: cim.CIMSessionType_kCIM_SESSION_TYPE_SINGLE,
-		MsgId:       uuid.NewV4().String(),
-		MsgType:     cim.CIMMsgType_kCIM_MSG_TYPE_TEXT,
-		MsgData:     []byte("test"),
-		CreateTime:  int32(time.Now().Unix()),
+	res, err := clientConn.CreateUser(ctx, &cim.CreateUserAccountInfo{
+		UserId:       1001,
+		UserNickName: "小姐姐真美腻",
+		//UserNickName: "  ", //test empty
+		UserToken:    "123456",
 	})
 
 	if err != nil {
 		t.Error(err)
 	}
 
-	logger.Sugar.Info("send msg res:", res.String())
+	logger.Sugar.Info("create user res:", res.String())
 }

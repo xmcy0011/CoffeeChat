@@ -1,11 +1,12 @@
 CREATE TABLE `im_user` (
-  `user_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) unsigned NOT NULL,
   `user_nick_name` varchar(32) DEFAULT NULL COMMENT '昵称',
   `user_token` varchar(64) DEFAULT NULL COMMENT '口令',
   `user_attach` varchar(1024) DEFAULT NULL COMMENT '附加信息（预留）',
   `created` int(11) DEFAULT NULL,
   `updated` int(11) DEFAULT NULL,
-  PRIMARY KEY (`user_id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `im_session` (

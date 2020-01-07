@@ -14,7 +14,7 @@ import (
 
 func TestLogicServer_RecentContactSession(t *testing.T) {
 	logger.InitLogger("../../../log/log.log", "debug")
-	_, err := toml.DecodeFile("../../../app/logic/logic-example.toml", conf.DefaultLogicConfig)
+	_, err := toml.DecodeFile("../../../app/im_logic/logic-example.toml", conf.DefaultLogicConfig)
 	if err != nil {
 		t.Fatal(err.Error())
 	}
@@ -58,7 +58,7 @@ func TestLogicServer_RecentContactSession(t *testing.T) {
 
 func TestLogicServer_GetMsgList(t *testing.T) {
 	logger.InitLogger("../../../log/log.log", "debug")
-	_, err := toml.DecodeFile("../../../app/logic/logic-example.toml", conf.DefaultLogicConfig)
+	_, err := toml.DecodeFile("../../../app/im_logic/logic-example.toml", conf.DefaultLogicConfig)
 	if err != nil {
 		t.Fatal(err.Error())
 	}

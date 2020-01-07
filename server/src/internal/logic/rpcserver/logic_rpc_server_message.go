@@ -51,6 +51,7 @@ func (s *LogicServer) ReadAckMsgData(ctx context.Context, in *cim.CIMMsgDataRead
 	return &cim.Empty{}, nil
 }
 
+// 广播单聊消息
 func (s *LogicServer) messageBroadcastSingle(in *cim.CIMMsgData) {
 	// 1.find online user
 	// 2.find gate gRPC server

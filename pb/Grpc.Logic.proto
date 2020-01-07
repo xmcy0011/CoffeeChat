@@ -29,4 +29,7 @@ service Logic {
     rpc SendMsgData(CIM.Message.CIMMsgData) returns(CIM.Message.CIMMsgDataAck) {}
     // 已读消息回执
     rpc ReadAckMsgData(CIM.Message.CIMMsgDataReadAck) returns(Empty) {}
+
+    // 创建用户
+    rpc CreateUser(CreateUserAccountInfo) returns(Empty){}
 }

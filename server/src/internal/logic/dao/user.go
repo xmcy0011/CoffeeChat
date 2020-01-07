@@ -1,10 +1,12 @@
 package dao
 
 import (
+	"errors"
 	"fmt"
 	"github.com/CoffeeChat/server/src/internal/logic/model"
 	"github.com/CoffeeChat/server/src/pkg/db"
 	"github.com/CoffeeChat/server/src/pkg/logger"
+	"time"
 )
 
 const kUserTableName = "im_user"
@@ -13,6 +15,7 @@ type User struct {
 }
 
 var DefaultUser = &User{}
+var unConnectError = errors.New("dbSlave not connected")
 
 // 查询用户信息
 func (u *User) Get(userId uint64) *model.UserModel {
@@ -56,5 +59,48 @@ func (u *User) Validate(userId uint64, userToken string) (bool, error) {
 	} else {
 		logger.Sugar.Error("no db connect for slave")
 	}
-	return false, nil
+	return false, unConnectError
+}
+
+// 用户信息
+func (u *User) Add(userId uint64, userNickName, userToken string) error {
+	session := db.DefaultManager.GetDBSlave()
+	if session == nil {
+		logger.Sugar.Error("no db connect for slave")
+		return unConnectError
+	}
+
+	// check exist
+	sql := fmt.Sprintf("select count(1) from %s where user_id=%d", kUserTableName, userId)
+	row := session.QueryRow(sql)
+
+	count := int64(0)
+	if err := row.Scan(&count); err != nil {
+		logger.Sugar.Warnf("QueryRow error:%d,userId=%d", userId)
+		return err
+	} else if count > 0 {
+		logger.Sugar.Warnf("user already exist,userId=%d", userId)
+		return errors.New("user already exist")
+	}
+
+	// insert
+	sql = fmt.Sprintf("insert into %s(user_id,user_nick_name,user_token,created) values(%d,'%s','%s',%d)",
+		kUserTableName, userId, userNickName, userToken, time.Now().Unix())
+	r, err := session.Exec(sql)
+	if err != nil {
+		logger.Sugar.Warn("Exec error:", err.Error())
+		return err
+	}
+	count, err = r.RowsAffected()
+	if err != nil {
+		logger.Sugar.Warnf("RowsAffected error:%s ", err.Error())
+		return err
+	} else {
+		if count > 0 {
+			return nil
+		} else {
+			logger.Sugar.Warn("unknown error, no effect row")
+			return errors.New("unknown error, no effect row")
+		}
+	}
 }

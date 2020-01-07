@@ -13,6 +13,12 @@ grant all privileges on coffeechat.* to cim@127.0.0.1 identified by '12345';
 flush privileges;
 ```
 
+2. 增加2个内置用户
+```sql
+insert into coffeechat.im_user(user_id,user_nick_name,user_token,created) values(1008,'千夜小姐姐','12345',unix_timestamp(now()))
+insert into coffeechat.im_user(user_id,user_nick_name,user_token,created) values(1009,'夏研小姐姐','12345',unix_timestamp(now()))
+```
+
 #### 支持 emoji 设置
 
 参考https://blog.csdn.net/alinyua/article/details/79599540

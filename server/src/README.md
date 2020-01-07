@@ -7,6 +7,7 @@ dep ensure -update
 ## mysql
 
 1.本地用户访问
+
 ```sql
 # 创建数据库coffeechat
 create database coffeechat
@@ -19,6 +20,7 @@ flush privileges;
 ```
 
 2.远程用户访问
+
 ```sql
 # cim能够远程登录
 GRANT ALL PRIVILEGES ON *.* TO 'cim'@'10.0.107.64' IDENTIFIED BY '12345' WITH GRANT OPTION;
@@ -31,6 +33,7 @@ flush privileges;
 ```
 
 3.如果需要删除用户
+
 ```sql
 # 指定数据库
 use mysql;
@@ -45,6 +48,22 @@ flush privileges;
 ## unable to deduce repository and source type for "google.golang.org/grpc"
 
 using proxy
+
 ```bash
 env http_proxy=http://127.0.0.1:60339 https_proxy=http://127.0.0.1:60339 dep ensure -v
 ```
+
+## 端口列表
+
+| 名称  | 分类 | 端口  | 备注                    |
+| ----- | ---- | ----- | ----------------------- |
+| gate  | 外部 | 8000  | TCP 端口                |
+|       | 外部 | 8001  | WebSocket(ws) 端口      |
+|       | 内部 | 7900  | 监听 logic 的 grpc 端口 |
+| logic | 内部 | 10600 | grpc 接口               |
+| logic | 外部 | 18080 | HTTP 接口               |
+
+PS：
+
+- 内部：不公开，服务端内部使用
+- 外部：公开，客户端使用
