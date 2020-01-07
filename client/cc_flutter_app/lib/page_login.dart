@@ -86,24 +86,31 @@ class _PageLoginStatefulWidgetState extends State<PageLoginStatefulWidget> {
                 ),
               ),
             ),
-            ButtonBar(
+            const SizedBox(height: 12.0),
+            Row(
               children: <Widget>[
+                Text("还没有账号？"),
                 FlatButton(
-                  child: const Text('注册'),
+                  child: const Text(
+                    '立即注册',
+                    style: TextStyle(color: Colors.blueAccent),
+                  ),
                   shape: const BeveledRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(7.0)),
                   ),
                   onPressed: _onRegister,
                 ),
-                RaisedButton(
-                  child: const Text('登 录'),
-                  elevation: 8.0,
-                  shape: const BeveledRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(7.0)),
-                  ),
-                  onPressed: _onLogin,
-                ),
               ],
+            ),
+            RaisedButton(
+              child: const Text('登 录'),
+              elevation: 5.0,
+              color: Colors.blueAccent,
+              textColor: Colors.white,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+              ),
+              onPressed: _onLogin,
             ),
           ],
         ),
