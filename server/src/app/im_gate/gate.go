@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	configFile  = flag.String("conf", "logic-example.toml", "the config path")
+	configFile  = flag.String("conf", "gate-example.toml", "the config path")
 	pidFileName = "server.pid"
 )
 
