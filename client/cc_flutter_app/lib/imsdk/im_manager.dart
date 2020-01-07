@@ -116,16 +116,19 @@ class IMManager extends IMessage {
 
     _sessionDbProvider.getAllSession(userId.toInt()).then((v) {
       sessions.clear();
-      v.forEach((item) {
-        if (item.sessionType == CIMSessionType.kCIM_SESSION_TYPE_SINGLE) {
-          sessions["PEER_" + item.sessionId.toString()] = item;
-        } else if (item.sessionType == CIMSessionType.kCIM_SESSION_TYPE_SINGLE) {
-          sessions["GROUP_" + item.sessionId.toString()] = item;
-        } else {
-          LogUtil.error("IMManager", "unknow session type load to sessions map.");
-        }
-      });
-
+      if (v != null) {
+        v.forEach((item) {
+          if (item.sessionType == CIMSessionType.kCIM_SESSION_TYPE_SINGLE) {
+            sessions["PEER_" + item.sessionId.toString()] = item;
+          } else if (item.sessionType == CIMSessionType.kCIM_SESSION_TYPE_SINGLE) {
+            sessions["GROUP_" + item.sessionId.toString()] = item;
+          } else {
+            LogUtil.error("IMManager", "unknow session type load to sessions map.");
+          }
+        });
+      } else {
+        v = new List<IMSession>();
+      }
       completer.complete(v);
     }).catchError((e) {
       completer.completeError(e);

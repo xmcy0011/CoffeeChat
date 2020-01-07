@@ -21,7 +21,7 @@ class PageMainStatefulApp extends StatefulWidget {
 class _PageMainStatefulAppState extends State<PageMainStatefulApp> {
   var _selectedIndex = 0;
   var totalUnreadCount = 0;
-  String messageBadgeCount = "89";
+  String messageBadgeCount = "";
 
   static List<Widget> _pages = <Widget>[
     PageHomeStatefulWidget(),
