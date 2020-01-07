@@ -31,5 +31,5 @@ service Logic {
     rpc ReadAckMsgData(CIM.Message.CIMMsgDataReadAck) returns(Empty) {}
 
     // 创建用户
-    rpc CreateUser(CreateUserAccountInfo) returns(Empty){}
+    rpc CreateUser(CreateUserAccountInfoReq) returns(CreateUserAccountInfoRsp){}
 }

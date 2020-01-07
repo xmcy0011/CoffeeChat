@@ -71,27 +71,27 @@ func (u *User) Add(userId uint64, userNickName, userToken string) error {
 	}
 
 	// check exist
-	sql := fmt.Sprintf("select count(1) from %s where user_id=%d", kUserTableName, userId)
-	row := session.QueryRow(sql)
-
-	count := int64(0)
-	if err := row.Scan(&count); err != nil {
-		logger.Sugar.Warnf("QueryRow error:%d,userId=%d", userId)
-		return err
-	} else if count > 0 {
-		logger.Sugar.Warnf("user already exist,userId=%d", userId)
-		return errors.New("user already exist")
-	}
+	//sql := fmt.Sprintf("select count(1) from %s where user_id=%d", kUserTableName, userId)
+	//row := session.QueryRow(sql)
+	//
+	//count := int64(0)
+	//if err := row.Scan(&count); err != nil {
+	//	logger.Sugar.Warnf("QueryRow error:%d,userId=%d", userId)
+	//	return err
+	//} else if count > 0 {
+	//	logger.Sugar.Warnf("user already exist,userId=%d", userId)
+	//	return errors.New("user already exist")
+	//}
 
 	// insert
-	sql = fmt.Sprintf("insert into %s(user_id,user_nick_name,user_token,created) values(%d,'%s','%s',%d)",
+	sql := fmt.Sprintf("insert into %s(user_id,user_nick_name,user_token,created) values(%d,'%s','%s',%d)",
 		kUserTableName, userId, userNickName, userToken, time.Now().Unix())
 	r, err := session.Exec(sql)
 	if err != nil {
 		logger.Sugar.Warn("Exec error:", err.Error())
 		return err
 	}
-	count, err = r.RowsAffected()
+	count, err := r.RowsAffected()
 	if err != nil {
 		logger.Sugar.Warnf("RowsAffected error:%s ", err.Error())
 		return err
