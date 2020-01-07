@@ -93,9 +93,7 @@ class _PageLoginStatefulWidgetState extends State<PageLoginStatefulWidget> {
                   shape: const BeveledRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(7.0)),
                   ),
-                  onPressed: () {
-                    navigatePushPage(context, PageRegisterStatefulWidget());
-                  },
+                  onPressed: _onRegister,
                 ),
                 RaisedButton(
                   child: const Text('登 录'),
@@ -202,6 +200,17 @@ class _PageLoginStatefulWidgetState extends State<PageLoginStatefulWidget> {
         );
       },
     );
+  }
+
+  void _onRegister() {
+    navigatePushPage(context, PageRegisterStatefulWidget()).then((value) {
+      // 返回页面时，更新用户ID
+      if (value != null) {
+        this._usernameController.text = value['userId'].toString();
+        this._nicknameController.text = value['nickName'];
+        this._passwordController.text = value['pwd'];
+      }
+    });
   }
 
 /*

@@ -40,8 +40,9 @@ class _PageRegisterStatefulWidget extends State<PageRegisterStatefulWidget> {
               color: kShrineBrown900,
               child: TextField(
                 controller: _userIdController,
+                keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
-                  labelText: 'UserId',
+                  labelText: '请输入用户ID',
                 ),
               ),
             ),
@@ -51,7 +52,7 @@ class _PageRegisterStatefulWidget extends State<PageRegisterStatefulWidget> {
               child: TextField(
                 controller: _nickNameController,
                 decoration: const InputDecoration(
-                  labelText: 'NickName',
+                  labelText: '请输入昵称',
                 ),
               ),
             ),
@@ -61,7 +62,7 @@ class _PageRegisterStatefulWidget extends State<PageRegisterStatefulWidget> {
               child: TextField(
                 controller: _passwordController,
                 decoration: const InputDecoration(
-                  labelText: 'Password',
+                  labelText: '请输入密码',
                 ),
               ),
             ),
@@ -117,7 +118,7 @@ class _PageRegisterStatefulWidget extends State<PageRegisterStatefulWidget> {
 
       // 跳转到登录界面
       if (result) {
-        Navigator.of(this.context).pop(userId);
+        Navigator.of(this.context).pop({'userId': userId, 'nickName': nickName, 'pwd': token});
       }
     });
   }
