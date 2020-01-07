@@ -5,6 +5,7 @@ import 'package:cc_flutter_app/imsdk/im_manager.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Login.pb.dart';
 import 'package:cc_flutter_app/page_main.dart';
+import 'package:cc_flutter_app/page_register.dart';
 import 'package:flutter/material.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -87,16 +88,15 @@ class _PageLoginStatefulWidgetState extends State<PageLoginStatefulWidget> {
             ),
             ButtonBar(
               children: <Widget>[
-                /*FlatButton(
-                  child: const Text('CANCEL'),
+                FlatButton(
+                  child: const Text('注册'),
                   shape: const BeveledRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(7.0)),
                   ),
                   onPressed: () {
-                    _usernameController.clear();
-                    _passwordController.clear();
+                    navigatePushPage(context, PageRegisterStatefulWidget());
                   },
-                ),*/
+                ),
                 RaisedButton(
                   child: const Text('登 录'),
                   elevation: 8.0,

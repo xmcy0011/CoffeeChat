@@ -31,6 +31,7 @@ dependencies:
   uuid: 2.0.1           # msgID生成(使用uuid，确保消息唯一)
   shared_preferences: ^0.5.2 # 保存键值对信息
   sqflite: ^1.1.7+1     # SQLite plugin for Flutter. Supports both iOS and Android
+  dio: ^3.0.7
 
 dev_dependencies:
   flutter_test:

@@ -4,8 +4,7 @@
 
 ```http
 POST http://ip:port/user/register HTTP/1.1
-Content-Type:application/json;
-charset=utf-8
+Content-Type:application/json; charset=utf-8
 ```
 
 请求：

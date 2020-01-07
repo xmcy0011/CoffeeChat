@@ -11,8 +11,8 @@ import (
 )
 
 var (
-	//configFile  = flag.String("conf", "http-example.toml", "the config path")
-	configFile  = flag.String("conf", "app/im_http/http-example.toml", "the config path")
+	configFile  = flag.String("conf", "http-example.toml", "the config path")
+	//configFile  = flag.String("conf", "app/im_http/http-example.toml", "the config path")
 	pidFileName = "server.pid"
 )
 

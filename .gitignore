@@ -5,3 +5,5 @@ server/src/app/logic/logic
 client/websocket_kefu
 server.pid
 daemon
+im_logic
+im_http

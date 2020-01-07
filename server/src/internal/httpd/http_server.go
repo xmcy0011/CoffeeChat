@@ -56,8 +56,8 @@ func userRegister(writer http.ResponseWriter, request *http.Request) {
 		writeError(kRegisterUserUrl, writer, -1, "method must be post")
 		return
 	}
-	if !ok || len(v) <= 0 || v[0] != "application/json" {
-		writeError(kRegisterUserUrl, writer, -1, "Content-Type must be application/json")
+	if !ok || len(v) <= 0 || v[0] != "application/json; charset=utf-8" {
+		writeError(kRegisterUserUrl, writer, -1, "Content-Type must be application/json; charset=utf-8")
 		return
 	}
 
@@ -128,7 +128,7 @@ func userRegister(writer http.ResponseWriter, request *http.Request) {
 func StartHttpServer(config Config) {
 	StartGrpcClient(config.Logic)
 
-	// content-type:x-www-form-urlencoded
+	// Content-Type:application/json; charset=utf-8
 	http.HandleFunc(kRegisterUserUrl, userRegister)
 
 	// 启动Http监听端口

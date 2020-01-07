@@ -26,9 +26,9 @@ func (u *User) Get(userId uint64) *model.UserModel {
 		row := session.QueryRow(sql)
 
 		userInfo := &model.UserModel{}
-		err := row.Scan(userInfo.Id, userInfo.UserId, userInfo.UserNickName, userInfo.UserToken, userInfo.UserAttach,
-			userInfo.Created, userInfo.Updated)
-		if err != nil {
+		err := row.Scan(&userInfo.Id, &userInfo.UserId, &userInfo.UserNickName, &userInfo.UserToken, &userInfo.UserAttach,
+			&userInfo.Created, &userInfo.Updated)
+		if err == nil {
 			return userInfo
 		} else {
 			logger.Sugar.Info("no result for sql:", sql)
@@ -84,8 +84,8 @@ func (u *User) Add(userId uint64, userNickName, userToken string) error {
 	//}
 
 	// insert
-	sql := fmt.Sprintf("insert into %s(user_id,user_nick_name,user_token,created) values(%d,'%s','%s',%d)",
-		kUserTableName, userId, userNickName, userToken, time.Now().Unix())
+	sql := fmt.Sprintf("insert into %s(user_id,user_nick_name,user_token,user_attach,created,updated) values(%d,'%s','%s','',%d,%d)",
+		kUserTableName, userId, userNickName, userToken, time.Now().Unix(), time.Now().Unix())
 	r, err := session.Exec(sql)
 	if err != nil {
 		logger.Sugar.Warn("Exec error:", err.Error())

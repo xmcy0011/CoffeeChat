@@ -78,6 +78,8 @@ class CIMErrorCode extends $pb.ProtobufEnum {
   static const CIMErrorCode kCIM_ERR_LOGIN_DB_VALIDATE_FAILED = CIMErrorCode._(200, 'kCIM_ERR_LOGIN_DB_VALIDATE_FAILED');
   static const CIMErrorCode kCIM_ERR_LOGIN_VERSION_TOO_OLD = CIMErrorCode._(201, 'kCIM_ERR_LOGIN_VERSION_TOO_OLD');
   static const CIMErrorCode kCIM_ERR_LOGIN_INVALID_USER_TOKEN = CIMErrorCode._(202, 'kCIM_ERR_LOGIN_INVALID_USER_TOKEN');
+  static const CIMErrorCode kCIM_ERROR_USER_ALREADY_EXIST = CIMErrorCode._(900, 'kCIM_ERROR_USER_ALREADY_EXIST');
+  static const CIMErrorCode kCIM_ERROR_USER_INVALID_PARAMETER = CIMErrorCode._(901, 'kCIM_ERROR_USER_INVALID_PARAMETER');
 
   static const $core.List<CIMErrorCode> values = <CIMErrorCode> [
     kCIM_ERR_SUCCSSE,
@@ -85,6 +87,8 @@ class CIMErrorCode extends $pb.ProtobufEnum {
     kCIM_ERR_LOGIN_DB_VALIDATE_FAILED,
     kCIM_ERR_LOGIN_VERSION_TOO_OLD,
     kCIM_ERR_LOGIN_INVALID_USER_TOKEN,
+    kCIM_ERROR_USER_ALREADY_EXIST,
+    kCIM_ERROR_USER_INVALID_PARAMETER,
   ];
 
   static final $core.Map<$core.int, CIMErrorCode> _byValue = $pb.ProtobufEnum.initByValue(values);
