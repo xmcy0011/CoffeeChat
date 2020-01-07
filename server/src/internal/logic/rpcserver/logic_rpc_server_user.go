@@ -31,7 +31,11 @@ func (s *LogicServer) CreateUser(ctx context.Context, req *cim.CreateUserAccount
 		return nil, err
 	}
 
+	// 1.create user
 	rsp.ErrorCode = cim.CIMErrorCode_kCIM_ERR_SUCCSSE
 	logger.Sugar.Infof("CreateUser userId=%d,userToken=%s", req.UserId, req.UserToken)
+
+	// 2.create robot session
+	AddRobotSession(req.UserId)
 	return rsp, nil
 }

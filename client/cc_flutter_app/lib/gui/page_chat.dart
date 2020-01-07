@@ -176,8 +176,13 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
     IMManager.singleton.getSessionList().then((value) {
       List<IMSession> list = value;
       for (var i = 0; list != null && i < list.length; i++) {
+        var displayName = list[i].sessionName;
+        if (list[i].sessionId == 2020010702) {
+          displayName = "思知机器人";
+        }
+
         setState(() {
-          SessionViewModel model = new SessionViewModel(list[i].sessionId, list[i].sessionName, list[i].sessionType,
+          SessionViewModel model = new SessionViewModel(list[i].sessionId, displayName, list[i].sessionType,
               list[i].unreadCnt, list[i].updatedTime, list[i].latestMsg);
           _sessionList.add(model);
         });
