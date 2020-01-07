@@ -6,6 +6,7 @@ import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Login.pb.dart';
 import 'package:cc_flutter_app/page_main.dart';
 import 'package:cc_flutter_app/page_register.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -102,14 +103,10 @@ class _PageLoginStatefulWidgetState extends State<PageLoginStatefulWidget> {
                 ),
               ],
             ),
-            RaisedButton(
+            // IOS Style Button
+            CupertinoButton(
               child: const Text('登 录'),
-              elevation: 5.0,
               color: Colors.blueAccent,
-              textColor: Colors.white,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10.0)),
-              ),
               onPressed: _onLogin,
             ),
           ],

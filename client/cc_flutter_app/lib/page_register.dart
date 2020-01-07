@@ -20,9 +20,9 @@ class PageRegisterStatefulWidget extends StatefulWidget {
 }
 
 class _PageRegisterStatefulWidget extends State<PageRegisterStatefulWidget> {
-  final _userIdController = TextEditingController(text: "3");
+  final _userIdController = TextEditingController(text: "");
   final _nickNameController = TextEditingController(text: "");
-  final _passwordController = TextEditingController(text: "12345");
+  final _passwordController = TextEditingController(text: "");
   static const kShrineBrown900 = Color(0xFF442B2D);
 
   @override
