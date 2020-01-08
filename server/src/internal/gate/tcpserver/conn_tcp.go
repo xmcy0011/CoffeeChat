@@ -3,9 +3,11 @@ package tcpserver
 import (
 	"container/list"
 	"context"
+	"encoding/json"
 	"github.com/CoffeeChat/server/src/api/cim"
 	"github.com/CoffeeChat/server/src/pkg/logger"
 	"github.com/golang/protobuf/proto"
+	uuid "github.com/satori/go.uuid"
 	"go.uber.org/atomic"
 	"net"
 	"sync"
@@ -320,6 +322,14 @@ func (tcp *TcpConn) onHandleMsgData(header *cim.ImHeader, buff []byte) {
 		return
 	}
 
+	if req.MsgType == cim.CIMMsgType_kCIM_MSG_TYPE_ROBOT {
+		_, err := DefaultRobotClient.ResolveQuestion(req.MsgData)
+		if err != nil {
+			logger.Sugar.Warnf(err.Error())
+			return
+		}
+	}
+
 	// fix time
 	req.CreateTime = int32(time.Now().Unix())
 	logger.Sugar.Infof("onHandleMsgData from_id:%d,to_id:%d,"+
@@ -350,6 +360,44 @@ func (tcp *TcpConn) onHandleMsgData(header *cim.ImHeader, buff []byte) {
 		user := DefaultUserManager.FindUser(rsp.ToSessionId)
 		if user != nil {
 			user.BroadcastMessage(req)
+		}
+
+		// 机器人消息，转发到第三方机器人平台，获取回复
+		// 这里为了简化，牺牲性能，直接调用了
+		// http超时3秒，1个TCP连接，2个协程。请注意
+		if req.MsgType == cim.CIMMsgType_kCIM_MSG_TYPE_ROBOT {
+			logger.Sugar.Debugf("robot msg ,msgData:%s,from_id:%d,to_id:%d", string(req.MsgData), rsp.FromUserId, rsp.ToSessionId)
+			question, err := DefaultRobotClient.ResolveQuestion(req.MsgData)
+			if err == nil {
+				answer, err := DefaultRobotClient.GetAnswer(req.FromUserId, question)
+				if err != nil {
+					logger.Sugar.Warnf("get robot answer error:%s,userId=%d", err.Error(), req.FromUserId)
+				} else {
+					//转发到logic存储
+					temp := req.FromUserId
+					req.FromUserId = req.ToSessionId
+					req.FromNickName = DefaultRobotClient.Name
+					req.ToSessionId = temp // change
+					req.MsgId = uuid.NewV4().String()
+					req.CreateTime = int32(time.Now().Unix())
+
+					data, _ := json.Marshal(answer)
+					req.MsgData = data
+
+					_, err := conn.SendMsgData(ctx, req)
+					if err != nil {
+						// 上行消息丢失计数+1
+						upMissMsgCount.Inc()
+						logger.Sugar.Warnf("err:", err.Error())
+					} else {
+						// 广播机器人回复的消息
+						user := DefaultUserManager.FindUser(temp)
+						if user != nil {
+							user.BroadcastMessage(req)
+						}
+					}
+				}
+			}
 		}
 	}
 }

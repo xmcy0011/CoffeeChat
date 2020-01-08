@@ -40,6 +40,7 @@ func main() {
 
 	_, err := toml.DecodeFile(*defaultConf, conf.DefaultLogicConfig)
 	if err != nil {
+		logger.Sugar.Errorf("load config error:%s,try again", err.Error())
 		_, err := toml.DecodeFile("im_logic.toml", conf.DefaultLogicConfig)
 		if err != nil {
 			logger.Sugar.Fatal("load conf file err:", err.Error())

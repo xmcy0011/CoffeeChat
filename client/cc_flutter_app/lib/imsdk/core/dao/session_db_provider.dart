@@ -15,7 +15,9 @@ class SessionDbProvider extends BaseDbProvider {
   final String columnUserId = "owner_user_id"; // 这个会话属于那个用户
   final String columnSessionId = "session_id";
   final String columnSessionType = "session_type";
+  final String columnSessionName = "session_name";
   final String columnSessionStatus = "session_status";
+  final String columnIsRobotSession = "is_robot_session";
   final String columnUpdatedTime = "updated_time";
   final String columnLatestClientMsgId = "latest_client_msg_id";
   final String columnLatestServerMsgId = "latest_server_msg_id";
@@ -40,7 +42,9 @@ class SessionDbProvider extends BaseDbProvider {
         $columnUserId integer not null,
         $columnSessionId text not null,
         $columnSessionType integer not null,
+        $columnSessionName text not null,
         $columnSessionStatus integer not null,
+        $columnIsRobotSession integer not null,
         $columnUpdatedTime integer not null,
         $columnLatestClientMsgId text not null,
         $columnLatestServerMsgId integer default 0,
@@ -78,16 +82,18 @@ class SessionDbProvider extends BaseDbProvider {
       return null;
     }
     var sql = '''
-    insert into $name ($columnUserId,$columnSessionId,$columnSessionType,$columnSessionStatus,
+    insert into $name ($columnUserId,$columnSessionId,$columnSessionType,$columnSessionName,$columnSessionStatus,$columnIsRobotSession,
     $columnUpdatedTime,$columnLatestClientMsgId,$columnLatestServerMsgId,
     $columnLatestMsgData,$columnLatestMsgType,$columnLatestMsgFromId,$columnLatestMsgStatus,$columnUnreadCount) 
-    values (?,?,?,?,?,?,?,?,?,?,?,?)
+    values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)
     ''';
     int result = await db.rawInsert(sql, [
       userId,
       session.sessionId.toString(),
       session.sessionType.value,
+      session.sessionName,
       CIMSessionStatusType.kCIM_SESSION_STATUS_OK.value,
+      session.isRobotSession ? 1 : 0,
       session.updatedTime,
       session.latestMsg.clientMsgId,
       session.latestMsg.serverMsgId,
@@ -107,7 +113,7 @@ class SessionDbProvider extends BaseDbProvider {
     update $name set $columnSessionStatus = ?,
     $columnUpdatedTime = ?,$columnLatestClientMsgId = ?,$columnLatestServerMsgId = ?,
     $columnLatestMsgData = ?,$columnLatestMsgType = ?,$columnLatestMsgFromId = ?,$columnLatestMsgStatus = ?,
-    $columnUnreadCount = ? where $columnUserId = ? and $columnSessionId = ? and $columnSessionType = ?
+    $columnUnreadCount = ? where $columnUserId = ? and $columnSessionId = ? and $columnSessionType = ? and $columnSessionName=?
     ''';
     int result = await database.rawUpdate(sql, [
       CIMSessionStatusType.kCIM_SESSION_STATUS_OK.value,
@@ -121,7 +127,8 @@ class SessionDbProvider extends BaseDbProvider {
       session.unreadCnt,
       userId,
       session.sessionId,
-      session.sessionType.value
+      session.sessionType.value,
+      session.sessionName
     ]);
     //print(result);
   }
@@ -173,12 +180,14 @@ class SessionDbProvider extends BaseDbProvider {
         }
 
         IMSession session = new IMSession(
-            int.parse(maps[i][columnSessionId]), // String
-            maps[i][columnSessionId],
+            int.parse(maps[i][columnSessionId]),
+            // string
+            maps[i][columnSessionName],
             CIMSessionType.valueOf(maps[i][columnSessionType]),
             maps[i][columnUnreadCount],
             maps[i][columnUpdatedTime],
-            msg);
+            msg,
+            maps[i][columnIsRobotSession] == 1);
         list.add(session);
       }
       return list;

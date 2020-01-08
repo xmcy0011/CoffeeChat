@@ -133,7 +133,7 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
             ],
           ),
           // 副标题
-          subtitle: new Text(session.latestMsg.msgData, maxLines: 1),
+          subtitle: new Text(_getMessageText(index), maxLines: 1),
         ),
       ),
       Divider(
@@ -177,8 +177,14 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
       List<IMSession> list = value;
       for (var i = 0; list != null && i < list.length; i++) {
         var displayName = list[i].sessionName;
-        if (list[i].sessionId == 2020010702) {
-          displayName = "思知机器人";
+        if (list[i].isRobotSession) {
+          if (list[i].sessionId == 2020010702) {
+            displayName = "思知机器人";
+          } else if (list[i].sessionId == 2020010701) {
+            displayName = "图灵机器人";
+          } else {
+            displayName = "机器人";
+          }
         }
 
         setState(() {
@@ -263,6 +269,15 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
 
     _sessionList.insert(0, model);
     navigatePushPage(context, PageMessage(session));
+  }
+
+  String _getMessageText(int index) {
+    var session = _sessionList[index];
+
+    if (session.latestMsg.msgType == CIMMsgType.kCIM_MSG_TYPE_ROBOT) {
+      return IMManager.singleton.resolveRobotMessage(session.latestMsg);
+    }
+    return session.latestMsg.msgData;
   }
 
   Future<String> _asyncInputDialog(BuildContext context) async {

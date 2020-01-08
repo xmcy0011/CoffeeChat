@@ -30,6 +30,7 @@ class IMClient {
 
   var isLogin = false;
   var isReLogin = false;
+  var isConnect = false;
 
   var requestMap = new Map<int, IMRequest>(); // 请求列表
   var registerCallbackList = new List<int>();
@@ -38,6 +39,12 @@ class IMClient {
 
   var checkConnectTimeSpan = 1; // 重连间隔,指数退避算法,1s,2s,4s,8s
   var checkConnectLastTick = 0;
+
+  var userId;
+  var nickName;
+  var userToken;
+  var ip;
+  var port;
 
   Function onDisconnect;
 
@@ -63,6 +70,7 @@ class IMClient {
     // timeout
     Timer.periodic(Duration(seconds: 1), (timer) {
       _checkRequestTimeout();
+      _reConnect();
     });
   }
 
@@ -74,40 +82,52 @@ class IMClient {
   /// [port] 服务器端口
   /// [callback] (CIMAuthTokenRsp)
   Future auth(Int64 userId, var nick, var userToken, var ip, var port) async {
-    if (socket != null) {
+    if (socket != null && isConnect) {
       socket.close();
     }
 
-    var completer = new Completer();
-    var feature = RawSocket.connect(ip, port, timeout: Duration(seconds: 5));
-    feature.then((value) {
-      print("connected");
-      socket = value;
-      // read data
-      socket.listen(_onRead, onError: _onError, onDone: _onDone);
+    this.userId = userId;
+    this.nickName = nick;
+    this.userToken = userToken;
+    this.ip = ip;
+    this.port = port;
 
-      // auth request
-      var req = new CIMAuthTokenReq();
-      req.userId = Int64.parseInt(userId.toString());
-      req.nickName = nick;
-      req.userToken = userToken;
-      req.clientType = CIMClientType.kCIM_CLIENT_TYPE_DEFAULT;
-      req.clientVersion = "1.0/flutter";
-      print("auth req,userId=$userId,nickName=$nick,token=$userToken");
-      sendRequest(CIMCmdID.kCIM_CID_LOGIN_AUTH_TOKEN_REQ.value, req, (rsp) {
-        if (rsp is CIMAuthTokenRsp) {
-          if (rsp.resultCode == CIMErrorCode.kCIM_ERR_SUCCSSE) {
-            this.isLogin = true;
+    var completer = new Completer();
+    try {
+      var feature = RawSocket.connect(ip, port, timeout: Duration(seconds: 5));
+      feature.then((value) {
+        print("connected");
+        socket = value;
+        // read data
+        socket.listen(_onRead, onError: _onError, onDone: _onDone);
+        isConnect = true;
+
+        // auth request
+        var req = new CIMAuthTokenReq();
+        req.userId = Int64.parseInt(userId.toString());
+        req.nickName = nick;
+        req.userToken = userToken;
+        req.clientType = CIMClientType.kCIM_CLIENT_TYPE_DEFAULT;
+        req.clientVersion = "1.0/flutter";
+        print("auth req,userId=$userId,nickName=$nick,token=$userToken");
+        sendRequest(CIMCmdID.kCIM_CID_LOGIN_AUTH_TOKEN_REQ.value, req, (rsp) {
+          if (rsp is CIMAuthTokenRsp) {
+            if (rsp.resultCode == CIMErrorCode.kCIM_ERR_SUCCSSE) {
+              this.isLogin = true;
+            }
+            completer.complete(rsp);
+          } else {
+            completer.completeError(rsp);
           }
-          completer.complete(rsp);
-        } else {
-          completer.completeError(rsp);
-        }
+        });
+      }).catchError((err) {
+        completer.completeError(err);
+        print("connect error:" + err.toString());
       });
-    }).catchError((err) {
-      completer.completeError(err);
-      print("connect error:" + err.toString());
-    });
+    } catch (ex) {
+      print("connect error:" + ex.toString());
+      completer.completeError(ex);
+    }
     return completer.future;
   }
 
@@ -203,6 +223,7 @@ class IMClient {
       }
     }
     isLogin = false;
+    isConnect = false;
   }
 
   // 超时
@@ -229,6 +250,13 @@ class IMClient {
         requestMap.remove(k);
       });
       tempList.clear();
+    }
+  }
+
+  // 重连
+  void _reConnect() {
+    if (!this.isConnect) {
+      this.auth(this.userId, this.nickName, this.userToken, this.ip, this.port);
     }
   }
 

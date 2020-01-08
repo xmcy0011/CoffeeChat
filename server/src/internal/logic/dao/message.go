@@ -191,9 +191,9 @@ func (m *Message) GetSingleMsgList(userId uint64, sessionId uint64, sessionType 
 
 // 存储消息
 func (m *Message) SaveMessage(fromId uint64, toId uint64, clientMsgId string, createTime int32,
-	msgType cim.CIMMsgType, sessionType cim.CIMSessionType, msgData string) (uint64, error) {
+	msgType cim.CIMMsgType, sessionType cim.CIMSessionType, msgData string, isToRobot bool) (uint64, error) {
 	if sessionType == cim.CIMSessionType_kCIM_SESSION_TYPE_SINGLE {
-		return m.saveSingleMessage(fromId, toId, clientMsgId, createTime, msgType, msgData)
+		return m.saveSingleMessage(fromId, toId, clientMsgId, createTime, msgType, msgData, isToRobot)
 	} else if sessionType == cim.CIMSessionType_kCIM_SESSION_TYPE_GROUP {
 		return m.saveGroupMessage(fromId, toId, clientMsgId, createTime, msgType, msgData)
 	} else {
@@ -201,7 +201,7 @@ func (m *Message) SaveMessage(fromId uint64, toId uint64, clientMsgId string, cr
 	}
 }
 func (m *Message) saveSingleMessage(fromId uint64, toId uint64, clientMsgId string, createTime int32,
-	msgType cim.CIMMsgType, msgData string) (uint64, error) {
+	msgType cim.CIMMsgType, msgData string, isToRobot bool) (uint64, error) {
 	dbMaster := db.DefaultManager.GetDbMaster()
 	if dbMaster != nil {
 		// Get MsgId
@@ -258,8 +258,10 @@ func (m *Message) saveSingleMessage(fromId uint64, toId uint64, clientMsgId stri
 				return 0, err
 			}
 
-			// 增加未读消息计数(对方)
-			DefaultUnread.IncUnreadCount(toId, fromId, cim.CIMSessionType_kCIM_SESSION_TYPE_SINGLE)
+			// 增加未读消息计数(对方)，如果对方是机器人，跳过
+			if !isToRobot {
+				DefaultUnread.IncUnreadCount(toId, fromId, cim.CIMSessionType_kCIM_SESSION_TYPE_SINGLE)
+			}
 
 			return uint64(msgId), nil
 		}

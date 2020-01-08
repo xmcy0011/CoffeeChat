@@ -15,6 +15,11 @@ var (
 	ownThinkWelcomeMsg  = "知识图谱问答机器人，聊天机器人，基于知识图谱、语义理解等的对话机器人。https://robot.ownthink.com/"
 )
 
+// 是否机器人账号
+func IsRobot(userId uint64) bool {
+	return userId == ownThinkRobotUserId
+}
+
 // 默认会话列表中显示机器人，并且显示欢迎语句
 func AddRobotSession(userId uint64) {
 	s := dao.DefaultSession
@@ -29,7 +34,7 @@ func AddRobotSession(userId uint64) {
 			// 显示欢迎语
 			u4 := uuid.NewV4()
 			_, err := dao.DefaultMessage.SaveMessage(ownThinkRobotUserId, userId, u4.String(), int32(time.Now().Unix()),
-				cim.CIMMsgType_kCIM_MSG_TYPE_TEXT, cim.CIMSessionType_kCIM_SESSION_TYPE_SINGLE, ownThinkWelcomeMsg)
+				cim.CIMMsgType_kCIM_MSG_TYPE_TEXT, cim.CIMSessionType_kCIM_SESSION_TYPE_SINGLE, ownThinkWelcomeMsg, false)
 			if err != nil {
 				logger.Sugar.Warnf("add robot welcome msg error:%s", err.Error())
 			} else {

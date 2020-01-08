@@ -74,10 +74,14 @@ const CIMMsgType$json = const {
   '2': const [
     const {'1': 'kCIM_MSG_TYPE_UNKNOWN', '2': 0},
     const {'1': 'kCIM_MSG_TYPE_TEXT', '2': 1},
-    const {'1': 'kCIM_MSG_TYPE_IMAGE', '2': 2},
-    const {'1': 'kCIM_MSG_TYPE_AUDIO', '2': 3},
+    const {'1': 'kCIM_MSG_TYPE_FILE', '2': 2},
+    const {'1': 'kCIM_MSG_TYPE_IMAGE', '2': 3},
+    const {'1': 'kCIM_MSG_TYPE_AUDIO', '2': 4},
+    const {'1': 'kCIM_MSG_TYPE_VIDEO', '2': 5},
+    const {'1': 'kCIM_MSG_TYPE_LOCATION', '2': 6},
+    const {'1': 'kCIM_MSG_TYPE_ROBOT', '2': 7},
     const {'1': 'kCIM_MSG_TYPE_TIPS', '2': 8},
-    const {'1': 'kCIM_MSG_TYPE_ROBOT', '2': 9},
+    const {'1': 'kCIM_MSG_TYPE_NOTIFACATION', '2': 9},
   ],
 };
 

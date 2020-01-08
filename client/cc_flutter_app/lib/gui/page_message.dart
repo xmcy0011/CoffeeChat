@@ -172,6 +172,9 @@ class _PageMessageState extends State<PageMessage> {
 //        width: maxWidth,
 //      )));
     }
+    if (msg.msgType == CIMMsgType.kCIM_MSG_TYPE_ROBOT) {
+      text = IMManager.singleton.resolveRobotMessage(msg);
+    }
 
     var isSelf = IMManager.singleton.isSelf(msg.fromUserId);
 
@@ -284,11 +287,11 @@ class _PageMessageState extends State<PageMessage> {
         // 如果不是最后一条消息，重新添加到末尾
         _msgList.remove(msg);
         _msgList.add(msg);
-        scrollEnd();
+        scrollEnd2();
       }
     });
 
-    sessionInfo.sendMessage(msg.clientMsgId, sId, CIMMsgType.kCIM_MSG_TYPE_TEXT, sType, msg.msgData).then((app) {
+    sessionInfo.sendMessage(msg.clientMsgId, sId, msg.msgType, sType, msg.msgData).then((app) {
       setState(() {
         msg.msgStatus = CIMMsgStatus.kCIM_MSG_STATUS_SENT;
       });
@@ -388,6 +391,15 @@ class _PageMessageState extends State<PageMessage> {
     msgInfo.msgType = CIMMsgType.kCIM_MSG_TYPE_TEXT;
     msgInfo.senderClientType = CIMClientType.kCIM_CLIENT_TYPE_DEFAULT;
 
+    // 机器人会话，注意消息类型和内容
+    if (this.sessionInfo.isRobotSession) {
+      Map<String, dynamic> toJson = {
+        'body': text,
+      };
+      msgInfo.msgData = jsonEncode(toJson);
+      msgInfo.msgType = CIMMsgType.kCIM_MSG_TYPE_ROBOT;
+    }
+
     //msgInfo.clientMsgId
     setState(() {
       _msgList.add(msgInfo);
@@ -395,7 +407,7 @@ class _PageMessageState extends State<PageMessage> {
     });
     scrollEnd2();
 
-    sessionInfo.sendMessage(msgInfo.clientMsgId, sId, CIMMsgType.kCIM_MSG_TYPE_TEXT, sType, text).then((app) {
+    sessionInfo.sendMessage(msgInfo.clientMsgId, sId, msgInfo.msgType, sType, msgInfo.msgData).then((app) {
       setState(() {
         msgInfo.msgStatus = CIMMsgStatus.kCIM_MSG_STATUS_SENT;
       });

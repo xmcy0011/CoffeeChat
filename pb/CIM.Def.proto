@@ -75,18 +75,71 @@ enum CIMSessionType {
   // kCIM_SESSION_TYPE_CONSULT = 4; // 客服
 }
 
+/* 消息类型补充说明
+文件：
+{
+  "md5":"e10adc3949ba59abbe56e057f20f883e",         # md5,32位
+  "size":"1024123",                                 # 文件大小,B
+  "url":"http://file.qiniu.com/15923014023.pdf",    # 上传云端后得到的文件下载地址
+  "displayName":"test.pdf",                         # 文件显示名称
+  "fileExtension":"pdf",                            # 文件扩展名
+  "icoThumbUrl":"http://file.qiniu.com/1124.png"    # 上传云端后得到的文件类型图标url（便于维护）
+}
+语音：
+{
+  "md5":"e10adc3949ba59abbe56e057f20f883e",         # md5,32位
+  "size":"1024123",                                 # 文件大小,B
+  "url":"http://file.qiniu.com/15923014023.mp3",    # 上传云端后得到的文件下载地址
+  "displayName":"test.mp3",                         # 文件显示名称
+  "fileExtension":"pdf",                            # 文件扩展名
+  "duration":"120"                                  # 时长，秒
+}
+视频：
+{
+  "md5":"e10adc3949ba59abbe56e057f20f883e",         # md5,32位
+  "size":"1024123",                                 # 文件大小,B
+  "url":"http://file.qiniu.com/15923014023.mp4",    # 上传云端后得到的文件下载地址
+  "displayName":"test.mp4",                         # 文件显示名称
+  "fileExtension":"mp4",                            # 文件扩展名
+  "duration":"15",                                  # 视频时长，秒
+  "width":"1080",                                   # 视频画面宽度
+  "height":"1920",                                  # 视频画面高度
+  "thumbUrl":"http://file.qiniu.com/1124.png"       # 上传云端后得到的视频封面图片url
+}
+位置：
+{
+  "latitude":"31.301844",                         # 纬度
+  "longitude":"121.513257",                       # 经度
+  "coordinate":"GCJ02",                           # 坐标系
+  "address":"上海市黄浦区福州路465号世纪出版大厦",     # 地址
+  "poi":"上海书城(福州路店)"                        # 兴趣点
+}
+机器人-上行：
+{
+  "body":"机器人你好"
+}
+机器人-下行：
+{
+  "body":"机器人你好",                          # 原始文本数据，在UI中展现
+  "content":{
+    "type":"text",                            # 机器人回答，文本消息，需要配合参数content
+    "content":"你也好"
+  }
+}
+*/
+
 // 消息类型
 enum CIMMsgType {
   kCIM_MSG_TYPE_UNKNOWN = 0; // 未知类型消息，本地使用，发送时请勿使用
   kCIM_MSG_TYPE_TEXT = 1;  // 文本
-  kCIM_MSG_TYPE_IMAGE = 2; // 图片
-  kCIM_MSG_TYPE_AUDIO = 3; // 声音
-  // kCIM_MSG_TYPE_VIDEO = 4;        // 视频
-  // kCIM_MSG_TYPE_LOCATION = 5;     // 位置
-  // kCIM_MSG_TYPE_NOTIFACATION = 6; // 系统通知（包括入群出群通知等）
-  // kCIM_MSG_TYPE_FILE = 7;         // 文件
+  kCIM_MSG_TYPE_FILE = 2;  // 文件
+  kCIM_MSG_TYPE_IMAGE = 3; // 图片
+  kCIM_MSG_TYPE_AUDIO = 4; // 声音
+  kCIM_MSG_TYPE_VIDEO = 5;        // 视频
+  kCIM_MSG_TYPE_LOCATION = 6;     // 位置
+  kCIM_MSG_TYPE_ROBOT = 7; // 图灵机器人消息
   kCIM_MSG_TYPE_TIPS = 8;  // 提醒类型
-  kCIM_MSG_TYPE_ROBOT = 9; // 图灵机器人消息
+  kCIM_MSG_TYPE_NOTIFACATION = 9; // 系统通知（包括入群出群通知等）
 
   // kCIM_MSG_TYPE_CUSTOM = 100; // 自定义
 }

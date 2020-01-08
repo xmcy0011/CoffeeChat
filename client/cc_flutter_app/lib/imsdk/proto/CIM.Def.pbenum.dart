@@ -136,18 +136,26 @@ class CIMSessionType extends $pb.ProtobufEnum {
 class CIMMsgType extends $pb.ProtobufEnum {
   static const CIMMsgType kCIM_MSG_TYPE_UNKNOWN = CIMMsgType._(0, 'kCIM_MSG_TYPE_UNKNOWN');
   static const CIMMsgType kCIM_MSG_TYPE_TEXT = CIMMsgType._(1, 'kCIM_MSG_TYPE_TEXT');
-  static const CIMMsgType kCIM_MSG_TYPE_IMAGE = CIMMsgType._(2, 'kCIM_MSG_TYPE_IMAGE');
-  static const CIMMsgType kCIM_MSG_TYPE_AUDIO = CIMMsgType._(3, 'kCIM_MSG_TYPE_AUDIO');
+  static const CIMMsgType kCIM_MSG_TYPE_FILE = CIMMsgType._(2, 'kCIM_MSG_TYPE_FILE');
+  static const CIMMsgType kCIM_MSG_TYPE_IMAGE = CIMMsgType._(3, 'kCIM_MSG_TYPE_IMAGE');
+  static const CIMMsgType kCIM_MSG_TYPE_AUDIO = CIMMsgType._(4, 'kCIM_MSG_TYPE_AUDIO');
+  static const CIMMsgType kCIM_MSG_TYPE_VIDEO = CIMMsgType._(5, 'kCIM_MSG_TYPE_VIDEO');
+  static const CIMMsgType kCIM_MSG_TYPE_LOCATION = CIMMsgType._(6, 'kCIM_MSG_TYPE_LOCATION');
+  static const CIMMsgType kCIM_MSG_TYPE_ROBOT = CIMMsgType._(7, 'kCIM_MSG_TYPE_ROBOT');
   static const CIMMsgType kCIM_MSG_TYPE_TIPS = CIMMsgType._(8, 'kCIM_MSG_TYPE_TIPS');
-  static const CIMMsgType kCIM_MSG_TYPE_ROBOT = CIMMsgType._(9, 'kCIM_MSG_TYPE_ROBOT');
+  static const CIMMsgType kCIM_MSG_TYPE_NOTIFACATION = CIMMsgType._(9, 'kCIM_MSG_TYPE_NOTIFACATION');
 
   static const $core.List<CIMMsgType> values = <CIMMsgType> [
     kCIM_MSG_TYPE_UNKNOWN,
     kCIM_MSG_TYPE_TEXT,
+    kCIM_MSG_TYPE_FILE,
     kCIM_MSG_TYPE_IMAGE,
     kCIM_MSG_TYPE_AUDIO,
-    kCIM_MSG_TYPE_TIPS,
+    kCIM_MSG_TYPE_VIDEO,
+    kCIM_MSG_TYPE_LOCATION,
     kCIM_MSG_TYPE_ROBOT,
+    kCIM_MSG_TYPE_TIPS,
+    kCIM_MSG_TYPE_NOTIFACATION,
   ];
 
   static final $core.Map<$core.int, CIMMsgType> _byValue = $pb.ProtobufEnum.initByValue(values);

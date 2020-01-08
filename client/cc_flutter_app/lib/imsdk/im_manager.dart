@@ -159,14 +159,8 @@ class IMManager extends IMessage {
     msg.serverMsgId = 0;
     msg.fromUserId = userId.toInt();
 
-    IMSession session = new IMSession(
-      sessionId,
-      userId.toString(),
-      CIMSessionType.kCIM_SESSION_TYPE_SINGLE,
-      0,
-      DateTime.now().millisecondsSinceEpoch ~/ 1000,
-      msg,
-    );
+    IMSession session = new IMSession(sessionId, sessionId.toString(), CIMSessionType.kCIM_SESSION_TYPE_SINGLE, 0,
+        DateTime.now().millisecondsSinceEpoch ~/ 1000, msg, false);
 
     // added to map
     sessions[_getSessionKey(sessionId, sessionType)] = session;
@@ -219,6 +213,26 @@ class IMManager extends IMessage {
       completer.completeError(e);
     });
     return completer.future;
+  }
+
+  // robot message
+  String resolveRobotMessage(IMMessage msg) {
+    if (msg.msgType == CIMMsgType.kCIM_MSG_TYPE_ROBOT) {
+      if (msg.fromUserId == IMManager.singleton.userId.toInt()) {
+        // 来自于机器人
+        var data = jsonDecode(msg.msgData);
+        if (data != null) {
+          return data['body'].toString();
+        }
+      } else {
+        // 上行消息
+        Map<String, dynamic> data = jsonDecode(msg.msgData);
+        if (data != null && data.containsKey('content') && data['content']['type'].toString() == "text") {
+          return data['content']['content'].toString();
+        }
+      }
+    }
+    return "";
   }
 
   /// 增加收到新消息监听器
@@ -307,7 +321,7 @@ class IMManager extends IMessage {
         msg.msgStatus = session.msgStatus;
 
         IMSession model = new IMSession(session.sessionId.toInt(), session.sessionId.toString(), session.sessionType,
-            session.unreadCnt, session.updatedTime.toInt(), msg);
+            session.unreadCnt, session.updatedTime.toInt(), msg, session.isRobotSession);
 
         // 存在更新
         if (count > 0) {

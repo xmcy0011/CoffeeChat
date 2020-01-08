@@ -9,6 +9,9 @@ type Config struct {
 	ListenPortGrpc int
 
 	Logic []LogicConfig // logic服务器地址
+
+	RobotUrl   string // 思知机器人URL
+	RobotAppId string // AppID
 }
 
 type LogicConfig struct {

@@ -16,12 +16,13 @@ import 'CIM.Def.pbenum.dart' as $0;
 class CIMMsgData extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('CIMMsgData', package: const $pb.PackageName('CIM.Message'))
     ..a<Int64>(1, 'fromUserId', $pb.PbFieldType.OU6, Int64.ZERO)
-    ..a<Int64>(2, 'toSessionId', $pb.PbFieldType.OU6, Int64.ZERO)
-    ..aOS(3, 'msgId')
-    ..a<$core.int>(4, 'createTime', $pb.PbFieldType.O3)
-    ..e<$0.CIMMsgType>(5, 'msgType', $pb.PbFieldType.OE, $0.CIMMsgType.kCIM_MSG_TYPE_UNKNOWN, $0.CIMMsgType.valueOf, $0.CIMMsgType.values)
-    ..e<$0.CIMSessionType>(6, 'sessionType', $pb.PbFieldType.OE, $0.CIMSessionType.kCIM_SESSION_TYPE_Invalid, $0.CIMSessionType.valueOf, $0.CIMSessionType.values)
-    ..a<$core.List<$core.int>>(7, 'msgData', $pb.PbFieldType.OY)
+    ..aOS(2, 'fromNickName')
+    ..a<Int64>(3, 'toSessionId', $pb.PbFieldType.OU6, Int64.ZERO)
+    ..aOS(4, 'msgId')
+    ..a<$core.int>(5, 'createTime', $pb.PbFieldType.O3)
+    ..e<$0.CIMMsgType>(6, 'msgType', $pb.PbFieldType.OE, $0.CIMMsgType.kCIM_MSG_TYPE_UNKNOWN, $0.CIMMsgType.valueOf, $0.CIMMsgType.values)
+    ..e<$0.CIMSessionType>(7, 'sessionType', $pb.PbFieldType.OE, $0.CIMSessionType.kCIM_SESSION_TYPE_Invalid, $0.CIMSessionType.valueOf, $0.CIMSessionType.values)
+    ..a<$core.List<$core.int>>(8, 'msgData', $pb.PbFieldType.OY)
     ..hasRequiredFields = false
   ;
 
@@ -42,35 +43,40 @@ class CIMMsgData extends $pb.GeneratedMessage {
   $core.bool hasFromUserId() => $_has(0);
   void clearFromUserId() => clearField(1);
 
-  Int64 get toSessionId => $_getI64(1);
-  set toSessionId(Int64 v) { $_setInt64(1, v); }
-  $core.bool hasToSessionId() => $_has(1);
-  void clearToSessionId() => clearField(2);
+  $core.String get fromNickName => $_getS(1, '');
+  set fromNickName($core.String v) { $_setString(1, v); }
+  $core.bool hasFromNickName() => $_has(1);
+  void clearFromNickName() => clearField(2);
 
-  $core.String get msgId => $_getS(2, '');
-  set msgId($core.String v) { $_setString(2, v); }
-  $core.bool hasMsgId() => $_has(2);
-  void clearMsgId() => clearField(3);
+  Int64 get toSessionId => $_getI64(2);
+  set toSessionId(Int64 v) { $_setInt64(2, v); }
+  $core.bool hasToSessionId() => $_has(2);
+  void clearToSessionId() => clearField(3);
 
-  $core.int get createTime => $_get(3, 0);
-  set createTime($core.int v) { $_setSignedInt32(3, v); }
-  $core.bool hasCreateTime() => $_has(3);
-  void clearCreateTime() => clearField(4);
+  $core.String get msgId => $_getS(3, '');
+  set msgId($core.String v) { $_setString(3, v); }
+  $core.bool hasMsgId() => $_has(3);
+  void clearMsgId() => clearField(4);
 
-  $0.CIMMsgType get msgType => $_getN(4);
-  set msgType($0.CIMMsgType v) { setField(5, v); }
-  $core.bool hasMsgType() => $_has(4);
-  void clearMsgType() => clearField(5);
+  $core.int get createTime => $_get(4, 0);
+  set createTime($core.int v) { $_setSignedInt32(4, v); }
+  $core.bool hasCreateTime() => $_has(4);
+  void clearCreateTime() => clearField(5);
 
-  $0.CIMSessionType get sessionType => $_getN(5);
-  set sessionType($0.CIMSessionType v) { setField(6, v); }
-  $core.bool hasSessionType() => $_has(5);
-  void clearSessionType() => clearField(6);
+  $0.CIMMsgType get msgType => $_getN(5);
+  set msgType($0.CIMMsgType v) { setField(6, v); }
+  $core.bool hasMsgType() => $_has(5);
+  void clearMsgType() => clearField(6);
 
-  $core.List<$core.int> get msgData => $_getN(6);
-  set msgData($core.List<$core.int> v) { $_setBytes(6, v); }
-  $core.bool hasMsgData() => $_has(6);
-  void clearMsgData() => clearField(7);
+  $0.CIMSessionType get sessionType => $_getN(6);
+  set sessionType($0.CIMSessionType v) { setField(7, v); }
+  $core.bool hasSessionType() => $_has(6);
+  void clearSessionType() => clearField(7);
+
+  $core.List<$core.int> get msgData => $_getN(7);
+  set msgData($core.List<$core.int> v) { $_setBytes(7, v); }
+  $core.bool hasMsgData() => $_has(7);
+  void clearMsgData() => clearField(8);
 }
 
 class CIMMsgDataAck extends $pb.GeneratedMessage {

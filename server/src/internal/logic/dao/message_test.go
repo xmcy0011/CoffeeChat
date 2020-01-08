@@ -24,7 +24,8 @@ func TestMessage_SaveMessage(t *testing.T) {
 	}
 
 	// init cache
-	err = db.InitCache()
+	redis := conf.DefaultLogicConfig.Redis
+	err = db.InitCache(redis.Ip, redis.Port, redis.Password, redis.KeyPrefix, redis.Pool)
 	if err != nil {
 		t.Fatal(err.Error())
 	}
@@ -38,7 +39,7 @@ func TestMessage_SaveMessage(t *testing.T) {
 		//MsgData:     []byte("hello cim"),
 	}
 	msgId, err := DefaultMessage.SaveMessage(data.FromUserId, data.ToSessionId, data.MsgId, data.CreateTime,
-		data.MsgType, data.SessionType, "hello cim")
+		data.MsgType, data.SessionType, "hello cim", false)
 	if err != nil {
 		t.Fatal(err.Error())
 	}

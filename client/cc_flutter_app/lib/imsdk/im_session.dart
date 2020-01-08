@@ -18,12 +18,14 @@ class IMSession {
   int sessionId; // 会话id，单聊：用户ID，群聊：群ID
   String sessionName; // 会话名称，群聊时有效
   CIMSessionType sessionType; // 会话类型
+  bool isRobotSession; // 是否为机器人会话
 
   int unreadCnt; // 该会话未读消息数量
   int updatedTime; // 更新时间
   IMMessage latestMsg; // 最新的消息
 
-  IMSession(this.sessionId, this.sessionName, this.sessionType, this.unreadCnt, this.updatedTime, this.latestMsg);
+  IMSession(this.sessionId, this.sessionName, this.sessionType, this.unreadCnt, this.updatedTime, this.latestMsg,
+      this.isRobotSession);
 
   /// 格式化时间
   /// 今天，显示时分；昨天，显示昨天；其他，显示年月日

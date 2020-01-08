@@ -36,6 +36,7 @@ func main() {
 	// resolve gate.conf
 	_, err := toml.DecodeFile(*configFile, conf.DefaultConfig)
 	if err != nil {
+		logger.Sugar.Errorf("load config error:%s,try again", err.Error())
 		_, err := toml.DecodeFile("im_gate.toml", conf.DefaultConfig)
 		if err != nil {
 			logger.Sugar.Error("load config error:", err.Error(), ",exit...")
