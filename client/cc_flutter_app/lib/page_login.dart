@@ -47,7 +47,7 @@ class _PageLoginStatefulWidgetState extends State<PageLoginStatefulWidget> {
                 ),
               ],
             ),
-            const SizedBox(height: 120.0),
+            const SizedBox(height: 40.0),
             PrimaryColorOverride(
               color: kShrineBrown900,
               child: TextField(
@@ -206,8 +206,14 @@ class _PageLoginStatefulWidgetState extends State<PageLoginStatefulWidget> {
     );
   }
 
-  void _onRegister() {
-    navigatePushPage(context, PageRegisterStatefulWidget()).then((value) {
+  void _onRegister() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String ip = prefs.getString("local_server_ip");
+    if (ip == null) {
+      ip = this._serverIpController.text;
+    }
+
+    navigatePushPage(context, PageRegisterStatefulWidget(ip)).then((value) {
       // 返回页面时，更新用户ID
       if (value != null) {
         this._usernameController.text = value['userId'].toString();
@@ -311,7 +317,8 @@ class _LoadingDialog extends State<NetLoadingDialog> {
 //        child: CircularProgressIndicator(
 //          valueColor: AlwaysStoppedAnimation<Color>(Colors.black12),
 //        ),
-        child: CupertinoActivityIndicator( // ios style 菊花
+        child: CupertinoActivityIndicator(
+          // ios style 菊花
           radius: 20.0,
           animating: false,
         ),

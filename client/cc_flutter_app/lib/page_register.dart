@@ -15,11 +15,19 @@ const DefaultRegisterUserAPI = "/user/register";
 
 // 注册页面
 class PageRegisterStatefulWidget extends StatefulWidget {
+  var ip;
+
+  PageRegisterStatefulWidget(this.ip);
+
   @override
-  State<StatefulWidget> createState() => _PageRegisterStatefulWidget();
+  State<StatefulWidget> createState() => _PageRegisterStatefulWidget(ip);
 }
 
 class _PageRegisterStatefulWidget extends State<PageRegisterStatefulWidget> {
+  var ip;
+
+  _PageRegisterStatefulWidget(this.ip);
+
   final _userIdController = TextEditingController(text: "");
   final _nickNameController = TextEditingController(text: "");
   final _passwordController = TextEditingController(text: "");
@@ -84,9 +92,6 @@ class _PageRegisterStatefulWidget extends State<PageRegisterStatefulWidget> {
   }
 
   void _onRegister() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String ip = prefs.getString("local_server_ip");
-
     var userId = _userIdController.text;
     var nickName = _nickNameController.text;
     var token = _passwordController.text;
@@ -138,21 +143,32 @@ class _PageRegisterStatefulWidget extends State<PageRegisterStatefulWidget> {
 
   // 调用http接口注册
   postRegister(String ip, int userId, String nickName, String token) async {
-    var dio = Dio();
-    dio.options.baseUrl = "http://" + ip + ":" + DefaultHttpServerPort.toString();
-    var response = await dio.post(DefaultRegisterUserAPI,
-        data: {'user_id': userId, 'user_nick_name': nickName, 'user_token': token},
-        options: Options(contentType: Headers.jsonContentType));
+    try {
+      var dio = Dio();
+      dio.options.baseUrl = "http://" + ip + ":" + DefaultHttpServerPort.toString();
+      dio.options.connectTimeout = 5000;
+      dio.options.receiveTimeout = 3000;
+      dio.options.contentType = Headers.jsonContentType;
 
-    if (response.statusCode == 200) {
-      var data = jsonDecode(response.data);
-      if (data['error_code'] == 0) {
-        Toast.show("注册成功，即将跳转...", context, gravity: Toast.CENTER, duration: 3);
-        return true;
-      } else {
-        Toast.show("注册失败：" + data['error_msg'].toString(), context, gravity: Toast.CENTER, duration: 3);
-        return false;
+      print("http register,url=${dio.options.baseUrl}$DefaultRegisterUserAPI");
+
+      var response = await dio.post(
+        DefaultRegisterUserAPI,
+        data: {'user_id': userId, 'user_nick_name': nickName, 'user_token': token},
+      );
+
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.data);
+        if (data['error_code'] == 0) {
+          Toast.show("注册成功，即将跳转...", context, gravity: Toast.CENTER, duration: 3);
+          return true;
+        } else {
+          Toast.show("注册失败：" + data['error_msg'].toString(), context, gravity: Toast.CENTER, duration: 3);
+          return false;
+        }
       }
+    } catch (ex) {
+      Toast.show("注册失败：" + ex.toString(), context, gravity: Toast.CENTER, duration: 3);
     }
     return false;
   }
