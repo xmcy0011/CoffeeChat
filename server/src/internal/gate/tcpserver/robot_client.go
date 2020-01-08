@@ -74,12 +74,15 @@ func (r *RobotClient) ResolveQuestion(msgData []byte) (string, error) {
 func (r *RobotClient) GetAnswer(userId uint64, question string) (RobotAnswer, error) {
 	url := fmt.Sprintf("%s?appid=%s&userid=%d&spoken=%s", conf.DefaultConfig.RobotUrl, conf.DefaultConfig.RobotAppId, userId, question)
 	client := http.Client{}
+	// 思知机器人比较慢啊...
 	client.Timeout = time.Second * 10
 
 	answer := RobotAnswer{Body: question}
+	answer.Content.Type = "text"
 
 	res, err := client.Get(url)
 	if err != nil {
+		answer.Content.Content = "机器人思考时间太长啦，推荐问题：姚明，undefined，被子植物门，coffeechat"
 		return answer, err
 	}
 
@@ -112,7 +115,6 @@ func (r *RobotClient) GetAnswer(userId uint64, question string) (RobotAnswer, er
 			return answer, errors.New("unknown type:" + strconv.Itoa(info.Data.Type))
 		}
 
-		answer.Content.Type = "text"
 		answer.Content.Content = info.Data.Info.Text
 		return answer, nil
 	}

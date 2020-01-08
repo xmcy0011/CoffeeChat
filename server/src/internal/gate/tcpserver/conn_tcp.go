@@ -369,10 +369,15 @@ func (tcp *TcpConn) onHandleMsgData(header *cim.ImHeader, buff []byte) {
 			logger.Sugar.Debugf("robot msg ,msgData:%s,from_id:%d,to_id:%d", string(req.MsgData), rsp.FromUserId, rsp.ToSessionId)
 			question, err := DefaultRobotClient.ResolveQuestion(req.MsgData)
 			if err == nil {
-				answer, err := DefaultRobotClient.GetAnswer(req.FromUserId, question)
-				if err != nil {
-					logger.Sugar.Warnf("get robot answer error:%s,userId=%d", err.Error(), req.FromUserId)
-				} else {
+				go func() {
+					answer, err := DefaultRobotClient.GetAnswer(req.FromUserId, question)
+					if err != nil {
+						logger.Sugar.Warnf("get robot answer error:%s,userId=%d", err.Error(), req.FromUserId)
+						if answer.Content.Content != "" {
+							answer.Content.Content = "机器人出错啦！"
+						}
+					}
+
 					//转发到logic存储
 					temp := req.FromUserId
 					req.FromUserId = req.ToSessionId
@@ -384,11 +389,12 @@ func (tcp *TcpConn) onHandleMsgData(header *cim.ImHeader, buff []byte) {
 					data, _ := json.Marshal(answer)
 					req.MsgData = data
 
-					_, err := conn.SendMsgData(ctx, req)
+					ctx, _ = context.WithTimeout(context.Background(), time.Second*kBusinessTimeOut)
+					_, err = conn.SendMsgData(ctx, req)
 					if err != nil {
 						// 上行消息丢失计数+1
 						upMissMsgCount.Inc()
-						logger.Sugar.Warnf("err:", err.Error())
+						logger.Sugar.Warnf("err:%s", err.Error())
 					} else {
 						// 广播机器人回复的消息
 						user := DefaultUserManager.FindUser(temp)
@@ -396,7 +402,7 @@ func (tcp *TcpConn) onHandleMsgData(header *cim.ImHeader, buff []byte) {
 							user.BroadcastMessage(req)
 						}
 					}
-				}
+				}()
 			}
 		}
 	}
