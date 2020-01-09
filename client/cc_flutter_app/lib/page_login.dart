@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cc_flutter_app/gui/helper.dart';
+import 'package:cc_flutter_app/imsdk/im_http.dart';
 import 'package:cc_flutter_app/imsdk/im_manager.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Login.pb.dart';
@@ -175,6 +176,8 @@ class _PageLoginStatefulWidgetState extends State<PageLoginStatefulWidget> {
       return null;
     }
 
+    IMHttp.singleton.setServerIp(ip);
+
     IMManager.singleton.login(Int64(userId), nick, token, ip, port).then((rsp) {
       closeDialog();
 
@@ -212,8 +215,9 @@ class _PageLoginStatefulWidgetState extends State<PageLoginStatefulWidget> {
     if (ip == null) {
       ip = this._serverIpController.text;
     }
+    IMHttp.singleton.setServerIp(ip);
 
-    navigatePushPage(context, PageRegisterStatefulWidget(ip)).then((value) {
+    navigatePushPage(context, PageRegisterStatefulWidget()).then((value) {
       // 返回页面时，更新用户ID
       if (value != null) {
         this._usernameController.text = value['userId'].toString();
