@@ -205,7 +205,8 @@ class _PageMessageState extends State<PageMessage> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
-                    Text(fromUser.nickName, style: Theme.of(context).textTheme.subhead),
+                    // 单聊时不需要显示对方昵称
+                    //Text(fromUser.nickName, style: Theme.of(context).textTheme.subhead),
                     Row(
                       children: <Widget>[
                         msg.msgStatus == CIMMsgStatus.kCIM_MSG_STATUS_SENDING
@@ -250,7 +251,8 @@ class _PageMessageState extends State<PageMessage> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(fromUser.nickName, style: Theme.of(context).textTheme.subhead),
+                  // 单聊时不需要显示对方昵称
+                  //Text(fromUser.nickName, style: Theme.of(context).textTheme.subhead),
                   _buildMsgContent(msg)
                 ],
               ),
