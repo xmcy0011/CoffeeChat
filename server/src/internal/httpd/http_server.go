@@ -163,7 +163,7 @@ func userNickNameQuery(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	logger.Sugar.Infof("%s create,user_id=%d", kQueryNickNameUserUrl, iUserId)
+	logger.Sugar.Infof("%s query user_nick_name,user_id=%d", kQueryNickNameUserUrl, iUserId)
 
 	// rpc
 	ctx, _ := context.WithTimeout(context.Background(), time.Second*3)
@@ -175,7 +175,7 @@ func userNickNameQuery(writer http.ResponseWriter, request *http.Request) {
 	queryRsp, err := conn.QueryUserNickName(ctx, req)
 	if err != nil {
 		logger.Sugar.Warnf("logic server error:%s", err.Error())
-		writeError(kRegisterUserUrl, writer, -1, "server internal error")
+		writeError(kQueryNickNameUserUrl, writer, -1, "server internal error")
 	} else {
 		if queryRsp.ErrorCode == cim.CIMErrorCode_kCIM_ERR_SUCCSSE {
 			rsp := UserNickNameRsp{NickName: ""}
@@ -185,7 +185,7 @@ func userNickNameQuery(writer http.ResponseWriter, request *http.Request) {
 
 			data, _ := json.Marshal(rsp)
 			_, _ = writer.Write(data)
-			logger.Sugar.Infof("%s query success,user_id=%d,nick_name=%s", kRegisterUserUrl,
+			logger.Sugar.Infof("%s query success,user_id=%d,nick_name=%s", kQueryNickNameUserUrl,
 				req.UserId, queryRsp.NickName)
 		} else {
 			rsp := UserNickNameRsp{NickName: ""}
@@ -197,7 +197,7 @@ func userNickNameQuery(writer http.ResponseWriter, request *http.Request) {
 			//}
 			data, _ := json.Marshal(rsp)
 			_, _ = writer.Write(data)
-			logger.Sugar.Infof("%s create failed:%s,user_id=%d", kRegisterUserUrl, rsp.ErrorMsg, req.UserId)
+			logger.Sugar.Infof("%s create failed:%s,user_id=%d", kQueryNickNameUserUrl, rsp.ErrorMsg, req.UserId)
 		}
 	}
 }

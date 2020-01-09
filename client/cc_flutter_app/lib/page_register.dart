@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:cc_flutter_app/imsdk/im_http.dart';
+import 'package:cc_flutter_app/imsdk/im_user.dart';
 import 'package:cc_flutter_app/page_login.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -112,7 +112,7 @@ class _PageRegisterStatefulWidget extends State<PageRegisterStatefulWidget> {
 
     _showLoading((closeDialog) async {
       // http注册用户
-      var result = await IMHttp.singleton.httpRegisterUser(iUserId, nickName, token);
+      var result = await IMUser.singleton.httpRegisterUser(iUserId, nickName, token);
       closeDialog();
 
       // 跳转到登录界面

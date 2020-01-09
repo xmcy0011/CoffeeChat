@@ -104,3 +104,20 @@ func (u *User) Add(userId uint64, userNickName, userToken string) error {
 		}
 	}
 }
+
+// 更新用户信息
+func (u *User) Update(userId uint64, userNickName string) {
+	session := db.DefaultManager.GetDBSlave()
+	if session == nil {
+		logger.Sugar.Error("no db connect for slave")
+		return
+	}
+
+	sql := fmt.Sprintf("update %s set user_nick_name=?,updated=? where user_id=?", kUserTableName)
+	_, err := session.Exec(sql, userNickName, time.Now().Unix(), userId)
+	if err != nil {
+		logger.Sugar.Error("update user error:", err.Error())
+	} else {
+		logger.Sugar.Debugf("update user_nick_name success userId=%d", userId)
+	}
+}

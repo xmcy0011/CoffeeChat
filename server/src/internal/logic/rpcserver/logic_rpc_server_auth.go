@@ -63,6 +63,9 @@ func (s *LogicServer) AuthToken(ctx context.Context, in *cim.CIMAuthTokenReq) (*
 			rsp.ResultCode = cim.CIMErrorCode_kCIM_ERR_SUCCSSE
 			rsp.ResultString = "success"
 
+			// update nick_name
+			dao.DefaultUser.Update(in.UserId, in.NickName)
+
 			// user info
 			user := dao.DefaultUser.Get(in.UserId)
 			rsp.UserInfo = &cim.CIMUserInfo{

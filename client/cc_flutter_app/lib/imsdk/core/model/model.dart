@@ -8,8 +8,8 @@ class UserModel {
   int userId; // 用户ID
 
   String nickName; // 用户昵称
-  /*optional*/
   String attachInfo; // 自定义字段
 
-  String avatarURL; // 头像URL
+  String avatarURL; // 头像URL（远程）
+  String avatarPath; // 头像本地缓存路径
 }

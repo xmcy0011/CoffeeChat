@@ -10,7 +10,8 @@ class IMMessage {
   CIMResCode msgResCode; // 消息错误码
   CIMMsgFeature msgFeature; // 消息属性
   CIMSessionType sessionType; // 会话类型
-  int fromUserId; // 来源会话ID
+  int fromUserId; // 来源用户ID
+  String fromUserNickName; // 会话用户昵称
   int toSessionId; // 目标会话ID
   int createTime; // 消息创建时间戳（毫秒）
 

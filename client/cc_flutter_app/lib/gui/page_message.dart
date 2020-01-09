@@ -6,11 +6,9 @@ import 'package:cc_flutter_app/imsdk/core/model/model.dart';
 import 'package:cc_flutter_app/imsdk/im_message.dart';
 import 'package:cc_flutter_app/imsdk/im_session.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pbserver.dart';
-import 'package:cc_flutter_app/imsdk/proto/CIM.List.pbserver.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Message.pb.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fixnum/fixnum.dart';
 import 'package:toast/toast.dart';
 
 // 单次拉取历史记录的最大数量
@@ -94,15 +92,16 @@ class _PageMessageState extends State<PageMessage> {
     // FIXED ME
     UserModel fromUser = new UserModel();
     fromUser.userId = msg.fromUserId;
-    fromUser.nickName = msg.fromUserId.toString();
     fromUser.avatarURL = "";
 
     //print("_onBuildMsgItem=${msg.serverMsgId},msg=${msg.msgData}");
 
     //return MsgItem(msg, fromUser);
     if (IMManager.singleton.isSelf(msg.fromUserId)) {
+      fromUser.nickName = IMManager.singleton.nickName;
       return _buildMeAvatarItem(position, msg, fromUser);
     }
+    fromUser.nickName = this.sessionInfo.sessionName;
     return _buildOtherAvatarItem(position, msg, fromUser);
   }
 
@@ -343,7 +342,7 @@ class _PageMessageState extends State<PageMessage> {
         scrollValue = 1000000;
       }
 
-      var timer = new Timer(Duration(milliseconds: 100), () {
+      new Timer(Duration(milliseconds: 100), () {
         setState(() {
           //_scrollController.jumpTo(scrollValue);
           _scrollController.animateTo(scrollValue,
