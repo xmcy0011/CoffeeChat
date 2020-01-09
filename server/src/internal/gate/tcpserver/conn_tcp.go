@@ -8,9 +8,9 @@ import (
 	"github.com/CoffeeChat/server/src/pkg/logger"
 	"github.com/golang/protobuf/proto"
 	uuid "github.com/satori/go.uuid"
+	"go.uber.org/atomic"
 	"net"
 	"sync"
-	"sync/atomic"
 	"time"
 )
 
@@ -19,10 +19,10 @@ const kBusinessTimeOut = 5   // 常规业务超时时间(s)
 const kHeartBeatTimeOut = 60 // 心跳超时时间
 const kAckMsgTimeOut = 15    // 等待确认收到消息响应超时时间
 
-var upMsgTotalCount = uint64(0)   // 上行消息总数
-var upMissMsgCount = uint64(0)    // 上行消息丢失
-var downMsgTotalCount = uint64(0) // 下行消息总数
-var downMissMsgCount = uint64(0)  // 下行消息丢失
+var upMsgTotalCount = atomic.NewUint64(0)   // 上行消息总数
+var upMissMsgCount = atomic.NewUint64(0)    // 上行消息丢失
+var downMsgTotalCount = atomic.NewUint64(0) // 下行消息总数
+var downMissMsgCount = atomic.NewUint64(0)  // 下行消息丢失
 
 type TcpConn struct {
 	Conn          *net.TCPConn      // 客户端的连接
@@ -31,7 +31,7 @@ type TcpConn struct {
 	userId        uint64            // 客户端id
 	conMutex      sync.Mutex        // 互斥锁
 
-	seq uint32 // 给客户端返回的seq号
+	seq *atomic.Uint32 // 给客户端返回的seq号
 
 	connectedTime     int64 // 连接时间
 	loginTime         int64 // 登录时间
@@ -50,6 +50,7 @@ func NewTcpConn() *TcpConn {
 		connectedTime:          0,
 		loginTime:              0,
 		isLogin:                false,
+		seq:                    atomic.NewUint32(0),
 	}
 	return conn
 }
@@ -189,12 +190,14 @@ func (tcp *TcpConn) GetUserId() uint64 {
 
 //GetSeq implements the CImConn GetUserId method.
 func (tcp *TcpConn) GetSeq() uint16 {
-	atomic.AddUint32(&tcp.seq, 1)
+	tcp.seq.Inc()
+
 	// 溢出
-	if tcp.seq >= uint32(cim.UINT16_MAX) {
-		tcp.seq = 1
+	if tcp.seq.Load() >= uint32(cim.UINT16_MAX) {
+		tcp.seq.Store(1)
+		return 1
 	}
-	return uint16(tcp.seq)
+	return uint16(tcp.seq.Load())
 }
 
 // 认证授权
@@ -336,7 +339,7 @@ func (tcp *TcpConn) onHandleMsgData(header *cim.ImHeader, buff []byte) {
 	logger.Sugar.Infof("onHandleMsgData from_id:%d,to_id:%d,"+
 		"session_type=%d,msg_id=%s,msg_type=%d,create_time=%d",
 		req.FromUserId, req.ToSessionId, req.SessionType, req.MsgId, req.MsgType, req.CreateTime)
-	atomic.AddUint64(&upMsgTotalCount, 1)
+	upMsgTotalCount.Inc()
 
 	conn := GetMessageConn()
 	ctx, cancelFun := context.WithTimeout(context.Background(), time.Second*kBusinessTimeOut)
@@ -345,7 +348,7 @@ func (tcp *TcpConn) onHandleMsgData(header *cim.ImHeader, buff []byte) {
 	rsp, err := conn.SendMsgData(ctx, req)
 	if err != nil {
 		// 上行消息丢失计数+1
-		atomic.AddUint64(&upMissMsgCount, 1)
+		upMissMsgCount.Inc()
 		logger.Sugar.Warnf("err:", err.Error())
 		return
 	} else {
@@ -394,8 +397,8 @@ func (tcp *TcpConn) onHandleMsgData(header *cim.ImHeader, buff []byte) {
 					_, err = conn.SendMsgData(ctx, req)
 					if err != nil {
 						// 上行消息丢失计数+1
-						atomic.AddUint64(&upMissMsgCount, 1)
-						logger.Sugar.Warnf("err:%s", err.Error())
+						upMissMsgCount.Inc()
+						logger.Sugar.Warnf("err:", err.Error())
 					} else {
 						// 广播机器人回复的消息
 						user := DefaultUserManager.FindUser(temp)
