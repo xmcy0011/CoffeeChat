@@ -47,6 +47,7 @@ const CIMErrorCode$json = const {
     const {'1': 'kCIM_ERR_LOGIN_INVALID_USER_TOKEN', '2': 202},
     const {'1': 'kCIM_ERROR_USER_ALREADY_EXIST', '2': 900},
     const {'1': 'kCIM_ERROR_USER_INVALID_PARAMETER', '2': 901},
+    const {'1': 'kCIM_ERROR_USER_NOT_EXIST', '2': 902},
   ],
 };
 

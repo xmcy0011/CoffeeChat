@@ -53,6 +53,7 @@ enum CIMErrorCode {
   // HTTP API 错码
   kCIM_ERROR_USER_ALREADY_EXIST = 900;      // 用户已存在
   kCIM_ERROR_USER_INVALID_PARAMETER = 901;  // 非法的用户信息
+  kCIM_ERROR_USER_NOT_EXIST = 902;          // 用户不存在
 }
 
 // 客户端类型

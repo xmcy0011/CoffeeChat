@@ -23,3 +23,25 @@ Content-Type:application/json; charset=utf-8
     "error_msg":"success",
 }
 ```
+
+## 查询用户昵称
+
+```http
+GET http://ip:port/user/nickname/query HTTP/1.1
+```
+
+请求：
+```json
+{
+    "user_id": 1003
+}
+```
+
+响应：
+```json
+{
+    "error_code": 0,
+    "error_msg":"success",
+    "nick_name":"小姐姐美腻"
+}
+```

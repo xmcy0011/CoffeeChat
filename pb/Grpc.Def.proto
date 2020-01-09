@@ -23,3 +23,13 @@ message CreateUserAccountInfoReq {
 message CreateUserAccountInfoRsp {
     CIM.Def.CIMErrorCode error_code = 1;         // 结果
 }
+
+// 查询用户昵称
+message QueryUserNickNameReq {
+    uint64 user_id = 1;          // 用户ID
+}
+
+message QueryUserNickNameRsp {
+    CIM.Def.CIMErrorCode error_code = 1;         // 结果
+    string nick_name = 2; // 昵称
+}

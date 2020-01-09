@@ -39,3 +39,21 @@ func (s *LogicServer) CreateUser(ctx context.Context, req *cim.CreateUserAccount
 	AddRobotSession(req.UserId)
 	return rsp, nil
 }
+
+// 查询用户昵称
+func (s *LogicServer) QueryUserNickName(ctx context.Context, in *cim.QueryUserNickNameReq) (*cim.QueryUserNickNameRsp, error) {
+	rsp := &cim.QueryUserNickNameRsp{}
+	u := dao.DefaultUser.Get(in.UserId)
+	if u == nil {
+		rsp.ErrorCode = cim.CIMErrorCode_kCIM_ERROR_USER_NOT_EXIST
+		logger.Sugar.Warnf("QueryUserNickName failed:user not exist,userId=%d", in.UserId)
+		return rsp, nil
+	}
+
+	// success
+	rsp.ErrorCode = cim.CIMErrorCode_kCIM_ERR_SUCCSSE
+	rsp.NickName = u.UserNickName
+	logger.Sugar.Infof("QueryUserNickName userId=%d,nickName=%s", in.UserId, rsp.NickName)
+
+	return rsp, nil
+}

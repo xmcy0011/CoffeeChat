@@ -32,4 +32,6 @@ service Logic {
 
     // 创建用户
     rpc CreateUser(CreateUserAccountInfoReq) returns(CreateUserAccountInfoRsp){}
+    // 查询用户昵称
+    rpc QueryUserNickName(QueryUserNickNameReq) returns(QueryUserNickNameRsp){}
 }
