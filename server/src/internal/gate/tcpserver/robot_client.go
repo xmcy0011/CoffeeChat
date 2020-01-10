@@ -5,10 +5,13 @@ import (
 	"errors"
 	"fmt"
 	"github.com/CoffeeChat/server/src/internal/gate/conf"
+	"github.com/CoffeeChat/server/src/pkg/def"
 	"github.com/CoffeeChat/server/src/pkg/logger"
+	"github.com/dgrijalva/jwt-go"
 	"io/ioutil"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -43,19 +46,14 @@ type JsonResponseOwnThink struct {
 	}
 }
 
-//type JsonResponseOwnThink struct {
-//	Message string                   `json:"message"`
-//	Data    JsonResponseOwnThinkData `json:"data"`
-//}
-//
-//type JsonResponseOwnThinkData struct {
-//	Type int                          `json:"type"`
-//	Info JsonResponseOwnThinkDataInfo `json:"info"`
-//}
-//
-//type JsonResponseOwnThinkDataInfo struct {
-//	Text string `json:"text"`
-//}
+// 小微返回json
+type JsonResponseWeChat struct {
+	Response string `json:"response"`
+}
+
+type JwtPayloadQuestion struct {
+	Q string `json:"q"`
+}
 
 var DefaultRobotClient = &RobotClient{Name: "思知机器人"}
 
@@ -70,9 +68,9 @@ func (r *RobotClient) ResolveQuestion(msgData []byte) (string, error) {
 	return req.Body, nil
 }
 
-// 获取答案
-func (r *RobotClient) GetAnswer(userId uint64, question string) (RobotAnswer, error) {
-	url := fmt.Sprintf("%s?appid=%s&userid=%d&spoken=%s", conf.DefaultConfig.RobotUrl, conf.DefaultConfig.RobotAppId, userId, question)
+// 从思知机器人获取答案
+func (r *RobotClient) getOwnThinkAnswer(userId uint64, question string) (RobotAnswer, error) {
+	url := fmt.Sprintf("%s?appid=%s&userid=%d&spoken=%s", conf.DefaultConfig.OwnThinkRobotUrl, conf.DefaultConfig.OwnThinkRobotAppId, userId, question)
 	client := http.Client{}
 	// 思知机器人比较慢啊...
 	client.Timeout = time.Second * 10
@@ -119,4 +117,82 @@ func (r *RobotClient) GetAnswer(userId uint64, question string) (RobotAnswer, er
 		return answer, nil
 	}
 	return answer, errors.New(strconv.Itoa(res.StatusCode) + " status code")
+}
+
+// jwt calc WebToken
+func (r *RobotClient) getJwtToken(signingKey, userId, question string) (string, error) {
+	// Header
+	// {
+	// "typ": "JWT",
+	// "alg": "HS256"
+	//}
+	token := jwt.New(jwt.SigningMethodHS256)
+	claims := make(jwt.MapClaims)
+
+	// Payload
+	//{
+	//	"uid": "xjlsj33lasfaf",
+	//	"data": {
+	//		"q": "我想和你聊天"
+	//	}
+	//}
+	claims["uid"] = userId
+	claims["data"] = JwtPayloadQuestion{Q: question}
+	token.Claims = claims
+
+	// Signing Key
+	return token.SignedString([]byte(signingKey))
+}
+
+func (r *RobotClient) getWeChatAnswer(userId uint64, question string) (RobotAnswer, error) {
+	url := fmt.Sprintf("%s/%s", conf.DefaultConfig.WeChatRobotUrl, conf.DefaultConfig.WeChatRobotToken)
+
+	query, err := r.getJwtToken(conf.DefaultConfig.WeChatRobotEncodingAESKey, strconv.Itoa(int(userId)), question)
+	if err != nil {
+		logger.Sugar.Errorf("get webToken error %s", err.Error())
+	}
+
+	client := http.Client{}
+	client.Timeout = time.Second * 3 // 小微的比较快
+
+	answer := RobotAnswer{Body: question}
+	answer.Content.Type = "text"
+
+	res, err := client.Post(url, "application/x-www-form-urlencoded", strings.NewReader("query="+query))
+	if err != nil {
+		answer.Content.Content = "小微思考时间太长啦，请稍后重试哦😅"
+		logger.Sugar.Warnf("weChat robot http error:%s", err.Error())
+		return answer, err
+	}
+
+	data, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		answer.Content.Content = "小微异常啦，申请维修哦🧰"
+		logger.Sugar.Warnf(err.Error())
+		return answer, err
+	}
+
+	response := JsonResponseWeChat{}
+	err = json.Unmarshal(data, &response)
+	if err != nil {
+		answer.Content.Content = "小微异常啦，申请维修哦🧰"
+		logger.Sugar.Warnf(err.Error())
+		return answer, err
+	}
+	answer.Content.Content = response.Response
+	return answer, nil
+}
+
+// 获取答案
+func (r *RobotClient) GetAnswer(userId, robotId uint64, question string) (RobotAnswer, error) {
+	answer := RobotAnswer{Body: question}
+
+	if robotId == def.OwnThinkRobotUserId {
+		return r.getOwnThinkAnswer(userId, question)
+	} else if robotId == def.WeChatRobotUserId {
+		return r.getWeChatAnswer(userId, question)
+	} else {
+		logger.Sugar.Warnf("invalid robot_id=%d,user_id=%d", robotId, userId)
+	}
+	return answer, errors.New("invalid robot_id")
 }

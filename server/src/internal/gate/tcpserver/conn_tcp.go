@@ -374,7 +374,7 @@ func (tcp *TcpConn) onHandleMsgData(header *cim.ImHeader, buff []byte) {
 			question, err := DefaultRobotClient.ResolveQuestion(req.MsgData)
 			if err == nil {
 				go func() {
-					answer, err := DefaultRobotClient.GetAnswer(req.FromUserId, question)
+					answer, err := DefaultRobotClient.GetAnswer(req.FromUserId, req.ToSessionId, question)
 					if err != nil {
 						logger.Sugar.Warnf("get robot answer error:%s,userId=%d", err.Error(), req.FromUserId)
 						if answer.Content.Content != "" {

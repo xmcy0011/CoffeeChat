@@ -10,8 +10,12 @@ type Config struct {
 
 	Logic []LogicConfig // logic服务器地址
 
-	RobotUrl   string // 思知机器人URL
-	RobotAppId string // AppID
+	OwnThinkRobotUrl   string // 思知机器人URL
+	OwnThinkRobotAppId string // AppID
+
+	WeChatRobotUrl            string // 微信机器人
+	WeChatRobotToken          string // TOKEN
+	WeChatRobotEncodingAESKey string // WebToken的AesKey https://www.jsonwebtoken.io/
 }
 
 type LogicConfig struct {
