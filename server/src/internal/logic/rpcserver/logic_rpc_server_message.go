@@ -7,6 +7,7 @@ import (
 	"github.com/CoffeeChat/server/src/api/cim"
 	"github.com/CoffeeChat/server/src/internal/logic/dao"
 	"github.com/CoffeeChat/server/src/pkg/db"
+	"github.com/CoffeeChat/server/src/pkg/def"
 	"github.com/CoffeeChat/server/src/pkg/logger"
 	"strings"
 )
@@ -21,7 +22,7 @@ func (s *LogicServer) SendMsgData(ctx context.Context, in *cim.CIMMsgData) (*cim
 	}
 
 	// 机器人消息，对方无需未读计数
-	isToRobot := IsRobot(in.ToSessionId) && in.MsgType == cim.CIMMsgType_kCIM_MSG_TYPE_ROBOT
+	isToRobot := def.IsRobot(in.ToSessionId) && in.MsgType == cim.CIMMsgType_kCIM_MSG_TYPE_ROBOT
 
 	serverMsgId, err := dao.DefaultMessage.SaveMessage(in.FromUserId, in.ToSessionId, in.MsgId, in.CreateTime, in.MsgType, in.SessionType, string(in.MsgData), isToRobot)
 	if err != nil {

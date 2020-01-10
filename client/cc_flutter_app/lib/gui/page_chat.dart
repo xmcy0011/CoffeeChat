@@ -177,6 +177,8 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
             displayName = "思知机器人";
           } else if (list[i].sessionId == 2020010701) {
             displayName = "图灵机器人";
+          } else if (list[i].sessionId == 2020010702) {
+            displayName = "小微机器人";
           } else {
             displayName = "机器人";
           }
@@ -283,7 +285,7 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
     info.isRobotSession = false;
 
     for (var i = 0; i < IMManager.singleton.sessions.length; i++) {
-      if(IMManager.singleton.sessions[i].sessionId == userId){
+      if (IMManager.singleton.sessions[i].sessionId == userId) {
         navigatePushPage(context, PageMessage(IMManager.singleton.sessions[i]));
         break;
       }
