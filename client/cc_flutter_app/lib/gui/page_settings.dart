@@ -69,7 +69,7 @@ class _PageSettingsStatefulWidgetState extends State<PageSettingsStatefulWidget>
                   child: new Text('确定'),
                   onPressed: () async {
                     SharedPreferences prefs = await SharedPreferences.getInstance();
-                    prefs.clear();
+                    //prefs.clear();
 
                     // 清理SDK缓存
                     IMManager.singleton.cleanup().then((e) {
