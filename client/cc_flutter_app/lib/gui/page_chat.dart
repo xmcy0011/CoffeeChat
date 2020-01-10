@@ -177,7 +177,7 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
             displayName = "思知机器人";
           } else if (list[i].sessionId == 2020010701) {
             displayName = "图灵机器人";
-          } else if (list[i].sessionId == 2020010702) {
+          } else if (list[i].sessionId == 2020010703) {
             displayName = "小微机器人";
           } else {
             displayName = "机器人";
