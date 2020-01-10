@@ -383,6 +383,7 @@ class _PageMessageState extends State<PageMessage> {
     msgInfo.clientMsgId = IMSession.generateMsgId();
     msgInfo.sessionType = sessionInfo.sessionType;
     msgInfo.fromUserId = IMManager.singleton.userId.toInt();
+    msgInfo.fromUserNickName = IMManager.singleton.nickName;
     msgInfo.toSessionId = sessionInfo.sessionId;
     msgInfo.createTime = DateTime.now().millisecondsSinceEpoch ~/ 1000;
     msgInfo.msgResCode = CIMResCode.kCIM_RES_CODE_OK;

@@ -50,6 +50,7 @@ class MessageBusiness extends IMessage {
 
     var msg = new CIMMsgData();
     msg.fromUserId = IMManager.singleton.userId;
+    msg.fromNickName = IMManager.singleton.nickName;
     msg.toSessionId = Int64(toSessionId);
 
     //var uuid = new Uuid();

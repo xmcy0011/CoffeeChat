@@ -181,9 +181,10 @@ class IMManager extends IMessage {
     var completer = new Completer();
 
     var session = getSession(toSessionId, sessionType);
-    session.updatedTime = session.latestMsg.createTime;
+    session.updatedTime = DateTime.now().millisecondsSinceEpoch ~/ 1000;
     session.latestMsg.clientMsgId = msgId;
     session.latestMsg.fromUserId = userId.toInt();
+    session.latestMsg.fromUserNickName = nickName;
     session.latestMsg.createTime = DateTime.now().millisecondsSinceEpoch ~/ 1000;
     session.latestMsg.msgType = msgType;
     session.latestMsg.msgData = msgData;
@@ -275,6 +276,34 @@ class IMManager extends IMessage {
       var list = new List<IMSession>();
       list.add(sessions[key]);
       _userConfig.onRefreshConversation(list);
+    } else {
+      if (msg.sessionType == CIMSessionType.kCIM_SESSION_TYPE_SINGLE) {
+        IMMessage model = new IMMessage();
+        model.clientMsgId = msg.msgId;
+        model.serverMsgId = 0;
+        model.msgStatus = CIMMsgStatus.kCIM_MSG_STATUS_NONE;
+        model.sessionType = msg.sessionType;
+        model.fromUserId = msg.fromUserId.toInt();
+        model.fromUserNickName = msg.fromNickName;
+        model.toSessionId = msg.toSessionId.toInt();
+        model.createTime = msg.createTime;
+        model.msgType = msg.msgType;
+        model.msgData = utf8.decode(msg.msgData);
+
+        // 创建会话
+        IMSession session = new IMSession(msg.fromUserId.toInt(), msg.fromNickName,
+            CIMSessionType.kCIM_SESSION_TYPE_SINGLE, 0, DateTime.now().millisecondsSinceEpoch ~/ 1000, model, false);
+        session.unreadCnt = 1;
+        // added to map
+        sessions[_getSessionKey(session.sessionId, session.sessionType)] = session;
+        // add to sqlite
+        _sessionDbProvider.insert(userId.toInt(), session);
+
+        // callback
+        var list = new List<IMSession>();
+        list.add(session);
+        _userConfig.onRefreshConversation(list);
+      }
     }
 
     // 回调

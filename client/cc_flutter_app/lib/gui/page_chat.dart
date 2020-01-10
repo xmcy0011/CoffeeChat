@@ -216,6 +216,7 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
 
   void _onRefreshSession(List<IMSession> session) {
     session.forEach((v) {
+      bool exist = false;
       for (var i = 0; i < _sessionList.length; i++) {
         if (v.sessionType == CIMSessionType.kCIM_SESSION_TYPE_SINGLE) {
           if (v.sessionId == _sessionList[i].sessionId) {
@@ -238,10 +239,19 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
                 IMSDKHelper.singleton.onTotalUnreadMsgCb(true, 1);
               }
             });
-
+            exist = true;
             break;
           }
         }
+      }
+
+      // 没找到，加入
+      if (!exist) {
+        setState(() {
+          _sessionList.insert(0, v);
+          // 通知tab更新总的未读计数
+          IMSDKHelper.singleton.onTotalUnreadMsgCb(true, 1);
+        });
       }
     });
   }
@@ -309,6 +319,12 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
           ),
           actions: <Widget>[
             FlatButton(
+              child: Text('取消'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
               child: Text('确认'),
               onPressed: () {
                 var text = textFieldController.text;
@@ -323,12 +339,6 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
                 } else {
                   Toast.show('用户ID无效', context, gravity: Toast.CENTER);
                 }
-              },
-            ),
-            FlatButton(
-              child: Text('取消'),
-              onPressed: () {
-                Navigator.of(context).pop();
               },
             ),
           ],
