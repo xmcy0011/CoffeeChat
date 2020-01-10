@@ -52,8 +52,9 @@ func TestLogicServer_RecentContactSession(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-
-	logger.Sugar.Info("recent_session res:", res.String())
+	for i := range res.ContactSessionList {
+		logger.Sugar.Infof("sessionId=%d,latestMsgData:%s", res.ContactSessionList[i].SessionId, string(res.ContactSessionList[i].MsgData))
+	}
 }
 
 func TestLogicServer_GetMsgList(t *testing.T) {

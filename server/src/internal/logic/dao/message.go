@@ -59,13 +59,13 @@ func (m *Message) GetMsgIdSingle(userId uint64, peerId uint64) (int64, error) {
 }
 
 // 查询某条消息详情
-func (m *Message) GetMessage(msgId uint64, peerId uint64) (*model.MessageModel, error) {
-	tableName := fmt.Sprintf("%s%d", kIMMessageRecvTableName, peerId%kIMMessageTableCount)
+func (m *Message) GetMessage(msgId uint64, fromId, toId uint64) (*model.MessageModel, error) {
+	tableName := fmt.Sprintf("%s%d", kIMMessageRecvTableName, toId%kIMMessageTableCount)
 	dbSlave := db.DefaultManager.GetDBSlave()
 	if dbSlave != nil {
 		sql := fmt.Sprintf("select id,client_msg_id,from_id,to_id,group_id,msg_type,msg_content,"+
-			"msg_res_code,msg_feature,msg_status,created,updated from %s where msg_id=%d and to_id=%d",
-			tableName, msgId, peerId)
+			"msg_res_code,msg_feature,msg_status,created,updated from %s where msg_id=%d and from_id=%d and to_id=%d",
+			tableName, msgId, fromId, toId)
 		row := dbSlave.QueryRow(sql)
 		msgInfo := &model.MessageModel{}
 		err := row.Scan(&msgInfo.Id, &msgInfo.ClientMsgId, &msgInfo.FromId, &msgInfo.ToId, &msgInfo.GroupId, &msgInfo.MsgType,

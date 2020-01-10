@@ -44,7 +44,7 @@ func TestLogicServer_CreateUser(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
 	defer cancel()
 
-	res, err := clientConn.CreateUser(ctx, &cim.CreateUserAccountInfo{
+	res, err := clientConn.CreateUser(ctx, &cim.CreateUserAccountInfoReq{
 		UserId:       1001,
 		UserNickName: "小姐姐真美腻",
 		//UserNickName: "  ", //test empty
