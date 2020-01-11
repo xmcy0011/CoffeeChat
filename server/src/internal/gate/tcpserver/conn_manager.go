@@ -48,6 +48,7 @@ func init() {
 					conn.OnTimer(tick.Unix())
 				}
 			default:
+				time.Sleep(time.Millisecond * 10)
 			}
 		}
 	}()

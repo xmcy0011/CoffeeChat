@@ -9,12 +9,15 @@ import (
 	"github.com/CoffeeChat/server/src/pkg/logger"
 	"os"
 	"os/signal"
+	"runtime/pprof"
 	"syscall"
 )
 
 var (
 	configFile  = flag.String("conf", "gate-example.toml", "the config path")
+	profFlag    = flag.Int("prof", 0, "write cpu profile, to used be p-prof tool")
 	pidFileName = "server.pid"
+	f           *os.File
 )
 
 func waitExit(c chan os.Signal) {
@@ -22,6 +25,13 @@ func waitExit(c chan os.Signal) {
 		switch i {
 		case syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT:
 			logger.Sugar.Info("receive exit signal ", i.String(), ",exit...")
+
+			// CPU 性能分析
+			if *profFlag == 1 {
+				_ = f.Close()
+				pprof.StopCPUProfile()
+			}
+
 			os.Exit(0)
 		}
 	}
@@ -32,6 +42,16 @@ func main() {
 
 	logger.InitLogger("log/log.log", "debug")
 	defer logger.Logger.Sync() // flushes buffer, if any
+
+	//启用CPU 性能分析
+	if *profFlag == 1 {
+		f, err := os.OpenFile("cpu.prof", os.O_RDWR|os.O_CREATE, 0644)
+		if err != nil {
+			logger.Sugar.Fatal(err)
+			return
+		}
+		pprof.StartCPUProfile(f)
+	}
 
 	// resolve gate.conf
 	_, err := toml.DecodeFile(*configFile, conf.DefaultConfig)
