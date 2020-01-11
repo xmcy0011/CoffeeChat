@@ -1,8 +1,8 @@
-#!/bin/sh
+#/bin/sh
 
 print_help(){
   echo "Usage: "
-  echo "  ./stop.sh (im_gate|im_logic)"
+  echo "  ./stop.sh (im_gate|im_logic|im_http)"
   echo "  ./stop.sh all"
 }
 
@@ -22,13 +22,18 @@ stop(){
     echo "kill $1 pid=$pid"
     kill "${pid}"
   fi
+  
+  ps aux|grep `cat server.pid`
 }
 
 case $1 in
-  gate)
+  im_gate)
     stop $1
     ;;
-  logic)
+  im_logic)
+    stop $1
+    ;;
+  im_http)
     stop $1
     ;;
   *)

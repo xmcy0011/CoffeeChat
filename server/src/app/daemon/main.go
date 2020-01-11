@@ -30,7 +30,6 @@ func main() {
 
 	fullPath, _ := filepath.Abs(appPath)
 	cmd := exec.Command(fullPath, args...)
-	fmt.Println("exec")
 	err := cmd.Start()
 	time.Sleep(time.Second)
 	if err != nil {

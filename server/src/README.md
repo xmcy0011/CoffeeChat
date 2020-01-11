@@ -45,6 +45,17 @@ delete from user where user='cim';
 flush privileges;
 ```
 
+## redis
+
+1. 更改配置
+```bash
+vim /etc/redis.conf
+
+## 更改以下几项
+daemonize yes           # 守护进程运行
+requirepass coffeechat  # 访问密码
+```
+
 ## unable to deduce repository and source type for "google.golang.org/grpc"
 
 using proxy

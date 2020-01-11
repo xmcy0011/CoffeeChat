@@ -3,8 +3,8 @@ CUR_DIR=`pwd`
 
 print_help(){
   echo "Usage: "
-  echo "  ./stop.sh (im_gate|im_logic)"
-  echo "  ./stop.sh all"
+  echo "  ./restart.sh (im_gate|im_logic|im_http)"
+  echo "  ./restart.sh all"
 }
 
 stop(){
@@ -35,17 +35,24 @@ start(){
     return
   fi
 
-  ./daemon im_$1 $2
+  ./daemon $1 $2
+
+  sleep 2
+  ps aux|grep `cat server.pid`
 }
 
 case $1 in
-  gate)
+  im_gate)
     stop $1
     start $1 conf=im_gate.conf
     ;;
-  logic)
+  im_logic)
     stop $1
     start $1 conf=im_logic.conf
+    ;;
+  im_http)
+    stop $1
+    start $1 conf=im_http.conf
     ;;
   *)
     print_help
