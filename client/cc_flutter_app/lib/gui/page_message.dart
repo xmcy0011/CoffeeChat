@@ -319,7 +319,6 @@ class _PageMessageState extends State<PageMessage> {
         });
 
         setState(() {
-          _msgList.insertAll(0, msgList);
           if (_scrollController == null) {
             if (_msgList.length > 6) {
               _scrollController = new ScrollController(initialScrollOffset: 380);
@@ -327,6 +326,7 @@ class _PageMessageState extends State<PageMessage> {
               _scrollController = new ScrollController();
             }
           }
+          _msgList.insertAll(0, msgList);
         });
       } else {
         print("getMessageList error,rsp is not CIMGetMsgListRsp");
