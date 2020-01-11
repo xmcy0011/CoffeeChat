@@ -111,14 +111,14 @@ func (m *Message) GetSingleMsgList(userId uint64, sessionId uint64, sessionType 
 				"msg_res_code,msg_feature,msg_status,created,updated from %s"+
 				" force index(ix_fromId_toId_msgStatus_created)"+
 				" where from_id=%d and to_id=%d"+
-				" order by id desc,created limit %d",
+				" order by msg_id desc,created limit %d",
 				tableNameA, userId, sessionId, limitCount)
 		} else {
 			sql = fmt.Sprintf("select msg_id,client_msg_id,from_id,to_id,group_id,msg_type,msg_content,"+
 				"msg_res_code,msg_feature,msg_status,created,updated from %s"+
 				" force index(ix_fromId_toId_msgStatus_created)"+
 				" where from_id=%d and to_id=%d and msg_id<%d"+
-				" order by id desc,created limit %d",
+				" order by msg_id desc,created limit %d",
 				tableNameA, userId, sessionId, endMsgId, limitCount)
 		}
 
@@ -144,14 +144,14 @@ func (m *Message) GetSingleMsgList(userId uint64, sessionId uint64, sessionType 
 					"msg_res_code,msg_feature,msg_status,created,updated from %s"+
 					" force index(ix_fromId_toId_msgStatus_created)"+
 					" where from_id=%d and to_id=%d"+
-					" order by id desc,created limit %d",
+					" order by msg_id desc,created limit %d",
 					tableNameB, sessionId, userId, limitCount)
 			} else {
 				sql = fmt.Sprintf("select msg_id,client_msg_id,from_id,to_id,group_id,msg_type,msg_content,"+
 					"msg_res_code,msg_feature,msg_status,created,updated from %s "+
 					" force index(ix_fromId_toId_msgStatus_created)"+
 					" where from_id=%d and to_id=%d and msg_id<%d"+
-					" order by id desc,created limit %d",
+					" order by msg_id desc,created limit %d",
 					tableNameB, sessionId, userId, endMsgId, limitCount)
 			}
 			rowB, err := dbSlave.Query(sql)
@@ -174,7 +174,9 @@ func (m *Message) GetSingleMsgList(userId uint64, sessionId uint64, sessionType 
 
 		// 从小到大升序排序（最新消息放最后，符合自然浏览顺序）
 		sort.Slice(msgArr, func(i, j int) bool {
-			return msgArr[i].Created < msgArr[j].Created && msgArr[i].MsgId < msgArr[j].MsgId
+			//return msgArr[i].Created < msgArr[j].Created && msgArr[i].MsgId < msgArr[j].MsgId
+			// fixed 2020.01.11 对话顺序问题
+			return msgArr[i].MsgId < msgArr[j].MsgId
 		})
 
 		// 返回部分
