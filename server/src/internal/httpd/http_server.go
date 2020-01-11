@@ -212,6 +212,7 @@ func StartHttpServer(config Config) {
 
 	// 启动Http监听端口
 	// PS：为了安全起见，一般线上需要改成HTTPS， 证书可以使用阿里云等免费的SSL证书
-	logger.Sugar.Infof("start http server")
-	logger.Sugar.Fatal(http.ListenAndServe(config.ListenIp+":"+strconv.Itoa(config.ListenPort), nil))
+	host := config.ListenIp + ":" + strconv.Itoa(config.ListenPort)
+	logger.Sugar.Infof("start http server,listen on %s", host)
+	logger.Sugar.Fatal(http.ListenAndServe(host, nil))
 }
