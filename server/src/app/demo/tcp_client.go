@@ -174,16 +174,12 @@ func read() {
 		switch header.CommandId {
 		case uint16(cim.CIMCmdID_kCIM_CID_LIST_RECENT_CONTACT_SESSION_RSP):
 			onHandleRecentSessionList(dataBuff)
-			break
 		case uint16(cim.CIMCmdID_kCIM_CID_MSG_DATA_ACK):
 			onHandleMsgDataAck(dataBuff)
-			break
 		case uint16(cim.CIMCmdID_kCIM_CID_MSG_DATA):
 			onHandleMsgData(dataBuff)
-			break
 		default:
 			logger.Sugar.Errorf("unknown command:%d", header.CommandId)
-			break
 		}
 	}
 }

@@ -113,25 +113,18 @@ func (tcp *TcpConn) OnRead(header *cim.ImHeader, buff []byte) {
 		//logger.Sugar.Info("heartbeat", header.CommandId)
 		tcp.lastHeartBeatTime = time.Now().Unix()
 		_, _ = tcp.Send(0, uint16(cim.CIMCmdID_kCIM_CID_LOGIN_HEARTBEAT), &cim.CIMHeartBeat{})
-		break
 	case uint16(cim.CIMCmdID_kCIM_CID_LOGIN_AUTH_TOKEN_REQ):
 		tcp.onHandleAuthReq(header, buff)
-		break
 	case uint16(cim.CIMCmdID_kCIM_CID_LIST_RECENT_CONTACT_SESSION_REQ):
 		tcp.onHandleRecentContactSessionReq(header, buff)
-		break
 	case uint16(cim.CIMCmdID_kCIM_CID_LIST_MSG_REQ):
 		tcp.onHandleGetMsgListReq(header, buff)
-		break
 	case uint16(cim.CIMCmdID_kCIM_CID_MSG_DATA):
 		tcp.onHandleMsgData(header, buff)
-		break
 	case uint16(cim.CIMCmdID_kCIM_CID_MSG_DATA_ACK):
 		tcp.onHandleMsgAck(header, buff)
-		break
 	case uint16(cim.CIMCmdID_kCIM_CID_MSG_READ_ACK):
 		tcp.onHandleSetReadMessaged(header, buff)
-		break
 	default:
 		logger.Sugar.Errorf("unknown command_id=%d", header.CommandId)
 		break
