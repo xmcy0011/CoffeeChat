@@ -1,0 +1,104 @@
+1.sip呼叫流程
+@startuml
+Alice -> Bob: INVITE
+Bob --> Alice: 100 Trying
+Bob --> Alice: 180 Ringing
+Bob --> Alice: 200 OK
+Alice -> Bob: ACK
+
+Alice -> Bob: RTP
+Bob -> Alice:
+Bob -> Alice: RTP
+Alice -> Bob:
+
+Bob -> Alice: BYE
+Alice -> Bob: 200 OK
+@enduml
+
+2.微信
+@startuml
+
+state alice{
+  [*] --> 拨号中
+  拨号中 --> 等待对方接听
+  等待对方接听 --> 取消1
+  等待对方接听 --> bob
+  通话中1 --> 结束1
+  取消1 --> 结束1
+  结束1 --> message
+}
+
+state bob{
+  [*] --> 连接中
+  连接中 -> 已接通
+  已接通 -> 持续振铃
+  持续振铃 --> 接听
+  持续振铃 --> 取消2
+  接听 --> 通话中
+  接听 --> 通话中1
+  通话中 --> 挂断
+  挂断 --> 结束
+  取消2 --> 结束
+  结束 --> message
+}
+
+state message{
+  [*] --> 通话时长01分00秒
+  [*] --> 对方已取消
+  [*] --> 已取消
+}
+@enduml
+
+3.声网SDK流程
+@startuml
+alice -> agora: 1.joinChannel
+agora -> alice: 2.onJoinChannelSuccess()
+alice -> im: 3.invite(pb)
+im -> alice: 4.100 Trying(pb)
+im -> bob: 5.invite(pb)
+bob -> im: 6.180 Ringing(pb)
+im -> alice: 7.180 Ringing(pb)
+bob -> im: 8.200 ok(pb)
+im -> bob: 9.ack(pb)
+im -> alice: 10.200 ok(pb)
+alice -> im: 11.ack(pb)
+bob -> agora: 12.joinChannel
+agora -> bob: 13.onJoinChannelSuccess()
+agora -> alice: 14.onUserJoined()
+alice <-> bob: 15.Agora voice/video data stream
+alice <-> bob: 16.Agora voice/video data stream
+alice -> im: 17.heartbeat(pb)
+bob -> im: 18.heartbeat(pb)
+alice <-> bob: 19.Agora voice/video data stream
+bob -> agora: 20.levelChannel
+agora -> alice: 21.onUserOffline,reason=1
+alice -> agora: 22.levelChannel
+agora -> agora: 23.delete Channel
+bob -> im: 24.BYE(pb)
+im -> bob: 25.200 OK(pb)
+im -> alice: 26.msg,type=tips,content=通话时长01分00秒(pb)
+alice -> im: 27.ack
+im -> bob: 28.msg(pb)
+bob -> im: 29.ack
+@enduml
+
+4.SIP和声网结合
+@startuml
+Alice -> IM: INVITE
+IM -> Bob: INVITE
+IM --> Alice: 100 Trying
+Bob --> IM: 180 Ringing
+Bob --> IM: 200 OK
+IM -> Alice: 200 OK
+Alice -> IM: ACK
+IM -> Bob: ACK
+
+Alice <-> Bob: Agora SDK voice/video data
+Alice <-> Bob: ……
+Alice <-> Bob: Agora SDK voice/video data
+
+Bob -> IM: BYE
+IM -> Alice: BYE
+Alice -> IM: 200 OK
+IM -> Bob: 200 OK
+@enduml
