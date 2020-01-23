@@ -20,24 +20,27 @@ Alice -> Bob: 200 OK
 
 state alice{
   [*] --> 拨号中
-  拨号中 --> 等待对方接听
+  拨号中 --> 已接通1: 2.收到100 Trying
+  拨号中 --> bob: 1.发送Invite
+  已接通1 --> 等待对方接听: 5.收到180 Ringing
   等待对方接听 --> 取消1
-  等待对方接听 --> bob
-  通话中1 --> 结束1
+  通话中1 --> 挂断1
+  挂断1 --> 结束1
   取消1 --> 结束1
   结束1 --> message
 }
 
 state bob{
-  [*] --> 连接中
+  [*] --> 连接中: 3.收到Invite
   连接中 -> 已接通
-  已接通 -> 持续振铃
-  持续振铃 --> 接听
+  已接通 -> 持续振铃: 4.回复180 Ringing
+  持续振铃 --> 接听: 6.发送200 OK
   持续振铃 --> 取消2
   接听 --> 通话中
-  接听 --> 通话中1
-  通话中 --> 挂断
+  接听 --> 通话中1: 7.收到200 OK
+  通话中 --> 挂断: 8.发送Bye
   挂断 --> 结束
+  挂断 --> 结束1: 9.收到Bye
   取消2 --> 结束
   结束 --> message
 }
@@ -51,24 +54,27 @@ state message{
 
 3.声网SDK流程
 @startuml
-alice -> agora: 1.joinChannel
-agora -> alice: 2.onJoinChannelSuccess()
-alice -> im: 3.invite(pb)
-im -> alice: 4.100 Trying(pb)
-im -> bob: 5.invite(pb)
+alice -> agora: 0. ....
+alice -> im: 1.invite(pb)
+im -> alice: 2.100 Trying(pb)
+im -> bob: 3.invite(pb)
+bob -> agora: 4.joinChannel
+agora -> bob: 5.onJoinChannelSuccess
 bob -> im: 6.180 Ringing(pb)
 im -> alice: 7.180 Ringing(pb)
 bob -> im: 8.200 ok(pb)
 im -> bob: 9.ack(pb)
 im -> alice: 10.200 ok(pb)
 alice -> im: 11.ack(pb)
-bob -> agora: 12.joinChannel
-agora -> bob: 13.onJoinChannelSuccess()
-agora -> alice: 14.onUserJoined()
+
+alice -> agora: 13.joinChannel
+agora -> alice: 14.onJoinChannelSuccess
+agora -> bob: 15.onUserJoined
+
 alice <-> bob: 15.Agora voice/video data stream
 alice <-> bob: 16.Agora voice/video data stream
-alice -> im: 17.heartbeat(pb)
-bob -> im: 18.heartbeat(pb)
+bob -> im: 17.heartbeat(pb)
+alice -> im: 18.heartbeat(pb)
 alice <-> bob: 19.Agora voice/video data stream
 bob -> agora: 20.levelChannel
 agora -> alice: 21.onUserOffline,reason=1
@@ -88,6 +94,7 @@ Alice -> IM: INVITE
 IM -> Bob: INVITE
 IM --> Alice: 100 Trying
 Bob --> IM: 180 Ringing
+IM --> Alice: 180 Ringing
 Bob --> IM: 200 OK
 IM -> Alice: 200 OK
 Alice -> IM: ACK

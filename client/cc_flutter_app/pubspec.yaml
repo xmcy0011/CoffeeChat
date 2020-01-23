@@ -32,6 +32,8 @@ dependencies:
   shared_preferences: ^0.5.2 # 保存键值对信息
   sqflite: ^1.1.7+1     # SQLite plugin for Flutter. Supports both iOS and Android
   dio: ^3.0.7
+  agora_rtc_engine: 1.0.3     # 声网SDK
+  permission_handler: ^3.0.0  # 权限
 
 dev_dependencies:
   flutter_test:

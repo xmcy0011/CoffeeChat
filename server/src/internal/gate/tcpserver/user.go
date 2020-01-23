@@ -9,6 +9,7 @@ import (
 	"container/list"
 	"github.com/CoffeeChat/server/src/api/cim"
 	"github.com/CoffeeChat/server/src/pkg/logger"
+	"github.com/golang/protobuf/proto"
 	"math"
 )
 
@@ -44,6 +45,16 @@ func (u *User) RemoveConn(e *list.Element, conn CImConn) {
 
 func (u *User) GetConnCount() int {
 	return u.conn.Len()
+}
+
+func (u *User) Broadcast(cmdId uint16, data proto.Message) {
+	for item := u.conn.Front(); item != nil; item = item.Next() {
+		conn := item.Value.(CImConn)
+		_, err := conn.Send(0, cmdId, data)
+		if err != nil {
+			logger.Sugar.Error("Broadcast error:", err.Error())
+		}
+	}
 }
 
 func (u *User) BroadcastMessage(data *cim.CIMMsgData) {

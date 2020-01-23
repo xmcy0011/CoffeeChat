@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:cc_flutter_app/gui/page_avchat_caller.dart';
+import 'package:cc_flutter_app/gui/page_avchat_ringing.dart';
 import 'package:cc_flutter_app/imsdk/im_manager.dart';
 import 'package:cc_flutter_app/imsdk/core/model/model.dart';
 import 'package:cc_flutter_app/imsdk/im_message.dart';
@@ -10,6 +12,8 @@ import 'package:cc_flutter_app/imsdk/proto/CIM.Message.pb.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:toast/toast.dart';
+
+import 'helper.dart';
 
 // 单次拉取历史记录的最大数量
 const kMaxPullMsgLimitCount = 10;
@@ -38,7 +42,37 @@ class _PageMessageState extends State<PageMessage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(this.sessionInfo.sessionName)),
+      appBar: AppBar(
+        title: Text(this.sessionInfo.sessionName),
+        actions: <Widget>[
+          PopupMenuButton(
+            icon: Icon(Icons.call),
+            itemBuilder: (BuildContext context) => <PopupMenuItem<String>>[
+              PopupMenuItem<String>(
+                child: Text("语音通话"),
+                value: "1",
+              ),
+              PopupMenuItem<String>(
+                child: Text("视频通话"),
+                value: "2",
+              ),
+            ],
+            onSelected: (String action) {
+              switch (action) {
+                case "1":
+                  _onVoiceCall();
+                  break;
+                case "2":
+                  _onVideoCall();
+                  break;
+              }
+            },
+            onCanceled: () {
+              print("onCanceled");
+            },
+          ),
+        ],
+      ),
       body: Container(
         child: RefreshIndicator(
           // 下拉刷新
@@ -441,4 +475,11 @@ class _PageMessageState extends State<PageMessage> {
       scrollEnd2();
     }
   }
+
+  void _onVoiceCall() {
+    navigatePushPage(this.context, new PageAVChatCallerStatefulWidget());
+    //navigatePushPage(this.context, new PageAVChatRingingStatefulWidget());
+  }
+
+  void _onVideoCall() {}
 }

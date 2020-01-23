@@ -25,6 +25,11 @@ const CIMCmdID$json = const {
     const {'1': 'kCIM_CID_MSG_GET_LATEST_MSG_ID_RSP', '2': 774},
     const {'1': 'kCIM_CID_MSG_GET_BY_MSG_ID_REQ', '2': 775},
     const {'1': 'kCIM_CID_MSG_GET_BY_MSG_ID_RSP', '2': 776},
+    const {'1': 'kCIM_CID_VOIP_INVITE_REQ', '2': 1025},
+    const {'1': 'kCIM_CID_VOIP_INVITE_REPLY', '2': 1026},
+    const {'1': 'kCIM_CID_VOIP_HEARTBEAT', '2': 1027},
+    const {'1': 'kCIM_CID_VOIP_BYE_REQ', '2': 1028},
+    const {'1': 'kCIM_CID_VOIP_BYE_RSP', '2': 1029},
   ],
 };
 
@@ -119,6 +124,36 @@ const CIMMsgFeature$json = const {
   ],
 };
 
+const CIMVoipInviteType$json = const {
+  '1': 'CIMVoipInviteType',
+  '2': const [
+    const {'1': 'kCIM_VOIP_INVITE_TYPE_UNKNOWN', '2': 0},
+    const {'1': 'kCIM_VOIP_INVITE_TYPE_VOICE_CALL', '2': 1},
+    const {'1': 'kCIM_VOIP_INVITE_TYPE_VIDEO_CALL', '2': 2},
+  ],
+};
+
+const CIMInviteRspCode$json = const {
+  '1': 'CIMInviteRspCode',
+  '2': const [
+    const {'1': 'kCIM_VOIP_INVITE_CODE_UNKNOWN', '2': 0},
+    const {'1': 'kCIM_VOIP_INVITE_CODE_TRYING', '2': 100},
+    const {'1': 'kCIM_VOIP_INVITE_CODE_RINGING', '2': 180},
+    const {'1': 'KCIM_VOIP_INVITE_CODE_OK', '2': 200},
+  ],
+};
+
+const CIMVoipByeReason$json = const {
+  '1': 'CIMVoipByeReason',
+  '2': const [
+    const {'1': 'kCIM_VOIP_BYE_REASON_UNKNOWN', '2': 0},
+    const {'1': 'kCIM_VOIP_BYE_REASON_CANCEL', '2': 1},
+    const {'1': 'kCIM_VOIP_BYE_REASON_HANG_UP', '2': 2},
+    const {'1': 'kCIM_VOIP_BYE_REASON_BUSY', '2': 3},
+    const {'1': 'kCIM_VOIP_BYE_REASON_ONLINE_CLIENT_REJECT', '2': 4},
+  ],
+};
+
 const CIMResCode$json = const {
   '1': 'CIMResCode',
   '2': const [
@@ -172,6 +207,14 @@ const CIMMsgInfo$json = const {
     const {'1': 'msg_data', '3': 11, '4': 1, '5': 12, '10': 'msgData'},
     const {'1': 'attach', '3': 12, '4': 1, '5': 9, '10': 'attach'},
     const {'1': 'sender_client_type', '3': 13, '4': 1, '5': 14, '6': '.CIM.Def.CIMClientType', '10': 'senderClientType'},
+  ],
+};
+
+const CIMChannelInfo$json = const {
+  '1': 'CIMChannelInfo',
+  '2': const [
+    const {'1': 'channel_name', '3': 1, '4': 1, '5': 9, '10': 'channelName'},
+    const {'1': 'channel_token', '3': 2, '4': 1, '5': 9, '10': 'channelToken'},
   ],
 };
 

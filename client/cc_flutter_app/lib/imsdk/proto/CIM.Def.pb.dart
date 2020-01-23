@@ -253,3 +253,33 @@ class CIMMsgInfo extends $pb.GeneratedMessage {
   void clearSenderClientType() => clearField(13);
 }
 
+class CIMChannelInfo extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('CIMChannelInfo', package: const $pb.PackageName('CIM.Def'))
+    ..aOS(1, 'channelName')
+    ..aOS(2, 'channelToken')
+    ..hasRequiredFields = false
+  ;
+
+  CIMChannelInfo() : super();
+  CIMChannelInfo.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  CIMChannelInfo.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  CIMChannelInfo clone() => CIMChannelInfo()..mergeFromMessage(this);
+  CIMChannelInfo copyWith(void Function(CIMChannelInfo) updates) => super.copyWith((message) => updates(message as CIMChannelInfo));
+  $pb.BuilderInfo get info_ => _i;
+  static CIMChannelInfo create() => CIMChannelInfo();
+  CIMChannelInfo createEmptyInstance() => create();
+  static $pb.PbList<CIMChannelInfo> createRepeated() => $pb.PbList<CIMChannelInfo>();
+  static CIMChannelInfo getDefault() => _defaultInstance ??= create()..freeze();
+  static CIMChannelInfo _defaultInstance;
+
+  $core.String get channelName => $_getS(0, '');
+  set channelName($core.String v) { $_setString(0, v); }
+  $core.bool hasChannelName() => $_has(0);
+  void clearChannelName() => clearField(1);
+
+  $core.String get channelToken => $_getS(1, '');
+  set channelToken($core.String v) { $_setString(1, v); }
+  $core.bool hasChannelToken() => $_has(1);
+  void clearChannelToken() => clearField(2);
+}
+

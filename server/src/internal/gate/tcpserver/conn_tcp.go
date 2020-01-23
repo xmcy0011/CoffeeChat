@@ -125,6 +125,16 @@ func (tcp *TcpConn) OnRead(header *cim.ImHeader, buff []byte) {
 		tcp.onHandleMsgAck(header, buff)
 	case uint16(cim.CIMCmdID_kCIM_CID_MSG_READ_ACK):
 		tcp.onHandleSetReadMessaged(header, buff)
+	case uint16(cim.CIMCmdID_kCIM_CID_VOIP_INVITE_REQ):
+		tcp.onHandleVOIPInviteReq(header, buff)
+	case uint16(cim.CIMCmdID_kCIM_CID_VOIP_HEARTBEAT):
+		tcp.onHandleVOIPHeartbeat(header, buff)
+	case uint16(cim.CIMCmdID_kCIM_CID_VOIP_INVITE_REPLY):
+		tcp.onHandleVOIPInviteReply(header, buff)
+	case uint16(cim.CIMCmdID_kCIM_CID_VOIP_INVITE_RSP):
+		tcp.onHandleVOIPInviteRsp(header, buff)
+	case uint16(cim.CIMCmdID_kCIM_CID_VOID_BYE_REQ):
+		tcp.onHandleVOIPInviteRsp(header, buff)
 	default:
 		logger.Sugar.Errorf("unknown command_id=%d", header.CommandId)
 		break

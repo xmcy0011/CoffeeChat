@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:cc_flutter_app/imsdk/im_manager.dart';
+import 'package:cc_flutter_app/imsdk/im_avchat.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Message.pb.dart';
+import 'package:cc_flutter_app/imsdk/proto/CIM.Voip.pb.dart';
 import 'package:cc_flutter_app/imsdk/proto/im_header.dart';
 import 'package:cc_flutter_app/imsdk/proto/im_request.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
@@ -27,6 +28,7 @@ abstract class IMessage {
 class IMClient {
   RawSocket socket; // socket
   var msgService = new Map<String, IMessage>(); // 消息处理
+  var voipService = new Map<String, IAVChat>(); // VOIP信令
 
   var isLogin = false;
   var isReLogin = false;
@@ -138,7 +140,7 @@ class IMClient {
     return sendRequest(cmdId, message, null);
   }
 
-  /// 发送请求，获得响应后回调
+  /// 发送请求，获得响应后回调（包序号一样）
   /// [commandId] 命令ID
   /// [message] 数据部
   /// [callback] 结果回调
@@ -165,6 +167,15 @@ class IMClient {
   /// [msg] 回调对象
   void registerMessageService(String name, IMessage msg) {
     this.msgService[name] = msg;
+  }
+
+  /// 注册收到新消息回调
+  void observerVOIPService(String name, IAVChat callbackInterface, bool register) {
+    if (register) {
+      this.voipService[name] = callbackInterface;
+    } else {
+      this.voipService.remove(name);
+    }
   }
 
   // 数据处理
@@ -290,6 +301,18 @@ class IMClient {
     // 已读消息通知
     else if (header.commandId == CIMCmdID.kCIM_CID_MSG_READ_NOTIFY.value) {
       _handleMsgReadNotify(header, data);
+    }
+    // VOIP
+    else if (header.commandId == CIMCmdID.kCIM_CID_VOIP_INVITE_REQ.value) {
+      _handleInviteReq(header, data);
+    } else if (header.commandId == CIMCmdID.kCIM_CID_VOIP_INVITE_REPLY.value) {
+      _handleInviteReply(header, data);
+    } else if (header.commandId == CIMCmdID.kCIM_CID_VOIP_HEARTBEAT.value) {
+      _handleVOIPHeartbeat(header, data);
+    } else if (header.commandId == CIMCmdID.kCIM_CID_VOIP_BYE_REQ.value) {
+      _handleVOIPByeReq(header, data);
+    } else if (header.commandId == CIMCmdID.kCIM_CID_VOIP_BYE_RSP.value) {
+      _handleVOIPByeRsp(header, data);
     } else {
       print("unknown message,cmdId:${header.commandId}");
     }
@@ -372,6 +395,57 @@ class IMClient {
     msgService.forEach((k, v) {
       IMessage msg = v;
       msg.onHandleReadNotify(header, notify);
+    });
+  }
+
+  // VOIP
+  void _handleInviteReq(IMHeader header, List<int> data) {
+    var req = CIMVoipInviteReq.fromBuffer(data);
+    print("_handleInviteReq creator_user_id:${req.creatorUserId},invite_user=${req.inviteUserList[0]}");
+
+    voipService.forEach((k, v) {
+      IAVChat chat = v;
+      chat.onHandleInviteReq(header, req);
+    });
+  }
+
+  void _handleInviteReply(IMHeader header, List<int> data) {
+    var req = CIMVoipInviteReply.fromBuffer(data);
+    print("_handleInviteReply reply_user_id:${req.userId},status:${req.rspCode.value}");
+
+    voipService.forEach((k, v) {
+      IAVChat chat = v;
+      chat.onHandleInviteReply(header, req);
+    });
+  }
+
+  void _handleVOIPHeartbeat(IMHeader header, List<int> data) {
+    var req = CIMVoipHeartbeat.fromBuffer(data);
+    print("_handleVOIPHeartbeat time=${DateTime.now().toString()}");
+
+    this.voipService.forEach((k, v) {
+      IAVChat chat = v;
+      chat.onHandleVOIPHeartbeat(header, req);
+    });
+  }
+
+  void _handleVOIPByeReq(IMHeader header, List<int> data) {
+    var req = CIMVoipByeReq.fromBuffer(data);
+    print("_handleVOIPByeReq user_id:${req.userId}");
+
+    this.voipService.forEach((k, v) {
+      IAVChat chat = v;
+      chat.onHandleVOIPByeReq(header, req);
+    });
+  }
+
+  void _handleVOIPByeRsp(IMHeader header, List<int> data) {
+    var rsp = CIMVoipByeRsp.fromBuffer(data);
+    print("_handleVOIPByeRsp user_id:${rsp.userId}");
+
+    this.voipService.forEach((k, v) {
+      IAVChat chat = v;
+      chat.onHandleVOIPByeRsp(header, rsp);
     });
   }
 }

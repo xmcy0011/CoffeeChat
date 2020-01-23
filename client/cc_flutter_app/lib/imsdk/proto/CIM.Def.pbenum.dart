@@ -27,6 +27,11 @@ class CIMCmdID extends $pb.ProtobufEnum {
   static const CIMCmdID kCIM_CID_MSG_GET_LATEST_MSG_ID_RSP = CIMCmdID._(774, 'kCIM_CID_MSG_GET_LATEST_MSG_ID_RSP');
   static const CIMCmdID kCIM_CID_MSG_GET_BY_MSG_ID_REQ = CIMCmdID._(775, 'kCIM_CID_MSG_GET_BY_MSG_ID_REQ');
   static const CIMCmdID kCIM_CID_MSG_GET_BY_MSG_ID_RSP = CIMCmdID._(776, 'kCIM_CID_MSG_GET_BY_MSG_ID_RSP');
+  static const CIMCmdID kCIM_CID_VOIP_INVITE_REQ = CIMCmdID._(1025, 'kCIM_CID_VOIP_INVITE_REQ');
+  static const CIMCmdID kCIM_CID_VOIP_INVITE_REPLY = CIMCmdID._(1026, 'kCIM_CID_VOIP_INVITE_REPLY');
+  static const CIMCmdID kCIM_CID_VOIP_HEARTBEAT = CIMCmdID._(1027, 'kCIM_CID_VOIP_HEARTBEAT');
+  static const CIMCmdID kCIM_CID_VOIP_BYE_REQ = CIMCmdID._(1028, 'kCIM_CID_VOIP_BYE_REQ');
+  static const CIMCmdID kCIM_CID_VOIP_BYE_RSP = CIMCmdID._(1029, 'kCIM_CID_VOIP_BYE_RSP');
 
   static const $core.List<CIMCmdID> values = <CIMCmdID> [
     kCIM_CID_UNKNOWN,
@@ -47,6 +52,11 @@ class CIMCmdID extends $pb.ProtobufEnum {
     kCIM_CID_MSG_GET_LATEST_MSG_ID_RSP,
     kCIM_CID_MSG_GET_BY_MSG_ID_REQ,
     kCIM_CID_MSG_GET_BY_MSG_ID_RSP,
+    kCIM_CID_VOIP_INVITE_REQ,
+    kCIM_CID_VOIP_INVITE_REPLY,
+    kCIM_CID_VOIP_HEARTBEAT,
+    kCIM_CID_VOIP_BYE_REQ,
+    kCIM_CID_VOIP_BYE_RSP,
   ];
 
   static final $core.Map<$core.int, CIMCmdID> _byValue = $pb.ProtobufEnum.initByValue(values);
@@ -227,6 +237,63 @@ class CIMMsgFeature extends $pb.ProtobufEnum {
   static CIMMsgFeature valueOf($core.int value) => _byValue[value];
 
   const CIMMsgFeature._($core.int v, $core.String n) : super(v, n);
+}
+
+class CIMVoipInviteType extends $pb.ProtobufEnum {
+  static const CIMVoipInviteType kCIM_VOIP_INVITE_TYPE_UNKNOWN = CIMVoipInviteType._(0, 'kCIM_VOIP_INVITE_TYPE_UNKNOWN');
+  static const CIMVoipInviteType kCIM_VOIP_INVITE_TYPE_VOICE_CALL = CIMVoipInviteType._(1, 'kCIM_VOIP_INVITE_TYPE_VOICE_CALL');
+  static const CIMVoipInviteType kCIM_VOIP_INVITE_TYPE_VIDEO_CALL = CIMVoipInviteType._(2, 'kCIM_VOIP_INVITE_TYPE_VIDEO_CALL');
+
+  static const $core.List<CIMVoipInviteType> values = <CIMVoipInviteType> [
+    kCIM_VOIP_INVITE_TYPE_UNKNOWN,
+    kCIM_VOIP_INVITE_TYPE_VOICE_CALL,
+    kCIM_VOIP_INVITE_TYPE_VIDEO_CALL,
+  ];
+
+  static final $core.Map<$core.int, CIMVoipInviteType> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static CIMVoipInviteType valueOf($core.int value) => _byValue[value];
+
+  const CIMVoipInviteType._($core.int v, $core.String n) : super(v, n);
+}
+
+class CIMInviteRspCode extends $pb.ProtobufEnum {
+  static const CIMInviteRspCode kCIM_VOIP_INVITE_CODE_UNKNOWN = CIMInviteRspCode._(0, 'kCIM_VOIP_INVITE_CODE_UNKNOWN');
+  static const CIMInviteRspCode kCIM_VOIP_INVITE_CODE_TRYING = CIMInviteRspCode._(100, 'kCIM_VOIP_INVITE_CODE_TRYING');
+  static const CIMInviteRspCode kCIM_VOIP_INVITE_CODE_RINGING = CIMInviteRspCode._(180, 'kCIM_VOIP_INVITE_CODE_RINGING');
+  static const CIMInviteRspCode KCIM_VOIP_INVITE_CODE_OK = CIMInviteRspCode._(200, 'KCIM_VOIP_INVITE_CODE_OK');
+
+  static const $core.List<CIMInviteRspCode> values = <CIMInviteRspCode> [
+    kCIM_VOIP_INVITE_CODE_UNKNOWN,
+    kCIM_VOIP_INVITE_CODE_TRYING,
+    kCIM_VOIP_INVITE_CODE_RINGING,
+    KCIM_VOIP_INVITE_CODE_OK,
+  ];
+
+  static final $core.Map<$core.int, CIMInviteRspCode> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static CIMInviteRspCode valueOf($core.int value) => _byValue[value];
+
+  const CIMInviteRspCode._($core.int v, $core.String n) : super(v, n);
+}
+
+class CIMVoipByeReason extends $pb.ProtobufEnum {
+  static const CIMVoipByeReason kCIM_VOIP_BYE_REASON_UNKNOWN = CIMVoipByeReason._(0, 'kCIM_VOIP_BYE_REASON_UNKNOWN');
+  static const CIMVoipByeReason kCIM_VOIP_BYE_REASON_CANCEL = CIMVoipByeReason._(1, 'kCIM_VOIP_BYE_REASON_CANCEL');
+  static const CIMVoipByeReason kCIM_VOIP_BYE_REASON_HANG_UP = CIMVoipByeReason._(2, 'kCIM_VOIP_BYE_REASON_HANG_UP');
+  static const CIMVoipByeReason kCIM_VOIP_BYE_REASON_BUSY = CIMVoipByeReason._(3, 'kCIM_VOIP_BYE_REASON_BUSY');
+  static const CIMVoipByeReason kCIM_VOIP_BYE_REASON_ONLINE_CLIENT_REJECT = CIMVoipByeReason._(4, 'kCIM_VOIP_BYE_REASON_ONLINE_CLIENT_REJECT');
+
+  static const $core.List<CIMVoipByeReason> values = <CIMVoipByeReason> [
+    kCIM_VOIP_BYE_REASON_UNKNOWN,
+    kCIM_VOIP_BYE_REASON_CANCEL,
+    kCIM_VOIP_BYE_REASON_HANG_UP,
+    kCIM_VOIP_BYE_REASON_BUSY,
+    kCIM_VOIP_BYE_REASON_ONLINE_CLIENT_REJECT,
+  ];
+
+  static final $core.Map<$core.int, CIMVoipByeReason> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static CIMVoipByeReason valueOf($core.int value) => _byValue[value];
+
+  const CIMVoipByeReason._($core.int v, $core.String n) : super(v, n);
 }
 
 class CIMResCode extends $pb.ProtobufEnum {
