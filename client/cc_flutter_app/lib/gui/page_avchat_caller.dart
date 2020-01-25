@@ -90,30 +90,32 @@ class _PageAVChatCallerWidgetState extends State<PageAVChatCallerStatefulWidget>
             height: 200,
             child: Row(
               children: <Widget>[
-                Expanded(
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        height: 80,
-                        child: RaisedButton(
-                          child: Icon(
-                            Icons.mic_off,
-                            color: Colors.white,
-                            size: 30,
-                          ),
-                          color: Colors.transparent,
-                          elevation: 60,
-                          shape: CircleBorder(side: BorderSide(color: Colors.white)),
-                          onPressed: _onMute,
+                avState == AVState.Established
+                    ? Expanded(
+                        child: Column(
+                          children: <Widget>[
+                            Container(
+                              height: 80,
+                              child: RaisedButton(
+                                child: Icon(
+                                  Icons.mic_off,
+                                  color: Colors.white,
+                                  size: 30,
+                                ),
+                                color: Colors.transparent,
+                                elevation: 60,
+                                shape: CircleBorder(side: BorderSide(color: Colors.white)),
+                                onPressed: _onMute,
+                              ),
+                            ),
+                            Padding(
+                              child: Text("静 音", style: new TextStyle(fontSize: 14, color: Colors.white)),
+                              padding: EdgeInsets.only(top: 10),
+                            )
+                          ],
                         ),
-                      ),
-                      Padding(
-                        child: Text("静 音", style: new TextStyle(fontSize: 14, color: Colors.white)),
-                        padding: EdgeInsets.only(top: 10),
                       )
-                    ],
-                  ),
-                ),
+                    : Container(),
                 Expanded(
                   child: Column(
                     children: <Widget>[
@@ -138,30 +140,32 @@ class _PageAVChatCallerWidgetState extends State<PageAVChatCallerStatefulWidget>
                     ],
                   ),
                 ),
-                Expanded(
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        height: 80,
-                        child: RaisedButton(
-                          child: Icon(
-                            Icons.volume_up,
-                            color: Colors.white,
-                            size: 30,
-                          ),
-                          color: Colors.transparent,
-                          elevation: 60,
-                          shape: CircleBorder(side: BorderSide(color: Colors.white)),
-                          onPressed: _onHandsFree,
+                avState == AVState.Established
+                    ? Expanded(
+                        child: Column(
+                          children: <Widget>[
+                            Container(
+                              height: 80,
+                              child: RaisedButton(
+                                child: Icon(
+                                  Icons.volume_up,
+                                  color: Colors.white,
+                                  size: 30,
+                                ),
+                                color: Colors.transparent,
+                                elevation: 60,
+                                shape: CircleBorder(side: BorderSide(color: Colors.white)),
+                                onPressed: _onHandsFree,
+                              ),
+                            ),
+                            Padding(
+                              child: Text("免 提", style: new TextStyle(fontSize: 14, color: Colors.white)),
+                              padding: EdgeInsets.only(top: 10),
+                            )
+                          ],
                         ),
-                      ),
-                      Padding(
-                        child: Text("免 提", style: new TextStyle(fontSize: 14, color: Colors.white)),
-                        padding: EdgeInsets.only(top: 10),
                       )
-                    ],
-                  ),
-                ),
+                    : Container(),
               ],
             ),
           ),
@@ -180,7 +184,9 @@ class _PageAVChatCallerWidgetState extends State<PageAVChatCallerStatefulWidget>
 
     IMAVChat.singleton.call(this.peerUserId, CIMVoipInviteType.kCIM_VOIP_INVITE_TYPE_VOICE_CALL, null, (data) {
       print("call success");
-      this.avState = AVState.Established;
+      setState(() {
+        this.avState = AVState.Established;
+      });
     }, (int code, String desc) {
       IMAVChat.singleton.hangUp(null); // 挂断
       Navigator.of(this.context).pop();
@@ -221,7 +227,9 @@ class _PageAVChatCallerWidgetState extends State<PageAVChatCallerStatefulWidget>
   /// AVChatStateObserverLite
   @override
   void onTrying() {
-    avState = AVState.Trying;
+    setState(() {
+      avState = AVState.Trying;
+    });
 
     timer = new Timer.periodic(Duration(milliseconds: 600), (t) {
       if (avState != AVState.Ringing && avState != AVState.Trying) {
@@ -243,13 +251,17 @@ class _PageAVChatCallerWidgetState extends State<PageAVChatCallerStatefulWidget>
 
   @override
   void onRinging() {
-    avState = AVState.Ringing;
+    setState(() {
+      avState = AVState.Ringing;
+    });
     // 对方振铃中，可以显示动画。。或者背景音乐
   }
 
   @override
   void onCallEstablished() {
-    avState = AVState.Established;
+    setState(() {
+      avState = AVState.Established;
+    });
     timer = new Timer.periodic(Duration(seconds: 1), (t) {
       if (avState != AVState.Established) {
         t.cancel();
