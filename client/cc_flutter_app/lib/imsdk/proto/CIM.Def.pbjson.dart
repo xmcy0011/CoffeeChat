@@ -27,9 +27,11 @@ const CIMCmdID$json = const {
     const {'1': 'kCIM_CID_MSG_GET_BY_MSG_ID_RSP', '2': 776},
     const {'1': 'kCIM_CID_VOIP_INVITE_REQ', '2': 1025},
     const {'1': 'kCIM_CID_VOIP_INVITE_REPLY', '2': 1026},
-    const {'1': 'kCIM_CID_VOIP_HEARTBEAT', '2': 1027},
-    const {'1': 'kCIM_CID_VOIP_BYE_REQ', '2': 1028},
-    const {'1': 'kCIM_CID_VOIP_BYE_RSP', '2': 1029},
+    const {'1': 'kCIM_CID_VOIP_INVITE_REPLY_ACK', '2': 1027},
+    const {'1': 'kCIM_CID_VOIP_HEARTBEAT', '2': 1028},
+    const {'1': 'kCIM_CID_VOIP_BYE_REQ', '2': 1029},
+    const {'1': 'kCIM_CID_VOIP_BYE_RSP', '2': 1030},
+    const {'1': 'kCIM_CID_VOIP_BYE_NOTIFY', '2': 1031},
   ],
 };
 
@@ -151,6 +153,7 @@ const CIMVoipByeReason$json = const {
     const {'1': 'kCIM_VOIP_BYE_REASON_HANG_UP', '2': 2},
     const {'1': 'kCIM_VOIP_BYE_REASON_BUSY', '2': 3},
     const {'1': 'kCIM_VOIP_BYE_REASON_ONLINE_CLIENT_REJECT', '2': 4},
+    const {'1': 'kCIM_VOIP_BYE_REASON_OK', '2': 5},
   ],
 };
 

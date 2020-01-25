@@ -23,16 +23,29 @@ message CIMVoipInviteReply {
   CIM.Def.CIMChannelInfo channel_info = 3; // 频道信息，由服务端分配
 }
 
+// 音视频呼叫ACK
+// 100 Trying->180 Ringing->200 Ok->ACK(this message)
+message CIMVoipInviteReplyAck {
+  CIM.Def.CIMChannelInfo channel_info = 1; // 频道信息，由服务端分配
+}
+
 // 心跳
 message CIMVoipHeartbeat {}
 
 // 挂断请求
 message CIMVoipByeReq {
-  uint64 local_call_time_len = 1; // 本地通话时长计数
-  uint64 user_id = 2;             // 挂断方用户ID
+  uint64 local_call_time_len = 1;          // 本地通话时长计数
+  uint64 user_id = 2;                      // 挂断方用户ID
+  CIM.Def.CIMChannelInfo channel_info = 3; // 频道信息
 }
 
+// 挂断响应
 message CIMVoipByeRsp {
-  CIM.Def.CIMVoipByeReason byeReason = 1; // 挂断原因
-  uint64 user_id = 2;                     // 挂断方用户ID
+  CIM.Def.CIMErrorCode error_code = 1; // 结果
+}
+
+// 挂断通知
+message CIMVoipByeNotify {
+  uint64 user_id = 1;                     // 挂断方用户ID
+  CIM.Def.CIMVoipByeReason byeReason = 2; // 挂断原因
 }

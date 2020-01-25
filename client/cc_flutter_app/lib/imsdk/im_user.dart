@@ -70,6 +70,7 @@ class IMUser {
 
   /// 查询用户昵称
   /// 如果本地有，则从本地加载。否则，从服务端拉取
+  /// [return] RegisterUserResult
   Future<dynamic> queryUserNickName(int userId, bool forceUpdate) async {
     var userDb = new UserDbProvider();
     var user = await userDb.get(userId);

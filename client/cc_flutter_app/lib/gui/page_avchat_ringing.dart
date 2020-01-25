@@ -1,13 +1,25 @@
+import 'package:cc_flutter_app/imsdk/im_user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 /// 被呼叫
 class PageAVChatRingingStatefulWidget extends StatefulWidget {
+  final peerUserId;
+
+  PageAVChatRingingStatefulWidget(this.peerUserId);
+
   @override
-  State<StatefulWidget> createState() => PageAVChatRingingWidgetState();
+  State<StatefulWidget> createState() => PageAVChatRingingWidgetState(peerUserId);
 }
 
 class PageAVChatRingingWidgetState extends State<PageAVChatRingingStatefulWidget> {
+  final peerUserId; // 对方ID
+
+  var nickName; // 对方昵称
+  var progress = "拨号中";
+
+  PageAVChatRingingWidgetState(this.peerUserId);
+
   @override
   Widget build(BuildContext context) {
     return _buildRinging();
@@ -56,7 +68,7 @@ class PageAVChatRingingWidgetState extends State<PageAVChatRingingStatefulWidget
               ),
               Padding(padding: EdgeInsets.only(top: 20)),
               Text(
-                "三生三世十里桃花",
+                nickName,
                 style: new TextStyle(fontSize: 20, color: Colors.white),
               ),
               Padding(padding: EdgeInsets.only(top: 5)),
@@ -122,6 +134,18 @@ class PageAVChatRingingWidgetState extends State<PageAVChatRingingStatefulWidget
         ]),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    IMUser.singleton.queryUserNickName(this.peerUserId, false).then((v) {
+      RegisterUserResult i = v as RegisterUserResult;
+      if (i != null && i.errorCode == 0) {
+        this.nickName = i.nickName;
+      }
+    }).catchError((e) {});
   }
 
   void _onCancel() {

@@ -23,6 +23,13 @@ const CIMVoipInviteReply$json = const {
   ],
 };
 
+const CIMVoipInviteReplyAck$json = const {
+  '1': 'CIMVoipInviteReplyAck',
+  '2': const [
+    const {'1': 'channel_info', '3': 1, '4': 1, '5': 11, '6': '.CIM.Def.CIMChannelInfo', '10': 'channelInfo'},
+  ],
+};
+
 const CIMVoipHeartbeat$json = const {
   '1': 'CIMVoipHeartbeat',
 };
@@ -32,14 +39,22 @@ const CIMVoipByeReq$json = const {
   '2': const [
     const {'1': 'local_call_time_len', '3': 1, '4': 1, '5': 4, '10': 'localCallTimeLen'},
     const {'1': 'user_id', '3': 2, '4': 1, '5': 4, '10': 'userId'},
+    const {'1': 'channel_info', '3': 3, '4': 1, '5': 11, '6': '.CIM.Def.CIMChannelInfo', '10': 'channelInfo'},
   ],
 };
 
 const CIMVoipByeRsp$json = const {
   '1': 'CIMVoipByeRsp',
   '2': const [
-    const {'1': 'byeReason', '3': 1, '4': 1, '5': 14, '6': '.CIM.Def.CIMVoipByeReason', '10': 'byeReason'},
-    const {'1': 'user_id', '3': 2, '4': 1, '5': 4, '10': 'userId'},
+    const {'1': 'error_code', '3': 1, '4': 1, '5': 14, '6': '.CIM.Def.CIMErrorCode', '10': 'errorCode'},
+  ],
+};
+
+const CIMVoipByeNotify$json = const {
+  '1': 'CIMVoipByeNotify',
+  '2': const [
+    const {'1': 'user_id', '3': 1, '4': 1, '5': 4, '10': 'userId'},
+    const {'1': 'byeReason', '3': 2, '4': 1, '5': 14, '6': '.CIM.Def.CIMVoipByeReason', '10': 'byeReason'},
   ],
 };
 

@@ -477,7 +477,8 @@ class _PageMessageState extends State<PageMessage> {
   }
 
   void _onVoiceCall() {
-    navigatePushPage(this.context, new PageAVChatCallerStatefulWidget());
+    navigatePushPage(
+        this.context, new PageAVChatCallerStatefulWidget(this.sessionInfo.sessionId, this.sessionInfo.sessionName));
     //navigatePushPage(this.context, new PageAVChatRingingStatefulWidget());
   }
 

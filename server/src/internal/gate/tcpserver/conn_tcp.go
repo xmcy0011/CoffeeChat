@@ -131,10 +131,10 @@ func (tcp *TcpConn) OnRead(header *cim.ImHeader, buff []byte) {
 		tcp.onHandleVOIPHeartbeat(header, buff)
 	case uint16(cim.CIMCmdID_kCIM_CID_VOIP_INVITE_REPLY):
 		tcp.onHandleVOIPInviteReply(header, buff)
-	case uint16(cim.CIMCmdID_kCIM_CID_VOIP_INVITE_RSP):
-		tcp.onHandleVOIPInviteRsp(header, buff)
-	case uint16(cim.CIMCmdID_kCIM_CID_VOID_BYE_REQ):
-		tcp.onHandleVOIPInviteRsp(header, buff)
+	case uint16(cim.CIMCmdID_kCIM_CID_VOIP_INVITE_REPLY_ACK):
+		tcp.onHandleVOIPInviteReplyAck(header, buff)
+	case uint16(cim.CIMCmdID_kCIM_CID_VOIP_BYE_REQ):
+		tcp.onHandleVOIPByeReq(header, buff)
 	default:
 		logger.Sugar.Errorf("unknown command_id=%d", header.CommandId)
 		break

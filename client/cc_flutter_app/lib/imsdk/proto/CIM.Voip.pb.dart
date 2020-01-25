@@ -88,6 +88,30 @@ class CIMVoipInviteReply extends $pb.GeneratedMessage {
   void clearChannelInfo() => clearField(3);
 }
 
+class CIMVoipInviteReplyAck extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('CIMVoipInviteReplyAck', package: const $pb.PackageName('CIM.Voip'))
+    ..a<$0.CIMChannelInfo>(1, 'channelInfo', $pb.PbFieldType.OM, $0.CIMChannelInfo.getDefault, $0.CIMChannelInfo.create)
+    ..hasRequiredFields = false
+  ;
+
+  CIMVoipInviteReplyAck() : super();
+  CIMVoipInviteReplyAck.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  CIMVoipInviteReplyAck.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  CIMVoipInviteReplyAck clone() => CIMVoipInviteReplyAck()..mergeFromMessage(this);
+  CIMVoipInviteReplyAck copyWith(void Function(CIMVoipInviteReplyAck) updates) => super.copyWith((message) => updates(message as CIMVoipInviteReplyAck));
+  $pb.BuilderInfo get info_ => _i;
+  static CIMVoipInviteReplyAck create() => CIMVoipInviteReplyAck();
+  CIMVoipInviteReplyAck createEmptyInstance() => create();
+  static $pb.PbList<CIMVoipInviteReplyAck> createRepeated() => $pb.PbList<CIMVoipInviteReplyAck>();
+  static CIMVoipInviteReplyAck getDefault() => _defaultInstance ??= create()..freeze();
+  static CIMVoipInviteReplyAck _defaultInstance;
+
+  $0.CIMChannelInfo get channelInfo => $_getN(0);
+  set channelInfo($0.CIMChannelInfo v) { setField(1, v); }
+  $core.bool hasChannelInfo() => $_has(0);
+  void clearChannelInfo() => clearField(1);
+}
+
 class CIMVoipHeartbeat extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('CIMVoipHeartbeat', package: const $pb.PackageName('CIM.Voip'))
     ..hasRequiredFields = false
@@ -110,6 +134,7 @@ class CIMVoipByeReq extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('CIMVoipByeReq', package: const $pb.PackageName('CIM.Voip'))
     ..a<Int64>(1, 'localCallTimeLen', $pb.PbFieldType.OU6, Int64.ZERO)
     ..a<Int64>(2, 'userId', $pb.PbFieldType.OU6, Int64.ZERO)
+    ..a<$0.CIMChannelInfo>(3, 'channelInfo', $pb.PbFieldType.OM, $0.CIMChannelInfo.getDefault, $0.CIMChannelInfo.create)
     ..hasRequiredFields = false
   ;
 
@@ -134,12 +159,16 @@ class CIMVoipByeReq extends $pb.GeneratedMessage {
   set userId(Int64 v) { $_setInt64(1, v); }
   $core.bool hasUserId() => $_has(1);
   void clearUserId() => clearField(2);
+
+  $0.CIMChannelInfo get channelInfo => $_getN(2);
+  set channelInfo($0.CIMChannelInfo v) { setField(3, v); }
+  $core.bool hasChannelInfo() => $_has(2);
+  void clearChannelInfo() => clearField(3);
 }
 
 class CIMVoipByeRsp extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('CIMVoipByeRsp', package: const $pb.PackageName('CIM.Voip'))
-    ..e<$0.CIMVoipByeReason>(1, 'byeReason', $pb.PbFieldType.OE, $0.CIMVoipByeReason.kCIM_VOIP_BYE_REASON_UNKNOWN, $0.CIMVoipByeReason.valueOf, $0.CIMVoipByeReason.values)
-    ..a<Int64>(2, 'userId', $pb.PbFieldType.OU6, Int64.ZERO)
+    ..e<$0.CIMErrorCode>(1, 'errorCode', $pb.PbFieldType.OE, $0.CIMErrorCode.kCIM_ERR_SUCCSSE, $0.CIMErrorCode.valueOf, $0.CIMErrorCode.values)
     ..hasRequiredFields = false
   ;
 
@@ -155,14 +184,39 @@ class CIMVoipByeRsp extends $pb.GeneratedMessage {
   static CIMVoipByeRsp getDefault() => _defaultInstance ??= create()..freeze();
   static CIMVoipByeRsp _defaultInstance;
 
-  $0.CIMVoipByeReason get byeReason => $_getN(0);
-  set byeReason($0.CIMVoipByeReason v) { setField(1, v); }
-  $core.bool hasByeReason() => $_has(0);
-  void clearByeReason() => clearField(1);
+  $0.CIMErrorCode get errorCode => $_getN(0);
+  set errorCode($0.CIMErrorCode v) { setField(1, v); }
+  $core.bool hasErrorCode() => $_has(0);
+  void clearErrorCode() => clearField(1);
+}
 
-  Int64 get userId => $_getI64(1);
-  set userId(Int64 v) { $_setInt64(1, v); }
-  $core.bool hasUserId() => $_has(1);
-  void clearUserId() => clearField(2);
+class CIMVoipByeNotify extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('CIMVoipByeNotify', package: const $pb.PackageName('CIM.Voip'))
+    ..a<Int64>(1, 'userId', $pb.PbFieldType.OU6, Int64.ZERO)
+    ..e<$0.CIMVoipByeReason>(2, 'byeReason', $pb.PbFieldType.OE, $0.CIMVoipByeReason.kCIM_VOIP_BYE_REASON_UNKNOWN, $0.CIMVoipByeReason.valueOf, $0.CIMVoipByeReason.values)
+    ..hasRequiredFields = false
+  ;
+
+  CIMVoipByeNotify() : super();
+  CIMVoipByeNotify.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  CIMVoipByeNotify.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  CIMVoipByeNotify clone() => CIMVoipByeNotify()..mergeFromMessage(this);
+  CIMVoipByeNotify copyWith(void Function(CIMVoipByeNotify) updates) => super.copyWith((message) => updates(message as CIMVoipByeNotify));
+  $pb.BuilderInfo get info_ => _i;
+  static CIMVoipByeNotify create() => CIMVoipByeNotify();
+  CIMVoipByeNotify createEmptyInstance() => create();
+  static $pb.PbList<CIMVoipByeNotify> createRepeated() => $pb.PbList<CIMVoipByeNotify>();
+  static CIMVoipByeNotify getDefault() => _defaultInstance ??= create()..freeze();
+  static CIMVoipByeNotify _defaultInstance;
+
+  Int64 get userId => $_getI64(0);
+  set userId(Int64 v) { $_setInt64(0, v); }
+  $core.bool hasUserId() => $_has(0);
+  void clearUserId() => clearField(1);
+
+  $0.CIMVoipByeReason get byeReason => $_getN(1);
+  set byeReason($0.CIMVoipByeReason v) { setField(2, v); }
+  $core.bool hasByeReason() => $_has(1);
+  void clearByeReason() => clearField(2);
 }
 

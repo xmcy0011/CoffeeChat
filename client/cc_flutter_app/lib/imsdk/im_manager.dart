@@ -8,6 +8,7 @@ import 'package:cc_flutter_app/imsdk/core/business/im_client.dart';
 import 'package:cc_flutter_app/imsdk/core/dao/sql_manager.dart';
 import 'package:cc_flutter_app/imsdk/core/log_util.dart';
 import 'package:cc_flutter_app/imsdk/core/model/model.dart';
+import 'package:cc_flutter_app/imsdk/im_avchat.dart';
 import 'package:cc_flutter_app/imsdk/im_session.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.List.pb.dart';
@@ -46,9 +47,11 @@ class IMManager extends IMessage {
 
   /// 初始化
   bool init() {
+    if (!_isInit) {
+      IMClient.singleton.registerMessageService("IMManager", this);
+      IMAVChat.singleton.init(); // init av
+    }
     _isInit = true;
-    IMClient.singleton.registerMessageService("IMManager", this);
-
     return true;
   }
 
@@ -101,8 +104,16 @@ class IMManager extends IMessage {
   void logout() {}
 
   /// 清理，本地数据缓存等，如聊天记录
-  Future cleanup() async {
+  Future cleanupCache() async {
     await SQLManager.cleanup();
+  }
+
+  /// 退出前清理
+  void cleanup() {
+    if (_isInit) {
+      IMAVChat.singleton.cleanup();
+    }
+    _isInit = false;
   }
 
   /// 判断是否是来自于自己的消息

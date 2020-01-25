@@ -31,11 +31,13 @@ enum CIMCmdID {
   kCIM_CID_MSG_GET_BY_MSG_ID_REQ = 0x0307; // 批量查询消息详情请求(20条内)
   kCIM_CID_MSG_GET_BY_MSG_ID_RSP = 0x0308;
 
-  kCIM_CID_VOIP_INVITE_REQ = 0x0401;   // 1.invite
-  kCIM_CID_VOIP_INVITE_REPLY = 0x0402; // 2.100 Tring/180 Ringing/200 OK
-  kCIM_CID_VOIP_HEARTBEAT = 0x0403;    // 3.heartbeat，30秒超时
-  kCIM_CID_VOIP_BYE_REQ = 0x0404;      // 4.Bye
-  kCIM_CID_VOIP_BYE_RSP = 0x0405;      //
+  kCIM_CID_VOIP_INVITE_REQ = 0x0401;       // 1.invite
+  kCIM_CID_VOIP_INVITE_REPLY = 0x0402;     // 2.100 Tring/180 Ringing/200 OK
+  kCIM_CID_VOIP_INVITE_REPLY_ACK = 0x0403; // 3.200 Ok的Ack
+  kCIM_CID_VOIP_HEARTBEAT = 0x0404;        // 4.heartbeat，30秒超时
+  kCIM_CID_VOIP_BYE_REQ = 0x0405;          // 5.Bye
+  kCIM_CID_VOIP_BYE_RSP = 0x0406;          //
+  kCIM_CID_VOIP_BYE_NOTIFY = 0x0407;       // 6.Bye notify
 }
 
 // 内部消息：服务器 <-> 服务器消息定义
@@ -200,11 +202,12 @@ enum CIMInviteRspCode {
 
 // Voip挂断原因
 enum CIMVoipByeReason {
-  kCIM_VOIP_BYE_REASON_UNKNOWN = 0; // default
-  kCIM_VOIP_BYE_REASON_CANCEL = 1;  // 拒绝
-  kCIM_VOIP_BYE_REASON_HANG_UP = 2; // 挂断
-  kCIM_VOIP_BYE_REASON_BUSY = 3; // 正忙
+  kCIM_VOIP_BYE_REASON_UNKNOWN = 0;              // default
+  kCIM_VOIP_BYE_REASON_CANCEL = 1;               // 拒绝
+  kCIM_VOIP_BYE_REASON_HANG_UP = 2;              // 挂断
+  kCIM_VOIP_BYE_REASON_BUSY = 3;                 // 正忙
   kCIM_VOIP_BYE_REASON_ONLINE_CLIENT_REJECT = 4; // 其他端拒绝通话
+  kCIM_VOIP_BYE_REASON_OK = 5;                   // 一切OK
 }
 
 // 消息错误码

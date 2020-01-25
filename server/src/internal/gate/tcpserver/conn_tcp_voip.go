@@ -9,7 +9,7 @@ import (
 
 // 音视频通话呼叫邀请
 func (tcp *TcpConn) onHandleVOIPInviteReq(header *cim.ImHeader, buff []byte) {
-	req := cim.VoipInviteReq{}
+	req := cim.CIMVoipInviteReq{}
 	err := proto.Unmarshal(buff, &req)
 	if err != nil {
 		logger.Sugar.Warnf("onHandleVOIPInviteReq error:%s,user_id:%d", err.Error(), tcp.userId)
@@ -32,7 +32,7 @@ func (tcp *TcpConn) onHandleVOIPInviteReq(header *cim.ImHeader, buff []byte) {
 	}
 
 	// allocate channel name
-	name, token, err := voip.GetChannelName(req.ToSessionId, req.SessionType)
+	name, token, err := voip.GetChannelName(req.InviteUserList[0])
 	if err != nil {
 		logger.Sugar.Warnf("onHandleVOIPInviteReq create channel error:%s,to_session_id=%d,invite_type=%d", err.Error(), tcp.userId, req.InviteType)
 		return
@@ -43,9 +43,13 @@ func (tcp *TcpConn) onHandleVOIPInviteReq(header *cim.ImHeader, buff []byte) {
 	}
 
 	// 100 trying
-	rsp := &cim.VoipInviteReply{}
+	rsp := &cim.CIMVoipInviteReply{}
 	rsp.UserId = 0
 	rsp.RspCode = cim.CIMInviteRspCode_kCIM_VOIP_INVITE_CODE_TRYING
+	rsp.ChannelInfo = &cim.CIMChannelInfo{
+		ChannelName:  name,
+		ChannelToken: token,
+	}
 	_, err = tcp.Send(header.SeqNum, uint16(cim.CIMCmdID_kCIM_CID_VOIP_INVITE_REPLY), rsp)
 	if err != nil {
 		logger.Sugar.Warnf("onHandleVOIPInviteReq send error:%s", err.Error())
@@ -62,7 +66,7 @@ func (tcp *TcpConn) onHandleVOIPInviteReq(header *cim.ImHeader, buff []byte) {
 
 // 呼叫应答
 func (tcp *TcpConn) onHandleVOIPInviteReply(header *cim.ImHeader, buff []byte) {
-	reply := cim.VoipInviteReply{}
+	reply := cim.CIMVoipInviteReply{}
 	err := proto.Unmarshal(buff, &reply)
 	if err != nil {
 		logger.Sugar.Warnf("onHandleVOIPInviteReply error:%s,user_id:%d", err.Error(), tcp.userId)
@@ -76,7 +80,7 @@ func (tcp *TcpConn) onHandleVOIPInviteReply(header *cim.ImHeader, buff []byte) {
 }
 
 // 呼叫成功，通话建立
-func (tcp *TcpConn) onHandleVOIPInviteRsp(header *cim.ImHeader, buff []byte) {
+func (tcp *TcpConn) onHandleVOIPInviteReplyAck(header *cim.ImHeader, buff []byte) {
 
 }
 

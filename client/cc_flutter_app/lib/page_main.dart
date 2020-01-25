@@ -1,8 +1,11 @@
+import 'package:cc_flutter_app/gui/helper.dart';
 import 'package:cc_flutter_app/gui/imsdk_helper.dart';
 import 'package:cc_flutter_app/gui/page_address.dart';
+import 'package:cc_flutter_app/gui/page_avchat_ringing.dart';
 import 'package:cc_flutter_app/gui/page_settings.dart';
 import 'package:cc_flutter_app/gui/widget/badge_bottom_tab_bar.dart';
 import 'package:cc_flutter_app/gui/widget/badge_bottom_tab_bar_item.dart';
+import 'package:cc_flutter_app/imsdk/im_avchat.dart';
 import 'package:cc_flutter_app/imsdk/im_manager.dart';
 import 'package:cc_flutter_app/imsdk/im_session.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,7 +21,7 @@ class PageMainStatefulApp extends StatefulWidget {
 
 /// 主页面，下面3个Table
 /// 主页、消息、我
-class _PageMainStatefulAppState extends State<PageMainStatefulApp> {
+class _PageMainStatefulAppState extends State<PageMainStatefulApp> implements Observer<AVChatData> {
   var _selectedIndex = 0;
   var totalUnreadCount = 0;
   String messageBadgeCount = "";
@@ -41,7 +44,18 @@ class _PageMainStatefulAppState extends State<PageMainStatefulApp> {
     IMSDKHelper.singleton.registerOnRefresh("_PageMainStatefulAppState", _onRefresh);
     //IMSDKHelper.singleton.registerOnRecvReceipt("_PageMainStatefulAppState", _onRecvReceipt);
     IMSDKHelper.singleton.onTotalUnreadMsgCb = _onUpdateTotalUnreadCount;
+    IMAVChat.singleton.observeIncomingCall(this, true);
+
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    // cleanup
+    IMManager.singleton.cleanup();
+    IMAVChat.singleton.observeIncomingCall(this, false);
   }
 
   @override
@@ -104,5 +118,12 @@ class _PageMainStatefulAppState extends State<PageMainStatefulApp> {
         this.messageBadgeCount = null;
       }
     });
+  }
+
+  /// Observer<AVChatData>
+  /// observeIncomingCall：有来电
+  @override
+  void onEvent(AVChatData t) {
+    navigatePushPage(context, PageAVChatRingingStatefulWidget(t));
   }
 }

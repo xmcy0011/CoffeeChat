@@ -72,7 +72,7 @@ class _PageSettingsStatefulWidgetState extends State<PageSettingsStatefulWidget>
                     //prefs.clear();
 
                     // 清理SDK缓存
-                    IMManager.singleton.cleanup().then((e) {
+                    IMManager.singleton.cleanupCache().then((e) {
                       Navigator.of(context).pop();
                       navigatePage(this.context, PageLoginStatefulWidget());
                     });

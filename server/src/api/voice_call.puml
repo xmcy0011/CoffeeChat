@@ -58,10 +58,10 @@ alice -> agora: 0. ....
 alice -> im: 1.invite(pb)
 im -> alice: 2.100 Trying(pb)
 im -> bob: 3.invite(pb)
-bob -> agora: 4.joinChannel
-agora -> bob: 5.onJoinChannelSuccess
-bob -> im: 6.180 Ringing(pb)
-im -> alice: 7.180 Ringing(pb)
+bob -> im: 4.180 Ringing(pb)
+im -> alice: 5.180 Ringing(pb)
+bob -> agora: 6.joinChannel
+agora -> bob: 7.onJoinChannelSuccess
 bob -> im: 8.200 ok(pb)
 im -> bob: 9.ack(pb)
 im -> alice: 10.200 ok(pb)

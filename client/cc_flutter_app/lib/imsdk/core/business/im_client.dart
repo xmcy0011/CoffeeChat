@@ -25,8 +25,20 @@ abstract class IMessage {
   void onHandleReadNotify(IMHeader header, CIMMsgDataReadNotify readNotify);
 }
 
+/// 音视频业务接口
+abstract class IAVChat {
+  void onHandleInviteReq(IMHeader header, CIMVoipInviteReq data); // 邀请
+  void onHandleInviteReply(IMHeader header, CIMVoipInviteReply data); // 应答
+  void onHandleInviteReplyAck(IMHeader header, CIMVoipInviteReplyAck data); // 应答200 ok 的ack
+  void onHandleVOIPByeRsp(IMHeader header, CIMVoipByeRsp data); // 挂断响应
+  void onHandleVOIPByeNotify(IMHeader header, CIMVoipByeNotify data); // 对方挂断通知
+  void onHandleVOIPHeartbeat(IMHeader header, CIMVoipHeartbeat data); // 心跳
+}
+
 class IMClient {
   RawSocket socket; // socket
+  var handleMap = new Map<int, Function(IMHeader header, List<int> data)>(); // 消息驱动表
+
   var msgService = new Map<String, IMessage>(); // 消息处理
   var voipService = new Map<String, IAVChat>(); // VOIP信令
 
@@ -61,6 +73,8 @@ class IMClient {
     isLogin = false;
     isReLogin = false;
 
+    _initHandleMap();
+
     // send heartbeat
     Timer.periodic(Duration(seconds: 15), (timer) {
       if (isLogin) {
@@ -74,6 +88,36 @@ class IMClient {
       _checkRequestTimeout();
       _reConnect();
     });
+  }
+
+  // 初始化消息驱动表
+  void _initHandleMap() {
+    // 认证
+    handleMap[CIMCmdID.kCIM_CID_LOGIN_AUTH_TOKEN_RSP.value] = _handleAuthRsp;
+    // 会话列表
+    handleMap[CIMCmdID.kCIM_CID_LIST_RECENT_CONTACT_SESSION_RSP.value] = _handleRecentSessionList;
+
+    // 历史消息
+    handleMap[CIMCmdID.kCIM_CID_LIST_MSG_RSP.value] = _handleGetMsgList;
+    // 消息收发
+    handleMap[CIMCmdID.kCIM_CID_MSG_DATA.value] = _handleMsgData;
+    // 消息收到ACK
+    handleMap[CIMCmdID.kCIM_CID_MSG_DATA_ACK.value] = _handleMsgDataAck;
+    // 已读消息通知
+    handleMap[CIMCmdID.kCIM_CID_MSG_READ_NOTIFY.value] = _handleMsgReadNotify;
+
+    // VOIP invite req
+    handleMap[CIMCmdID.kCIM_CID_VOIP_INVITE_REQ.value] = _handleInviteReq;
+    // VOIP reply
+    handleMap[CIMCmdID.kCIM_CID_VOIP_INVITE_REPLY.value] = _handleInviteReply;
+    // VOIP reply ack
+    handleMap[CIMCmdID.kCIM_CID_VOIP_INVITE_REPLY_ACK.value] = _handleInviteReplyAck;
+    // VOIP heartbeat
+    handleMap[CIMCmdID.kCIM_CID_VOIP_HEARTBEAT.value] = _handleVOIPHeartbeat;
+    // VOIP Bye rsp
+    handleMap[CIMCmdID.kCIM_CID_VOIP_BYE_RSP.value] = _handleVOIPByeRsp;
+    // VOIP Bye notify
+    handleMap[CIMCmdID.kCIM_CID_VOIP_BYE_NOTIFY.value] = _handleVOIPByeNotify;
   }
 
   /// 认证
@@ -278,41 +322,9 @@ class IMClient {
       return null;
     }
 
-    // 认证
-    if (header.commandId == CIMCmdID.kCIM_CID_LOGIN_AUTH_TOKEN_RSP.value) {
-      _handleAuthRsp(header, data);
-    }
-    // 会话列表
-    else if (header.commandId == CIMCmdID.kCIM_CID_LIST_RECENT_CONTACT_SESSION_RSP.value) {
-      _handleRecentSessionList(header, data);
-    }
-    // 历史消息
-    else if (header.commandId == CIMCmdID.kCIM_CID_LIST_MSG_RSP.value) {
-      _handleGetMsgList(header, data);
-    }
-    // 消息收发
-    else if (header.commandId == CIMCmdID.kCIM_CID_MSG_DATA.value) {
-      _handleMsgData(header, data);
-    }
-    // 消息收到ACK
-    else if (header.commandId == CIMCmdID.kCIM_CID_MSG_DATA_ACK.value) {
-      _handleMsgDataAck(header, data);
-    }
-    // 已读消息通知
-    else if (header.commandId == CIMCmdID.kCIM_CID_MSG_READ_NOTIFY.value) {
-      _handleMsgReadNotify(header, data);
-    }
-    // VOIP
-    else if (header.commandId == CIMCmdID.kCIM_CID_VOIP_INVITE_REQ.value) {
-      _handleInviteReq(header, data);
-    } else if (header.commandId == CIMCmdID.kCIM_CID_VOIP_INVITE_REPLY.value) {
-      _handleInviteReply(header, data);
-    } else if (header.commandId == CIMCmdID.kCIM_CID_VOIP_HEARTBEAT.value) {
-      _handleVOIPHeartbeat(header, data);
-    } else if (header.commandId == CIMCmdID.kCIM_CID_VOIP_BYE_REQ.value) {
-      _handleVOIPByeReq(header, data);
-    } else if (header.commandId == CIMCmdID.kCIM_CID_VOIP_BYE_RSP.value) {
-      _handleVOIPByeRsp(header, data);
+    if (this.handleMap.containsKey(header.commandId)) {
+      Function(IMHeader, List<int>) f = this.handleMap[header.commandId];
+      f(header, data);
     } else {
       print("unknown message,cmdId:${header.commandId}");
     }
@@ -419,6 +431,16 @@ class IMClient {
     });
   }
 
+  void _handleInviteReplyAck(IMHeader header, List<int> data) {
+    var req = CIMVoipInviteReplyAck.fromBuffer(data);
+    print("_handleInviteReplyAck channel_name=${req.channelInfo.channelName}");
+
+    voipService.forEach((k, v) {
+      IAVChat chat = v;
+      chat.onHandleInviteReplyAck(header, req);
+    });
+  }
+
   void _handleVOIPHeartbeat(IMHeader header, List<int> data) {
     var req = CIMVoipHeartbeat.fromBuffer(data);
     print("_handleVOIPHeartbeat time=${DateTime.now().toString()}");
@@ -429,23 +451,23 @@ class IMClient {
     });
   }
 
-  void _handleVOIPByeReq(IMHeader header, List<int> data) {
-    var req = CIMVoipByeReq.fromBuffer(data);
-    print("_handleVOIPByeReq user_id:${req.userId}");
-
-    this.voipService.forEach((k, v) {
-      IAVChat chat = v;
-      chat.onHandleVOIPByeReq(header, req);
-    });
-  }
-
   void _handleVOIPByeRsp(IMHeader header, List<int> data) {
     var rsp = CIMVoipByeRsp.fromBuffer(data);
-    print("_handleVOIPByeRsp user_id:${rsp.userId}");
+    print("_handleVOIPByeRsp error_code:${rsp.errorCode.value}");
 
     this.voipService.forEach((k, v) {
       IAVChat chat = v;
       chat.onHandleVOIPByeRsp(header, rsp);
+    });
+  }
+
+  void _handleVOIPByeNotify(IMHeader header, List<int> data) {
+    var rsp = CIMVoipByeNotify.fromBuffer(data);
+    print("_handleVOIPByeRsp user_id:${rsp.userId},bye_reason:${rsp.byeReason}");
+
+    this.voipService.forEach((k, v) {
+      IAVChat chat = v;
+      chat.onHandleVOIPByeNotify(header, rsp);
     });
   }
 }
