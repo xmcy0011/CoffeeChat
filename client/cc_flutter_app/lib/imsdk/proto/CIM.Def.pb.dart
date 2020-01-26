@@ -257,6 +257,7 @@ class CIMChannelInfo extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('CIMChannelInfo', package: const $pb.PackageName('CIM.Def'))
     ..aOS(1, 'channelName')
     ..aOS(2, 'channelToken')
+    ..a<Int64>(3, 'creatorId', $pb.PbFieldType.OU6, Int64.ZERO)
     ..hasRequiredFields = false
   ;
 
@@ -281,5 +282,10 @@ class CIMChannelInfo extends $pb.GeneratedMessage {
   set channelToken($core.String v) { $_setString(1, v); }
   $core.bool hasChannelToken() => $_has(1);
   void clearChannelToken() => clearField(2);
+
+  Int64 get creatorId => $_getI64(2);
+  set creatorId(Int64 v) { $_setInt64(2, v); }
+  $core.bool hasCreatorId() => $_has(2);
+  void clearCreatorId() => clearField(3);
 }
 

@@ -272,4 +272,5 @@ message CIMMsgInfo {
 message CIMChannelInfo {
   string channel_name = 1;  // 频道名称
   string channel_token = 2; // 频道授权令牌
+  uint64 creator_id = 3;    // 频道创建者
 }

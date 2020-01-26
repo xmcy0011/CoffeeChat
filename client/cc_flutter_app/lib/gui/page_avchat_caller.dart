@@ -18,7 +18,7 @@ class PageAVChatCallerStatefulWidget extends StatefulWidget {
 }
 
 class _PageAVChatCallerWidgetState extends State<PageAVChatCallerStatefulWidget>
-    implements Observer<AVChatCommonEvent>, AVChatStateObserverLite {
+    implements AVChatHangUpObserver, AVChatStateObserverLite {
   final peerUserId;
   final nickName;
 
@@ -209,20 +209,12 @@ class _PageAVChatCallerWidgetState extends State<PageAVChatCallerStatefulWidget>
 
   /// 取消
   void _onCancel() {
-    IMAVChat.singleton.hangUp(null); // 挂断
-
-    Navigator.of(this.context).pop();
-    Toast.toast(context, msg: "通话结束 ", position: ToastPostion.center);
+    onHangup(new AVChatCommonEvent(AVChatEventType.OK, null));
   }
 
   void _onMute() {}
 
   void _onHandsFree() {}
-
-  /// Observer<AVChatData>
-  /// observeHangUpNotification
-  @override
-  void onEvent(AVChatCommonEvent t) {}
 
   /// AVChatStateObserverLite
   @override
@@ -231,6 +223,7 @@ class _PageAVChatCallerWidgetState extends State<PageAVChatCallerStatefulWidget>
       avState = AVState.Trying;
     });
 
+    // 对方振铃中，可以显示动画。。或者背景音乐
     timer = new Timer.periodic(Duration(milliseconds: 600), (t) {
       if (avState != AVState.Ringing && avState != AVState.Trying) {
         t.cancel();
@@ -238,8 +231,13 @@ class _PageAVChatCallerWidgetState extends State<PageAVChatCallerStatefulWidget>
         timerTick++;
 
         var textLater = "";
-        for (var i = 0; i < (timerTick % 3) + 1; i++) {
-          textLater += ".";
+        var tick = (timerTick % 3) + 1;
+        for (var i = 0; i <= 3; i++) {
+          if (i < tick) {
+            textLater += ".";
+          } else {
+            textLater += " ";
+          }
         }
 
         setState(() {
@@ -254,7 +252,6 @@ class _PageAVChatCallerWidgetState extends State<PageAVChatCallerStatefulWidget>
     setState(() {
       avState = AVState.Ringing;
     });
-    // 对方振铃中，可以显示动画。。或者背景音乐
   }
 
   @override
@@ -305,11 +302,22 @@ class _PageAVChatCallerWidgetState extends State<PageAVChatCallerStatefulWidget>
   void onLeaveChannel() {}
 
   @override
-  void onBye(CIMVoipByeReason reason) {}
-
-  @override
   void onUserJoined(int uid, int elapsed) {}
 
   @override
   void onUserOffline(int uid, int reason) {}
+
+  /// AVChatHangUpObserver
+  @override
+  void onHangup(AVChatCommonEvent data) {
+    IMAVChat.singleton.hangUp(null); // 挂断
+
+    var msgTips = IMAVChat.singleton.getHangupReasonStr(data);
+    Toast.toast(this.context, msg: msgTips, position: ToastPostion.center);
+    new Timer(Duration(seconds: 1), () {
+      setState(() {
+        Navigator.of(this.context).pop();
+      });
+    });
+  }
 }

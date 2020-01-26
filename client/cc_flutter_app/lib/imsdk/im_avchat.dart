@@ -30,10 +30,10 @@ class IMAVChat extends IAVChat {
   static final agoraAppId = "2af76c4e0d9746bfb080b485752e7296"; // Agora APP Id
   final _callTimeOut = 10; // s
 
-  var _incomingCallHandleList = new List<Observer<AVChatData>>(); // observeIncomingCall, invite
+  var _incomingCallHandleList = new List<AVChatIncomingCallObserver>(); // observeIncomingCall, invite
   var _avChatStateHandleList = new List<AVChatStateObserverLite>(); // AVChatState, 通话过程中的状态变化监听
   //var _calleeAckHandleList = new List<Observer<AVChatCalleeAckEvent>>(); // calleeAck, 音视频通话对方操作通知
-  var _hangUpHandleList = new List<Observer<AVChatCommonEvent>>(); // hangUp, 音视频通话对方挂断事件
+  var _hangUpHandleList = new List<AVChatHangUpObserver>(); // hangUp, 音视频通话对方挂断事件
   //var _controlHandleList = new List<Observer<AVChatControlEvent>>(); // control, 音视频通话中接收到控制指令
 
   var _isInit = false;
@@ -164,6 +164,7 @@ class IMAVChat extends IAVChat {
     req.inviteUserList.add(Int64(userId)); // invite user list
 
     // enable timer
+    req.creatorUserId = IMClient.singleton.userId;
     _callTimer = Timer.periodic(Duration(seconds: 1), (t) {
       if (this.avState == AVState.Hangup || this.avState == AVState.Established) {
         t.cancel();
@@ -177,7 +178,8 @@ class IMAVChat extends IAVChat {
     });
 
     // save chat info
-    this.chatData = new AVChatData(userId, "unknown", "", callType, DateTime.now().millisecondsSinceEpoch ~/ 1000);
+    this.chatData = new AVChatData(
+        req.creatorUserId.toInt(), userId, "unknown", "", callType, DateTime.now().millisecondsSinceEpoch ~/ 1000);
     IMClient.singleton.send(CIMCmdID.kCIM_CID_VOIP_INVITE_REQ.value, req);
   }
 
@@ -187,6 +189,7 @@ class IMAVChat extends IAVChat {
   /// 连接媒体服务器的结果将会在 AVChatStateObserverLite.onJoinedChannel(int, String, String, int) 中进行通知。
   /// [callback] 回调
   void accept(/*String chatId,*/ AVChatCallback<void> callback) {
+    print("accept");
     acceptCallback = callback;
 
     // join channel (agora)
@@ -213,6 +216,7 @@ class IMAVChat extends IAVChat {
   void hangUp(/*String chatId,*/ AVChatCallback<void> callback) {
     hangupCallback = callback;
     avState = AVState.Hangup;
+    print("hangUp");
 
     if (chatData != null && this.avState != AVState.Default) {
       // level channel
@@ -223,16 +227,44 @@ class IMAVChat extends IAVChat {
       req.channelInfo = new CIMChannelInfo();
       req.channelInfo.channelName = this.chatData.channelName;
       req.channelInfo.channelToken = this.chatData.channelToken;
+      req.channelInfo.creatorId = Int64(this.chatData.creatorId);
       req.userId = IMClient.singleton.userId;
       req.localCallTimeLen = Int64((DateTime.now().millisecondsSinceEpoch ~/ 1000) - this.chatData.timeTag);
+      req.byeReason = CIMVoipByeReason.kCIM_VOIP_BYE_REASON_HANG_UP;
       IMClient.singleton.send(CIMCmdID.kCIM_CID_VOIP_BYE_REQ.value, req);
     }
+  }
+
+  /// 获取挂断原因(中文)
+  String getHangupReasonStr(AVChatCommonEvent e) {
+    var msgTips = "通话结束";
+    switch (e.event) {
+      case AVChatEventType.PEER_HANG_UP:
+        msgTips = "对方挂断";
+        break;
+      case AVChatEventType.CALLEE_ACK_BUSY:
+        msgTips = "对方正忙";
+        break;
+      case AVChatEventType.CALLEE_ACK_REJECT:
+        msgTips = "对方拒绝通话";
+        break;
+      case AVChatEventType.CALLEE_ONLINE_CLIENT_ACK_REJECT:
+        msgTips = "对方其他端拒绝通话";
+        break;
+      case AVChatEventType.OK:
+        msgTips = "通话结束";
+        break;
+      case AVChatEventType.UNDEFINE:
+        msgTips = "通话结束";
+        break;
+    }
+    return msgTips;
   }
 
   /// 注册/注销网络来电. 当收到对方来电请求时，会通知上层通话信息。 用户可以选择 accept2(long, AVChatCallback) 来接听电话， 或者
   /// hangUp2(long, AVChatCallback) 来挂断电话，最好能够先发送一个正忙的指令给对方 sendControlCommand(long, byte, AVChatCallback)。
   /// 通常在收到来电请求时，上层需要维持 一个超时器，当超过一定时间没有操作时直接调用 hangUp2(long, AVChatCallback) 来挂断。
-  void observeIncomingCall(Observer<AVChatData> observer, bool register) {
+  void observeIncomingCall(AVChatIncomingCallObserver observer, bool register) {
     if (register) {
       _incomingCallHandleList.add(observer);
     } else {
@@ -259,7 +291,7 @@ class IMAVChat extends IAVChat {
 ////  }
 
   /// 注册/注销网络通话对方挂断的通知
-  void observeHangUpNotification(Observer<AVChatCommonEvent> observer, bool register) {
+  void observeHangUpNotification(AVChatHangUpObserver observer, bool register) {
     if (register) {
       _hangUpHandleList.add(observer);
     } else {
@@ -279,8 +311,13 @@ class IMAVChat extends IAVChat {
   /// Interface IAVChat
   void onHandleInviteReq(IMHeader header, CIMVoipInviteReq data) {
     // save channel info
-    this.chatData = new AVChatData(data.creatorUserId.toInt(), data.channelInfo.channelName,
-        data.channelInfo.channelToken, data.inviteType, DateTime.now().millisecondsSinceEpoch ~/ 1000);
+    this.chatData = new AVChatData(
+        data.creatorUserId.toInt(),
+        IMClient.singleton.userId.toInt(),
+        data.channelInfo.channelName,
+        data.channelInfo.channelToken,
+        data.inviteType,
+        DateTime.now().millisecondsSinceEpoch ~/ 1000);
 
     // reply 180 ringing
     var req = new CIMVoipInviteReply();
@@ -291,9 +328,7 @@ class IMAVChat extends IAVChat {
 
     // callback there has incoming call
     _incomingCallHandleList.forEach((v) {
-      AVChatData avChatData = new AVChatData(data.creatorUserId.toInt(), data.channelInfo.channelName,
-          data.channelInfo.channelToken, data.inviteType, DateTime.now().millisecondsSinceEpoch ~/ 1000);
-      v.onEvent(avChatData);
+      v.onIncomingCall(this.chatData);
     });
   }
 
@@ -368,27 +403,27 @@ class IMAVChat extends IAVChat {
     this._hangUpHandleList.forEach((v) {
       // 对方正忙
       if (data.byeReason == CIMVoipByeReason.kCIM_VOIP_BYE_REASON_BUSY) {
-        v.onEvent(new AVChatCommonEvent(AVChatEventType.CALLEE_ACK_BUSY, this.chatData));
+        v.onHangup(new AVChatCommonEvent(AVChatEventType.CALLEE_ACK_BUSY, this.chatData));
       }
       // 对方拒绝
       else if (data.byeReason == CIMVoipByeReason.kCIM_VOIP_BYE_REASON_CANCEL) {
-        v.onEvent(new AVChatCommonEvent(AVChatEventType.CALLEE_ACK_REJECT, this.chatData));
+        v.onHangup(new AVChatCommonEvent(AVChatEventType.CALLEE_ACK_REJECT, this.chatData));
       }
       // 对方主动挂断
       else if (data.byeReason == CIMVoipByeReason.kCIM_VOIP_BYE_REASON_HANG_UP) {
-        v.onEvent(new AVChatCommonEvent(AVChatEventType.PEER_HANG_UP, this.chatData));
+        v.onHangup(new AVChatCommonEvent(AVChatEventType.PEER_HANG_UP, this.chatData));
       }
       // 对方其他端拒绝
       else if (data.byeReason == CIMVoipByeReason.kCIM_VOIP_BYE_REASON_ONLINE_CLIENT_REJECT) {
-        v.onEvent(new AVChatCommonEvent(AVChatEventType.CALLEE_ONLINE_CLIENT_ACK_REJECT, this.chatData));
+        v.onHangup(new AVChatCommonEvent(AVChatEventType.CALLEE_ONLINE_CLIENT_ACK_REJECT, this.chatData));
       }
       // 未知
       else if (data.byeReason == CIMVoipByeReason.kCIM_VOIP_BYE_REASON_UNKNOWN) {
-        v.onEvent(new AVChatCommonEvent(AVChatEventType.UNDEFINE, this.chatData));
+        v.onHangup(new AVChatCommonEvent(AVChatEventType.UNDEFINE, this.chatData));
       }
       // 一切OK
       else if (data.byeReason == CIMVoipByeReason.kCIM_VOIP_BYE_REASON_OK) {
-        v.onEvent(new AVChatCommonEvent(AVChatEventType.OK, this.chatData));
+        v.onHangup(new AVChatCommonEvent(AVChatEventType.OK, this.chatData));
       }
     });
   }
@@ -409,19 +444,14 @@ enum AVState {
 
 /// 请求音视频通话信息
 class AVChatData {
+  int creatorId; // 创建者ID
   int peerId; // 获取对方帐号, 多人通话时无效
   String channelName; // 获取通话ID
   String channelToken;
   CIMVoipInviteType chatType; // 通话类型
   int timeTag; // 当前事件发生的时间戳
 
-  AVChatData(this.peerId, this.channelName, this.channelToken, this.chatType, this.timeTag);
-}
-
-/// 通知观察器
-abstract class Observer<T> {
-  /// 通知产生后的回调函数
-  void onEvent(T t);
+  AVChatData(this.creatorId, this.peerId, this.channelName, this.channelToken, this.chatType, this.timeTag);
 }
 
 /// call result
@@ -447,9 +477,6 @@ abstract class AVChatStateObserverLite {
 
   /// [信令] 3.200 OK 会话成功建立，通话中
   void onCallEstablished();
-
-  /// [信令] 4.Bye 挂断
-  void onBye(CIMVoipByeReason reason);
 
   /// [引擎] 通话过程中音视频引擎发生错误
   void onError(dynamic code);
@@ -513,29 +540,33 @@ abstract class AVChatStateObserverLite {
 //void	onVideoFrameResolutionChanged(String account, int width, int height, int rotate)
 }
 
+/// 来电
+abstract class AVChatIncomingCallObserver {
+  void onIncomingCall(AVChatData data);
+}
+
+/// 挂断
+abstract class AVChatHangUpObserver {
+  void onHangup(AVChatCommonEvent data);
+}
+
 /// 音视频通话事件枚举
 enum AVChatEventType {
-  CALLEE_ACK_AGREE, // 被叫方同意通话
-  CALLEE_ONLINE_CLIENT_ACK_AGREE, // 被叫方同时在线的其他端同意通话
-
-  CONTROL_NOTIFICATION, // 通话中收到的控制命令
-
+  UNDEFINE, // 未定义
   CALLEE_ACK_BUSY, //被叫方正在忙
   CALLEE_ACK_REJECT, // 被叫方拒绝通话
   CALLEE_ONLINE_CLIENT_ACK_REJECT, // 被叫方同时在线的其他端拒绝通话
-
   PEER_HANG_UP, // 对方挂断电话
   OK, // 我方主动挂断，一切OK
-  UNDEFINE, // 未定义
 }
 
 /// 音视频通话对方操作通知
-class AVChatCalleeAckEvent {
-  AVChatEventType event; // 事件
-  AVChatData data; // 通话信息
-
-  AVChatCalleeAckEvent(this.event, this.data);
-}
+//class AVChatCalleeAckEvent {
+//  AVChatEventType event; // 事件
+//  AVChatData data; // 通话信息
+//
+//  AVChatCalleeAckEvent(this.event, this.data);
+//}
 
 /// 推送通知选项参数
 class AVChatNotifyOption {
@@ -575,13 +606,15 @@ class AVChatNotifyOption {
 }
 
 /// 音视频通话事件
-class AVChatCommonEvent extends AVChatCalleeAckEvent {
-  AVChatCommonEvent(AVChatEventType event, AVChatData data) : super(event, data);
+class AVChatCommonEvent {
+  AVChatEventType event; // 事件
+  AVChatData data; // 通话信息
+  AVChatCommonEvent(this.event, this.data);
 }
 
 /// 网络通话控制命令通知
-class AVChatControlEvent extends AVChatCalleeAckEvent {
-  int controlCommand; // 控制指令
-
-  AVChatControlEvent(AVChatEventType event, AVChatData data, this.controlCommand) : super(event, data);
-}
+//class AVChatControlEvent extends AVChatCalleeAckEvent {
+//  int controlCommand; // 控制指令
+//
+//  AVChatControlEvent(AVChatEventType event, AVChatData data, this.controlCommand) : super(event, data);
+//}

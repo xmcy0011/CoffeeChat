@@ -218,6 +218,7 @@ const CIMChannelInfo$json = const {
   '2': const [
     const {'1': 'channel_name', '3': 1, '4': 1, '5': 9, '10': 'channelName'},
     const {'1': 'channel_token', '3': 2, '4': 1, '5': 9, '10': 'channelToken'},
+    const {'1': 'creator_id', '3': 3, '4': 1, '5': 4, '10': 'creatorId'},
   ],
 };
 

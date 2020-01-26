@@ -135,6 +135,7 @@ class CIMVoipByeReq extends $pb.GeneratedMessage {
     ..a<Int64>(1, 'localCallTimeLen', $pb.PbFieldType.OU6, Int64.ZERO)
     ..a<Int64>(2, 'userId', $pb.PbFieldType.OU6, Int64.ZERO)
     ..a<$0.CIMChannelInfo>(3, 'channelInfo', $pb.PbFieldType.OM, $0.CIMChannelInfo.getDefault, $0.CIMChannelInfo.create)
+    ..e<$0.CIMVoipByeReason>(4, 'byeReason', $pb.PbFieldType.OE, $0.CIMVoipByeReason.kCIM_VOIP_BYE_REASON_UNKNOWN, $0.CIMVoipByeReason.valueOf, $0.CIMVoipByeReason.values)
     ..hasRequiredFields = false
   ;
 
@@ -164,6 +165,11 @@ class CIMVoipByeReq extends $pb.GeneratedMessage {
   set channelInfo($0.CIMChannelInfo v) { setField(3, v); }
   $core.bool hasChannelInfo() => $_has(2);
   void clearChannelInfo() => clearField(3);
+
+  $0.CIMVoipByeReason get byeReason => $_getN(3);
+  set byeReason($0.CIMVoipByeReason v) { setField(4, v); }
+  $core.bool hasByeReason() => $_has(3);
+  void clearByeReason() => clearField(4);
 }
 
 class CIMVoipByeRsp extends $pb.GeneratedMessage {
@@ -193,7 +199,8 @@ class CIMVoipByeRsp extends $pb.GeneratedMessage {
 class CIMVoipByeNotify extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('CIMVoipByeNotify', package: const $pb.PackageName('CIM.Voip'))
     ..a<Int64>(1, 'userId', $pb.PbFieldType.OU6, Int64.ZERO)
-    ..e<$0.CIMVoipByeReason>(2, 'byeReason', $pb.PbFieldType.OE, $0.CIMVoipByeReason.kCIM_VOIP_BYE_REASON_UNKNOWN, $0.CIMVoipByeReason.valueOf, $0.CIMVoipByeReason.values)
+    ..a<$0.CIMChannelInfo>(2, 'channelInfo', $pb.PbFieldType.OM, $0.CIMChannelInfo.getDefault, $0.CIMChannelInfo.create)
+    ..e<$0.CIMVoipByeReason>(3, 'byeReason', $pb.PbFieldType.OE, $0.CIMVoipByeReason.kCIM_VOIP_BYE_REASON_UNKNOWN, $0.CIMVoipByeReason.valueOf, $0.CIMVoipByeReason.values)
     ..hasRequiredFields = false
   ;
 
@@ -214,9 +221,14 @@ class CIMVoipByeNotify extends $pb.GeneratedMessage {
   $core.bool hasUserId() => $_has(0);
   void clearUserId() => clearField(1);
 
-  $0.CIMVoipByeReason get byeReason => $_getN(1);
-  set byeReason($0.CIMVoipByeReason v) { setField(2, v); }
-  $core.bool hasByeReason() => $_has(1);
-  void clearByeReason() => clearField(2);
+  $0.CIMChannelInfo get channelInfo => $_getN(1);
+  set channelInfo($0.CIMChannelInfo v) { setField(2, v); }
+  $core.bool hasChannelInfo() => $_has(1);
+  void clearChannelInfo() => clearField(2);
+
+  $0.CIMVoipByeReason get byeReason => $_getN(2);
+  set byeReason($0.CIMVoipByeReason v) { setField(3, v); }
+  $core.bool hasByeReason() => $_has(2);
+  void clearByeReason() => clearField(3);
 }
 

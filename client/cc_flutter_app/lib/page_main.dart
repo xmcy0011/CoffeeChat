@@ -21,7 +21,7 @@ class PageMainStatefulApp extends StatefulWidget {
 
 /// 主页面，下面3个Table
 /// 主页、消息、我
-class _PageMainStatefulAppState extends State<PageMainStatefulApp> implements Observer<AVChatData> {
+class _PageMainStatefulAppState extends State<PageMainStatefulApp> implements AVChatIncomingCallObserver {
   var _selectedIndex = 0;
   var totalUnreadCount = 0;
   String messageBadgeCount = "";
@@ -123,7 +123,7 @@ class _PageMainStatefulAppState extends State<PageMainStatefulApp> implements Ob
   /// Observer<AVChatData>
   /// observeIncomingCall：有来电
   @override
-  void onEvent(AVChatData t) {
-    navigatePushPage(context, PageAVChatRingingStatefulWidget(t));
+  void onIncomingCall(AVChatData data) {
+    navigatePushPage(context, PageAVChatRingingStatefulWidget(data));
   }
 }

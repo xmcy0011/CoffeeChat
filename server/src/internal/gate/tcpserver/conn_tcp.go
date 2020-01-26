@@ -151,7 +151,9 @@ func (tcp *TcpConn) Send(seq uint16, cmdId uint16, body proto.Message) (int, err
 	}
 	header.SetPduMsg(body)
 
-	return tcp.Conn.Write(header.GetBuffer())
+	var data = header.GetBuffer()
+	logger.Sugar.Debugf("send len=%d,user_id=%d", len(data), tcp.userId)
+	return tcp.Conn.Write(data)
 }
 
 //OnTimer implements the CImConn OnTimer method.

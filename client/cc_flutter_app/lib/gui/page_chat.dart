@@ -284,11 +284,9 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
     info.sessionStatus = CIMSessionStatusType.kCIM_SESSION_STATUS_OK;
     info.isRobotSession = false;
 
-    for (var i = 0; i < IMManager.singleton.sessions.length; i++) {
-      if (IMManager.singleton.sessions[i].sessionId == userId) {
-        navigatePushPage(context, PageMessage(IMManager.singleton.sessions[i]));
-        break;
-      }
+    var key = "PEER_" + userId.toString();
+    if (IMManager.singleton.sessions.containsKey(key)) {
+      navigatePushPage(context, PageMessage(IMManager.singleton.sessions[key]));
     }
 
     var session = IMManager.singleton.createSession(userId, CIMSessionType.kCIM_SESSION_TYPE_SINGLE);

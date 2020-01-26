@@ -1,24 +1,28 @@
+import 'dart:async';
+
+import 'package:cc_flutter_app/gui/widget/toast_widget.dart';
+import 'package:cc_flutter_app/imsdk/im_avchat.dart';
 import 'package:cc_flutter_app/imsdk/im_user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 /// 被呼叫
 class PageAVChatRingingStatefulWidget extends StatefulWidget {
-  final peerUserId;
+  final AVChatData avChatData;
 
-  PageAVChatRingingStatefulWidget(this.peerUserId);
+  PageAVChatRingingStatefulWidget(this.avChatData);
 
   @override
-  State<StatefulWidget> createState() => PageAVChatRingingWidgetState(peerUserId);
+  State<StatefulWidget> createState() => PageAVChatRingingWidgetState(avChatData);
 }
 
-class PageAVChatRingingWidgetState extends State<PageAVChatRingingStatefulWidget> {
-  final peerUserId; // 对方ID
+class PageAVChatRingingWidgetState extends State<PageAVChatRingingStatefulWidget> implements AVChatHangUpObserver {
+  final AVChatData avChatData; // 对方ID
 
   var nickName; // 对方昵称
   var progress = "拨号中";
 
-  PageAVChatRingingWidgetState(this.peerUserId);
+  PageAVChatRingingWidgetState(this.avChatData);
 
   @override
   Widget build(BuildContext context) {
@@ -139,17 +143,30 @@ class PageAVChatRingingWidgetState extends State<PageAVChatRingingStatefulWidget
   @override
   void initState() {
     super.initState();
+    setState(() {
+      this.nickName = this.avChatData.peerId.toString();
+    });
 
-    IMUser.singleton.queryUserNickName(this.peerUserId, false).then((v) {
+    IMUser.singleton.queryUserNickName(this.avChatData.peerId, false).then((v) {
       RegisterUserResult i = v as RegisterUserResult;
       if (i != null && i.errorCode == 0) {
-        this.nickName = i.nickName;
+        setState(() {
+          this.nickName = i.nickName;
+        });
       }
     }).catchError((e) {});
+
+    IMAVChat.singleton.observeHangUpNotification(this, true);
+  }
+
+  @override
+  void dispose() {
+    IMAVChat.singleton.observeHangUpNotification(this, false);
+    super.dispose();
   }
 
   void _onCancel() {
-    Navigator.of(this.context).pop();
+    onHangup(new AVChatCommonEvent(AVChatEventType.OK, null));
   }
 
   void _onMute() {}
@@ -157,4 +174,16 @@ class PageAVChatRingingWidgetState extends State<PageAVChatRingingStatefulWidget
   void _onMinimum() {}
 
   void _onHandsFree() {}
+
+  /// AVChatHangUpObserver
+  @override
+  void onHangup(AVChatCommonEvent data) {
+    IMAVChat.singleton.hangUp(null); // 挂断
+
+    var msgTips = IMAVChat.singleton.getHangupReasonStr(data);
+    Toast.toast(this.context, msg: msgTips, position: ToastPostion.center);
+    new Timer(Duration(seconds: 1), () {
+      Navigator.of(this.context).pop();
+    });
+  }
 }

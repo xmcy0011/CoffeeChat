@@ -45,6 +45,7 @@ class IMClient {
   var isLogin = false;
   var isReLogin = false;
   var isConnect = false;
+  var isOnceConnect = false;
 
   var requestMap = new Map<int, IMRequest>(); // 请求列表
   var registerCallbackList = new List<int>();
@@ -147,6 +148,7 @@ class IMClient {
         // read data
         socket.listen(_onRead, onError: _onError, onDone: _onDone);
         isConnect = true;
+        isOnceConnect = true;
 
         // auth request
         var req = new CIMAuthTokenReq();
@@ -238,6 +240,11 @@ class IMClient {
       while (true) {
         var temp = cache.sublist(start);
         if (!header.readHeader(temp)) {
+          if (start == 0) {
+            print("invalid IMHeader,start=" + start.toString() + ",cacheOffset=" + cacheOffset.toString());
+          }
+          cache.clear();
+          cacheOffset = 0;
           break;
         }
 
@@ -310,7 +317,7 @@ class IMClient {
 
   // 重连
   void _reConnect() {
-    if (!this.isConnect) {
+    if (!this.isConnect && this.isOnceConnect) {
       this.auth(this.userId, this.nickName, this.userToken, this.ip, this.port);
     }
   }
@@ -319,7 +326,7 @@ class IMClient {
   void _onHandle(IMHeader header, List<int> data) {
     if (header.commandId == CIMCmdID.kCIM_CID_LOGIN_HEARTBEAT.value) {
       print("onHandle heartbeat");
-      return null;
+      return;
     }
 
     if (this.handleMap.containsKey(header.commandId)) {

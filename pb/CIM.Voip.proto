@@ -37,6 +37,7 @@ message CIMVoipByeReq {
   uint64 local_call_time_len = 1;          // 本地通话时长计数
   uint64 user_id = 2;                      // 挂断方用户ID
   CIM.Def.CIMChannelInfo channel_info = 3; // 频道信息
+  CIM.Def.CIMVoipByeReason bye_reason = 4; // 挂断原因
 }
 
 // 挂断响应
@@ -46,6 +47,7 @@ message CIMVoipByeRsp {
 
 // 挂断通知
 message CIMVoipByeNotify {
-  uint64 user_id = 1;                     // 挂断方用户ID
-  CIM.Def.CIMVoipByeReason byeReason = 2; // 挂断原因
+  uint64 user_id = 1;                      // 挂断方用户ID
+  CIM.Def.CIMChannelInfo channel_info = 2; // 频道信息
+  CIM.Def.CIMVoipByeReason byeReason = 3;  // 挂断原因
 }
