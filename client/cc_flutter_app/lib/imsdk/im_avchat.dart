@@ -226,7 +226,6 @@ class IMAVChat extends IAVChat {
   /// [reason] 挂断原因
   void hangUp(/*String chatId,*/ CIMVoipByeReason reason, CallHangup callback) {
     hangupCallback = callback;
-    avState = AVState.Hangup;
     print("hangUp");
 
     if (chatData != null && this.avState != AVState.Default) {
@@ -248,6 +247,8 @@ class IMAVChat extends IAVChat {
       req.byeReason = reason;
       IMClient.singleton.send(CIMCmdID.kCIM_CID_VOIP_BYE_REQ.value, req);
     }
+
+    avState = AVState.Hangup;
   }
 
   /// 获取挂断原因(中文)
