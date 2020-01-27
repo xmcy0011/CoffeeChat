@@ -5,11 +5,14 @@
  */
 package tcpserver
 
+import "sync"
+
 type UserManager struct {
 	users map[uint64]*User // 在线用户字典
 }
 
 var DefaultUserManager = &UserManager{}
+var mutex = sync.Mutex{}
 
 func init() {
 	DefaultUserManager.users = make(map[uint64]*User)
@@ -25,7 +28,9 @@ func (u *UserManager) FindUser(userId uint64) *User {
 
 // 添加一个用户
 func (u *UserManager) AddUser(userId uint64, user *User) {
+	mutex.Lock()
 	u.users[userId] = user
+	mutex.Unlock()
 }
 
 // 移除一个用户
