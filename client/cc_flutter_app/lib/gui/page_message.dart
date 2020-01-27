@@ -10,6 +10,7 @@ import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pbserver.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Message.pb.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:toast/toast.dart';
 import 'package:fixnum/fixnum.dart';
 
@@ -482,11 +483,32 @@ class _PageMessageState extends State<PageMessage> {
     }
   }
 
-  void _onVoiceCall() {
-    navigatePushPage(this.context,
-        new PageAVChatCallerStatefulWidget(Int64(this.sessionInfo.sessionId), this.sessionInfo.sessionName));
-    //navigatePushPage(this.context, new PageAVChatRingingStatefulWidget());
+  void _onVoiceCall() async {
+    // await for camera and mic permissions before pushing video page
+    if (await _handleCameraAndMic()) {
+      navigatePushPage(this.context,
+          new PageAVChatCallerStatefulWidget(Int64(this.sessionInfo.sessionId), this.sessionInfo.sessionName));
+    }
   }
 
   void _onVideoCall() {}
+
+  /// require permissions
+  _handleCameraAndMic() async {
+    // 请求权限
+    Map<PermissionGroup, PermissionStatus> permissions = await PermissionHandler().requestPermissions(
+      [PermissionGroup.camera, PermissionGroup.microphone],
+    );
+
+    //校验权限
+    if (permissions[PermissionGroup.camera] != PermissionStatus.granted) {
+      print("无照相权限");
+      return false;
+    }
+    if (permissions[PermissionGroup.microphone] != PermissionStatus.granted) {
+      print("无麦克风权限");
+      return false;
+    }
+    return true;
+  }
 }

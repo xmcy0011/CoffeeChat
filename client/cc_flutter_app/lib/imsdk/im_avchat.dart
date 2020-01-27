@@ -43,9 +43,8 @@ class IMAVChat extends IAVChat {
   AVState avState; // 通话状态
   CallSuccess callSuccessCallback; // call success
   CallError callErrorCallback; // call error
-
-  AVChatCallback<void> acceptCallback; // accept
-  AVChatCallback<void> hangupCallback; // hangup
+  CallAccept acceptCallback; // accept
+  CallHangup hangupCallback; // hangup
 
   /// 单实例
   static final IMAVChat singleton = IMAVChat._internal();
@@ -144,6 +143,11 @@ class IMAVChat extends IAVChat {
     }
   }
 
+  /// 扬声器
+  void enableSpeakerphone(bool enable){
+    AgoraRtcEngine.setEnableSpeakerphone(enable);
+  }
+
   /// 信令层发起双人通话
   /// 在信令层发起呼叫, 成功调用此接口后对方会收到相应的会话通知。 在呼叫过程中需要上层实现定时器, 当超过一定时间对方未接听时 需要 hangUp2(long, AVChatCallback) 挂断会话。
   /// 状态在observeAVChatState注册的回调接口中
@@ -188,25 +192,30 @@ class IMAVChat extends IAVChat {
   /// 如果需要接听电话则需要调用此接口, 如果需要拒绝通话请调用 hangUp(long, AVChatCallback)。在成功接听会话后, 引擎就会自动去连接预先分配好的媒体服务器。
   /// 连接媒体服务器的结果将会在 AVChatStateObserverLite.onJoinedChannel(int, String, String, int) 中进行通知。
   /// [callback] 回调
-  void accept(/*String chatId,*/ AVChatCallback<void> callback) {
-    print("accept");
+  void accept(/*String chatId,*/ CallAccept callback) {
     acceptCallback = callback;
 
-    // join channel (agora)
-    AgoraRtcEngine.leaveChannel();
-    //AgoraRtcEngine.joinChannel(chatData.channelToken, chatData.channelName, "", IMClient.singleton.userId);
-    // Fixed Me, prd env need use channel token
-    AgoraRtcEngine.joinChannel(null, chatData.channelName, "", IMClient.singleton.userId);
+    // OK
+    if (avState == AVState.Ringing || avState == AVState.Trying) {
+      print("send 200 ok");
 
-    // send 200 ok
-    var req = new CIMVoipInviteReply();
-    req.channelInfo = new CIMChannelInfo();
-    req.channelInfo.channelName = this.chatData.channelName;
-    req.channelInfo.channelToken = this.chatData.channelToken;
-    req.rspCode = CIMInviteRspCode.KCIM_VOIP_INVITE_CODE_OK;
-    req.userId = IMClient.singleton.userId;
+      // join channel (agora)
+      AgoraRtcEngine.leaveChannel();
+      // AgoraRtcEngine.joinChannel(chatData.channelToken, chatData.channelName, "", IMClient.singleton.userId);
+      // Fixed Me, prd env need use channel token
+      AgoraRtcEngine.joinChannel(null, chatData.channelName, "", IMClient.singleton.userId.toInt());
 
-    IMClient.singleton.send(CIMCmdID.kCIM_CID_VOIP_INVITE_REPLY_ACK.value, req);
+      // send 200 ok
+      var req = new CIMVoipInviteReply();
+      req.channelInfo = new CIMChannelInfo();
+      req.channelInfo.channelName = this.chatData.channelName;
+      req.channelInfo.channelToken = this.chatData.channelToken;
+      req.channelInfo.creatorId = this.chatData.creatorId;
+      req.rspCode = CIMInviteRspCode.KCIM_VOIP_INVITE_CODE_OK;
+      req.userId = IMClient.singleton.userId;
+
+      IMClient.singleton.send(CIMCmdID.kCIM_CID_VOIP_INVITE_REPLY.value, req);
+    }
   }
 
   /// 信令层挂断或者拒绝通话请求
@@ -215,7 +224,7 @@ class IMAVChat extends IAVChat {
   /// 如果在通话过程中调用此接口,则会直接挂断通话, 同时对方会收到你挂断通知信令。
   /// 如果是对方挂断，无需调用此方法
   /// [reason] 挂断原因
-  void hangUp(/*String chatId,*/ CIMVoipByeReason reason, AVChatCallback<void> callback) {
+  void hangUp(/*String chatId,*/ CIMVoipByeReason reason, CallHangup callback) {
     hangupCallback = callback;
     avState = AVState.Hangup;
     print("hangUp");
@@ -353,12 +362,16 @@ class IMAVChat extends IAVChat {
     this.chatData = new AVChatData(data.creatorUserId, IMClient.singleton.userId, data.channelInfo.channelName,
         data.channelInfo.channelToken, data.inviteType, DateTime.now().millisecondsSinceEpoch ~/ 1000);
 
-    // reply 180 ringing
-    var req = new CIMVoipInviteReply();
-    req.userId = IMClient.singleton.userId;
-    req.rspCode = CIMInviteRspCode.kCIM_VOIP_INVITE_CODE_RINGING;
-    req.channelInfo = data.channelInfo;
-    IMClient.singleton.send(CIMCmdID.kCIM_CID_VOIP_INVITE_REPLY.value, req);
+    // FIXED ME
+    this.avState = AVState.Ringing;
+    new Timer(Duration(seconds: 1), () {
+      // reply 180 ringing
+      var req = new CIMVoipInviteReply();
+      req.userId = IMClient.singleton.userId;
+      req.rspCode = CIMInviteRspCode.kCIM_VOIP_INVITE_CODE_RINGING;
+      req.channelInfo = data.channelInfo;
+      IMClient.singleton.send(CIMCmdID.kCIM_CID_VOIP_INVITE_REPLY.value, req);
+    });
 
     // callback there has incoming call
     _incomingCallHandleList.forEach((v) {
@@ -393,13 +406,14 @@ class IMAVChat extends IAVChat {
       AgoraRtcEngine.leaveChannel();
       //AgoraRtcEngine.joinChannel(chatData.channelToken, chatData.channelName, "", IMClient.singleton.userId);
       // Fixed Me, prd env need use channel token
-      AgoraRtcEngine.joinChannel(null, chatData.channelName, "", IMClient.singleton.userId);
+      AgoraRtcEngine.joinChannel(null, chatData.channelName, "", IMClient.singleton.userId.toInt());
 
       // 2.reply ack
       var req = new CIMVoipInviteReplyAck();
       req.channelInfo = new CIMChannelInfo();
       req.channelInfo.channelName = this.chatData.channelName;
       req.channelInfo.channelToken = this.chatData.channelToken;
+      req.channelInfo.creatorId = this.chatData.creatorId;
       IMClient.singleton.send(CIMCmdID.kCIM_CID_VOIP_INVITE_REPLY_ACK.value, req);
 
       // 3.callback
@@ -422,13 +436,18 @@ class IMAVChat extends IAVChat {
   void onHandleInviteReplyAck(IMHeader header, CIMVoipInviteReplyAck data) {
     // callback
     if (this.acceptCallback != null) {
-      this.acceptCallback.onSuccess(null);
+      this.acceptCallback();
     }
+    this.avState = AVState.Established;
+    this.chatData.timeTag = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+    this._avChatStateHandleList.forEach((v) {
+      v.onCallEstablished();
+    });
   }
 
   void onHandleVOIPByeRsp(IMHeader header, CIMVoipByeRsp data) {
     if (this.hangupCallback != null) {
-      this.hangupCallback.onSuccess(null);
+      this.hangupCallback();
     }
   }
 
@@ -474,6 +493,8 @@ class AVChatData {
 /// call result
 typedef CallSuccess = void Function(AVChatData e);
 typedef CallError = void Function(int errorCode, String errorDesc);
+typedef CallAccept = void Function();
+typedef CallHangup = void Function();
 
 /// 网络通话回调接口
 abstract class AVChatCallback<T> {

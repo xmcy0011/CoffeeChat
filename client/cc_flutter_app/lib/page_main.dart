@@ -10,6 +10,7 @@ import 'package:cc_flutter_app/imsdk/im_manager.dart';
 import 'package:cc_flutter_app/imsdk/im_session.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'gui/page_home.dart';
 import 'gui/page_chat.dart';
@@ -124,6 +125,31 @@ class _PageMainStatefulAppState extends State<PageMainStatefulApp> implements AV
   /// observeIncomingCall：有来电
   @override
   void onIncomingCall(AVChatData data) {
-    navigatePushPage(context, PageAVChatRingingStatefulWidget(data));
+    _requirePermissionsAndPushPage(data);
+  }
+
+  void _requirePermissionsAndPushPage(AVChatData data) async {
+    if (await _handleCameraAndMic()) {
+      navigatePushPage(context, PageAVChatRingingStatefulWidget(data));
+    }
+  }
+
+  /// require permissions
+  _handleCameraAndMic() async {
+    // 请求权限
+    Map<PermissionGroup, PermissionStatus> permissions = await PermissionHandler().requestPermissions(
+      [PermissionGroup.camera, PermissionGroup.microphone],
+    );
+
+    //校验权限
+    if (permissions[PermissionGroup.camera] != PermissionStatus.granted) {
+      print("无照相权限");
+      return false;
+    }
+    if (permissions[PermissionGroup.microphone] != PermissionStatus.granted) {
+      print("无麦克风权限");
+      return false;
+    }
+    return true;
   }
 }

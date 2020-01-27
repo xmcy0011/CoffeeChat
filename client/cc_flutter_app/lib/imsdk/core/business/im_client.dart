@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:cc_flutter_app/imsdk/im_avchat.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Message.pb.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Voip.pb.dart';
 import 'package:cc_flutter_app/imsdk/proto/im_header.dart';
@@ -55,7 +54,7 @@ class IMClient {
   var checkConnectTimeSpan = 1; // 重连间隔,指数退避算法,1s,2s,4s,8s
   var checkConnectLastTick = 0;
 
-  var userId;
+  Int64 userId;
   var nickName;
   var userToken;
   var ip;

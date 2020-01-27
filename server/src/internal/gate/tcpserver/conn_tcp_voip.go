@@ -107,43 +107,61 @@ func (tcp *TcpConn) onHandleVOIPInviteReply(header *cim.ImHeader, buff []byte) {
 
 	logger.Sugar.Infof("onHandleVOIPInviteReply user_id:%d,res_code:%s", reply.UserId, reply.RspCode.String())
 
-	//if reply.RspCode == cim.CIMInviteRspCode_kCIM_VOIP_INVITE_CODE_RINGING {
-	//	// 180 Ringing, 转发
-	//	c := voip.DefaultVOIPManager.Get(reply.ChannelInfo.CreatorId)
-	//	if c == nil {
-	//		logger.Sugar.Warnf("onHandleVOIPInviteReply channel not exist,name=%s,creator_id=%d",
-	//			reply.ChannelInfo.ChannelName, reply.ChannelInfo.CreatorId)
-	//		return
-	//	}
-	//
-	//	useId := c.PeerUserId
-	//	if c.PeerUserId == tcp.userId {
-	//		useId = c.Creator
-	//	}
-	//	u := DefaultUserManager.FindUser(useId)
-	//	if u != nil {
-	//		// update channel avState
-	//		voip.DefaultVOIPManager.UpdateAvState(reply.ChannelInfo.CreatorId, voip.AVState_Ringing)
-	//		// 转发180 Ringing
-	//		u.Broadcast(uint16(cim.CIMCmdID_kCIM_CID_VOIP_INVITE_REPLY), reply)
-	//	} else {
-	//		logger.Sugar.Warnf("onHandleVOIPInviteReply user not find,user_id=%d", useId)
-	//	}
-	//} else if reply.RspCode == cim.CIMInviteRspCode_KCIM_VOIP_INVITE_CODE_OK {
-	//	// 200 OK, 回复replyAck
-	//	var ack = &cim.CIMVoipInviteReplyAck{
-	//		ChannelInfo: &cim.CIMChannelInfo{
-	//			ChannelName:  reply.ChannelInfo.ChannelName,
-	//			ChannelToken: reply.ChannelInfo.ChannelToken,
-	//		},
-	//	}
-	//	_, _ = tcp.Send(header.SeqNum, uint16(cim.CIMCmdID_kCIM_CID_VOIP_INVITE_REPLY_ACK), ack)
-	//
-	//	// update avState
-	//	voip.DefaultVOIPManager.UpdateAvState(reply.ChannelInfo.CreatorId, voip.AVState_Establish)
-	//} else {
-	//	logger.Sugar.Warnf("onHandleVOIPInviteReply user_id:%d,error res_code:%d", reply.UserId, reply.RspCode.String())
-	//}
+	if reply.RspCode == cim.CIMInviteRspCode_kCIM_VOIP_INVITE_CODE_RINGING {
+		// 180 Ringing, 转发
+		c := voip.DefaultVOIPManager.Get(reply.ChannelInfo.CreatorId)
+		if c == nil {
+			logger.Sugar.Warnf("onHandleVOIPInviteReply channel not exist,name=%s,creator_id=%d",
+				reply.ChannelInfo.ChannelName, reply.ChannelInfo.CreatorId)
+			return
+		}
+
+		useId := c.PeerUserId
+		if c.PeerUserId == tcp.userId {
+			useId = c.Creator
+		}
+		u := DefaultUserManager.FindUser(useId)
+		if u != nil {
+			// update channel avState
+			voip.DefaultVOIPManager.UpdateAvState(reply.ChannelInfo.CreatorId, voip.AVState_Ringing)
+			// 转发180 Ringing
+			u.Broadcast(uint16(cim.CIMCmdID_kCIM_CID_VOIP_INVITE_REPLY), reply)
+			logger.Sugar.Debugf("onHandleVOIPInviteReply transmit to user_id=%d", useId)
+		} else {
+			logger.Sugar.Warnf("onHandleVOIPInviteReply user not find,user_id=%d", useId)
+		}
+	} else if reply.RspCode == cim.CIMInviteRspCode_KCIM_VOIP_INVITE_CODE_OK {
+		// 200 OK, 回复replyAck
+		var ack = &cim.CIMVoipInviteReplyAck{
+			ChannelInfo: &cim.CIMChannelInfo{
+				ChannelName:  reply.ChannelInfo.ChannelName,
+				ChannelToken: reply.ChannelInfo.ChannelToken,
+			},
+		}
+		_, _ = tcp.Send(header.SeqNum, uint16(cim.CIMCmdID_kCIM_CID_VOIP_INVITE_REPLY_ACK), ack)
+
+		logger.Sugar.Infof("onHandleVOIPInviteReply 200 ok,user_id=%d", reply.UserId)
+		// update avState
+		voip.DefaultVOIPManager.UpdateAvState(reply.ChannelInfo.CreatorId, voip.AVState_Establish)
+
+		// 转发200 OK给对方
+		c := voip.DefaultVOIPManager.Get(reply.ChannelInfo.CreatorId)
+		if c == nil {
+			logger.Sugar.Warnf("onHandleVOIPInviteReply transmit 200 ok,but channel not exist,name=%s,creator_id=%d",
+				reply.ChannelInfo.ChannelName, reply.ChannelInfo.CreatorId)
+			return
+		}
+		useId := c.PeerUserId
+		if c.PeerUserId == tcp.userId {
+			useId = c.Creator
+		}
+		u := DefaultUserManager.FindUser(useId)
+		if u != nil {
+			u.Broadcast(uint16(cim.CIMCmdID_kCIM_CID_VOIP_INVITE_REPLY), reply)
+		}
+	} else {
+		logger.Sugar.Warnf("onHandleVOIPInviteReply user_id:%d,error res_code:%d", reply.UserId, reply.RspCode.String())
+	}
 }
 
 // 呼叫成功，通话建立
@@ -166,7 +184,7 @@ func (tcp *TcpConn) onHandleVOIPInviteReplyAck(header *cim.ImHeader, buff []byte
 		logger.Sugar.Infof("onHandleVOIPInviteReplyAck creator_user_id:%d,peer_user_id:%d,channel_name:%s",
 			c.Creator, c.PeerUserId, c.Name)
 	} else {
-		logger.Sugar.Infof("onHandleVOIPInviteReplyAck channel_name:%d not find,user_id:%d", req.ChannelInfo.ChannelName, tcp.userId)
+		logger.Sugar.Infof("onHandleVOIPInviteReplyAck channel_name:%s not find,user_id:%d", req.ChannelInfo.ChannelName, tcp.userId)
 	}
 }
 

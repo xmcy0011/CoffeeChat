@@ -26,6 +26,8 @@
                 android:value="true" />
             <intent-filter>
                 <action android:name="android.permission.INTERNET"/>
+                <action android:name="android.permission.CAMERA"/>
+                <action android:name="android.permission.Microphone"/>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>

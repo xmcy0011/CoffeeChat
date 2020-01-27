@@ -26,6 +26,7 @@ class _PageAVChatCallerWidgetState extends State<PageAVChatCallerStatefulWidget>
 
   var progress = "拨号中";
   var timerTick = 0;
+  bool enableSpeakerphone = false;
 
   Timer timer;
   AVState avState;
@@ -100,48 +101,50 @@ class _PageAVChatCallerWidgetState extends State<PageAVChatCallerStatefulWidget>
                               height: 80,
                               child: RaisedButton(
                                 child: Icon(
-                                  Icons.mic_off,
+                                  Icons.call_end,
                                   color: Colors.white,
                                   size: 30,
                                 ),
-                                color: Colors.transparent,
+                                color: Colors.red,
                                 elevation: 60,
-                                shape: CircleBorder(side: BorderSide(color: Colors.white)),
-                                onPressed: _onMute,
+                                shape: CircleBorder(),
+                                onPressed: _onHangup,
                               ),
                             ),
                             Padding(
-                              child: Text("静 音", style: new TextStyle(fontSize: 14, color: Colors.white)),
+                              child: Text("挂 断", style: new TextStyle(fontSize: 14, color: Colors.white)),
                               padding: EdgeInsets.only(top: 10),
                             )
                           ],
                         ),
                       )
                     : Container(),
-                Expanded(
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        height: 80,
-                        child: RaisedButton(
-                          child: Icon(
-                            Icons.call_end,
-                            color: Colors.white,
-                            size: 30,
-                          ),
-                          color: Colors.red,
-                          elevation: 60,
-                          shape: CircleBorder(),
-                          onPressed: _onCancel,
+                avState != AVState.Established
+                    ? Expanded(
+                        child: Column(
+                          children: <Widget>[
+                            Container(
+                              height: 80,
+                              child: RaisedButton(
+                                child: Icon(
+                                  Icons.call_end,
+                                  color: Colors.white,
+                                  size: 30,
+                                ),
+                                color: Colors.red,
+                                elevation: 60,
+                                shape: CircleBorder(),
+                                onPressed: _onCancel,
+                              ),
+                            ),
+                            Padding(
+                              child: Text("取 消", style: new TextStyle(fontSize: 14, color: Colors.white)),
+                              padding: EdgeInsets.only(top: 10),
+                            )
+                          ],
                         ),
-                      ),
-                      Padding(
-                        child: Text("取 消", style: new TextStyle(fontSize: 14, color: Colors.white)),
-                        padding: EdgeInsets.only(top: 10),
                       )
-                    ],
-                  ),
-                ),
+                    : Container(),
                 avState == AVState.Established
                     ? Expanded(
                         child: Column(
@@ -215,9 +218,18 @@ class _PageAVChatCallerWidgetState extends State<PageAVChatCallerStatefulWidget>
     _showEndTips(IMClient.singleton.userId, AVChatEventType.CALLEE_CANCEL);
   }
 
-  void _onMute() {}
+  /// 挂断
+  void _onHangup() {
+    IMAVChat.singleton.hangUp(CIMVoipByeReason.kCIM_VOIP_BYE_REASON_END, null); // 挂断
+    _showEndTips(IMClient.singleton.userId, AVChatEventType.CALLEE_END);
+  }
 
-  void _onHandsFree() {}
+  /// 免提
+  void _onHandsFree() {
+    enableSpeakerphone = !enableSpeakerphone;
+    IMAVChat.singleton.enableSpeakerphone(enableSpeakerphone);
+    Toast.toast(context, msg: enableSpeakerphone ? "外置扬声器" : "内置扬声器", position: ToastPostion.center);
+  }
 
   /// AVChatStateObserverLite
   @override
@@ -226,7 +238,6 @@ class _PageAVChatCallerWidgetState extends State<PageAVChatCallerStatefulWidget>
       avState = AVState.Trying;
     });
 
-    // 对方振铃中，可以显示动画。。或者背景音乐
     timer = new Timer.periodic(Duration(milliseconds: 600), (t) {
       if (avState != AVState.Ringing && avState != AVState.Trying) {
         t.cancel();
@@ -255,6 +266,11 @@ class _PageAVChatCallerWidgetState extends State<PageAVChatCallerStatefulWidget>
     setState(() {
       avState = AVState.Ringing;
     });
+
+    new Timer(Duration(seconds: 1), () {
+      // 对方振铃中，可以显示动画。。或者背景音乐
+      Toast.toast(this.context, msg: "对方振铃中", position: ToastPostion.center);
+    });
   }
 
   @override
@@ -267,8 +283,8 @@ class _PageAVChatCallerWidgetState extends State<PageAVChatCallerStatefulWidget>
         t.cancel();
       } else {
         var hourStr, minStr, secondStr;
-        var hour = t.tick / 3600;
-        var min = t.tick / 60;
+        var hour = t.tick ~/ 3600;
+        var min = t.tick ~/ 60;
         var second = t.tick % 60;
 
         // 补0
