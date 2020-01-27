@@ -115,6 +115,7 @@ func (tcp *TcpConn) onHandleVOIPInviteReply(header *cim.ImHeader, buff []byte) {
 				reply.ChannelInfo.ChannelName, reply.ChannelInfo.CreatorId)
 			return
 		}
+		logger.Sugar.Infof("onHandleVOIPInviteReply 180 ringing,user_id=%d", reply.UserId)
 
 		useId := c.PeerUserId
 		if c.PeerUserId == tcp.userId {

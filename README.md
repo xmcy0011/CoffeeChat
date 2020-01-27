@@ -9,6 +9,10 @@ opensource im with server(go) and client(flutter+swift)
 ![设置界面](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/flutter/setting.jpg)
 ![聊天界面](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/flutter/chat.jpg)
 ![发起聊天](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/flutter/invite_chat.jpg)
+![语音通话-发起](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/flutter/voip_invite.png)
+![语音通话-来电](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/flutter/voip_incoming.jpg)
+![语音通话-通话中](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/flutter/voip_calling.jpg)
+![语音通话-结束](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/flutter/voip_end.jpg)
 
 ## Features
 
@@ -74,7 +78,7 @@ opensource im with server(go) and client(flutter+swift)
 - [ ] 端到端加密
 - [ ] 高清语音消息
 - [ ] 文件上传下载
-- [ ] 语音通话
+- [x] 语音通话
 - [ ] 视频通话
 - [ ] electron 跨平台桌面客户端
 - [x] flutter 跨平台移动端
