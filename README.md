@@ -10,9 +10,9 @@ opensource im with server(go) and client(flutter+swift)
 ![聊天界面](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/flutter/chat.jpg)  
 ![发起聊天](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/flutter/invite_chat.jpg)  
 ![语音通话-发起](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/voip_invite.png)  
-![语音通话-来电](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/voip_incoming.jpg)  
-![语音通话-通话中](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/voip_calling.jpg)  
-![语音通话-结束](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/voip_end.jpg)  
+![语音通话-来电](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/voip_incoming.png)  
+![语音通话-通话中](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/voip_calling.png)  
+![语音通话-结束](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/voip_end.png)  
 
 ## Features
 
