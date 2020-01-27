@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:cc_flutter_app/gui/page_avchat_caller.dart';
-import 'package:cc_flutter_app/gui/page_avchat_ringing.dart';
 import 'package:cc_flutter_app/imsdk/im_manager.dart';
 import 'package:cc_flutter_app/imsdk/core/model/model.dart';
 import 'package:cc_flutter_app/imsdk/im_message.dart';
@@ -12,6 +11,7 @@ import 'package:cc_flutter_app/imsdk/proto/CIM.Message.pb.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:toast/toast.dart';
+import 'package:fixnum/fixnum.dart';
 
 import 'helper.dart';
 
@@ -207,6 +207,9 @@ class _PageMessageState extends State<PageMessage> {
     }
     if (msg.msgType == CIMMsgType.kCIM_MSG_TYPE_ROBOT) {
       text = IMManager.singleton.resolveRobotMessage(msg);
+    } else if (msg.msgType == CIMMsgType.kCIM_MSG_TYPE_AVCHAT) {
+      var msgContent = IMManager.singleton.resolveAVChatMessage(msg);
+      text = formatAVChatMsg(msgContent);
     }
 
     var isSelf = IMManager.singleton.isSelf(msg.fromUserId);
@@ -456,10 +459,13 @@ class _PageMessageState extends State<PageMessage> {
 
   // 接收一条消息
   void _onReceiveMsg(CIMMsgData msg) {
-    if (msg.fromUserId == sessionInfo.sessionId) {
+    // 对方发给我 or 自己的其他端发送的
+    if (msg.fromUserId == sessionInfo.sessionId || msg.toSessionId == sessionInfo.sessionId) {
       var msgInfo = new IMMessage();
+
       msgInfo.toSessionId = msg.toSessionId.toInt();
       msgInfo.fromUserId = msg.fromUserId.toInt();
+
       msgInfo.msgType = msg.msgType;
       msgInfo.msgData = utf8.decode(msg.msgData);
       msgInfo.msgStatus = CIMMsgStatus.kCIM_MSG_STATUS_SENT; // FIXED me
@@ -477,8 +483,8 @@ class _PageMessageState extends State<PageMessage> {
   }
 
   void _onVoiceCall() {
-    navigatePushPage(
-        this.context, new PageAVChatCallerStatefulWidget(this.sessionInfo.sessionId, this.sessionInfo.sessionName));
+    navigatePushPage(this.context,
+        new PageAVChatCallerStatefulWidget(Int64(this.sessionInfo.sessionId), this.sessionInfo.sessionName));
     //navigatePushPage(this.context, new PageAVChatRingingStatefulWidget());
   }
 

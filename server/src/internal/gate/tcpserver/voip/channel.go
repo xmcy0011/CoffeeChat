@@ -1,5 +1,7 @@
 package voip
 
+import "github.com/CoffeeChat/server/src/api/cim"
+
 type AVState int32
 
 const (
@@ -21,7 +23,8 @@ type ChannelInfo struct {
 	Name  string // 频道名
 	Token string // 频道令牌
 
-	State AVState // 通话状态
+	State    AVState               // 通话状态
+	CallType cim.CIMVoipInviteType // 通话类型
 
 	Creator    uint64 // 发起者
 	PeerUserId uint64 // 被呼叫者

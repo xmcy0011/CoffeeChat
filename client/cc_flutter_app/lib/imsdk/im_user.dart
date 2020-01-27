@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:cc_flutter_app/imsdk/core/dao/user_db_provider.dart';
 import 'package:cc_flutter_app/imsdk/core/model/model.dart';
 import 'package:dio/dio.dart';
+import 'package:fixnum/fixnum.dart';
 
 const DefaultHttpServerPort = 18080;
 const DefaultRegisterUserAPI = "/user/register";
@@ -71,11 +72,11 @@ class IMUser {
   /// 查询用户昵称
   /// 如果本地有，则从本地加载。否则，从服务端拉取
   /// [return] RegisterUserResult
-  Future<dynamic> queryUserNickName(int userId, bool forceUpdate) async {
+  Future<dynamic> queryUserNickName(Int64 userId, bool forceUpdate) async {
     var userDb = new UserDbProvider();
-    var user = await userDb.get(userId);
+    var user = await userDb.get(userId.toInt());
     if (user != null && user.nickName != "" && !forceUpdate) {
-      return new RegisterUserResult(0, "", userId, user.nickName);
+      return new RegisterUserResult(0, "", userId.toInt(), user.nickName);
     }
 
     // 从服务端拉取
@@ -90,28 +91,28 @@ class IMUser {
       if (response.statusCode == 200) {
         var data = jsonDecode(response.data);
         completer.complete(new RegisterUserResult(
-            data['error_code'], data['error_msg'].toString(), userId, data['nick_name'].toString()));
+            data['error_code'], data['error_msg'].toString(), userId.toInt(), data['nick_name'].toString()));
 
         // 更新本地缓存
         if (data['error_code'] == 0) {
           UserModel user2 = new UserModel();
-          user2.userId = userId;
+          user2.userId = userId.toInt();
           user2.nickName = data['nick_name'].toString();
           user2.avatarURL = "";
           user2.avatarPath = "";
           user2.attachInfo = "";
           if (user != null) {
-            userDb.updateNickName(userId, user2.nickName);
+            userDb.updateNickName(userId.toInt(), user2.nickName);
           } else {
-            userDb.insert(userId, user2);
+            userDb.insert(userId.toInt(), user2);
           }
         }
       } else {
-        completer
-            .complete(new RegisterUserResult(-1, "http status code " + response.statusCode.toString(), userId, ""));
+        completer.complete(
+            new RegisterUserResult(-1, "http status code " + response.statusCode.toString(), userId.toInt(), ""));
       }
     }).catchError((e) {
-      completer.complete(new RegisterUserResult(-1, e.toString(), userId, ""));
+      completer.complete(new RegisterUserResult(-1, e.toString(), userId.toInt(), ""));
     });
     return completer.future;
   }

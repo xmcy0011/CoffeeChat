@@ -1,11 +1,22 @@
 package tcpserver
 
 import (
+	"context"
+	"encoding/json"
 	"github.com/CoffeeChat/server/src/api/cim"
 	"github.com/CoffeeChat/server/src/internal/gate/tcpserver/voip"
 	"github.com/CoffeeChat/server/src/pkg/logger"
 	"github.com/golang/protobuf/proto"
+	uuid "github.com/satori/go.uuid"
+	"time"
 )
+
+type AVChatMsgInfo struct {
+	HangupUserId uint64                `json:"hangup_user_id"` // 挂断用户ID
+	HangupReason cim.CIMVoipByeReason  `json:"hangup_reason"`  // 挂断原因
+	TimeLen      int                   `json:"time_len"`       // 通话时长（秒）
+	CallType     cim.CIMVoipInviteType `json:"call_type"`      // 0:unknown, 1:voice, 2:video
+}
 
 // 音视频通话呼叫邀请
 func (tcp *TcpConn) onHandleVOIPInviteReq(header *cim.ImHeader, buff []byte) {
@@ -52,6 +63,7 @@ func (tcp *TcpConn) onHandleVOIPInviteReq(header *cim.ImHeader, buff []byte) {
 		Name:       name,
 		Token:      token,
 		State:      voip.AVState_Tring,
+		CallType:   req.InviteType,
 		Creator:    req.CreatorUserId,
 		PeerUserId: req.InviteUserList[0],
 	})
@@ -198,9 +210,51 @@ func (tcp *TcpConn) onHandleVOIPByeReq(header *cim.ImHeader, buff []byte) {
 	if c.PeerUserId == tcp.userId {
 		userId = c.Creator
 	}
-	u := DefaultUserManager.FindUser(userId)
-	if u != nil {
-		u.Broadcast(uint16(cim.CIMCmdID_kCIM_CID_VOIP_BYE_NOTIFY), notify)
+	peerUser := DefaultUserManager.FindUser(userId)
+	if peerUser != nil {
+		peerUser.Broadcast(uint16(cim.CIMCmdID_kCIM_CID_VOIP_BYE_NOTIFY), notify)
 		logger.Sugar.Debugf("onHandleVOIPByeReq broadcast to user_id:%d", userId)
+	}
+
+	// send msg
+	msgContent := &AVChatMsgInfo{
+		HangupUserId: tcp.userId,
+		HangupReason: req.ByeReason,
+		TimeLen:      int(req.LocalCallTimeLen),
+		CallType:     c.CallType,
+	}
+	msgData, _ := json.Marshal(msgContent)
+	data := &cim.CIMMsgData{
+		FromUserId:   tcp.userId,
+		FromNickName: tcp.nickName,
+		ToSessionId:  userId,
+		MsgId:        uuid.NewV4().String(),
+		CreateTime:   int32(time.Now().Unix()),
+		MsgType:      cim.CIMMsgType_kCIM_MSG_TYPE_AVCHAT,
+		SessionType:  cim.CIMSessionType_kCIM_SESSION_TYPE_SINGLE,
+		MsgData:      msgData,
+	}
+
+	conn := GetMessageConn()
+	ctx, cancelFun := context.WithTimeout(context.Background(), time.Second*kBusinessTimeOut)
+	defer cancelFun()
+
+	// save to db
+	_, err = conn.SendMsgData(ctx, data)
+	if err != nil {
+		// 上行消息丢失计数+1
+		upMissMsgCount.Inc()
+		logger.Sugar.Warnf("err:", err.Error())
+	} else {
+		// broadcast peer user
+		if peerUser != nil {
+			peerUser.BroadcastMessage(data)
+		}
+
+		// broadcast send user
+		user := DefaultUserManager.FindUser(tcp.userId)
+		if user != nil {
+			user.BroadcastMessage(data)
+		}
 	}
 }

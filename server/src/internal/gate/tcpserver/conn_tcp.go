@@ -29,6 +29,7 @@ type TcpConn struct {
 	clientType    cim.CIMClientType // 客户端连接类型
 	clientVersion string            // 客户端版本
 	userId        uint64            // 客户端id
+	nickName      string            // 昵称
 	conMutex      sync.Mutex        // 互斥锁
 
 	seq *atomic.Uint32 // 给客户端返回的seq号
@@ -152,7 +153,7 @@ func (tcp *TcpConn) Send(seq uint16, cmdId uint16, body proto.Message) (int, err
 	header.SetPduMsg(body)
 
 	var data = header.GetBuffer()
-	logger.Sugar.Debugf("send len=%d,user_id=%d", len(data), tcp.userId)
+	//logger.Sugar.Debugf("send len=%d,user_id=%d", len(data), tcp.userId)
 	return tcp.Conn.Write(data)
 }
 
@@ -233,6 +234,7 @@ func (tcp *TcpConn) onHandleAuthReq(header *cim.ImHeader, buff []byte) {
 			if rsp.ResultCode == cim.CIMErrorCode_kCIM_ERR_SUCCSSE {
 				tcp.isLogin = true
 				tcp.userId = req.UserId
+				tcp.nickName = req.NickName
 				tcp.clientType = req.ClientType
 				tcp.clientVersion = req.ClientVersion
 				tcp.loginTime = time.Now().Unix()

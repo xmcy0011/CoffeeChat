@@ -204,7 +204,7 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
       var session = _sessionList[i];
       if (!session.isRobotSession) {
         // 查询昵称
-        var result = await IMUser.singleton.queryUserNickName(session.sessionId, false);
+        var result = await IMUser.singleton.queryUserNickName(Int64(session.sessionId), false);
         print(
             "_onInitSessionName errorCode=${result.errorCode},errorMsg=${result.errorMsg},userId=${result.userId},nickName=${result.nickName}");
         if (result is RegisterUserResult && result.errorCode == 0) {
@@ -299,6 +299,9 @@ class _PageChatStateWidgetState extends State<PageChatStateWidget> {
 
     if (session.latestMsg.msgType == CIMMsgType.kCIM_MSG_TYPE_ROBOT) {
       return IMManager.singleton.resolveRobotMessage(session.latestMsg);
+    } else if (session.latestMsg.msgType == CIMMsgType.kCIM_MSG_TYPE_AVCHAT) {
+      var msgContent = IMManager.singleton.resolveAVChatMessage(session.latestMsg);
+      return formatAVChatMsg(msgContent);
     }
     return session.latestMsg.msgData;
   }

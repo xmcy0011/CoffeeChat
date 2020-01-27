@@ -137,6 +137,13 @@ enum CIMSessionType {
 机器人回答，文本消息，需要配合参数content "content":"你也好"
   }
 }
+音视频通话：
+{
+  "hangupUserId":1992,
+  "hangupReason":1,    # 参考CIMVoipByeReason
+  "timeLen": 0,        # 通话时长（秒）
+  "callType":1,        # 0:unknown,1:voice,2:video
+}
 */
 
 // 消息类型
@@ -151,6 +158,7 @@ enum CIMMsgType {
   kCIM_MSG_TYPE_ROBOT = 7;        // 图灵机器人消息
   kCIM_MSG_TYPE_TIPS = 8;         // 提醒类型
   kCIM_MSG_TYPE_NOTIFACATION = 9; // 系统通知（包括入群出群通知等）
+  kCIM_MSG_TYPE_AVCHAT = 10;      // 由音视频通话产生的消息
 
   // kCIM_MSG_TYPE_CUSTOM = 100; // 自定义
 }
@@ -203,11 +211,12 @@ enum CIMInviteRspCode {
 // Voip挂断原因
 enum CIMVoipByeReason {
   kCIM_VOIP_BYE_REASON_UNKNOWN = 0;              // default
-  kCIM_VOIP_BYE_REASON_CANCEL = 1;               // 拒绝
-  kCIM_VOIP_BYE_REASON_HANG_UP = 2;              // 挂断
-  kCIM_VOIP_BYE_REASON_BUSY = 3;                 // 正忙
-  kCIM_VOIP_BYE_REASON_ONLINE_CLIENT_REJECT = 4; // 其他端拒绝通话
-  kCIM_VOIP_BYE_REASON_OK = 5;                   // 一切OK
+  kCIM_VOIP_BYE_REASON_CANCEL = 1;               // 我方取消
+  kCIM_VOIP_BYE_REASON_REJECT = 2;               // 对方拒绝
+  kCIM_VOIP_BYE_REASON_END = 3;                  // 通话结束
+  kCIM_VOIP_BYE_REASON_BUSY = 4;                 // 对方正忙
+  kCIM_VOIP_BYE_REASON_ONLINE_CLIENT_REJECT = 5; // 其他端拒绝通话
+  // kCIM_VOIP_BYE_REASON_OK = 6;                   // 一切OK
 }
 
 // 消息错误码

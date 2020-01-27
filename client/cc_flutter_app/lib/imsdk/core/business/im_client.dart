@@ -243,8 +243,7 @@ class IMClient {
           if (start == 0) {
             print("invalid IMHeader,start=" + start.toString() + ",cacheOffset=" + cacheOffset.toString());
           }
-          cache.clear();
-          cacheOffset = 0;
+          start = cacheOffset; // delay clear
           break;
         }
 

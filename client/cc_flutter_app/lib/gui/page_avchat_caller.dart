@@ -1,15 +1,17 @@
 import 'dart:async';
 
 import 'package:cc_flutter_app/gui/widget/toast_widget.dart';
+import 'package:cc_flutter_app/imsdk/core/business/im_client.dart';
 import 'package:cc_flutter_app/imsdk/im_avchat.dart';
 import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pbenum.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fixnum/fixnum.dart';
 
 /// 主动呼叫
 class PageAVChatCallerStatefulWidget extends StatefulWidget {
-  final peerUserId;
-  final nickName;
+  final Int64 peerUserId;
+  final String nickName;
 
   PageAVChatCallerStatefulWidget(this.peerUserId, this.nickName);
 
@@ -19,8 +21,8 @@ class PageAVChatCallerStatefulWidget extends StatefulWidget {
 
 class _PageAVChatCallerWidgetState extends State<PageAVChatCallerStatefulWidget>
     implements AVChatHangUpObserver, AVChatStateObserverLite {
-  final peerUserId;
-  final nickName;
+  final Int64 peerUserId;
+  final String nickName;
 
   var progress = "拨号中";
   var timerTick = 0;
@@ -188,7 +190,7 @@ class _PageAVChatCallerWidgetState extends State<PageAVChatCallerStatefulWidget>
         this.avState = AVState.Established;
       });
     }, (int code, String desc) {
-      IMAVChat.singleton.hangUp(null); // 挂断
+      IMAVChat.singleton.hangUp(CIMVoipByeReason.kCIM_VOIP_BYE_REASON_CANCEL, null); // 挂断
       Navigator.of(this.context).pop();
       Toast.toast(context, msg: "对方无应答", position: ToastPostion.center);
       print("call error:$code,$desc");
@@ -209,7 +211,8 @@ class _PageAVChatCallerWidgetState extends State<PageAVChatCallerStatefulWidget>
 
   /// 取消
   void _onCancel() {
-    onHangup(new AVChatCommonEvent(AVChatEventType.OK, null));
+    IMAVChat.singleton.hangUp(CIMVoipByeReason.kCIM_VOIP_BYE_REASON_CANCEL, null); // 挂断
+    _showEndTips(IMClient.singleton.userId, AVChatEventType.CALLEE_CANCEL);
   }
 
   void _onMute() {}
@@ -310,9 +313,11 @@ class _PageAVChatCallerWidgetState extends State<PageAVChatCallerStatefulWidget>
   /// AVChatHangUpObserver
   @override
   void onHangup(AVChatCommonEvent data) {
-    IMAVChat.singleton.hangUp(null); // 挂断
+    _showEndTips(data.data.creatorId, data.event);
+  }
 
-    var msgTips = IMAVChat.singleton.getHangupReasonStr(data);
+  void _showEndTips(Int64 hangupUserId, AVChatEventType eventType) {
+    var msgTips = IMAVChat.singleton.getHangupReasonStr(hangupUserId, eventType);
     Toast.toast(this.context, msg: msgTips, position: ToastPostion.center);
     new Timer(Duration(seconds: 1), () {
       setState(() {

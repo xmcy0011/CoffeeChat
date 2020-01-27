@@ -160,6 +160,7 @@ class CIMMsgType extends $pb.ProtobufEnum {
   static const CIMMsgType kCIM_MSG_TYPE_ROBOT = CIMMsgType._(7, 'kCIM_MSG_TYPE_ROBOT');
   static const CIMMsgType kCIM_MSG_TYPE_TIPS = CIMMsgType._(8, 'kCIM_MSG_TYPE_TIPS');
   static const CIMMsgType kCIM_MSG_TYPE_NOTIFACATION = CIMMsgType._(9, 'kCIM_MSG_TYPE_NOTIFACATION');
+  static const CIMMsgType kCIM_MSG_TYPE_AVCHAT = CIMMsgType._(10, 'kCIM_MSG_TYPE_AVCHAT');
 
   static const $core.List<CIMMsgType> values = <CIMMsgType> [
     kCIM_MSG_TYPE_UNKNOWN,
@@ -172,6 +173,7 @@ class CIMMsgType extends $pb.ProtobufEnum {
     kCIM_MSG_TYPE_ROBOT,
     kCIM_MSG_TYPE_TIPS,
     kCIM_MSG_TYPE_NOTIFACATION,
+    kCIM_MSG_TYPE_AVCHAT,
   ];
 
   static final $core.Map<$core.int, CIMMsgType> _byValue = $pb.ProtobufEnum.initByValue(values);
@@ -282,18 +284,18 @@ class CIMInviteRspCode extends $pb.ProtobufEnum {
 class CIMVoipByeReason extends $pb.ProtobufEnum {
   static const CIMVoipByeReason kCIM_VOIP_BYE_REASON_UNKNOWN = CIMVoipByeReason._(0, 'kCIM_VOIP_BYE_REASON_UNKNOWN');
   static const CIMVoipByeReason kCIM_VOIP_BYE_REASON_CANCEL = CIMVoipByeReason._(1, 'kCIM_VOIP_BYE_REASON_CANCEL');
-  static const CIMVoipByeReason kCIM_VOIP_BYE_REASON_HANG_UP = CIMVoipByeReason._(2, 'kCIM_VOIP_BYE_REASON_HANG_UP');
-  static const CIMVoipByeReason kCIM_VOIP_BYE_REASON_BUSY = CIMVoipByeReason._(3, 'kCIM_VOIP_BYE_REASON_BUSY');
-  static const CIMVoipByeReason kCIM_VOIP_BYE_REASON_ONLINE_CLIENT_REJECT = CIMVoipByeReason._(4, 'kCIM_VOIP_BYE_REASON_ONLINE_CLIENT_REJECT');
-  static const CIMVoipByeReason kCIM_VOIP_BYE_REASON_OK = CIMVoipByeReason._(5, 'kCIM_VOIP_BYE_REASON_OK');
+  static const CIMVoipByeReason kCIM_VOIP_BYE_REASON_REJECT = CIMVoipByeReason._(2, 'kCIM_VOIP_BYE_REASON_REJECT');
+  static const CIMVoipByeReason kCIM_VOIP_BYE_REASON_END = CIMVoipByeReason._(3, 'kCIM_VOIP_BYE_REASON_END');
+  static const CIMVoipByeReason kCIM_VOIP_BYE_REASON_BUSY = CIMVoipByeReason._(4, 'kCIM_VOIP_BYE_REASON_BUSY');
+  static const CIMVoipByeReason kCIM_VOIP_BYE_REASON_ONLINE_CLIENT_REJECT = CIMVoipByeReason._(5, 'kCIM_VOIP_BYE_REASON_ONLINE_CLIENT_REJECT');
 
   static const $core.List<CIMVoipByeReason> values = <CIMVoipByeReason> [
     kCIM_VOIP_BYE_REASON_UNKNOWN,
     kCIM_VOIP_BYE_REASON_CANCEL,
-    kCIM_VOIP_BYE_REASON_HANG_UP,
+    kCIM_VOIP_BYE_REASON_REJECT,
+    kCIM_VOIP_BYE_REASON_END,
     kCIM_VOIP_BYE_REASON_BUSY,
     kCIM_VOIP_BYE_REASON_ONLINE_CLIENT_REJECT,
-    kCIM_VOIP_BYE_REASON_OK,
   ];
 
   static final $core.Map<$core.int, CIMVoipByeReason> _byValue = $pb.ProtobufEnum.initByValue(values);

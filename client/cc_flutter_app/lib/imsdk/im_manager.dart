@@ -247,6 +247,23 @@ class IMManager extends IMessage {
     return "";
   }
 
+  // avChat message
+  AVChatMsgContent resolveAVChatMessage(IMMessage msg) {
+    if (msg.msgType == CIMMsgType.kCIM_MSG_TYPE_AVCHAT) {
+      // 来自于机器人
+      var data = jsonDecode(msg.msgData);
+      if (data != null) {
+        AVChatMsgContent content = new AVChatMsgContent();
+        content.callType = CIMVoipInviteType.valueOf(data['call_type']);
+        content.hangupUserId = Int64(data['hangup_user_id']);
+        content.timeLen = data['time_len'];
+        content.hangupReason = CIMVoipByeReason.valueOf(data['hangup_reason']);
+        return content;
+      }
+    }
+    return null;
+  }
+
   /// 增加收到新消息监听器
   /// [name] 唯一标志
   /// [**未实现**listener**] 原型：void onNewMessage(List<IMMessage> msgList)
@@ -269,7 +286,12 @@ class IMManager extends IMessage {
     var key;
     if (msg.sessionType == CIMSessionType.kCIM_SESSION_TYPE_SINGLE) {
       // 单聊，注意sessionID
-      key = _getSessionKey(msg.fromUserId.toInt(), msg.sessionType);
+      if (msg.fromUserId == userId) {
+        // 自己其他端发送的
+        key = _getSessionKey(msg.toSessionId.toInt(), msg.sessionType);
+      } else {
+        key = _getSessionKey(msg.fromUserId.toInt(), msg.sessionType);
+      }
     } else {
       key = _getSessionKey(msg.toSessionId.toInt(), msg.sessionType);
     }
@@ -393,4 +415,11 @@ class IMManager extends IMessage {
 
   // 同步历史消息
   void _syncMessage() {}
+}
+
+class AVChatMsgContent {
+  Int64 hangupUserId; // `json:"hangup_user_id"` // 挂断用户ID
+  CIMVoipByeReason hangupReason; // `json:"hangup_reason"`  // 挂断原因
+  int timeLen; // `json:"time_len"`       // 通话时长（秒）
+  CIMVoipInviteType callType; // `json:"call_type"`      // 0:unknown, 1:voice, 2:video
 }

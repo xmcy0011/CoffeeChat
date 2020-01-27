@@ -1,10 +1,13 @@
 import 'dart:async';
 
 import 'package:cc_flutter_app/gui/widget/toast_widget.dart';
+import 'package:cc_flutter_app/imsdk/core/business/im_client.dart';
 import 'package:cc_flutter_app/imsdk/im_avchat.dart';
 import 'package:cc_flutter_app/imsdk/im_user.dart';
+import 'package:cc_flutter_app/imsdk/proto/CIM.Def.pb.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fixnum/fixnum.dart';
 
 /// 被呼叫
 class PageAVChatRingingStatefulWidget extends StatefulWidget {
@@ -166,7 +169,8 @@ class PageAVChatRingingWidgetState extends State<PageAVChatRingingStatefulWidget
   }
 
   void _onCancel() {
-    onHangup(new AVChatCommonEvent(AVChatEventType.OK, null));
+    IMAVChat.singleton.hangUp(CIMVoipByeReason.kCIM_VOIP_BYE_REASON_REJECT, null); // 拒绝，挂断
+    _showEndTips(IMClient.singleton.userId, AVChatEventType.CALLEE_ACK_REJECT);
   }
 
   void _onMute() {}
@@ -178,12 +182,16 @@ class PageAVChatRingingWidgetState extends State<PageAVChatRingingStatefulWidget
   /// AVChatHangUpObserver
   @override
   void onHangup(AVChatCommonEvent data) {
-    IMAVChat.singleton.hangUp(null); // 挂断
+    _showEndTips(data.data.creatorId, data.event);
+  }
 
-    var msgTips = IMAVChat.singleton.getHangupReasonStr(data);
+  void _showEndTips(Int64 hangupUserId, AVChatEventType eventType) {
+    var msgTips = IMAVChat.singleton.getHangupReasonStr(hangupUserId, eventType);
     Toast.toast(this.context, msg: msgTips, position: ToastPostion.center);
     new Timer(Duration(seconds: 1), () {
-      Navigator.of(this.context).pop();
+      setState(() {
+        Navigator.of(this.context).pop();
+      });
     });
   }
 }
