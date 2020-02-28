@@ -57,6 +57,7 @@ enum CIMErrorCode {
   kCIM_ERR_LOGIN_DB_VALIDATE_FAILED = 200; // 失败
   kCIM_ERR_LOGIN_VERSION_TOO_OLD = 201;    // 客户端版本太旧
   kCIM_ERR_LOGIN_INVALID_USER_TOKEN = 202; // 非法的口令
+  kCIM_ERR_LOGIN_INVALID_USER_OR_PWD = 203; // 用户不存在或者密码错误
 
   // HTTP API 错码
   kCIM_ERROR_USER_ALREADY_EXIST = 900;     // 用户已存在

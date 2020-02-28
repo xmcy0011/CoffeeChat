@@ -1,0 +1,48 @@
+1.给用户发消息接口（QQ好友或找钢用户）
+@startuml
+A -> API: 1.POST msg/sendGroupMsgs
+API --> Online.IM: 2.grpc
+
+Online.IM -> TeamTalk: 3.POST msg/sendMsg
+Online.IM <-- TeamTalk: 4.success
+API <- Online.IM: 5.success
+API --> A: 6.success
+
+Online.IM <- TeamTalk : 7.POST msgCustom/kfextToB
+
+Online.IM -> Online.OutServer:8.grpc
+Online.OutServer -> QiDian: 9.POST msgCustom/kfextToB
+Online.OutServer <- QiDian: 10.success
+Online.IM <- Online.OutServer:11.success
+Online.IM --> TeamTalk: 12.success
+@enduml
+
+2.发送QQ好友消息
+@startuml
+A -> msg_server1: 1.sessionType=QQ_Single
+msg_server1 -> route_server: 2.CID_OTHER_QIDIAN_QQ_MSG_DATA
+route_server -> http_msg_server1: 3.随机选取一个转发
+http_msg_server1 -> Online.IM: 4.POST msgCustom/kfextToB
+http_msg_server1 <-- Online.IM: 5.success
+http_msg_server1 -> db_proxy_server1: 6.存储
+http_msg_server1 <-- db_proxy_server1: 7.ACK
+http_msg_server1 -> push_server: 8.消息推送
+
+route_server <-- http_msg_server1: 9.ACK
+route_server -> msg_server1: 10.广播ACK
+route_server -> msg_server2: 11.广播ACK
+A <-- msg_server1: 12.ACK
+@enduml
+
+3.给用户发消息接口（QQ好友或找钢用户）
+@startuml
+Online.IM --> http_msg_server: 1.POST msg/sendMsg
+Online.IM <-- http_msg_server: 2.success
+http_msg_server -> db_proxy_server1: storage
+http_msg_server <-- db_proxy_server1: CID_MSG_DATA
+http_msg_server -> route_server: 3.CID_MSG_DATA
+route_server -> msg_server1: 4.broadcast Msg
+msg_server1 -> 用户A: 5.CID_MSG_DATA
+msg_server1 <-- 用户A: 6.ACK
+route_server -> msg_server2: 7.broadcast Msg
+@enduml

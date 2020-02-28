@@ -56,8 +56,8 @@ func (s *LogicServer) AuthToken(ctx context.Context, in *cim.CIMAuthTokenReq) (*
 
 	exist, err := dao.DefaultUser.Validate(in.UserId, in.UserToken)
 	if err != nil {
-		rsp.ResultCode = cim.CIMErrorCode_kCIM_ERR_INTERNAL_ERROR
-		rsp.ResultString = "服务器内部错误"
+		rsp.ResultCode = cim.CIMErrorCode_kCIM_ERR_LOGIN_INVALID_USER_OR_PWD
+		rsp.ResultString = "用户不存在或者密码错误"
 	} else {
 		if exist {
 			rsp.ResultCode = cim.CIMErrorCode_kCIM_ERR_SUCCSSE
