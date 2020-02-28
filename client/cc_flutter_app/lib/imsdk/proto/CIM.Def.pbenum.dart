@@ -87,17 +87,19 @@ class CIMIntenralCmdID extends $pb.ProtobufEnum {
 }
 
 class CIMErrorCode extends $pb.ProtobufEnum {
-  static const CIMErrorCode kCIM_ERR_SUCCSSE = CIMErrorCode._(0, 'kCIM_ERR_SUCCSSE');
-  static const CIMErrorCode kCIM_ERR_INTERNAL_ERROR = CIMErrorCode._(1, 'kCIM_ERR_INTERNAL_ERROR');
-  static const CIMErrorCode kCIM_ERR_LOGIN_DB_VALIDATE_FAILED = CIMErrorCode._(200, 'kCIM_ERR_LOGIN_DB_VALIDATE_FAILED');
-  static const CIMErrorCode kCIM_ERR_LOGIN_VERSION_TOO_OLD = CIMErrorCode._(201, 'kCIM_ERR_LOGIN_VERSION_TOO_OLD');
-  static const CIMErrorCode kCIM_ERR_LOGIN_INVALID_USER_TOKEN = CIMErrorCode._(202, 'kCIM_ERR_LOGIN_INVALID_USER_TOKEN');
-  static const CIMErrorCode kCIM_ERR_LOGIN_INVALID_USER_OR_PWD = CIMErrorCode._(203, 'kCIM_ERR_LOGIN_INVALID_USER_OR_PWD');
-  static const CIMErrorCode kCIM_ERROR_USER_ALREADY_EXIST = CIMErrorCode._(900, 'kCIM_ERROR_USER_ALREADY_EXIST');
-  static const CIMErrorCode kCIM_ERROR_USER_INVALID_PARAMETER = CIMErrorCode._(901, 'kCIM_ERROR_USER_INVALID_PARAMETER');
-  static const CIMErrorCode kCIM_ERROR_USER_NOT_EXIST = CIMErrorCode._(902, 'kCIM_ERROR_USER_NOT_EXIST');
+  static const CIMErrorCode kCIM_ERR_UNKNOWN = CIMErrorCode._(0, 'kCIM_ERR_UNKNOWN');
+  static const CIMErrorCode kCIM_ERR_SUCCSSE = CIMErrorCode._(200, 'kCIM_ERR_SUCCSSE');
+  static const CIMErrorCode kCIM_ERR_INTERNAL_ERROR = CIMErrorCode._(201, 'kCIM_ERR_INTERNAL_ERROR');
+  static const CIMErrorCode kCIM_ERR_LOGIN_DB_VALIDATE_FAILED = CIMErrorCode._(2000, 'kCIM_ERR_LOGIN_DB_VALIDATE_FAILED');
+  static const CIMErrorCode kCIM_ERR_LOGIN_VERSION_TOO_OLD = CIMErrorCode._(2001, 'kCIM_ERR_LOGIN_VERSION_TOO_OLD');
+  static const CIMErrorCode kCIM_ERR_LOGIN_INVALID_USER_TOKEN = CIMErrorCode._(2002, 'kCIM_ERR_LOGIN_INVALID_USER_TOKEN');
+  static const CIMErrorCode kCIM_ERR_LOGIN_INVALID_USER_OR_PWD = CIMErrorCode._(2003, 'kCIM_ERR_LOGIN_INVALID_USER_OR_PWD');
+  static const CIMErrorCode kCIM_ERROR_USER_ALREADY_EXIST = CIMErrorCode._(9000, 'kCIM_ERROR_USER_ALREADY_EXIST');
+  static const CIMErrorCode kCIM_ERROR_USER_INVALID_PARAMETER = CIMErrorCode._(9001, 'kCIM_ERROR_USER_INVALID_PARAMETER');
+  static const CIMErrorCode kCIM_ERROR_USER_NOT_EXIST = CIMErrorCode._(9002, 'kCIM_ERROR_USER_NOT_EXIST');
 
   static const $core.List<CIMErrorCode> values = <CIMErrorCode> [
+    kCIM_ERR_UNKNOWN,
     kCIM_ERR_SUCCSSE,
     kCIM_ERR_INTERNAL_ERROR,
     kCIM_ERR_LOGIN_DB_VALIDATE_FAILED,
@@ -218,10 +220,12 @@ class CIMMsgStatus extends $pb.ProtobufEnum {
 }
 
 class CIMSessionStatusType extends $pb.ProtobufEnum {
-  static const CIMSessionStatusType kCIM_SESSION_STATUS_OK = CIMSessionStatusType._(0, 'kCIM_SESSION_STATUS_OK');
-  static const CIMSessionStatusType kCIM_SESSION_STATUS_DELETE = CIMSessionStatusType._(1, 'kCIM_SESSION_STATUS_DELETE');
+  static const CIMSessionStatusType kCIM_SESSION_STATUS_UNKNOWN = CIMSessionStatusType._(0, 'kCIM_SESSION_STATUS_UNKNOWN');
+  static const CIMSessionStatusType kCIM_SESSION_STATUS_OK = CIMSessionStatusType._(1, 'kCIM_SESSION_STATUS_OK');
+  static const CIMSessionStatusType kCIM_SESSION_STATUS_DELETE = CIMSessionStatusType._(2, 'kCIM_SESSION_STATUS_DELETE');
 
   static const $core.List<CIMSessionStatusType> values = <CIMSessionStatusType> [
+    kCIM_SESSION_STATUS_UNKNOWN,
     kCIM_SESSION_STATUS_OK,
     kCIM_SESSION_STATUS_DELETE,
   ];
@@ -307,9 +311,11 @@ class CIMVoipByeReason extends $pb.ProtobufEnum {
 }
 
 class CIMResCode extends $pb.ProtobufEnum {
-  static const CIMResCode kCIM_RES_CODE_OK = CIMResCode._(0, 'kCIM_RES_CODE_OK');
+  static const CIMResCode kCIM_RES_CODE_UNKNOWN = CIMResCode._(0, 'kCIM_RES_CODE_UNKNOWN');
+  static const CIMResCode kCIM_RES_CODE_OK = CIMResCode._(1, 'kCIM_RES_CODE_OK');
 
   static const $core.List<CIMResCode> values = <CIMResCode> [
+    kCIM_RES_CODE_UNKNOWN,
     kCIM_RES_CODE_OK,
   ];
 

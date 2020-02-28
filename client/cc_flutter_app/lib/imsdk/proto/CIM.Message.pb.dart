@@ -85,7 +85,7 @@ class CIMMsgDataAck extends $pb.GeneratedMessage {
     ..a<Int64>(2, 'toSessionId', $pb.PbFieldType.OU6, Int64.ZERO)
     ..a<Int64>(3, 'serverMsgId', $pb.PbFieldType.OU6, Int64.ZERO)
     ..aOS(4, 'msgId')
-    ..e<$0.CIMResCode>(5, 'resCode', $pb.PbFieldType.OE, $0.CIMResCode.kCIM_RES_CODE_OK, $0.CIMResCode.valueOf, $0.CIMResCode.values)
+    ..e<$0.CIMResCode>(5, 'resCode', $pb.PbFieldType.OE, $0.CIMResCode.kCIM_RES_CODE_UNKNOWN, $0.CIMResCode.valueOf, $0.CIMResCode.values)
     ..e<$0.CIMSessionType>(6, 'sessionType', $pb.PbFieldType.OE, $0.CIMSessionType.kCIM_SESSION_TYPE_Invalid, $0.CIMSessionType.valueOf, $0.CIMSessionType.values)
     ..a<$core.int>(7, 'createTime', $pb.PbFieldType.O3)
     ..hasRequiredFields = false

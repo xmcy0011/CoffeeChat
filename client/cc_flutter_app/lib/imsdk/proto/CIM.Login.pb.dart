@@ -64,7 +64,7 @@ class CIMAuthTokenReq extends $pb.GeneratedMessage {
 class CIMAuthTokenRsp extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('CIMAuthTokenRsp', package: const $pb.PackageName('CIM.Login'))
     ..a<$core.int>(1, 'serverTime', $pb.PbFieldType.OU3)
-    ..e<$0.CIMErrorCode>(2, 'resultCode', $pb.PbFieldType.OE, $0.CIMErrorCode.kCIM_ERR_SUCCSSE, $0.CIMErrorCode.valueOf, $0.CIMErrorCode.values)
+    ..e<$0.CIMErrorCode>(2, 'resultCode', $pb.PbFieldType.OE, $0.CIMErrorCode.kCIM_ERR_UNKNOWN, $0.CIMErrorCode.valueOf, $0.CIMErrorCode.values)
     ..aOS(3, 'resultString')
     ..a<$0.CIMUserInfo>(4, 'userInfo', $pb.PbFieldType.OM, $0.CIMUserInfo.getDefault, $0.CIMUserInfo.create)
     ..hasRequiredFields = false

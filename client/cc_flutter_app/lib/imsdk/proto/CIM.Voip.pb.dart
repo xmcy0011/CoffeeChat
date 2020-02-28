@@ -174,7 +174,7 @@ class CIMVoipByeReq extends $pb.GeneratedMessage {
 
 class CIMVoipByeRsp extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('CIMVoipByeRsp', package: const $pb.PackageName('CIM.Voip'))
-    ..e<$0.CIMErrorCode>(1, 'errorCode', $pb.PbFieldType.OE, $0.CIMErrorCode.kCIM_ERR_SUCCSSE, $0.CIMErrorCode.valueOf, $0.CIMErrorCode.values)
+    ..e<$0.CIMErrorCode>(1, 'errorCode', $pb.PbFieldType.OE, $0.CIMErrorCode.kCIM_ERR_UNKNOWN, $0.CIMErrorCode.valueOf, $0.CIMErrorCode.values)
     ..hasRequiredFields = false
   ;
 

@@ -47,15 +47,16 @@ const CIMIntenralCmdID$json = const {
 const CIMErrorCode$json = const {
   '1': 'CIMErrorCode',
   '2': const [
-    const {'1': 'kCIM_ERR_SUCCSSE', '2': 0},
-    const {'1': 'kCIM_ERR_INTERNAL_ERROR', '2': 1},
-    const {'1': 'kCIM_ERR_LOGIN_DB_VALIDATE_FAILED', '2': 200},
-    const {'1': 'kCIM_ERR_LOGIN_VERSION_TOO_OLD', '2': 201},
-    const {'1': 'kCIM_ERR_LOGIN_INVALID_USER_TOKEN', '2': 202},
-    const {'1': 'kCIM_ERR_LOGIN_INVALID_USER_OR_PWD', '2': 203},
-    const {'1': 'kCIM_ERROR_USER_ALREADY_EXIST', '2': 900},
-    const {'1': 'kCIM_ERROR_USER_INVALID_PARAMETER', '2': 901},
-    const {'1': 'kCIM_ERROR_USER_NOT_EXIST', '2': 902},
+    const {'1': 'kCIM_ERR_UNKNOWN', '2': 0},
+    const {'1': 'kCIM_ERR_SUCCSSE', '2': 200},
+    const {'1': 'kCIM_ERR_INTERNAL_ERROR', '2': 201},
+    const {'1': 'kCIM_ERR_LOGIN_DB_VALIDATE_FAILED', '2': 2000},
+    const {'1': 'kCIM_ERR_LOGIN_VERSION_TOO_OLD', '2': 2001},
+    const {'1': 'kCIM_ERR_LOGIN_INVALID_USER_TOKEN', '2': 2002},
+    const {'1': 'kCIM_ERR_LOGIN_INVALID_USER_OR_PWD', '2': 2003},
+    const {'1': 'kCIM_ERROR_USER_ALREADY_EXIST', '2': 9000},
+    const {'1': 'kCIM_ERROR_USER_INVALID_PARAMETER', '2': 9001},
+    const {'1': 'kCIM_ERROR_USER_NOT_EXIST', '2': 9002},
   ],
 };
 
@@ -115,8 +116,9 @@ const CIMMsgStatus$json = const {
 const CIMSessionStatusType$json = const {
   '1': 'CIMSessionStatusType',
   '2': const [
-    const {'1': 'kCIM_SESSION_STATUS_OK', '2': 0},
-    const {'1': 'kCIM_SESSION_STATUS_DELETE', '2': 1},
+    const {'1': 'kCIM_SESSION_STATUS_UNKNOWN', '2': 0},
+    const {'1': 'kCIM_SESSION_STATUS_OK', '2': 1},
+    const {'1': 'kCIM_SESSION_STATUS_DELETE', '2': 2},
   ],
 };
 
@@ -162,7 +164,8 @@ const CIMVoipByeReason$json = const {
 const CIMResCode$json = const {
   '1': 'CIMResCode',
   '2': const [
-    const {'1': 'kCIM_RES_CODE_OK', '2': 0},
+    const {'1': 'kCIM_RES_CODE_UNKNOWN', '2': 0},
+    const {'1': 'kCIM_RES_CODE_OK', '2': 1},
   ],
 };
 

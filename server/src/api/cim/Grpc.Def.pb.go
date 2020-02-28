@@ -190,7 +190,7 @@ func (m *CreateUserAccountInfoRsp) GetErrorCode() CIMErrorCode {
 	if m != nil {
 		return m.ErrorCode
 	}
-	return CIMErrorCode_kCIM_ERR_SUCCSSE
+	return CIMErrorCode_kCIM_ERR_UNKNOWN
 }
 
 // 查询用户昵称
@@ -270,7 +270,7 @@ func (m *QueryUserNickNameRsp) GetErrorCode() CIMErrorCode {
 	if m != nil {
 		return m.ErrorCode
 	}
-	return CIMErrorCode_kCIM_ERR_SUCCSSE
+	return CIMErrorCode_kCIM_ERR_UNKNOWN
 }
 
 func (m *QueryUserNickNameRsp) GetNickName() string {

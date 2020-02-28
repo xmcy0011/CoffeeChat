@@ -49,20 +49,22 @@ enum CIMIntenralCmdID {
 }
 
 enum CIMErrorCode {
+  kCIM_ERR_UNKNOWN = 0; // 未知错误
+
   // 通用错误码
-  kCIM_ERR_SUCCSSE = 0;        // 成功
-  kCIM_ERR_INTERNAL_ERROR = 1; // 服务器内部错误
+  kCIM_ERR_SUCCSSE = 200;        // 成功
+  kCIM_ERR_INTERNAL_ERROR = 201; // 服务器内部错误
 
   // 账号错误码
-  kCIM_ERR_LOGIN_DB_VALIDATE_FAILED = 200; // 失败
-  kCIM_ERR_LOGIN_VERSION_TOO_OLD = 201;    // 客户端版本太旧
-  kCIM_ERR_LOGIN_INVALID_USER_TOKEN = 202; // 非法的口令
-  kCIM_ERR_LOGIN_INVALID_USER_OR_PWD = 203; // 用户不存在或者密码错误
+  kCIM_ERR_LOGIN_DB_VALIDATE_FAILED = 2000;  // 失败
+  kCIM_ERR_LOGIN_VERSION_TOO_OLD = 2001;     // 客户端版本太旧
+  kCIM_ERR_LOGIN_INVALID_USER_TOKEN = 2002;  // 非法的口令
+  kCIM_ERR_LOGIN_INVALID_USER_OR_PWD = 2003; // 用户不存在或者密码错误
 
   // HTTP API 错码
-  kCIM_ERROR_USER_ALREADY_EXIST = 900;     // 用户已存在
-  kCIM_ERROR_USER_INVALID_PARAMETER = 901; // 非法的用户信息
-  kCIM_ERROR_USER_NOT_EXIST = 902;         // 用户不存在
+  kCIM_ERROR_USER_ALREADY_EXIST = 9000;     // 用户已存在
+  kCIM_ERROR_USER_INVALID_PARAMETER = 9001; // 非法的用户信息
+  kCIM_ERROR_USER_NOT_EXIST = 9002;         // 用户不存在
 }
 
 // 客户端类型
@@ -181,8 +183,9 @@ enum CIMMsgStatus {
 
 // 会话状态
 enum CIMSessionStatusType {
-  kCIM_SESSION_STATUS_OK = 0;
-  kCIM_SESSION_STATUS_DELETE = 1;
+  kCIM_SESSION_STATUS_UNKNOWN = 0; // 未知
+  kCIM_SESSION_STATUS_OK = 1;
+  kCIM_SESSION_STATUS_DELETE = 2;
 }
 
 // 消息属性
@@ -222,9 +225,10 @@ enum CIMVoipByeReason {
 
 // 消息错误码
 enum CIMResCode {
-  kCIM_RES_CODE_OK = 0; // 一切正常
-                        // kCIM_RES_CODE_ERROR = 1;           // 错误
-                        // kCIM_RES_CODE_Group_NOT_EXIST = 2; // 群不存在
+  kCIM_RES_CODE_UNKNOWN = 0; // unknown
+  kCIM_RES_CODE_OK = 1;      // 一切正常
+  // kCIM_RES_CODE_ERROR = 1;           // 错误
+  // kCIM_RES_CODE_Group_NOT_EXIST = 2; // 群不存在
   // kCIM_RES_CODE_IN_BLACK = 3;        // 被接收方加入黑名单
 }
 

@@ -316,7 +316,7 @@ func (m *CIMVoipByeRsp) GetErrorCode() CIMErrorCode {
 	if m != nil {
 		return m.ErrorCode
 	}
-	return CIMErrorCode_kCIM_ERR_SUCCSSE
+	return CIMErrorCode_kCIM_ERR_UNKNOWN
 }
 
 // 挂断通知

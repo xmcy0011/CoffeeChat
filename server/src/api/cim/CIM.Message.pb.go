@@ -190,7 +190,7 @@ func (m *CIMMsgDataAck) GetResCode() CIMResCode {
 	if m != nil {
 		return m.ResCode
 	}
-	return CIMResCode_kCIM_RES_CODE_OK
+	return CIMResCode_kCIM_RES_CODE_UNKNOWN
 }
 
 func (m *CIMMsgDataAck) GetSessionType() CIMSessionType {

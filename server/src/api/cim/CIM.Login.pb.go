@@ -146,7 +146,7 @@ func (m *CIMAuthTokenRsp) GetResultCode() CIMErrorCode {
 	if m != nil {
 		return m.ResultCode
 	}
-	return CIMErrorCode_kCIM_ERR_SUCCSSE
+	return CIMErrorCode_kCIM_ERR_UNKNOWN
 }
 
 func (m *CIMAuthTokenRsp) GetResultString() string {
