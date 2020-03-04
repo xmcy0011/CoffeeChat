@@ -1,10 +1,12 @@
-package main
+package filegw
 
 import (
 	"github.com/minio/minio-go"
 	"log"
 )
 
+// 测试使用minio的go sdk
+// see more:https://docs.min.io/cn/golang-client-quickstart-guide.html
 func UploadTest() {
 	endpoint := "10.0.59.231:9000"
 	accessKeyID := "minioadmin"

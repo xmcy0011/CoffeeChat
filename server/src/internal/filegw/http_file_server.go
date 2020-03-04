@@ -1,10 +1,11 @@
-package main
+package filegw
 
 import (
 	"encoding/json"
+	"fmt"
+	"github.com/CoffeeChat/server/src/internal/filegw/conf"
 	"github.com/CoffeeChat/server/src/pkg/logger"
 	uuid "github.com/satori/go.uuid"
-	"math/rand"
 	"net/http"
 	"strconv"
 	"strings"
@@ -34,7 +35,28 @@ type HttpUploadInfo struct {
 
 var defaultIoClient *IoClient
 
-const minioServerEndpoint = "10.0.59.231:9000"
+//const minIoServerEndpoint = "10.0.59.231:9000"
+
+func StartHttpFileServer() error {
+	listenEndpoint := fmt.Sprintf("%s:%d", conf.DefaultConfig.ListenIp, conf.DefaultConfig.ListenPort)
+	minIoServerEndpoint := fmt.Sprintf("%s:%d", conf.DefaultConfig.MinIo.Ip, conf.DefaultConfig.MinIo.Port)
+	minIoConfig := conf.DefaultConfig.MinIo
+
+	// connect minio server
+	logger.Sugar.Infof("connect minio server:%s", minIoServerEndpoint)
+	defaultIoClient = &IoClient{}
+	if err := defaultIoClient.init(minIoServerEndpoint, minIoConfig.AccessKeyID, minIoConfig.SecretAccessKey,
+		minIoConfig.Location, minIoConfig.UseSSL); err != nil {
+		logger.Sugar.Fatalf("init IoClient error:%s", err.Error())
+		return err
+	}
+
+	// start http server
+	logger.Sugar.Infof("start http server and listen on:%s", listenEndpoint)
+	http.HandleFunc("/file/upload", upload)
+	http.HandleFunc("/", download)
+	return http.ListenAndServe(listenEndpoint, nil)
+}
 
 func printError(w http.ResponseWriter, v interface{}) {
 	data, err := json.Marshal(v)
@@ -142,6 +164,7 @@ func upload(w http.ResponseWriter, req *http.Request) {
 
 		// fixed me
 		objectName := uuid.NewV4().String() + "." + extension
+
 		length, err := defaultIoClient.upload(objectName, contentType, handle, f.Size)
 		if err != nil {
 			printError(w, &Response{
@@ -168,20 +191,6 @@ func upload(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func main() {
-	logger.InitLogger("log.log", "debug")
-	rand.Seed(time.Now().Unix())
+func download(w http.ResponseWriter, req *http.Request) {
 
-	logger.Sugar.Infof("connect minio server:%s", minioServerEndpoint)
-	defaultIoClient = &IoClient{}
-	if err := defaultIoClient.init(minioServerEndpoint); err != nil {
-		logger.Sugar.Fatal("init IoClient error:%s", err.Error())
-		return
-	}
-
-	const listenEndPoint = "10.0.106.117:8500"
-	logger.Sugar.Infof("start http server and listen on:%s", listenEndPoint)
-
-	http.HandleFunc("/file/upload", upload)
-	http.ListenAndServe(listenEndPoint, nil)
 }

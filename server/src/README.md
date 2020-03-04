@@ -71,8 +71,9 @@ env http_proxy=http://127.0.0.1:60339 https_proxy=http://127.0.0.1:60339 dep ens
 | gate  | 外部 | 8000  | TCP 端口                |
 |       | 外部 | 8001  | WebSocket(ws) 端口      |
 |       | 内部 | 7900  | 监听 logic 的 grpc 端口 |
+| filegw| 外部 | 8500  | http文件上传下载端口     |
 | logic | 内部 | 10600 | grpc 接口               |
-| logic | 外部 | 18080 | HTTP 接口               |
+| http  | 外部 | 18080 | HTTP 接口               |
 
 PS：
 

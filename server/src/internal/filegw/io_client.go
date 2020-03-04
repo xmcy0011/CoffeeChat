@@ -1,4 +1,4 @@
-package main
+package filegw
 
 import (
 	"context"
@@ -9,24 +9,15 @@ import (
 	"time"
 )
 
-const (
-	accessKeyID     = "minioadmin"
-	secretAccessKey = "minioadmin"
-	useSSL          = false
-
-	//bucketName = "testBucket"
-	location = "us-east-1" // default,see more:https://docs.min.io/docs/golang-client-api-reference#MakeBucket
-)
-
-var clientPool map[int]*IoClient
-var clientPoolSize int
-
 type IoClient struct {
 	client     *minio.Client
 	bucketName string
 }
 
 /*
+var clientPool map[int]*IoClient
+var clientPoolSize int
+
 func InitPool(size int, endpoint string) error {
 	clientPoolSize = size
 	clientPool = make(map[int]*IoClient, 0)
@@ -47,18 +38,18 @@ func GetRandomPool() *IoClient {
 }
 */
 
-func (i *IoClient) init(endpoint string) error {
+func (i *IoClient) init(endpoint, accessKeyID, secretAccessKey, location string, useSSL bool) error {
 	// Initialize minio client object.
 	minIOClient, err := minio.New(endpoint, accessKeyID, secretAccessKey, useSSL)
 	if err != nil {
 		logger.Sugar.Error(err)
 		return err
 	}
-	logger.Sugar.Infof("client init success,endpoint=%s", endpoint)
+	logger.Sugar.Infof("minio client init success,endpoint=%s", endpoint)
 
 	// bucketName:2019 2020 2021 ....etc
 	i.bucketName = strconv.Itoa(time.Now().Year())
-
+	logger.Sugar.Infof("check minio server bucket=%s exist ....", i.bucketName)
 	// 存储桶不存在则创建
 	err = minIOClient.MakeBucket(i.bucketName, location)
 	if err != nil {

@@ -1,4 +1,4 @@
-package main
+package filegw
 
 /**
 https://github.com/qiniu/qetag/blob/master/qetag.go
