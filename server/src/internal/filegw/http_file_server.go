@@ -6,7 +6,9 @@ import (
 	"github.com/CoffeeChat/server/src/internal/filegw/conf"
 	"github.com/CoffeeChat/server/src/pkg/logger"
 	uuid "github.com/satori/go.uuid"
+	"io"
 	"net/http"
+	"net/url"
 	"strconv"
 	"strings"
 	"time"
@@ -34,29 +36,6 @@ type HttpUploadInfo struct {
 }
 
 var defaultIoClient *IoClient
-
-//const minIoServerEndpoint = "10.0.59.231:9000"
-
-func StartHttpFileServer() error {
-	listenEndpoint := fmt.Sprintf("%s:%d", conf.DefaultConfig.ListenIp, conf.DefaultConfig.ListenPort)
-	minIoServerEndpoint := fmt.Sprintf("%s:%d", conf.DefaultConfig.MinIo.Ip, conf.DefaultConfig.MinIo.Port)
-	minIoConfig := conf.DefaultConfig.MinIo
-
-	// connect minio server
-	logger.Sugar.Infof("connect minio server:%s", minIoServerEndpoint)
-	defaultIoClient = &IoClient{}
-	if err := defaultIoClient.init(minIoServerEndpoint, minIoConfig.AccessKeyID, minIoConfig.SecretAccessKey,
-		minIoConfig.Location, minIoConfig.UseSSL); err != nil {
-		logger.Sugar.Fatalf("init IoClient error:%s", err.Error())
-		return err
-	}
-
-	// start http server
-	logger.Sugar.Infof("start http server and listen on:%s", listenEndpoint)
-	http.HandleFunc("/file/upload", upload)
-	http.HandleFunc("/", download)
-	return http.ListenAndServe(listenEndpoint, nil)
-}
 
 func printError(w http.ResponseWriter, v interface{}) {
 	data, err := json.Marshal(v)
@@ -100,6 +79,27 @@ func getContentType(fileName string) (extension, contentType string) {
 	return
 }
 
+func getFilenameFromUrl(req *http.Request) (string, error) {
+	name := req.RequestURI[1:] // 去除/
+	enEscapeUrl, err := url.QueryUnescape(name)
+	if err != nil {
+		return "", err
+	}
+	arr := strings.Split(enEscapeUrl, ".")
+	if len(arr) == 2 {
+		//ignore
+		//extension := arr[1]
+		encrypt := arr[0]
+		// 去除扩展名后解密，得到完整路径，包括后缀名
+		decrypt, err := AesDecryptWithString(encrypt, conf.DefaultConfig.UrlAesKey)
+		if err != nil {
+			return "", err
+		}
+		return decrypt, nil
+	}
+	return "", nil
+}
+
 func upload(w http.ResponseWriter, req *http.Request) {
 	contentType := req.Header.Get("content-type")
 	contentLen := req.ContentLength
@@ -141,7 +141,7 @@ func upload(w http.ResponseWriter, req *http.Request) {
 		logger.Sugar.Debugf("req.MultipartForm.File,name=%s", name)
 
 		if len(files) != 1 {
-			logger.Sugar.Errorf("not have any file")
+			logger.Sugar.Errorf("too many files")
 			printError(w, &Response{
 				ErrorCode: HttpResCodeUnknown,
 				ErrorMsg:  "too many files",
@@ -164,8 +164,9 @@ func upload(w http.ResponseWriter, req *http.Request) {
 
 		// fixed me
 		objectName := uuid.NewV4().String() + "." + extension
+		bucketName := strconv.Itoa(time.Now().Year())
 
-		length, err := defaultIoClient.upload(objectName, contentType, handle, f.Size)
+		length, err := defaultIoClient.upload(bucketName, objectName, contentType, handle, f.Size)
 		if err != nil {
 			printError(w, &Response{
 				ErrorCode: HttpResCodeUnknown,
@@ -175,6 +176,14 @@ func upload(w http.ResponseWriter, req *http.Request) {
 			return
 		} else {
 			filePath := defaultIoClient.getPath(objectName)
+			//name := filePath[0:strings.LastIndex(filePath, ".")]
+			// 对url进行Aes加密，防止泄露服务器目录结构
+			// 保留后缀名，便于客户端判断
+			encrypt, err := AesEncryptWithString(filePath, conf.DefaultConfig.UrlAesKey)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
 			logger.Sugar.Infof("successful uploaded,fileName=%s,fileSize=%.2f MB,savePath=%s", f.Filename, float64(length)/1024/1024, filePath)
 
 			info := &HttpUploadInfo{
@@ -182,7 +191,7 @@ func upload(w http.ResponseWriter, req *http.Request) {
 					ErrorCode: HttpResCodeSuccess,
 					ErrorMsg:  "success",
 				},
-				Data:      filePath,
+				Data:      url.QueryEscape(encrypt + "." + extension),
 				TimeStamp: time.Now().Unix(),
 			}
 			printError(w, info)
@@ -191,6 +200,87 @@ func upload(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
+//绑定域名后，可以在浏览器直接查看图片
+//
+//参考：
+//短视频文件
+//http://180.163.22.25:80/qqdownload?ver=1&rkey=3081f00201010481e83081e50201010201000204a61ae1ba0481a63330353130323031303030343336333033343032303130303032303461363161653162613032303337613161666430323034313031366133623430323034356535663463343430343130383330326330353866616562383730656462653064643264633762656637306430323033376131646239303230313030303431343030303030303038363636393663363537343739373036353030303030303034333133303330333102045e5f4c5c04280000000866696c657479706500000004313030310000000b646f776e656e637279707400000001300400
+//&filetype=1001&videotype=1&subvideotype=0&term=pc
+//
+//语音
+//ver=1&rkey=dea801e9847bbff36b21b7be0e5361852d0ca2779733bc55d5d3ef04f5e32584706e6272a4d379be0518b13231738aac8a0a365ca900b647ca7efe651de9ef82
+//
+//现在版本：
+//Sf1p16npgvFwi0VPS9IgaA==.png
 func download(w http.ResponseWriter, req *http.Request) {
+	if req.RequestURI == "/favicon.ico" {
+		return
+	}
 
+	logger.Sugar.Debugf("download url=%s", req.RequestURI)
+
+	filename, err := getFilenameFromUrl(req)
+	if err != nil {
+		printError(w, &Response{
+			ErrorCode: HttpResCodeError,
+			ErrorMsg:  "url error",
+		})
+		logger.Sugar.Errorf("url error,url=%s,error=%s", req.RequestURI, err.Error())
+		return
+	}
+	logger.Sugar.Debugf("decrypt fileName=%s,url=%s", filename, req.RequestURI)
+
+	// 2020/1.png
+	bucketName := filename[0:4]
+	objectName := filename[5:]
+
+	reader, err := defaultIoClient.download(bucketName, objectName)
+	if err != nil {
+		printError(w, &Response{
+			ErrorCode: HttpResCodeError,
+			ErrorMsg:  err.Error(),
+		})
+		logger.Sugar.Errorf("read error,url=%s,error=%s", req.RequestURI, err.Error())
+		return
+	}
+
+	info, err := reader.Stat()
+	if err != nil {
+		printError(w, &Response{
+			ErrorCode: HttpResCodeError,
+			ErrorMsg:  "read error",
+		})
+		logger.Sugar.Errorf("read error,url=%s,error=%s", req.RequestURI, err.Error())
+		return
+	}
+
+	_, contentType := getContentType(filename)
+	w.Header().Set("Content-Disposition", "attachment; filename="+filename)
+	//w.Header().Set("Content-Type", http.DetectContentType(fileHeader))
+	w.Header().Set("Content-Type", contentType)
+	w.Header().Set("Content-Length", strconv.FormatInt(info.Size, 10))
+
+	reader.Seek(0, 0)
+	io.Copy(w, reader)
+}
+
+func StartHttpFileServer() error {
+	listenEndpoint := fmt.Sprintf("%s:%d", conf.DefaultConfig.ListenIp, conf.DefaultConfig.ListenPort)
+	minIoServerEndpoint := fmt.Sprintf("%s:%d", conf.DefaultConfig.MinIo.Ip, conf.DefaultConfig.MinIo.Port)
+	minIoConfig := conf.DefaultConfig.MinIo
+
+	// connect minio server
+	logger.Sugar.Infof("connect minio server:%s", minIoServerEndpoint)
+	defaultIoClient = &IoClient{}
+	if err := defaultIoClient.init(minIoServerEndpoint, minIoConfig.AccessKeyID, minIoConfig.SecretAccessKey,
+		minIoConfig.Location, minIoConfig.UseSSL); err != nil {
+		logger.Sugar.Fatalf("init IoClient error:%s", err.Error())
+		return err
+	}
+
+	// start http server
+	logger.Sugar.Infof("start http server and listen on:%s", listenEndpoint)
+	http.HandleFunc("/file/upload", upload)
+	http.HandleFunc("/", download)
+	return http.ListenAndServe(listenEndpoint, nil)
 }

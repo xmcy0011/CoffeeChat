@@ -4,7 +4,8 @@ type Config struct {
 	ListenIp   string
 	ListenPort int // tcp监听端口
 
-	MinIo MinIoConfig // logic服务器地址
+	MinIo     MinIoConfig // logic服务器地址
+	UrlAesKey string
 }
 
 type MinIoConfig struct {

@@ -73,7 +73,7 @@ func (i *IoClient) getPath(objectName string) string {
 	return i.bucketName + "/" + objectName
 }
 
-func (i *IoClient) upload(objectName string, contentType string, reader io.Reader, fileSize int64) (int64, error) {
+func (i *IoClient) upload(bucketName, objectName string, contentType string, reader io.Reader, fileSize int64) (int64, error) {
 	// 上传一个zip文件。
 	//objectName := "头像.jpg"
 	//filePath := "/Users/xuyc/头像.jpg"
@@ -86,10 +86,18 @@ func (i *IoClient) upload(objectName string, contentType string, reader io.Reade
 	//}
 
 	//context.WithTimeout(context.Background(), time.Minute*10)
-	length, err := i.client.PutObjectWithContext(context.Background(), i.bucketName, objectName, reader, fileSize, minio.PutObjectOptions{ContentType: contentType})
+	length, err := i.client.PutObjectWithContext(context.Background(), bucketName, objectName, reader, fileSize, minio.PutObjectOptions{ContentType: contentType})
 	//if err != nil {
 	//}else{
 	//	log.Printf("Successfully uploaded %s of size %d\n", objectName, length)
 	//}
 	return length, err
+}
+
+func (i *IoClient) download(bucketName, objectName string) (*minio.Object, error) {
+	object, err := i.client.GetObject(bucketName, objectName, minio.GetObjectOptions{})
+	if err != nil {
+		return nil, err
+	}
+	return object, nil
 }
