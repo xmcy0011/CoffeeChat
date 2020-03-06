@@ -45,6 +45,8 @@ class IMClient {
   var isReLogin = false;
   var isConnect = false;
   var isOnceConnect = false;
+  var lastReConnectTick = 0;
+  var reConnectInterval = 1;
 
   var requestMap = new Map<int, IMRequest>(); // 请求列表
   var registerCallbackList = new List<int>();
@@ -86,7 +88,7 @@ class IMClient {
     // timeout
     Timer.periodic(Duration(seconds: 1), (timer) {
       _checkRequestTimeout();
-      _reConnect();
+      _reConnect(timer.tick);
     });
   }
 
@@ -159,8 +161,10 @@ class IMClient {
         print("auth req,userId=$userId,nickName=$nick,token=$userToken");
         sendRequest(CIMCmdID.kCIM_CID_LOGIN_AUTH_TOKEN_REQ.value, req, (rsp) {
           if (rsp is CIMAuthTokenRsp) {
+            print("auth result:${rsp.resultCode},msg:${rsp.resultString}");
             if (rsp.resultCode == CIMErrorCode.kCIM_ERR_SUCCSSE) {
               this.isLogin = true;
+              this.reConnectInterval = 1;
             }
             completer.complete(rsp);
           } else {
@@ -296,7 +300,9 @@ class IMClient {
       if (timespan >= kRequestTimeout) {
         print("timeout seqNumber=${v.header.seqNumber},"
             "cmdId=${v.header.commandId}");
-        v.callback(Future.error("timeout"));
+        if (v.callback != null) {
+          v.callback("timeout");
+        }
         if (tempList == null) {
           tempList = new Map<int, IMRequest>();
         }
@@ -314,9 +320,19 @@ class IMClient {
   }
 
   // 重连
-  void _reConnect() {
+  void _reConnect(tick) {
     if (!this.isConnect && this.isOnceConnect) {
-      this.auth(this.userId, this.nickName, this.userToken, this.ip, this.port);
+      //1 2 4 8 ...
+      if (tick >= (reConnectInterval + lastReConnectTick)) {
+        print("reconnect tick=$tick,lastConnectTick=$lastReConnectTick,connectInterval=$reConnectInterval");
+
+        lastReConnectTick = tick;
+        reConnectInterval *= 2;
+        if (reConnectInterval >= 16) {
+          reConnectInterval = 1;
+        }
+        this.auth(this.userId, this.nickName, this.userToken, this.ip, this.port);
+      }
     }
   }
 

@@ -48,6 +48,7 @@ flush privileges;
 ## redis
 
 1. 更改配置
+
 ```bash
 vim /etc/redis.conf
 
@@ -66,14 +67,15 @@ env http_proxy=http://127.0.0.1:60339 https_proxy=http://127.0.0.1:60339 dep ens
 
 ## 端口列表
 
-| 名称  | 分类 | 端口  | 备注                    |
-| ----- | ---- | ----- | ----------------------- |
-| gate  | 外部 | 8000  | TCP 端口                |
-|       | 外部 | 8001  | WebSocket(ws) 端口      |
-|       | 内部 | 7900  | 监听 logic 的 grpc 端口 |
-| filegw| 外部 | 8500  | http文件上传下载端口     |
-| logic | 内部 | 10600 | grpc 接口               |
-| http  | 外部 | 18080 | HTTP 接口               |
+| 名称   | 分类 | 端口  | 备注                    |
+| ------ | ---- | ----- | ----------------------- |
+| gate   | 外部 | 8000  | TCP 端口                |
+|        | 外部 | 8001  | WebSocket(ws) 端口      |
+|        | 内部 | 7900  | 监听 logic 的 grpc 端口 |
+| filegw | 外部 | 8500  | http 文件上传下载端口   |
+|        | 内部 | 9000  | minio 对象存储服务端口  |
+| logic  | 内部 | 10600 | grpc 接口               |
+| http   | 外部 | 18080 | HTTP 接口               |
 
 PS：
 

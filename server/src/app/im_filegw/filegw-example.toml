@@ -5,7 +5,7 @@ UrlAesKey="12345678abcdefgh"
 
 # minio server
 [MinIo]
-Ip="10.0.59.231"
+Ip="106.14.172.35"
 Port=9000
 AccessKeyID="minioadmin"
 SecretAccessKey="minioadmin"
