@@ -8,4 +8,5 @@ daemon
 im_logic
 im_http
 im_gate
+client/ios
 log.log

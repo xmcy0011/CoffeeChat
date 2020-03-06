@@ -210,6 +210,15 @@ func upload(w http.ResponseWriter, req *http.Request) {
 //语音
 //ver=1&rkey=dea801e9847bbff36b21b7be0e5361852d0ca2779733bc55d5d3ef04f5e32584706e6272a4d379be0518b13231738aac8a0a365ca900b647ca7efe651de9ef82
 //
+//某云存储下载url（视频截帧）:
+//<原视频URL>?x-oss-process=video/snapshot,t_7000,f_jpg,w_800,h_600,m_fast
+//t:指定截图时间,ms
+//w:指定截图宽度，如果指定为0，则自动计算，px
+//h:指定截图高度，如果指定为0,则自动计算。如果w和h都为0，则输出为原视频宽高，px
+//m:指定截图模式，不指定则为默认模式，根据时间精确截图。如果指定为fast，则截取该时间点之前的最近的一个关键帧，枚举值fast
+//f:指定输出图片的格式，jpg/png
+//ar:指定是否根据视频信息自动旋转图片。如果指定为auto，则会在截图生成之后根据视频旋转信息进行自动旋转。枚举值auto
+//
 //现在版本：
 //Sf1p16npgvFwi0VPS9IgaA==.png
 func download(w http.ResponseWriter, req *http.Request) {
