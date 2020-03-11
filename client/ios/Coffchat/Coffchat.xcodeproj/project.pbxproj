@@ -1,0 +1,448 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 51;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		11BE8A49C7DD3E7F0A9669A0 /* Pods_Coffchat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F494202F2A92B14FDCFFABCD /* Pods_Coffchat.framework */; };
+		F41AE38B24174224009B0E0C /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41AE38924174224009B0E0C /* LoginViewController.swift */; };
+		F41AE38C24174224009B0E0C /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F41AE38A24174224009B0E0C /* LoginViewController.xib */; };
+		F4C05A10241391E000D1E293 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C05A0F241391E000D1E293 /* AppDelegate.swift */; };
+		F4C05A12241391E000D1E293 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C05A11241391E000D1E293 /* SceneDelegate.swift */; };
+		F4C05A14241391E000D1E293 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C05A13241391E000D1E293 /* ViewController.swift */; };
+		F4C05A17241391E000D1E293 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4C05A15241391E000D1E293 /* Main.storyboard */; };
+		F4C05A1A241391E000D1E293 /* Coffchat.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F4C05A18241391E000D1E293 /* Coffchat.xcdatamodeld */; };
+		F4C05A1C241391E100D1E293 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F4C05A1B241391E100D1E293 /* Assets.xcassets */; };
+		F4C05A1F241391E100D1E293 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4C05A1D241391E100D1E293 /* LaunchScreen.storyboard */; };
+		F4D3B7AD2417BED500524D9A /* CIMClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D3B7AC2417BED500524D9A /* CIMClient.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		33CD66CC29159902F5F981E3 /* Pods-Coffchat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Coffchat.debug.xcconfig"; path = "Target Support Files/Pods-Coffchat/Pods-Coffchat.debug.xcconfig"; sourceTree = "<group>"; };
+		E985536505320BE9CE303892 /* Pods-Coffchat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Coffchat.release.xcconfig"; path = "Target Support Files/Pods-Coffchat/Pods-Coffchat.release.xcconfig"; sourceTree = "<group>"; };
+		F41AE38924174224009B0E0C /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		F41AE38A24174224009B0E0C /* LoginViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoginViewController.xib; sourceTree = "<group>"; };
+		F494202F2A92B14FDCFFABCD /* Pods_Coffchat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Coffchat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F4C05A0C241391E000D1E293 /* Coffchat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Coffchat.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F4C05A0F241391E000D1E293 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		F4C05A11241391E000D1E293 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		F4C05A13241391E000D1E293 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		F4C05A16241391E000D1E293 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		F4C05A19241391E000D1E293 /* Coffchat.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Coffchat.xcdatamodel; sourceTree = "<group>"; };
+		F4C05A1B241391E100D1E293 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F4C05A1E241391E100D1E293 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		F4C05A20241391E100D1E293 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F4D3B7AC2417BED500524D9A /* CIMClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CIMClient.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F4C05A09241391E000D1E293 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				11BE8A49C7DD3E7F0A9669A0 /* Pods_Coffchat.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4AA653CBFCD74DFA67E7A1CF /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				33CD66CC29159902F5F981E3 /* Pods-Coffchat.debug.xcconfig */,
+				E985536505320BE9CE303892 /* Pods-Coffchat.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		F4C05A03241391E000D1E293 = {
+			isa = PBXGroup;
+			children = (
+				F4C05A0E241391E000D1E293 /* Coffchat */,
+				F4C05A0D241391E000D1E293 /* Products */,
+				4AA653CBFCD74DFA67E7A1CF /* Pods */,
+				FA3EA038AF5D43481DAC1DF7 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		F4C05A0D241391E000D1E293 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F4C05A0C241391E000D1E293 /* Coffchat.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F4C05A0E241391E000D1E293 /* Coffchat */ = {
+			isa = PBXGroup;
+			children = (
+				F4D3B7AB2417BEAB00524D9A /* CIMSdk */,
+				F4C05A0F241391E000D1E293 /* AppDelegate.swift */,
+				F4C05A11241391E000D1E293 /* SceneDelegate.swift */,
+				F4C05A13241391E000D1E293 /* ViewController.swift */,
+				F41AE38924174224009B0E0C /* LoginViewController.swift */,
+				F41AE38A24174224009B0E0C /* LoginViewController.xib */,
+				F4C05A15241391E000D1E293 /* Main.storyboard */,
+				F4C05A1B241391E100D1E293 /* Assets.xcassets */,
+				F4C05A1D241391E100D1E293 /* LaunchScreen.storyboard */,
+				F4C05A20241391E100D1E293 /* Info.plist */,
+				F4C05A18241391E000D1E293 /* Coffchat.xcdatamodeld */,
+			);
+			path = Coffchat;
+			sourceTree = "<group>";
+		};
+		F4D3B7AB2417BEAB00524D9A /* CIMSdk */ = {
+			isa = PBXGroup;
+			children = (
+				F4D3B7AC2417BED500524D9A /* CIMClient.swift */,
+			);
+			path = CIMSdk;
+			sourceTree = "<group>";
+		};
+		FA3EA038AF5D43481DAC1DF7 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F494202F2A92B14FDCFFABCD /* Pods_Coffchat.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F4C05A0B241391E000D1E293 /* Coffchat */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F4C05A23241391E100D1E293 /* Build configuration list for PBXNativeTarget "Coffchat" */;
+			buildPhases = (
+				83FA062FA441A7DC7182D3BA /* [CP] Check Pods Manifest.lock */,
+				F4C05A08241391E000D1E293 /* Sources */,
+				F4C05A09241391E000D1E293 /* Frameworks */,
+				F4C05A0A241391E000D1E293 /* Resources */,
+				49288F0A0152FF8E09610AC2 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Coffchat;
+			productName = Coffchat;
+			productReference = F4C05A0C241391E000D1E293 /* Coffchat.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F4C05A04241391E000D1E293 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1130;
+				LastUpgradeCheck = 1130;
+				ORGANIZATIONNAME = "Xuyingchun Inc.";
+				TargetAttributes = {
+					F4C05A0B241391E000D1E293 = {
+						CreatedOnToolsVersion = 11.3.1;
+					};
+				};
+			};
+			buildConfigurationList = F4C05A07241391E000D1E293 /* Build configuration list for PBXProject "Coffchat" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = F4C05A03241391E000D1E293;
+			productRefGroup = F4C05A0D241391E000D1E293 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F4C05A0B241391E000D1E293 /* Coffchat */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F4C05A0A241391E000D1E293 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F41AE38C24174224009B0E0C /* LoginViewController.xib in Resources */,
+				F4C05A1F241391E100D1E293 /* LaunchScreen.storyboard in Resources */,
+				F4C05A1C241391E100D1E293 /* Assets.xcassets in Resources */,
+				F4C05A17241391E000D1E293 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		49288F0A0152FF8E09610AC2 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Coffchat/Pods-Coffchat-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Coffchat/Pods-Coffchat-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Coffchat/Pods-Coffchat-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		83FA062FA441A7DC7182D3BA /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Coffchat-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F4C05A08241391E000D1E293 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F4D3B7AD2417BED500524D9A /* CIMClient.swift in Sources */,
+				F4C05A14241391E000D1E293 /* ViewController.swift in Sources */,
+				F4C05A10241391E000D1E293 /* AppDelegate.swift in Sources */,
+				F4C05A12241391E000D1E293 /* SceneDelegate.swift in Sources */,
+				F41AE38B24174224009B0E0C /* LoginViewController.swift in Sources */,
+				F4C05A1A241391E000D1E293 /* Coffchat.xcdatamodeld in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		F4C05A15241391E000D1E293 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F4C05A16241391E000D1E293 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		F4C05A1D241391E100D1E293 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F4C05A1E241391E100D1E293 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		F4C05A21241391E100D1E293 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		F4C05A22241391E100D1E293 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		F4C05A24241391E100D1E293 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 33CD66CC29159902F5F981E3 /* Pods-Coffchat.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = Coffchat/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.xuyc.Coffchat;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F4C05A25241391E100D1E293 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E985536505320BE9CE303892 /* Pods-Coffchat.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = Coffchat/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.xuyc.Coffchat;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F4C05A07241391E000D1E293 /* Build configuration list for PBXProject "Coffchat" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F4C05A21241391E100D1E293 /* Debug */,
+				F4C05A22241391E100D1E293 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F4C05A23241391E100D1E293 /* Build configuration list for PBXNativeTarget "Coffchat" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F4C05A24241391E100D1E293 /* Debug */,
+				F4C05A25241391E100D1E293 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		F4C05A18241391E000D1E293 /* Coffchat.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				F4C05A19241391E000D1E293 /* Coffchat.xcdatamodel */,
+			);
+			currentVersion = F4C05A19241391E000D1E293 /* Coffchat.xcdatamodel */;
+			path = Coffchat.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = F4C05A04241391E000D1E293 /* Project object */;
+}

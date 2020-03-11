@@ -8,6 +8,9 @@ daemon
 im_logic
 im_http
 im_gate
-client/ios
 log.log
 im_filegw
+client/ios/Coffchat/Coffchat.xcodeproj/xcuserdata
+client/ios/Coffchat/Pods
+Podfile.lock
+client/ios/Coffchat/Coffchat.xcworkspace/xcuserdata
