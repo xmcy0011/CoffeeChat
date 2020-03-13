@@ -8,6 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		11BE8A49C7DD3E7F0A9669A0 /* Pods_Coffchat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F494202F2A92B14FDCFFABCD /* Pods_Coffchat.framework */; };
+		F40A2CDE2419F0820090C230 /* CIMHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40A2CDD2419F0820090C230 /* CIMHeader.swift */; };
+		F417B0262419D4F000E1AAC0 /* CIM.Login.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = F417B0212419D4F000E1AAC0 /* CIM.Login.pb.swift */; };
+		F417B0272419D4F000E1AAC0 /* CIM.List.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = F417B0222419D4F000E1AAC0 /* CIM.List.pb.swift */; };
+		F417B0282419D4F000E1AAC0 /* CIM.Message.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = F417B0232419D4F000E1AAC0 /* CIM.Message.pb.swift */; };
+		F417B0292419D4F000E1AAC0 /* CIM.Def.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = F417B0242419D4F000E1AAC0 /* CIM.Def.pb.swift */; };
+		F417B02A2419D4F000E1AAC0 /* CIM.Voip.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = F417B0252419D4F000E1AAC0 /* CIM.Voip.pb.swift */; };
 		F41AE38B24174224009B0E0C /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41AE38924174224009B0E0C /* LoginViewController.swift */; };
 		F41AE38C24174224009B0E0C /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F41AE38A24174224009B0E0C /* LoginViewController.xib */; };
 		F4C05A10241391E000D1E293 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C05A0F241391E000D1E293 /* AppDelegate.swift */; };
@@ -23,6 +29,12 @@
 /* Begin PBXFileReference section */
 		33CD66CC29159902F5F981E3 /* Pods-Coffchat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Coffchat.debug.xcconfig"; path = "Target Support Files/Pods-Coffchat/Pods-Coffchat.debug.xcconfig"; sourceTree = "<group>"; };
 		E985536505320BE9CE303892 /* Pods-Coffchat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Coffchat.release.xcconfig"; path = "Target Support Files/Pods-Coffchat/Pods-Coffchat.release.xcconfig"; sourceTree = "<group>"; };
+		F40A2CDD2419F0820090C230 /* CIMHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CIMHeader.swift; sourceTree = "<group>"; };
+		F417B0212419D4F000E1AAC0 /* CIM.Login.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CIM.Login.pb.swift; sourceTree = "<group>"; };
+		F417B0222419D4F000E1AAC0 /* CIM.List.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CIM.List.pb.swift; sourceTree = "<group>"; };
+		F417B0232419D4F000E1AAC0 /* CIM.Message.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CIM.Message.pb.swift; sourceTree = "<group>"; };
+		F417B0242419D4F000E1AAC0 /* CIM.Def.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CIM.Def.pb.swift; sourceTree = "<group>"; };
+		F417B0252419D4F000E1AAC0 /* CIM.Voip.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CIM.Voip.pb.swift; sourceTree = "<group>"; };
 		F41AE38924174224009B0E0C /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		F41AE38A24174224009B0E0C /* LoginViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoginViewController.xib; sourceTree = "<group>"; };
 		F494202F2A92B14FDCFFABCD /* Pods_Coffchat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Coffchat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -57,6 +69,26 @@
 				E985536505320BE9CE303892 /* Pods-Coffchat.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		F40A2CDC2419F06D0090C230 /* model */ = {
+			isa = PBXGroup;
+			children = (
+				F40A2CDD2419F0820090C230 /* CIMHeader.swift */,
+			);
+			path = model;
+			sourceTree = "<group>";
+		};
+		F417B0202419D3E800E1AAC0 /* pb */ = {
+			isa = PBXGroup;
+			children = (
+				F417B0242419D4F000E1AAC0 /* CIM.Def.pb.swift */,
+				F417B0222419D4F000E1AAC0 /* CIM.List.pb.swift */,
+				F417B0212419D4F000E1AAC0 /* CIM.Login.pb.swift */,
+				F417B0232419D4F000E1AAC0 /* CIM.Message.pb.swift */,
+				F417B0252419D4F000E1AAC0 /* CIM.Voip.pb.swift */,
+			);
+			path = pb;
 			sourceTree = "<group>";
 		};
 		F4C05A03241391E000D1E293 = {
@@ -98,6 +130,8 @@
 		F4D3B7AB2417BEAB00524D9A /* CIMSdk */ = {
 			isa = PBXGroup;
 			children = (
+				F40A2CDC2419F06D0090C230 /* model */,
+				F417B0202419D3E800E1AAC0 /* pb */,
 				F4D3B7AC2417BED500524D9A /* CIMClient.swift */,
 			);
 			path = CIMSdk;
@@ -228,11 +262,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				F4D3B7AD2417BED500524D9A /* CIMClient.swift in Sources */,
+				F417B0292419D4F000E1AAC0 /* CIM.Def.pb.swift in Sources */,
+				F417B02A2419D4F000E1AAC0 /* CIM.Voip.pb.swift in Sources */,
+				F417B0262419D4F000E1AAC0 /* CIM.Login.pb.swift in Sources */,
 				F4C05A14241391E000D1E293 /* ViewController.swift in Sources */,
 				F4C05A10241391E000D1E293 /* AppDelegate.swift in Sources */,
 				F4C05A12241391E000D1E293 /* SceneDelegate.swift in Sources */,
 				F41AE38B24174224009B0E0C /* LoginViewController.swift in Sources */,
+				F40A2CDE2419F0820090C230 /* CIMHeader.swift in Sources */,
 				F4C05A1A241391E000D1E293 /* Coffchat.xcdatamodeld in Sources */,
+				F417B0272419D4F000E1AAC0 /* CIM.List.pb.swift in Sources */,
+				F417B0282419D4F000E1AAC0 /* CIM.Message.pb.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

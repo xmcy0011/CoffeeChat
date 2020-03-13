@@ -9,9 +9,24 @@
 import CocoaAsyncSocket
 import Foundation
 
+// IM结果回调
+typealias IMResultCallback<T> = (_ res: T) -> Void
+
+protocol CIMClientProtocol {
+    /// 登录
+    /// - Parameters:
+    ///   - userId: 用户ID
+    ///   - nick: 昵称
+    ///   - userToken: 认证口令
+    ///   - serverIp: 服务器IP
+    ///   - port: 服务器端口
+    ///   - callback: 登录结果回调
+    func auth(userId: Int64, nick: String, userToken: String, serverIp: String, port: UInt16, callback: IMResultCallback<CIM_Login_CIMAuthTokenRsp>?)
+}
+
 // IM连接
 // 负责与服务端通信
-class CIMClient: NSObject, GCDAsyncSocketDelegate {
+class CIMClient: NSObject, GCDAsyncSocketDelegate, CIMClientProtocol {
     var tcpClient: GCDAsyncSocket?
     var ip: String = "10.0.106.117"
     var port: UInt16 = 8000
@@ -43,14 +58,6 @@ class CIMClient: NSObject, GCDAsyncSocketDelegate {
         }
     }
     
-    func close() {
-        tcpClient?.disconnect()
-    }
-    
-    func send() {
-        // socket.write(<#T##data: Data?##Data?#>, withTimeout: <#T##TimeInterval#>, tag: <#T##Int#>)
-    }
-    
     // 2、主界面UI显示数据
 //        DispatchQueue.main.async {
 //            let showStr: NSMutableString = NSMutableString()
@@ -70,7 +77,13 @@ class CIMClient: NSObject, GCDAsyncSocketDelegate {
 //        clientSocket.readData(withTimeout: -1, tag: 0)
 }
 
+// MARK: GCDAsyncSocketDelegate
+
 extension CIMClient {
+//    func sendRequest(<#parameters#>) -> <#return type#> {
+//        <#function body#>
+//    }
+    
     // connect
     func socket(_ sock: GCDAsyncSocket, didConnectToHost host: String, port: UInt16) {
         print("successful connected to \(host):\(port)")
@@ -84,5 +97,13 @@ extension CIMClient {
     // disconnect
     func socketDidDisconnect(_ sock: GCDAsyncSocket, withError err: Error?) {
         print("socket disconnected,error:\(String(describing: err))")
+    }
+}
+
+// MARK: CIMClientProtocol
+
+extension CIMClient {
+    func auth(userId: Int64, nick: String, userToken: String, serverIp: String, port: UInt16, callback: IMResultCallback<CIM_Login_CIMAuthTokenRsp>?) {
+        
     }
 }

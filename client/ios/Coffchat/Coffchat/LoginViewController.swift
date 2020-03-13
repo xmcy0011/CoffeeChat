@@ -46,7 +46,7 @@ class LoginViewController: UIViewController {
     }
     
     @IBAction func onCancelBtnClick(_ sender: Any) {
-        client.close()
+        //client.close()
         self.dismiss(animated: true, completion: nil)
     }
 }

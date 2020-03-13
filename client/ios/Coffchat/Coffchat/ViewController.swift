@@ -9,20 +9,18 @@
 import UIKit
 
 class ViewController: UIViewController {
-
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
 //        let imageView = UIImageView()
 //        let image = UIImage(named: "lanuch")
 //        imageView.image = image
 //
 //        self.view.addSubview(imageView)
     }
-    
+
     @IBAction func onLoginBtnClick(_ sender: Any) {
         let loginView = LoginViewController()
         self.present(loginView, animated: true, completion: nil)
     }
 }
-
