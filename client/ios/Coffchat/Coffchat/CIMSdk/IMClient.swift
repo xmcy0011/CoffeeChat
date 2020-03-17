@@ -11,6 +11,8 @@ import Foundation
 
 // IM结果回调
 typealias IMResultCallback<T> = (_ res: T) -> Void
+// 消息驱动表处理函数
+typealias IMHandleFunc = (_ header: IMHeader, _ data: Data) -> Void
 
 protocol IMClientProtocol {
     /// 登录
@@ -39,6 +41,7 @@ class IMClient: NSObject, GCDAsyncSocketDelegate, IMClientProtocol {
     
     // dic
     fileprivate var requestDic: [UInt16: IMRequest]
+    fileprivate var handleMap: [UInt16: IMHandleFunc]
     
     // callback
     fileprivate var connectCallback: IMResultCallback<Bool>?
@@ -53,11 +56,13 @@ class IMClient: NSObject, GCDAsyncSocketDelegate, IMClientProtocol {
     
     override init() {
         requestDic = [:]
+        handleMap = [:]
         // recvBuffer = Data()
         
         super.init()
         print("CIMClient init")
         tcpClient = GCDAsyncSocket(delegate: self, delegateQueue: DispatchQueue.main)
+        initHandleMap()
     }
     
     deinit {
@@ -148,30 +153,9 @@ extension IMClient {
             } else {
                 print("parse IMHeader success,cmd=\(header.commandId),seq=\(header.seqNumber)")
                 
-                // 心跳包，直接回复
-                if header.commandId == CIM_Def_CIMCmdID.kCimCidLoginHeartbeat.rawValue {
-                    lastHeartBeat = Int32(NSDate().timeIntervalSince1970)
-                    print("receive headerbeat,lastHeartBeat=\(lastHeartBeat)")
-                    sendNotify(cmdId: CIM_Def_CIMCmdID.kCimCidLoginHeartbeat, body: try! CIM_Login_CIMHeartBeat().serializedData())
-                    // 监听数据
-                    tcpClient?.readData(withTimeout: -1, tag: 0)
-                    return
-                }
-                
-                // 查找响应对应的请求并回调结果
-                let item = requestDic.removeValue(forKey: header.seqNumber)
-                if item == nil {
-                    print("WARRN:unknown msg,cmdId=\(header.commandId),seq=\(header.seqNumber)")
-                } else {
-                    print("DEBUG:find callback,cmdId=\(header.commandId),seq=\(header.seqNumber)")
-                    
-                    // IMRequest.IMResponseCallback?
-                    // 回调结果
-                    if item?.callback != nil {
-                        let bodyData = data[Int(kHeaderLen)..<data.count] // 去掉头部，只放裸数据
-                        item?.callback!(header, bodyData)
-                    }
-                }
+                // 处理消息
+                let bodyData = data[Int(kHeaderLen)..<data.count] // 去掉头部，只放裸数据
+                _onHandle(header: header, data: bodyData)
             }
         }
         
@@ -293,5 +277,136 @@ extension IMClient {
             self.sendRequest(cmdId: CIM_Def_CIMCmdID.kCimCidLoginAuthTokenReq, body: body, callback: authCallback)
         }
         return res
+    }
+}
+
+// MARK: HandleMap
+
+extension IMClient {
+    /// 初始化消息驱动表
+    internal func initHandleMap() {
+        // 认证
+        handleMap[UInt16(CIM_Def_CIMCmdID.kCimCidLoginAuthTokenRsp.rawValue)] = _handleAuthRsp
+        // 会话列表
+        handleMap[UInt16(CIM_Def_CIMCmdID.kCimCidListRecentContactSessionRsp.rawValue)] = _handleRecentSessionList
+        // 历史消息
+        handleMap[UInt16(CIM_Def_CIMCmdID.kCimCidListMsgRsp.rawValue)] = _handleGetMsgList
+        
+        // 消息收发
+        handleMap[UInt16(CIM_Def_CIMCmdID.kCimCidMsgData.rawValue)] = _handleMsgData
+        // 消息收到ACK
+        handleMap[UInt16(CIM_Def_CIMCmdID.kCimCidMsgDataAck.rawValue)] = _handleMsgDataAck
+        // 已读消息通知
+        handleMap[UInt16(CIM_Def_CIMCmdID.kCimCidMsgReadAck.rawValue)] = _handleMsgReadNotify
+    }
+    
+    // 消息处理
+    internal func _onHandle(header: IMHeader, data: Data){
+        // 心跳包，直接回复
+        if header.commandId == CIM_Def_CIMCmdID.kCimCidLoginHeartbeat.rawValue {
+            lastHeartBeat = Int32(NSDate().timeIntervalSince1970)
+            print("receive headerbeat,lastHeartBeat=\(lastHeartBeat)")
+            //sendNotify(cmdId: CIM_Def_CIMCmdID.kCimCidLoginHeartbeat, body: try! CIM_Login_CIMHeartBeat().serializedData())
+            return
+        }
+        
+        switch Int(header.commandId)  {
+        case CIM_Def_CIMCmdID.kCimCidLoginAuthTokenRsp.rawValue:
+            _handleAuthRsp(header: header, data: data)
+        case CIM_Def_CIMCmdID.kCimCidListRecentContactSessionRsp.rawValue:
+            _handleRecentSessionList(header: header, data: data)
+        case CIM_Def_CIMCmdID.kCimCidListMsgRsp.rawValue:
+            _handleGetMsgList(header: header, data: data)
+        case CIM_Def_CIMCmdID.kCimCidMsgData.rawValue:
+            _handleMsgData(header: header, data: data)
+        case CIM_Def_CIMCmdID.kCimCidMsgDataAck.rawValue:
+            _handleMsgDataAck(header: header, data: data)
+        case CIM_Def_CIMCmdID.kCimCidMsgReadNotify.rawValue:
+            _handleMsgReadNotify(header: header, data: data)
+        default:
+            print("unknown msg,cmdId=\(header.commandId)")
+        }
+    }
+    
+    // 认证
+    internal func _handleAuthRsp(header: IMHeader, data: Data) {
+        // 查找响应对应的请求并回调结果
+        let item = requestDic.removeValue(forKey: header.seqNumber)
+        if item == nil {
+            print("WARRN:unknown msg,cmdId=\(header.commandId),seq=\(header.seqNumber)")
+        } else {
+            print("DEBUG:find callback,cmdId=\(header.commandId),seq=\(header.seqNumber)")
+            
+            // IMRequest.IMResponseCallback?
+            // 回调结果
+            if item?.callback != nil {
+                item?.callback!(header, data)
+            }
+        }
+    }
+    
+    // 会话列表
+    internal func _handleRecentSessionList(header: IMHeader, data: Data) {
+        var rsp: CIM_List_CIMRecentContactSessionRsp?
+        do {
+            rsp = try CIM_List_CIMRecentContactSessionRsp(serializedData: data)
+        } catch {
+            print("parse _handleRecentSessionList error")
+        }
+        if rsp != nil {
+            print("_handleRecentSessionList unreadCount=\(rsp!.unreadCounts),count=\(rsp!.contactSessionList.count)")
+        }
+    }
+    
+    // 历史消息列表
+    internal func _handleGetMsgList(header: IMHeader, data: Data) {
+        var rsp: CIM_List_CIMGetMsgListRsp?
+        do {
+            rsp = try CIM_List_CIMGetMsgListRsp(serializedData: data)
+        } catch {
+            print("parse _handleGetMsgList error")
+        }
+        if rsp != nil {
+            print("_handleGetMsgList count=\(rsp!.msgList.count)")
+        }
+    }
+    
+    // 收到消息
+    internal func _handleMsgData(header: IMHeader, data: Data) {
+        var msg: CIM_Message_CIMMsgData?
+        do {
+            msg = try CIM_Message_CIMMsgData(serializedData: data)
+        } catch {
+            print("parse _handleMsgData error")
+        }
+        if msg != nil {
+            print("_handleMsgData fromId=\(msg!.fromUserID),msgType=\(msg!.msgType),sessionType=\(msg!.sessionType),clientMsgId=\(msg!.msgID)")
+        }
+    }
+    
+    // 收到消息回执ACK
+    internal func _handleMsgDataAck(header: IMHeader, data: Data) {
+        var ack: CIM_Message_CIMMsgDataAck?
+        do {
+            ack = try CIM_Message_CIMMsgDataAck(serializedData: data)
+        } catch {
+            print("parse _handleMsgDataAck error")
+        }
+        if ack != nil {
+            print("_handleMsgDataAck toId=\(ack!.toSessionID),resCode=\(ack!.resCode),clientMsgId=\(ack!.msgID),serverMsgId=\(ack!.serverMsgID)")
+        }
+    }
+    
+    // 收到消息已读通知
+    internal func _handleMsgReadNotify(header: IMHeader, data: Data) {
+        var notify: CIM_Message_CIMMsgDataReadNotify?
+        do {
+            notify = try CIM_Message_CIMMsgDataReadNotify(serializedData: data)
+        } catch {
+            print("parse _handleMsgReadNotify error")
+        }
+        if notify != nil {
+            print("_handleMsgReadNotify userId=\(notify!.userID),sessionId=\(notify!.sessionID),serverMsgId=\(notify!.msgID),sessionType=\(notify!.sessionType)")
+        }
     }
 }
