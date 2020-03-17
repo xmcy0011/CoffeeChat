@@ -1,5 +1,5 @@
 //
-//  CIMHeader.swift
+//  IMHeader.swift
 //  Coffchat
 //
 //  Created by xuyingchun on 2020/3/12.
@@ -13,7 +13,7 @@ let kHeaderLen: UInt32 = 16
 let kProtocolVersion: UInt16 = 1
 
 /// 消息头部，自定义协议使用TLV格式
-class CIMHeader {
+class IMHeader {
     var length: UInt32 = 0 // 4 byte，消息体长度
     var version: UInt16 = 0 // 2 byte,default 1
     var flag: UInt16 = 0 // 2byte，保留
@@ -142,13 +142,13 @@ class CIMHeader {
         version = kProtocolVersion
 
         var headerData = Data()
-        headerData.append(contentsOf: CIMHeader.uintToFourBytes(num: length)) // 总长度
-        headerData.append(contentsOf: CIMHeader.uintToBytes(num: version)) // 协议版本号
-        headerData.append(contentsOf: CIMHeader.uintToBytes(num: flag)) // 标志位
-        headerData.append(contentsOf: CIMHeader.uintToBytes(num: serviceId))
-        headerData.append(contentsOf: CIMHeader.uintToBytes(num: commandId)) // 命令号
-        headerData.append(contentsOf: CIMHeader.uintToBytes(num: seqNumber)) // 消息序号
-        headerData.append(contentsOf: CIMHeader.uintToBytes(num: reversed))
+        headerData.append(contentsOf: IMHeader.uintToFourBytes(num: length)) // 总长度
+        headerData.append(contentsOf: IMHeader.uintToBytes(num: version)) // 协议版本号
+        headerData.append(contentsOf: IMHeader.uintToBytes(num: flag)) // 标志位
+        headerData.append(contentsOf: IMHeader.uintToBytes(num: serviceId))
+        headerData.append(contentsOf: IMHeader.uintToBytes(num: commandId)) // 命令号
+        headerData.append(contentsOf: IMHeader.uintToBytes(num: seqNumber)) // 消息序号
+        headerData.append(contentsOf: IMHeader.uintToBytes(num: reversed))
 
         return headerData + bodyData!
     }

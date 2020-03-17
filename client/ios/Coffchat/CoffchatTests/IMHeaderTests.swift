@@ -26,7 +26,7 @@ class CIMHeaderTests: XCTestCase {
 
     // 测试协议头的读写
     func testWriteReadHeader() {
-        let header = CIMHeader()
+        let header = IMHeader()
         header.setCommandId(cmdId: 12)
         header.setSeq(seq: 3)
         header.setMsg(msg: Data(repeating: 4, count: 10))
@@ -34,7 +34,7 @@ class CIMHeaderTests: XCTestCase {
         let data = header.getBuffer()
         print(data!)
 
-        let header2 = CIMHeader()
+        let header2 = IMHeader()
         XCTAssert(header2.readHeader(data: data!))
 
         // copy bytes

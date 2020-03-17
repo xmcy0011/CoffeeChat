@@ -138,15 +138,15 @@ extension IMClient {
         print("socket receive data,len=\(data.count)")
         
         // 是否足够长，数据包完整
-        if !CIMHeader.isAvailable(data: data) {
+        if !IMHeader.isAvailable(data: data) {
             print("bad data!")
         } else {
             // 解析协议头
-            let header = CIMHeader()
+            let header = IMHeader()
             if !header.readHeader(data: data) {
                 print("readHeader error!")
             } else {
-                print("parse CIMHeader success,cmd=\(header.commandId),seq=\(header.seqNumber)")
+                print("parse IMHeader success,cmd=\(header.commandId),seq=\(header.seqNumber)")
                 
                 // 心跳包，直接回复
                 if header.commandId == CIM_Def_CIMCmdID.kCimCidLoginHeartbeat.rawValue {
@@ -205,7 +205,7 @@ extension IMClient {
         }
         
         // 头部
-        let header = CIMHeader()
+        let header = IMHeader()
         header.setCommandId(cmdId: UInt16(cmdId.rawValue))
         header.setSeq(seq: tempSeq)
         header.setMsg(msg: body)
@@ -239,7 +239,7 @@ extension IMClient {
         }
         
         // 头部
-        let header = CIMHeader()
+        let header = IMHeader()
         header.setCommandId(cmdId: UInt16(cmdId.rawValue))
         header.setSeq(seq: tempSeq)
         header.setMsg(msg: body)
@@ -264,7 +264,7 @@ extension IMClient {
         let res = connect(ip: serverIp, port: port) { _ in // 连接成功回调
             // 这个写法，根据XCode提示修改后，有点看不懂啊
             // sendRequest的回调函数
-            let authCallback: (CIMHeader, Data) -> Void = { (_: CIMHeader, data: Data) in
+            let authCallback: (IMHeader, Data) -> Void = { (_: IMHeader, data: Data) in
                 var res = CIM_Login_CIMAuthTokenRsp()
                 do {
                     res = try CIM_Login_CIMAuthTokenRsp(serializedData: data)
