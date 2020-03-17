@@ -25,6 +25,7 @@ protocol IMClientProtocol {
 }
 
 let kClientVersion = "0.0.1"
+let singletonIMClient = IMClient()
 
 // IM连接
 // 负责与服务端通信
@@ -44,6 +45,11 @@ class IMClient: NSObject, GCDAsyncSocketDelegate, IMClientProtocol {
     
     // 是否已连接
     var isConnected: Bool? { return tcpClient?.isConnected }
+    
+    /// 单实例
+    public class var singleton: IMClient {
+        return singletonIMClient
+    }
     
     override init() {
         requestDic = [:]
@@ -157,7 +163,6 @@ extension IMClient {
                 if item == nil {
                     print("WARRN:unknown msg,cmdId=\(header.commandId),seq=\(header.seqNumber)")
                 } else {
-                    
                     print("DEBUG:find callback,cmdId=\(header.commandId),seq=\(header.seqNumber)")
                     
                     // IMRequest.IMResponseCallback?
