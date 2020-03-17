@@ -42,7 +42,7 @@ class LoginViewController: UIViewController {
     
     
     @IBAction func onLoginBtnClick(_ sender: Any) {
-        client.connect(ip: "10.0.106.117", port: 8000, callback: nil)
+        _ = client.connect(ip: "10.0.106.117", port: 8000, callback: nil)
     }
     
     @IBAction func onCancelBtnClick(_ sender: Any) {

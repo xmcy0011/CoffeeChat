@@ -153,10 +153,11 @@ extension IMClient {
                 }
                 
                 // 查找响应对应的请求并回调结果
-                let item = requestDic[header.seqNumber]
+                let item = requestDic.removeValue(forKey: header.seqNumber)
                 if item == nil {
                     print("WARRN:unknown msg,cmdId=\(header.commandId),seq=\(header.seqNumber)")
                 } else {
+                    
                     print("DEBUG:find callback,cmdId=\(header.commandId),seq=\(header.seqNumber)")
                     
                     // IMRequest.IMResponseCallback?
@@ -257,12 +258,14 @@ extension IMClient {
         
         let res = connect(ip: serverIp, port: port) { _ in // 连接成功回调
             // 这个写法，根据XCode提示修改后，有点看不懂啊
+            // sendRequest的回调函数
             let authCallback: (CIMHeader, Data) -> Void = { (_: CIMHeader, data: Data) in
                 var res = CIM_Login_CIMAuthTokenRsp()
                 do {
                     res = try CIM_Login_CIMAuthTokenRsp(serializedData: data)
                     
                     print("auth resultCode=\(res.resultCode),resultString=\(res.resultString)")
+                    // 回调auth结果
                     if callback != nil {
                         callback!(res)
                     }
