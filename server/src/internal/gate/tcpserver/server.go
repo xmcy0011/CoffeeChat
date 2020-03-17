@@ -67,6 +67,8 @@ func tcpConnRead(tcpConn *TcpConn) {
 
 		for {
 			if !cim.IsPduAvailable(buffer, writeOffset) {
+				// reset
+				writeOffset = 0
 				break
 			}
 

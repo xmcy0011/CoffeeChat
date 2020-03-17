@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		11BE8A49C7DD3E7F0A9669A0 /* Pods_Coffchat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F494202F2A92B14FDCFFABCD /* Pods_Coffchat.framework */; };
-		F40A2CDE2419F0820090C230 /* CIMHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40A2CDD2419F0820090C230 /* CIMHeader.swift */; };
+		F40A2CDE2419F0820090C230 /* IMHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40A2CDD2419F0820090C230 /* IMHeader.swift */; };
 		F417B0262419D4F000E1AAC0 /* CIM.Login.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = F417B0212419D4F000E1AAC0 /* CIM.Login.pb.swift */; };
 		F417B0272419D4F000E1AAC0 /* CIM.List.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = F417B0222419D4F000E1AAC0 /* CIM.List.pb.swift */; };
 		F417B0282419D4F000E1AAC0 /* CIM.Message.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = F417B0232419D4F000E1AAC0 /* CIM.Message.pb.swift */; };
@@ -16,6 +16,9 @@
 		F417B02A2419D4F000E1AAC0 /* CIM.Voip.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = F417B0252419D4F000E1AAC0 /* CIM.Voip.pb.swift */; };
 		F41AE38B24174224009B0E0C /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41AE38924174224009B0E0C /* LoginViewController.swift */; };
 		F41AE38C24174224009B0E0C /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F41AE38A24174224009B0E0C /* LoginViewController.xib */; };
+		F43CA151241FA2E90065373F /* IMRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43CA150241FA2E90065373F /* IMRequest.swift */; };
+		F4BC8F3D241F22A700ED38C9 /* IMHeaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BC8F3C241F22A700ED38C9 /* IMHeaderTests.swift */; };
+		F4BC8F3F241F243200ED38C9 /* IMClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BC8F3E241F243200ED38C9 /* IMClientTests.swift */; };
 		F4C05A10241391E000D1E293 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C05A0F241391E000D1E293 /* AppDelegate.swift */; };
 		F4C05A12241391E000D1E293 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C05A11241391E000D1E293 /* SceneDelegate.swift */; };
 		F4C05A14241391E000D1E293 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C05A13241391E000D1E293 /* ViewController.swift */; };
@@ -23,13 +26,23 @@
 		F4C05A1A241391E000D1E293 /* Coffchat.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F4C05A18241391E000D1E293 /* Coffchat.xcdatamodeld */; };
 		F4C05A1C241391E100D1E293 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F4C05A1B241391E100D1E293 /* Assets.xcassets */; };
 		F4C05A1F241391E100D1E293 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4C05A1D241391E100D1E293 /* LaunchScreen.storyboard */; };
-		F4D3B7AD2417BED500524D9A /* CIMClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D3B7AC2417BED500524D9A /* CIMClient.swift */; };
+		F4D3B7AD2417BED500524D9A /* IMClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D3B7AC2417BED500524D9A /* IMClient.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F4BC8F37241F223100ED38C9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F4C05A04241391E000D1E293 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F4C05A0B241391E000D1E293;
+			remoteInfo = Coffchat;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		33CD66CC29159902F5F981E3 /* Pods-Coffchat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Coffchat.debug.xcconfig"; path = "Target Support Files/Pods-Coffchat/Pods-Coffchat.debug.xcconfig"; sourceTree = "<group>"; };
 		E985536505320BE9CE303892 /* Pods-Coffchat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Coffchat.release.xcconfig"; path = "Target Support Files/Pods-Coffchat/Pods-Coffchat.release.xcconfig"; sourceTree = "<group>"; };
-		F40A2CDD2419F0820090C230 /* CIMHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CIMHeader.swift; sourceTree = "<group>"; };
+		F40A2CDD2419F0820090C230 /* IMHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMHeader.swift; sourceTree = "<group>"; };
 		F417B0212419D4F000E1AAC0 /* CIM.Login.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CIM.Login.pb.swift; sourceTree = "<group>"; };
 		F417B0222419D4F000E1AAC0 /* CIM.List.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CIM.List.pb.swift; sourceTree = "<group>"; };
 		F417B0232419D4F000E1AAC0 /* CIM.Message.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CIM.Message.pb.swift; sourceTree = "<group>"; };
@@ -37,7 +50,12 @@
 		F417B0252419D4F000E1AAC0 /* CIM.Voip.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CIM.Voip.pb.swift; sourceTree = "<group>"; };
 		F41AE38924174224009B0E0C /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		F41AE38A24174224009B0E0C /* LoginViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoginViewController.xib; sourceTree = "<group>"; };
+		F43CA150241FA2E90065373F /* IMRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMRequest.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		F494202F2A92B14FDCFFABCD /* Pods_Coffchat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Coffchat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F4BC8F32241F223100ED38C9 /* CoffchatTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoffchatTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F4BC8F36241F223100ED38C9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F4BC8F3C241F22A700ED38C9 /* IMHeaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMHeaderTests.swift; sourceTree = "<group>"; };
+		F4BC8F3E241F243200ED38C9 /* IMClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMClientTests.swift; sourceTree = "<group>"; };
 		F4C05A0C241391E000D1E293 /* Coffchat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Coffchat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4C05A0F241391E000D1E293 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F4C05A11241391E000D1E293 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -47,10 +65,17 @@
 		F4C05A1B241391E100D1E293 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F4C05A1E241391E100D1E293 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F4C05A20241391E100D1E293 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F4D3B7AC2417BED500524D9A /* CIMClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CIMClient.swift; sourceTree = "<group>"; };
+		F4D3B7AC2417BED500524D9A /* IMClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		F4BC8F2F241F223100ED38C9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F4C05A09241391E000D1E293 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -74,7 +99,8 @@
 		F40A2CDC2419F06D0090C230 /* model */ = {
 			isa = PBXGroup;
 			children = (
-				F40A2CDD2419F0820090C230 /* CIMHeader.swift */,
+				F40A2CDD2419F0820090C230 /* IMHeader.swift */,
+				F43CA150241FA2E90065373F /* IMRequest.swift */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -91,10 +117,21 @@
 			path = pb;
 			sourceTree = "<group>";
 		};
+		F4BC8F33241F223100ED38C9 /* CoffchatTests */ = {
+			isa = PBXGroup;
+			children = (
+				F4BC8F36241F223100ED38C9 /* Info.plist */,
+				F4BC8F3C241F22A700ED38C9 /* IMHeaderTests.swift */,
+				F4BC8F3E241F243200ED38C9 /* IMClientTests.swift */,
+			);
+			path = CoffchatTests;
+			sourceTree = "<group>";
+		};
 		F4C05A03241391E000D1E293 = {
 			isa = PBXGroup;
 			children = (
 				F4C05A0E241391E000D1E293 /* Coffchat */,
+				F4BC8F33241F223100ED38C9 /* CoffchatTests */,
 				F4C05A0D241391E000D1E293 /* Products */,
 				4AA653CBFCD74DFA67E7A1CF /* Pods */,
 				FA3EA038AF5D43481DAC1DF7 /* Frameworks */,
@@ -105,6 +142,7 @@
 			isa = PBXGroup;
 			children = (
 				F4C05A0C241391E000D1E293 /* Coffchat.app */,
+				F4BC8F32241F223100ED38C9 /* CoffchatTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -132,7 +170,7 @@
 			children = (
 				F40A2CDC2419F06D0090C230 /* model */,
 				F417B0202419D3E800E1AAC0 /* pb */,
-				F4D3B7AC2417BED500524D9A /* CIMClient.swift */,
+				F4D3B7AC2417BED500524D9A /* IMClient.swift */,
 			);
 			path = CIMSdk;
 			sourceTree = "<group>";
@@ -148,6 +186,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		F4BC8F31241F223100ED38C9 /* CoffchatTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F4BC8F39241F223100ED38C9 /* Build configuration list for PBXNativeTarget "CoffchatTests" */;
+			buildPhases = (
+				F4BC8F2E241F223100ED38C9 /* Sources */,
+				F4BC8F2F241F223100ED38C9 /* Frameworks */,
+				F4BC8F30241F223100ED38C9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F4BC8F38241F223100ED38C9 /* PBXTargetDependency */,
+			);
+			name = CoffchatTests;
+			productName = CoffchatTests;
+			productReference = F4BC8F32241F223100ED38C9 /* CoffchatTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		F4C05A0B241391E000D1E293 /* Coffchat */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = F4C05A23241391E100D1E293 /* Build configuration list for PBXNativeTarget "Coffchat" */;
@@ -177,6 +233,10 @@
 				LastUpgradeCheck = 1130;
 				ORGANIZATIONNAME = "Xuyingchun Inc.";
 				TargetAttributes = {
+					F4BC8F31241F223100ED38C9 = {
+						CreatedOnToolsVersion = 11.3.1;
+						TestTargetID = F4C05A0B241391E000D1E293;
+					};
 					F4C05A0B241391E000D1E293 = {
 						CreatedOnToolsVersion = 11.3.1;
 					};
@@ -196,11 +256,19 @@
 			projectRoot = "";
 			targets = (
 				F4C05A0B241391E000D1E293 /* Coffchat */,
+				F4BC8F31241F223100ED38C9 /* CoffchatTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		F4BC8F30241F223100ED38C9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F4C05A0A241391E000D1E293 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -257,19 +325,29 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		F4BC8F2E241F223100ED38C9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F4BC8F3F241F243200ED38C9 /* IMClientTests.swift in Sources */,
+				F4BC8F3D241F22A700ED38C9 /* IMHeaderTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F4C05A08241391E000D1E293 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F4D3B7AD2417BED500524D9A /* CIMClient.swift in Sources */,
+				F4D3B7AD2417BED500524D9A /* IMClient.swift in Sources */,
 				F417B0292419D4F000E1AAC0 /* CIM.Def.pb.swift in Sources */,
 				F417B02A2419D4F000E1AAC0 /* CIM.Voip.pb.swift in Sources */,
 				F417B0262419D4F000E1AAC0 /* CIM.Login.pb.swift in Sources */,
 				F4C05A14241391E000D1E293 /* ViewController.swift in Sources */,
+				F43CA151241FA2E90065373F /* IMRequest.swift in Sources */,
 				F4C05A10241391E000D1E293 /* AppDelegate.swift in Sources */,
 				F4C05A12241391E000D1E293 /* SceneDelegate.swift in Sources */,
 				F41AE38B24174224009B0E0C /* LoginViewController.swift in Sources */,
-				F40A2CDE2419F0820090C230 /* CIMHeader.swift in Sources */,
+				F40A2CDE2419F0820090C230 /* IMHeader.swift in Sources */,
 				F4C05A1A241391E000D1E293 /* Coffchat.xcdatamodeld in Sources */,
 				F417B0272419D4F000E1AAC0 /* CIM.List.pb.swift in Sources */,
 				F417B0282419D4F000E1AAC0 /* CIM.Message.pb.swift in Sources */,
@@ -277,6 +355,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F4BC8F38241F223100ED38C9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F4C05A0B241391E000D1E293 /* Coffchat */;
+			targetProxy = F4BC8F37241F223100ED38C9 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		F4C05A15241391E000D1E293 /* Main.storyboard */ = {
@@ -298,6 +384,44 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		F4BC8F3A241F223100ED38C9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = CoffchatTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.xuyc.CoffchatTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Coffchat.app/Coffchat";
+			};
+			name = Debug;
+		};
+		F4BC8F3B241F223100ED38C9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = CoffchatTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.xuyc.CoffchatTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Coffchat.app/Coffchat";
+			};
+			name = Release;
+		};
 		F4C05A21241391E100D1E293 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -451,6 +575,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		F4BC8F39241F223100ED38C9 /* Build configuration list for PBXNativeTarget "CoffchatTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F4BC8F3A241F223100ED38C9 /* Debug */,
+				F4BC8F3B241F223100ED38C9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		F4C05A07241391E000D1E293 /* Build configuration list for PBXProject "Coffchat" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

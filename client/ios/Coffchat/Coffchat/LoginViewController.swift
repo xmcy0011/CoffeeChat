@@ -16,7 +16,7 @@ struct Login: Encodable {
 }
 
 class LoginViewController: UIViewController {
-    var client = CIMClient()
+    var client = IMClient()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,7 +42,7 @@ class LoginViewController: UIViewController {
     
     
     @IBAction func onLoginBtnClick(_ sender: Any) {
-        client.connect(ip: "10.0.106.117", port: 8000)
+        client.connect(ip: "10.0.106.117", port: 8000, callback: nil)
     }
     
     @IBAction func onCancelBtnClick(_ sender: Any) {
