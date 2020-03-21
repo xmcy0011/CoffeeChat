@@ -17,6 +17,7 @@
 		F41AE38B24174224009B0E0C /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41AE38924174224009B0E0C /* LoginViewController.swift */; };
 		F41AE38C24174224009B0E0C /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F41AE38A24174224009B0E0C /* LoginViewController.xib */; };
 		F43CA151241FA2E90065373F /* IMRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43CA150241FA2E90065373F /* IMRequest.swift */; };
+		F4840BE62424C2930005EF04 /* IMManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4840BE52424C2930005EF04 /* IMManager.swift */; };
 		F4BC8F3D241F22A700ED38C9 /* IMHeaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BC8F3C241F22A700ED38C9 /* IMHeaderTests.swift */; };
 		F4BC8F3F241F243200ED38C9 /* IMClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BC8F3E241F243200ED38C9 /* IMClientTests.swift */; };
 		F4C05A10241391E000D1E293 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C05A0F241391E000D1E293 /* AppDelegate.swift */; };
@@ -51,6 +52,7 @@
 		F41AE38924174224009B0E0C /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		F41AE38A24174224009B0E0C /* LoginViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoginViewController.xib; sourceTree = "<group>"; };
 		F43CA150241FA2E90065373F /* IMRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMRequest.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		F4840BE52424C2930005EF04 /* IMManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMManager.swift; sourceTree = "<group>"; };
 		F494202F2A92B14FDCFFABCD /* Pods_Coffchat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Coffchat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4BC8F32241F223100ED38C9 /* CoffchatTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoffchatTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4BC8F36241F223100ED38C9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -171,6 +173,7 @@
 				F40A2CDC2419F06D0090C230 /* model */,
 				F417B0202419D3E800E1AAC0 /* pb */,
 				F4D3B7AC2417BED500524D9A /* IMClient.swift */,
+				F4840BE52424C2930005EF04 /* IMManager.swift */,
 			);
 			path = CIMSdk;
 			sourceTree = "<group>";
@@ -341,6 +344,7 @@
 				F4D3B7AD2417BED500524D9A /* IMClient.swift in Sources */,
 				F417B0292419D4F000E1AAC0 /* CIM.Def.pb.swift in Sources */,
 				F417B02A2419D4F000E1AAC0 /* CIM.Voip.pb.swift in Sources */,
+				F4840BE62424C2930005EF04 /* IMManager.swift in Sources */,
 				F417B0262419D4F000E1AAC0 /* CIM.Login.pb.swift in Sources */,
 				F4C05A14241391E000D1E293 /* ViewController.swift in Sources */,
 				F43CA151241FA2E90065373F /* IMRequest.swift in Sources */,

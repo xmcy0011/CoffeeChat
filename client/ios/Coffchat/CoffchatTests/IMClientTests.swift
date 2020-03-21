@@ -20,8 +20,8 @@ class IMClientTests: XCTestCase {
 //    }
 
     func testConnect() {
-        let client = IMClient()
-        _ = client.connect(ip: "10.0.106.117", port: 8000, callback: nil)
+        let client = IMClient(delegate: nil)
+        _ = client.connect(ip: "10.0.106.117", port: 8000)
 
         sleep(3)
         XCTAssert(client.isConnected!)
@@ -29,7 +29,8 @@ class IMClientTests: XCTestCase {
 
     func testAuth() {
         let ex = expectation(description: "")
-        _ = IMClient.singleton.auth(userId: 1008, nick: "赵丽", userToken: "12345", serverIp: "192.168.0.106", port: 8000) { rsp in
+        let client = IMClient(delegate: nil)
+        _ = client.auth(userId: 1008, nick: "赵丽", userToken: "12345", serverIp: "192.168.31.174", port: 8000) { rsp in
             XCTAssert(rsp.resultCode == CIM_Def_CIMErrorCode.kCimErrSuccsse)
             
             // 完成异步的单元测试，waitForExpectations的timeout不会出发，测试通过
