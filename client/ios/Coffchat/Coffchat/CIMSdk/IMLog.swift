@@ -31,7 +31,7 @@ class IMLog {
             // 获取文件名
             let fileName = (file as NSString).lastPathComponent
             // 打印日志内容
-            print("\(getNowTheTime()) [debug] \(fileName):\(line) \(function) | \(item)")
+        print("\(getNowTheTime()) [debug] [\(fileName):\(line) \(function)] | \(item)")
         #endif
     }
     
@@ -45,7 +45,7 @@ class IMLog {
         // 获取文件名
         let fileName = (file as NSString).lastPathComponent
         // 打印日志内容
-        print("\(getNowTheTime()) [info] \(fileName):\(line) \(function) | \(item)")
+        print("\(getNowTheTime()) [info] [\(fileName):\(line) \(function)] | \(item)")
     }
     
     /// 打印一条warn日志
@@ -58,7 +58,7 @@ class IMLog {
         // 获取文件名
         let fileName = (file as NSString).lastPathComponent
         // 打印日志内容
-        print("\(getNowTheTime()) [warn] \(fileName):\(line) \(function) | \(item)")
+        print("\(getNowTheTime()) [warn] [\(fileName):\(line) \(function)] | \(item)")
     }
     
     /// 打印一条error日志
@@ -71,6 +71,6 @@ class IMLog {
         // 获取文件名
         let fileName = (file as NSString).lastPathComponent
         // 打印日志内容
-        print("\(getNowTheTime()) [error] \(fileName):\(line) \(function) | \(item)")
+        print("\(getNowTheTime()) [error] [\(fileName):\(line) \(function)] | \(item)")
     }
 }
