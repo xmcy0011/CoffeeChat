@@ -16,7 +16,7 @@ struct Login: Encodable {
 }
 
 class LoginViewController: UIViewController {
-    var client = IMClient(delegate: nil)
+    var client = IMClient()
     
     override func viewDidLoad() {
         super.viewDidLoad()

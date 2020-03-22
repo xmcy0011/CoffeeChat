@@ -13,44 +13,50 @@ import Foundation
 typealias IMHandleFunc = (_ header: IMHeader, _ data: Data) -> Void
 let singletonIMManager = IMManager()
 
-protocol IMManagerProtocol {
-    /// 登录
-    /// - Parameters:
-    ///   - userId: 用户ID
-    ///   - nick: 昵称
-    ///   - userToken: 认证口令
-    ///   - serverIp: 服务器IP
-    ///   - port: 服务器端口
-    ///   - callback: 登录结果回调
-    func auth(userId: UInt64, nick: String, userToken: String, serverIp: String, port: UInt16, callback: IMResultCallback<CIM_Login_CIMAuthTokenRsp>?) -> Bool
-    /// 发送一个具有响应的请求
-    /// - Parameters:
-    ///   - cmdId: 命令ID，见CIM_Def_CIMCmdID
-    ///   - body: 数据部
-    ///   - callback: 响应结果回调
-    func send(cmdId: CIM_Def_CIMCmdID, body: Data, callback: IMResponseCallback?)
-    /// 发送不需要响应的消息
-    /// - Parameters:
-    ///   - cmdId: 命令ID，见CIM_Def_CIMCmdID
-    ///   - body: 数据部
-    func sendNotify(cmdId: CIM_Def_CIMCmdID, body: Data)
-}
+/*
+ protocol IMManagerProtocol {
+ /// 登录
+ /// - Parameters:
+ ///   - userId: 用户ID
+ ///   - nick: 昵称
+ ///   - userToken: 认证口令
+ ///   - serverIp: 服务器IP
+ ///   - port: 服务器端口
+ ///   - callback: 登录结果回调
+ func auth(userId: UInt64, nick: String, userToken: String, serverIp: String, port: UInt16, callback: IMResultCallback<CIM_Login_CIMAuthTokenRsp>?) -> Bool
+ /// 发送一个具有响应的请求
+ /// - Parameters:
+ ///   - cmdId: 命令ID，见CIM_Def_CIMCmdID
+ ///   - body: 数据部
+ ///   - callback: 响应结果回调
+ func send(cmdId: CIM_Def_CIMCmdID, body: Data, callback: IMResponseCallback?)
+ /// 发送不需要响应的消息
+ /// - Parameters:
+ ///   - cmdId: 命令ID，见CIM_Def_CIMCmdID
+ ///   - body: 数据部
+ func sendNotify(cmdId: CIM_Def_CIMCmdID, body: Data)
+ }
+ */
 
 // IM连接
 // 负责与服务端通信
-class IMManager: IMClientDelegate, IMManagerProtocol {
-    fileprivate var client: IMClient?
+class IMManager: IMClientDelegate {
+    fileprivate var _loginManager: IMLoginManager
+    fileprivate var _conversationManager: IMConversationManager
+    
     // dic
     fileprivate var requestDic: [UInt16: IMRequest]
     fileprivate var handleMap: [UInt16: IMHandleFunc]
     
-    // callback
-    fileprivate var connectCallback: IMResultCallback<Bool>?
+    // 登录管理
+    public var loginManager: IMLoginManager {
+        return _loginManager
+    }
     
-    // 是否已连接
-    var isConnected: Bool? { return client?.isConnected }
-    // 是否已认证成功
-    var isLogin: Bool? { return client?.isLogin }
+    // 会话管理
+    public var conversationManager: IMConversationManager {
+        return _conversationManager
+    }
     
     /// 单实例
     public class var singleton: IMManager {
@@ -61,7 +67,9 @@ class IMManager: IMClientDelegate, IMManagerProtocol {
         handleMap = [:]
         requestDic = [:]
         
-        client = IMClient(delegate: self)
+        _loginManager = IMLoginManager()
+        _conversationManager = IMConversationManager()
+        DefaultIMClient.register(key: "IMManager", delegate: self)
     }
     
     // 2、主界面UI显示数据
@@ -86,58 +94,48 @@ class IMManager: IMClientDelegate, IMManagerProtocol {
 // MARK: IMClientDelegate
 
 extension IMManager {
-    // connect
-    func onConnected(_ host: String, port: UInt16) {
-        IMLog.debug(item: "successful connected to \(host):\(port)")
-    }
+    /// connected
+    /// - Parameters:
+    ///   - host: IP
+    ///   - port: 端口
+    func onConnected(_ host: String, port: UInt16) {}
     
-    // receive data
-    func onHandleData(_ header: IMHeader, _ data: Data?) {
-        IMLog.debug(item: "onHandleData ,cmdId=\(header.commandId),len=\(String(describing: data?.count))")
-    }
+    /// 收到数据
+    /// - Parameters:
+    ///   - header: 协议头
+    ///   - data: 数据体（裸数据）
+    func onHandleData(_ header: IMHeader, _ data: Data) {}
     
-    // disconnect
-    func onDisconnect(_ err: Error?) {
-        IMLog.debug(item: "socket disconnected,error:\(String(describing: err))")
-    }
+    /// disconnected
+    /// - Parameter err: 错误
+    func onDisconnect(_ err: Error?) {}
 }
 
 // MARK: IMManagerProtocol
 
 extension IMManager {
-    /// 登录
-    /// - Parameters:
-    ///   - userId: 用户ID
-    ///   - nick: 昵称
-    ///   - userToken: 认证口令
-    ///   - serverIp: 服务器IP
-    ///   - port: 服务器端口
-    ///   - callback: 登录结果回调
-    func auth(userId: UInt64, nick: String, userToken: String, serverIp: String, port: UInt16, callback: IMResultCallback<CIM_Login_CIMAuthTokenRsp>?) -> Bool {
-        return client!.auth(userId: userId, nick: nick, userToken: userToken, serverIp: serverIp, port: port, callback: callback)
-    }
-    
-    /// 发送一个具有响应的请求
-    /// - Parameters:
-    ///   - cmdId: 命令ID，见CIM_Def_CIMCmdID
-    ///   - body: 数据部
-    ///   - callback: 响应结果回调
-    func send(cmdId: CIM_Def_CIMCmdID, body: Data, callback: IMResponseCallback?) {
-        // 发送
-        let header = client!.send(cmdId: cmdId, body: body)
-        
-        // 把请求加入到待响应列表中，以seq序号为key
-        let req = IMRequest(header: header, callback: callback)
-        requestDic[req.seq] = req
-    }
-    
-    /// 发送不需要响应的消息
-    /// - Parameters:
-    ///   - cmdId: 命令ID，见CIM_Def_CIMCmdID
-    ///   - body: 数据部
-    func sendNotify(cmdId: CIM_Def_CIMCmdID, body: Data) {
-        _ = client!.send(cmdId: cmdId, body: body)
-    }
+    /*
+     /// 发送一个具有响应的请求
+     /// - Parameters:
+     ///   - cmdId: 命令ID，见CIM_Def_CIMCmdID
+     ///   - body: 数据部
+     ///   - callback: 响应结果回调
+     func send(cmdId: CIM_Def_CIMCmdID, body: Data, callback: IMResponseCallback?) {
+         // 发送
+         let header = client!.send(cmdId: cmdId, body: body)
+     
+         // 把请求加入到待响应列表中，以seq序号为key
+         let req = IMRequest(header: header, callback: callback)
+         requestDic[req.seq] = req
+     }
+     
+     /// 发送不需要响应的消息
+     /// - Parameters:
+     ///   - cmdId: 命令ID，见CIM_Def_CIMCmdID
+     ///   - body: 数据部
+     func sendNotify(cmdId: CIM_Def_CIMCmdID, body: Data) {
+         _ = client!.send(cmdId: cmdId, body: body)
+     }*/
 }
 
 // MARK: HandleMap
