@@ -9,6 +9,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LoginViewController" customModule="Coffchat" customModuleProvider="target">
             <connections>
+                <outlet property="btnLogin" destination="88U-6U-vgR" id="rXS-PE-Hr7"/>
                 <outlet property="id" destination="TsH-tr-zb7" id="R9J-Eh-d7D"/>
                 <outlet property="nick" destination="mnO-F4-jAL" id="gms-s9-VJi"/>
                 <outlet property="server" destination="Sdp-rg-Lxg" id="d7q-km-DI9"/>
@@ -24,7 +25,7 @@
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="21" translatesAutoresizingMaskIntoConstraints="NO" id="4Qt-NP-6eh">
                     <rect key="frame" x="107" y="323" width="200" height="250"/>
                     <subviews>
-                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="ID" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="TsH-tr-zb7">
+                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="1008" borderStyle="roundedRect" placeholder="ID" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="TsH-tr-zb7">
                             <rect key="frame" x="0.0" y="0.0" width="200" height="34"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="200" id="oKh-FJ-PD9"/>
@@ -32,7 +33,7 @@
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <textInputTraits key="textInputTraits"/>
                         </textField>
-                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Token" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="vvo-d6-K15">
+                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="12345" borderStyle="roundedRect" placeholder="Token" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="vvo-d6-K15">
                             <rect key="frame" x="0.0" y="55" width="200" height="34"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="200" id="mY4-AN-89f"/>
@@ -40,7 +41,7 @@
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <textInputTraits key="textInputTraits"/>
                         </textField>
-                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="NickName" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="mnO-F4-jAL">
+                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="apple" borderStyle="roundedRect" placeholder="NickName" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="mnO-F4-jAL">
                             <rect key="frame" x="0.0" y="110" width="200" height="34"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="200" id="M6J-AD-JZJ"/>
@@ -48,7 +49,7 @@
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <textInputTraits key="textInputTraits"/>
                         </textField>
-                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Server" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Sdp-rg-Lxg">
+                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="192.168.31.174" borderStyle="roundedRect" placeholder="Server" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Sdp-rg-Lxg">
                             <rect key="frame" x="0.0" y="165" width="200" height="34"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="200" id="Tnh-H3-mrP"/>

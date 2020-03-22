@@ -15,22 +15,28 @@ struct Login: Encodable {
     let pwd: String
 }
 
-class LoginViewController: UIViewController {
+class LoginViewController: UIViewController, IMLoginManagerDelegate {
     @IBOutlet var id: UITextField!
     @IBOutlet var token: UITextField!
     @IBOutlet var nick: UITextField!
     @IBOutlet var server: UITextField!
+    @IBOutlet var btnLogin: UIButton!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        _ = IMManager.singleton.loginManager.register(key: "LoginViewController", delegate: self)
 
+        // Do any additional setup after loading the view.
         // 使用Alamofire发送HTTP请求
 //        let req = Login(userName: "10091009", pwd: "12345")
 //        AF.request("www.baidu.com", method: .post, parameters: req, encoder: JSONParameterEncoder.default).response { res in
 //            debugPrint(res)
 //        }
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        _ = IMManager.singleton.loginManager.unregister(key: "LoginViewController")
     }
 
     /*
@@ -46,7 +52,7 @@ class LoginViewController: UIViewController {
     @IBAction func onLoginBtnClick(_ sender: Any) {
         if check() {
             let userId = UInt64(id.text!)
-            if userId == nil{
+            if userId == nil {
                 return
             }
             _ = IMManager.singleton.loginManager.login(userId: userId!, nick: nick.text!, userToken: token.text!, serverIp: server.text!, port: 8000) { rsp in
@@ -57,9 +63,7 @@ class LoginViewController: UIViewController {
                         let ok = UIAlertAction(title: "提醒", style: .cancel, handler: nil)
                         alert.addAction(ok)
                         self.present(alert, animated: true, completion: nil)
-                    }else{
-                        
-                    }
+                    } else {}
                 }
             }
         }
@@ -86,10 +90,29 @@ class LoginViewController: UIViewController {
             let alert = UIAlertController(title: "提醒", message: text, preferredStyle: .alert)
             let ok = UIAlertAction(title: "OK", style: .cancel)
             alert.addAction(ok)
-            self.present(alert, animated: true, completion: nil)
+            present(alert, animated: true, completion: nil)
             return false
         }
-        
+
         return true
     }
+
+    func onLogin(step: IMLoginStep) {
+        DispatchQueue.main.async {
+            switch step {
+            case .Linking:
+                self.btnLogin.setTitle("连接中...", for: .normal)
+            case .LinkOK:
+                self.btnLogin.setTitle("已连接", for: .normal)
+            case .Logining:
+                self.btnLogin.setTitle("认证中...", for: .normal)
+            case .LoginOK:
+                self.btnLogin.setTitle("登录成功", for: .normal)
+            default:
+                self.btnLogin.setTitle("登录", for: .normal)
+            }
+        }
+    }
+
+    func onAutoLoginFailed(code: Error) {}
 }

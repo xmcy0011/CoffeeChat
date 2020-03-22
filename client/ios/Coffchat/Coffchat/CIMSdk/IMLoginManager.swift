@@ -47,7 +47,7 @@ protocol IMLoginManagerDelegate {
     func onAutoLoginFailed(code: Error)
 }
 
-class IMLoginManager: IMClientDelegateStatus,IMClientDelegateData {
+class IMLoginManager: IMClientDelegateStatus, IMClientDelegateData {
     fileprivate var client: IMClient
     fileprivate var timer: Timer? // 自动登录，心跳超时检测定时器
     fileprivate var lastHeartBeat: Int32 = 0 // 上一次收到服务器心跳的时间戳
@@ -82,10 +82,13 @@ class IMLoginManager: IMClientDelegateStatus,IMClientDelegateData {
     ///   - callback: 回调
     func login(userId: UInt64, nick: String, userToken: String, serverIp: String, port: UInt16, callback: IMResultCallback<CIM_Login_CIMAuthTokenRsp>?) -> Bool {
         IMLog.info(item: "auth userId=\(userId),nick=\(nick),userToken=\(userToken),serverIp=\(serverIp),port=\(port)")
-        client.disconnect()
-        if timer != nil {
-            timer!.invalidate() // 销毁timer
-            timer = nil
+        
+        if isLogin, self.userId != nil, userId != self.userId {
+            client.disconnect()
+            if timer != nil {
+                timer!.invalidate() // 销毁timer
+                timer = nil
+            }
         }
         
         lastAuthTime = Int32(NSDate().timeIntervalSince1970) // 记住认证时间戳
@@ -97,9 +100,7 @@ class IMLoginManager: IMClientDelegateStatus,IMClientDelegateData {
         authCallback = callback
         
         // 更新登录进度
-        for item in delegates {
-            item.value.onLogin(step: loginStep)
-        }
+        _onUpdateLoginStep(step: loginStep)
         return client.connect(ip: serverIp, port: port)
     }
     
@@ -143,6 +144,7 @@ extension IMLoginManager {
     // 更新当前登录进度
     func _onUpdateLoginStep(step: IMLoginStep) {
         loginStep = step
+        IMLog.debug(item: "step:\(step)")
         for item in delegates {
             item.value.onLogin(step: loginStep)
         }
@@ -182,7 +184,7 @@ extension IMLoginManager {
 
 // MARK: IMClientDelegateData
 
-extension IMLoginManager{
+extension IMLoginManager {
     func onHandleData(_ header: IMHeader, _ data: Data) {
         if header.commandId == CIM_Def_CIMCmdID.kCimCidLoginHeartbeat.rawValue {
             IMLog.debug(item: "recv hearbeat")
