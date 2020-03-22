@@ -18,6 +18,7 @@
 		F41AE38C24174224009B0E0C /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F41AE38A24174224009B0E0C /* LoginViewController.xib */; };
 		F42F794524273B7300A50A0A /* IMLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42F794424273B7300A50A0A /* IMLog.swift */; };
 		F42F794A2427453800A50A0A /* IMLoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42F79492427453800A50A0A /* IMLoginManager.swift */; };
+		F42F794C2427772F00A50A0A /* IMConversationManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42F794B2427772F00A50A0A /* IMConversationManagerTests.swift */; };
 		F43CA151241FA2E90065373F /* IMRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43CA150241FA2E90065373F /* IMRequest.swift */; };
 		F4840BE62424C2930005EF04 /* IMManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4840BE52424C2930005EF04 /* IMManager.swift */; };
 		F48654142426694400D39970 /* IMLoginManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48654132426694400D39970 /* IMLoginManagerTests.swift */; };
@@ -58,6 +59,7 @@
 		F41AE38A24174224009B0E0C /* LoginViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoginViewController.xib; sourceTree = "<group>"; };
 		F42F794424273B7300A50A0A /* IMLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMLog.swift; sourceTree = "<group>"; };
 		F42F79492427453800A50A0A /* IMLoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMLoginManager.swift; sourceTree = "<group>"; };
+		F42F794B2427772F00A50A0A /* IMConversationManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMConversationManagerTests.swift; sourceTree = "<group>"; };
 		F43CA150241FA2E90065373F /* IMRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMRequest.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		F4840BE52424C2930005EF04 /* IMManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMManager.swift; sourceTree = "<group>"; };
 		F48654132426694400D39970 /* IMLoginManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMLoginManagerTests.swift; sourceTree = "<group>"; };
@@ -146,6 +148,7 @@
 				F4BC8F3C241F22A700ED38C9 /* IMHeaderTests.swift */,
 				F4BC8F3E241F243200ED38C9 /* IMClientTests.swift */,
 				F48654132426694400D39970 /* IMLoginManagerTests.swift */,
+				F42F794B2427772F00A50A0A /* IMConversationManagerTests.swift */,
 			);
 			path = CoffchatTests;
 			sourceTree = "<group>";
@@ -355,6 +358,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F42F794C2427772F00A50A0A /* IMConversationManagerTests.swift in Sources */,
 				F48654142426694400D39970 /* IMLoginManagerTests.swift in Sources */,
 				F4BC8F3F241F243200ED38C9 /* IMClientTests.swift in Sources */,
 				F4BC8F3D241F22A700ED38C9 /* IMHeaderTests.swift in Sources */,

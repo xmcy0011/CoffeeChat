@@ -41,11 +41,13 @@ let DefaultIMClient = IMClient()
 class IMClient: NSObject, GCDAsyncSocketDelegate {
     fileprivate var tcpClient: GCDAsyncSocket?
     fileprivate var seq: UInt16 = 1 // 序号，发送一次后即递增，没加锁FIXME
+    fileprivate var checkTimer: Timer? // 超时检测定时器
     // fileprivate var recvBuffer:Data // TCP缓冲区，粘包处理
     
     // callback
     fileprivate var delegateDicStatus: [String: IMClientDelegateStatus] = [:] // tcp连接状态的回调
     fileprivate var delegateDicData: [String: IMClientDelegateData] = [:] // 业务数据的回调
+    fileprivate var requestDic: [UInt16: IMRequest] = [:] // 需要响应的请求列表
     
     // 是否已连接
     public var isConnected: Bool? { return tcpClient?.isConnected }
@@ -58,6 +60,9 @@ class IMClient: NSObject, GCDAsyncSocketDelegate {
         super.init()
         IMLog.debug(item: "CIMClient init")
         tcpClient = GCDAsyncSocket(delegate: self, delegateQueue: DispatchQueue.main)
+        
+        checkTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: _checkTimer)
+        checkTimer?.fire()
     }
     
     deinit {
@@ -130,6 +135,19 @@ class IMClient: NSObject, GCDAsyncSocketDelegate {
         return header
     }
     
+    /// 发送请求，包含协议头，如果一定时间没有收到响应，会触发超时回调
+    /// - Parameters:
+    ///   - cmdId: 命令ID，见CIM_Def_CIMCmdID
+    ///   - body: 数据
+    ///   - timeout: 超时回调，10s
+    func sendRequest(cmdId: CIM_Def_CIMCmdID, body: Data, timeout: IMResponseTimeoutCallback?) {
+        let header = send(cmdId: cmdId, body: body)
+        
+        // 加入到待响应字典中
+        let req = IMRequest(header: header, timeout: timeout)
+        requestDic[header.seqNumber] = req
+    }
+    
     /// 注册委托 - 连接状态
     /// - Parameters:
     ///   - key: 唯一标识
@@ -156,6 +174,25 @@ class IMClient: NSObject, GCDAsyncSocketDelegate {
     /// - Parameter key: 唯一标识
     func unregister(keyData: String) {
         delegateDicData.removeValue(forKey: keyData)
+    }
+    
+    func _checkTimer(t: Timer) {
+        let nowTimestamp = Int32(NSDate.now.timeIntervalSince1970)
+        let maxWaitTimeLen = 10 // 最大等待时间
+        
+        var it = requestDic.makeIterator()
+        var item = it.next()
+        while item != nil {
+            let req = (item?.value)!
+            item = it.next()
+            
+            if abs(nowTimestamp - req.createTimestamp) > maxWaitTimeLen {
+                IMLog.warn(item: "request timeout,seq=\(req.seq),cmdId=\(req.header.commandId) ")
+                // next已经改变，放心移除
+                requestDic.removeValue(forKey: req.seq)
+                req.timeoutCallback?()
+            }
+        }
     }
 }
 

@@ -123,7 +123,7 @@ extension IMManager {
     /// 初始化消息驱动表
     internal func initHandleMap() {
         // 认证
-        handleMap[UInt16(CIM_Def_CIMCmdID.kCimCidLoginAuthTokenRsp.rawValue)] = _handleAuthRsp
+        //handleMap[UInt16(CIM_Def_CIMCmdID.kCimCidLoginAuthTokenRsp.rawValue)] = _handleAuthRsp
         // 会话列表
         handleMap[UInt16(CIM_Def_CIMCmdID.kCimCidListRecentContactSessionRsp.rawValue)] = _handleRecentSessionList
         // 历史消息
@@ -140,8 +140,8 @@ extension IMManager {
     // 消息处理
     internal func _onHandle(header: IMHeader, data: Data) {
         switch Int(header.commandId) {
-        case CIM_Def_CIMCmdID.kCimCidLoginAuthTokenRsp.rawValue:
-            _handleAuthRsp(header: header, data: data)
+//        case CIM_Def_CIMCmdID.kCimCidLoginAuthTokenRsp.rawValue:
+//            _handleAuthRsp(header: header, data: data)
         case CIM_Def_CIMCmdID.kCimCidListRecentContactSessionRsp.rawValue:
             _handleRecentSessionList(header: header, data: data)
         case CIM_Def_CIMCmdID.kCimCidListMsgRsp.rawValue:
@@ -154,23 +154,6 @@ extension IMManager {
             _handleMsgReadNotify(header: header, data: data)
         default:
             IMLog.warn(item: "unknown msg,cmdId=\(header.commandId)")
-        }
-    }
-    
-    // 认证
-    internal func _handleAuthRsp(header: IMHeader, data: Data) {
-        // 查找响应对应的请求并回调结果
-        let item = requestDic.removeValue(forKey: header.seqNumber)
-        if item == nil {
-            IMLog.warn(item: "WARRN:unknown msg,cmdId=\(header.commandId),seq=\(header.seqNumber)")
-        } else {
-            IMLog.debug(item: "DEBUG:find callback,cmdId=\(header.commandId),seq=\(header.seqNumber)")
-            
-            // IMRequest.IMResponseCallback?
-            // 回调结果
-            if item?.callback != nil {
-                item?.callback!(header, data)
-            }
         }
     }
     

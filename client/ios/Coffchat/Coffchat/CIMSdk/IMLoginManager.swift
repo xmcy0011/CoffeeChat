@@ -48,10 +48,6 @@ protocol IMLoginManagerDelegate {
 }
 
 class IMLoginManager: IMClientDelegateStatus,IMClientDelegateData {
-    fileprivate var userId: UInt64?
-    fileprivate var userToken: String?
-    fileprivate var userNick: String?
-    
     fileprivate var client: IMClient
     fileprivate var timer: Timer? // 自动登录，心跳超时检测定时器
     fileprivate var lastHeartBeat: Int32 = 0 // 上一次收到服务器心跳的时间戳
@@ -62,6 +58,10 @@ class IMLoginManager: IMClientDelegateStatus,IMClientDelegateData {
     public var loginStep: IMLoginStep = IMLoginStep.Default // 当前连接状态
     public var isLogin: Bool = false // 是否已登陆
     public var loginTime: Int32 = 0 // 登录时间戳
+    
+    public var userId: UInt64?
+    public var userToken: String?
+    public var userNick: String?
     
     fileprivate var delegates: [String: IMLoginManagerDelegate] = [:] // 委托字典
     fileprivate var authCallback: IMResultCallback<CIM_Login_CIMAuthTokenRsp>? // 认证结果回调
