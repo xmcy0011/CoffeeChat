@@ -18,6 +18,7 @@ class IMLoginManagerTests: XCTestCase, IMLoginManagerDelegate {
     func testAuth() {
         let ex = expectation(description: "")
         let manager = IMManager.singleton.loginManager
+        _ = manager.register(key: "IMLoginManagerTests", delegate: self)
         _ = manager.login(userId: 1008, nick: "赵丽", userToken: "12345", serverIp: "192.168.31.174", port: 8000) { rsp in
             XCTAssert(rsp.resultCode == CIM_Def_CIMErrorCode.kCimErrSuccsse)
 

@@ -158,9 +158,7 @@ extension IMLoginManager {
         
         if !isLogin, userId != nil, userNick != nil, userToken != nil {
             // 更新登录进度
-            for item in delegates {
-                item.value.onLogin(step: .Logining)
-            }
+            _onUpdateLoginStep(step: .Logining)
             
             // 登录请求
             var req = CIM_Login_CIMAuthTokenReq()
@@ -171,8 +169,6 @@ extension IMLoginManager {
             req.clientVersion = kClientVersion
             
             let body = try! req.serializedData()
-            
-            _onUpdateLoginStep(step: .Logining)
             // sned to server
             _ = client.send(cmdId: CIM_Def_CIMCmdID.kCimCidLoginAuthTokenReq, body: body)
         }
