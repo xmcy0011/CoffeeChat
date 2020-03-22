@@ -83,6 +83,10 @@ class IMLoginManager: IMClientDelegateStatus,IMClientDelegateData {
     func login(userId: UInt64, nick: String, userToken: String, serverIp: String, port: UInt16, callback: IMResultCallback<CIM_Login_CIMAuthTokenRsp>?) -> Bool {
         IMLog.info(item: "auth userId=\(userId),nick=\(nick),userToken=\(userToken),serverIp=\(serverIp),port=\(port)")
         client.disconnect()
+        if timer != nil {
+            timer!.invalidate() // 销毁timer
+            timer = nil
+        }
         
         lastAuthTime = Int32(NSDate().timeIntervalSince1970) // 记住认证时间戳
         loginStep = IMLoginStep.Linking

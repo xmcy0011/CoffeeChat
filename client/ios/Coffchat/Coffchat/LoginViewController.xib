@@ -9,6 +9,10 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LoginViewController" customModule="Coffchat" customModuleProvider="target">
             <connections>
+                <outlet property="id" destination="TsH-tr-zb7" id="R9J-Eh-d7D"/>
+                <outlet property="nick" destination="mnO-F4-jAL" id="gms-s9-VJi"/>
+                <outlet property="server" destination="Sdp-rg-Lxg" id="d7q-km-DI9"/>
+                <outlet property="token" destination="vvo-d6-K15" id="mUV-Vw-5Wp"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>

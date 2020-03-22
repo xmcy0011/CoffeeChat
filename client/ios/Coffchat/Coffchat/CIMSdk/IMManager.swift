@@ -90,33 +90,6 @@ class IMManager {
 //        clientSocket.readData(withTimeout: -1, tag: 0)
 }
 
-// MARK: IMManagerProtocol
-
-extension IMManager {
-    /*
-     /// 发送一个具有响应的请求
-     /// - Parameters:
-     ///   - cmdId: 命令ID，见CIM_Def_CIMCmdID
-     ///   - body: 数据部
-     ///   - callback: 响应结果回调
-     func send(cmdId: CIM_Def_CIMCmdID, body: Data, callback: IMResponseCallback?) {
-         // 发送
-         let header = client!.send(cmdId: cmdId, body: body)
-     
-         // 把请求加入到待响应列表中，以seq序号为key
-         let req = IMRequest(header: header, callback: callback)
-         requestDic[req.seq] = req
-     }
-     
-     /// 发送不需要响应的消息
-     /// - Parameters:
-     ///   - cmdId: 命令ID，见CIM_Def_CIMCmdID
-     ///   - body: 数据部
-     func sendNotify(cmdId: CIM_Def_CIMCmdID, body: Data) {
-         _ = client!.send(cmdId: cmdId, body: body)
-     }*/
-}
-
 // MARK: HandleMap
 
 extension IMManager {
