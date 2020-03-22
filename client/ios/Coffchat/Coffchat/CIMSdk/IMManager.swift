@@ -40,7 +40,7 @@ let singletonIMManager = IMManager()
 
 // IM连接
 // 负责与服务端通信
-class IMManager: IMClientDelegate {
+class IMManager {
     fileprivate var _loginManager: IMLoginManager
     fileprivate var _conversationManager: IMConversationManager
     
@@ -69,7 +69,6 @@ class IMManager: IMClientDelegate {
         
         _loginManager = IMLoginManager()
         _conversationManager = IMConversationManager()
-        DefaultIMClient.register(key: "IMManager", delegate: self)
     }
     
     // 2、主界面UI显示数据
@@ -89,26 +88,6 @@ class IMManager: IMClientDelegate {
     
     // 4、每次读完数据后，都要调用一次监听数据的方法
 //        clientSocket.readData(withTimeout: -1, tag: 0)
-}
-
-// MARK: IMClientDelegate
-
-extension IMManager {
-    /// connected
-    /// - Parameters:
-    ///   - host: IP
-    ///   - port: 端口
-    func onConnected(_ host: String, port: UInt16) {}
-    
-    /// 收到数据
-    /// - Parameters:
-    ///   - header: 协议头
-    ///   - data: 数据体（裸数据）
-    func onHandleData(_ header: IMHeader, _ data: Data) {}
-    
-    /// disconnected
-    /// - Parameter err: 错误
-    func onDisconnect(_ err: Error?) {}
 }
 
 // MARK: IMManagerProtocol

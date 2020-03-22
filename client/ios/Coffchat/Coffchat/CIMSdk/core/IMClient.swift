@@ -12,21 +12,25 @@ import Foundation
 // IM结果回调
 typealias IMResultCallback<T> = (_ res: T) -> Void
 
-// IMClient协议回调
-protocol IMClientDelegate {
+// IMClient协议回调 - 连接状态
+protocol IMClientDelegateStatus {
     /// connected
     /// - Parameters:
     ///   - host: IP
     ///   - port: 端口
     func onConnected(_ host: String, port: UInt16)
+    /// disconnected
+    /// - Parameter err: 错误
+    func onDisconnect(_ err: Error?)
+}
+
+// IMClient协议回调 - 数据
+protocol IMClientDelegateData {
     /// 收到数据
     /// - Parameters:
     ///   - header: 协议头
     ///   - data: 数据体（裸数据）
     func onHandleData(_ header: IMHeader, _ data: Data)
-    /// disconnected
-    /// - Parameter err: 错误
-    func onDisconnect(_ err: Error?)
 }
 
 let kClientVersion = "0.0.1"
@@ -40,7 +44,8 @@ class IMClient: NSObject, GCDAsyncSocketDelegate {
     // fileprivate var recvBuffer:Data // TCP缓冲区，粘包处理
     
     // callback
-    fileprivate var delegateDic: [String: IMClientDelegate] // 收到服务器的消息回调给上层，处理业务
+    fileprivate var delegateDicStatus: [String: IMClientDelegateStatus] = [:] // tcp连接状态的回调
+    fileprivate var delegateDicData: [String: IMClientDelegateData] = [:] // 业务数据的回调
     
     // 是否已连接
     public var isConnected: Bool? { return tcpClient?.isConnected }
@@ -48,7 +53,6 @@ class IMClient: NSObject, GCDAsyncSocketDelegate {
     public var port: UInt16 = 8000
     
     override init() {
-        delegateDic = [:]
         // recvBuffer = Data()
         
         super.init()
@@ -126,18 +130,32 @@ class IMClient: NSObject, GCDAsyncSocketDelegate {
         return header
     }
     
-    /// 注册委托
+    /// 注册委托 - 连接状态
     /// - Parameters:
     ///   - key: 唯一标识
     ///   - delegate: 委托对象
-    func register(key: String, delegate: IMClientDelegate) {
-        delegateDic[key] = delegate
+    func register(key: String, delegateStatus: IMClientDelegateStatus) {
+        delegateDicStatus[key] = delegateStatus
     }
     
-    /// 取消委托
+    /// 注册委托 - 业务数据
+    /// - Parameters:
+    ///   - key: 唯一标识
+    ///   - delegate: 委托对象
+    func register(key: String, delegateData: IMClientDelegateData) {
+        delegateDicData[key] = delegateData
+    }
+    
+    /// 取消委托  - 连接状态
     /// - Parameter key: 唯一标识
-    func unregister(key: String) {
-        delegateDic.removeValue(forKey: key)
+    func unregister(keyStatus: String) {
+        delegateDicStatus.removeValue(forKey: keyStatus)
+    }
+    
+    /// 取消委托 - 业务数据
+    /// - Parameter key: 唯一标识
+    func unregister(keyData: String) {
+        delegateDicData.removeValue(forKey: keyData)
     }
 }
 
@@ -149,7 +167,7 @@ extension IMClient {
         IMLog.debug(item: "IMClient successful connected to \(host):\(port)")
         
         // 回调 FIXME 非线程安全
-        for item in delegateDic {
+        for item in delegateDicStatus {
             item.value.onConnected(host, port: port)
         }
         
@@ -176,7 +194,7 @@ extension IMClient {
                 let bodyData = data[Int(kHeaderLen)..<data.count] // 去掉头部，只放裸数据
                 
                 // 回调 FIXME 非线程安全
-                for item in delegateDic {
+                for item in delegateDicData {
                     item.value.onHandleData(header, bodyData)
                 }
             }
@@ -190,7 +208,7 @@ extension IMClient {
     func socketDidDisconnect(_ sock: GCDAsyncSocket, withError err: Error?) {
         IMLog.debug(item: "socket disconnected,error:\(String(describing: err))")
         // 回调 FIXME 非线程安全
-        for item in delegateDic {
+        for item in delegateDicStatus {
             item.value.onDisconnect(err)
         }
     }

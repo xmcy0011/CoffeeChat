@@ -10,7 +10,7 @@ import XCTest
 
 @testable import Coffchat
 
-class IMClientTests: XCTestCase,IMClientDelegate{
+class IMClientTests: XCTestCase,IMClientDelegateStatus{
     var testConnectEx:XCTestExpectation?
     var client:IMClient?
     // 执行其他测试之前需要先连接服务器
@@ -24,7 +24,7 @@ class IMClientTests: XCTestCase,IMClientDelegate{
     func testConnect() {
         testConnectEx = expectation(description: "")
         client = IMClient()
-        client?.register(key: "IMClientTests", delegate: self)
+        client?.register(key: "IMClientTests", delegateStatus: self)
         _ = client?.connect(ip: "192.168.31.174", port: 8000)
 
         // 异步方法的单元测试写法
@@ -38,10 +38,6 @@ extension IMClientTests{
     func onConnected(_ host: String, port: UInt16) {
         IMLog.debug(item: "recv onConnected")
         testConnectEx?.fulfill()
-    }
-    
-    func onHandleData(_ header: IMHeader, _ data: Data) {
-        
     }
     
     func onDisconnect(_ err: Error?) {

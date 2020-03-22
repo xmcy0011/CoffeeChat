@@ -47,7 +47,7 @@ protocol IMLoginManagerDelegate {
     func onAutoLoginFailed(code: Error)
 }
 
-class IMLoginManager: IMClientDelegate {
+class IMLoginManager: IMClientDelegateStatus,IMClientDelegateData {
     fileprivate var userId: UInt64?
     fileprivate var userToken: String?
     fileprivate var userNick: String?
@@ -68,7 +68,8 @@ class IMLoginManager: IMClientDelegate {
     
     init() {
         client = DefaultIMClient
-        client.register(key: "IMLoginManager", delegate: self)
+        client.register(key: "IMLoginManager", delegateStatus: self)
+        client.register(key: "IMLoginManager", delegateData: self)
     }
     
     /// 登录
@@ -132,7 +133,7 @@ class IMLoginManager: IMClientDelegate {
     }
 }
 
-// MARK: IMClientDelegate
+// MARK: IMClientDelegateStatus
 
 extension IMLoginManager {
     // 更新当前登录进度
@@ -173,7 +174,11 @@ extension IMLoginManager {
             _ = client.send(cmdId: CIM_Def_CIMCmdID.kCimCidLoginAuthTokenReq, body: body)
         }
     }
-    
+}
+
+// MARK: IMClientDelegateData
+
+extension IMLoginManager{
     func onHandleData(_ header: IMHeader, _ data: Data) {
         if header.commandId == CIM_Def_CIMCmdID.kCimCidLoginHeartbeat.rawValue {
             IMLog.debug(item: "recv hearbeat")

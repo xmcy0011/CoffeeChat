@@ -16,7 +16,9 @@ protocol IMConversationManagerDelegate {
 }
 
 /// 会话管理
-class IMConversationManager: IMConversationManagerDelegate {
+class IMConversationManager: IMConversationManagerDelegate, IMClientDelegateData {
+    fileprivate var client:IMClient
+    
     fileprivate var delegateDic: [String: IMConversationManagerDelegate]
 
     /// 总的未读消息计数
@@ -27,6 +29,9 @@ class IMConversationManager: IMConversationManagerDelegate {
     init() {
         delegateDic = [:]
         totalUnreadCount = 0
+        
+        client = DefaultIMClient
+        client.register(key: "IMConversationManager", delegateData:  self)
     }
 
     func getAllRecentSessions() {
@@ -50,6 +55,15 @@ class IMConversationManager: IMConversationManagerDelegate {
     }
 }
 
+// MARK: IMClientDelegateData
+
+extension IMConversationManager{
+    func onHandleData(_ header: IMHeader, _ data: Data) {
+        
+    }
+}
+
 // MARK: IMConversationManagerDelegate
 
 extension IMConversationManager {}
+
