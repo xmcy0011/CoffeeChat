@@ -38,14 +38,8 @@ protocol IMManagerProtocol {
 
 // IM连接
 // 负责与服务端通信
-class IMManager: NSObject, GCDAsyncSocketDelegate {
-    fileprivate var tcpClient: GCDAsyncSocket?
-    fileprivate var ip: String = "10.0.106.117"
-    fileprivate var port: UInt16 = 8000
-    fileprivate var seq: UInt16 = 1 // 序号，发送一次后即递增，没加锁FIXME
-    // fileprivate var recvBuffer:Data // TCP缓冲区，粘包处理
-    fileprivate var lastHeartBeat: Int32 = 0 // 上一次收到服务器心跳的时间戳
-    
+class IMManager: IMClientDelegate, IMManagerProtocol {
+    fileprivate var client: IMClient?
     // dic
     fileprivate var requestDic: [UInt16: IMRequest]
     fileprivate var handleMap: [UInt16: IMHandleFunc]
@@ -54,62 +48,20 @@ class IMManager: NSObject, GCDAsyncSocketDelegate {
     fileprivate var connectCallback: IMResultCallback<Bool>?
     
     // 是否已连接
-    var isConnected: Bool? { return tcpClient?.isConnected }
+    var isConnected: Bool? { return client?.isConnected }
+    // 是否已认证成功
+    var isLogin: Bool? { return client?.isLogin }
     
     /// 单实例
     public class var singleton: IMManager {
         return singletonIMManager
     }
     
-    override init() {
-        requestDic = [:]
+    init() {
         handleMap = [:]
-        // recvBuffer = Data()
+        requestDic = [:]
         
-        super.init()
-        print("CIMManager init")
-        tcpClient = GCDAsyncSocket(delegate: self, delegateQueue: DispatchQueue.main)
-        initHandleMap()
-    }
-    
-    deinit {
-        tcpClient?.delegate = nil
-        tcpClient?.delegateQueue = nil
-    }
-    
-    /// 连接服务器
-    /// - Parameters:
-    ///   - ip: 服务器地址
-    ///   - port: 服务器端口
-    ///   - callback: 连接结果回调
-    internal func connect(ip: String, port: UInt16, callback: IMResultCallback<Bool>?) -> Bool {
-        self.ip = ip
-        self.port = port
-        connectCallback = callback
-        
-        if tcpClient!.isConnected {
-            tcpClient?.disconnect()
-        }
-        
-        print("CIMManager connect to \(ip):\(port)")
-        do {
-            try tcpClient?.connect(toHost: ip, onPort: port)
-            return true
-        } catch {
-            print("connect error:\(error)")
-        }
-        return false
-    }
-    
-    /// 断开连接
-    internal func disconnect() {
-        tcpClient?.disconnect()
-    }
-    
-    /// send raw data to server
-    /// - Parameter data: raw data
-    func send(data: Data) {
-        tcpClient?.write(data, withTimeout: -1, tag: 0)
+        client = IMClient(delegate: self)
     }
     
     // 2、主界面UI显示数据
@@ -131,48 +83,60 @@ class IMManager: NSObject, GCDAsyncSocketDelegate {
 //        clientSocket.readData(withTimeout: -1, tag: 0)
 }
 
-// MARK: GCDAsyncSocketDelegate
+// MARK: IMClientDelegate
 
 extension IMManager {
     // connect
-    func socket(_ sock: GCDAsyncSocket, didConnectToHost host: String, port: UInt16) {
-        print("successful connected to \(host):\(port)")
-        if connectCallback != nil {
-            connectCallback!(true)
-        }
-        
-        // 监听数据
-        tcpClient?.readData(withTimeout: -1, tag: 0)
+    func onConnected(_ host: String, port: UInt16) {
+        IMLog.debug(item: "successful connected to \(host):\(port)")
     }
     
     // receive data
-    func socket(_ sock: GCDAsyncSocket, didRead data: Data, withTag tag: Int) {
-        print("socket receive data,len=\(data.count)")
-        
-        // 是否足够长，数据包完整
-        if !IMHeader.isAvailable(data: data) {
-            print("bad data!")
-        } else {
-            // 解析协议头
-            let header = IMHeader()
-            if !header.readHeader(data: data) {
-                print("readHeader error!")
-            } else {
-                print("parse IMHeader success,cmd=\(header.commandId),seq=\(header.seqNumber)")
-                
-                // 处理消息
-                let bodyData = data[Int(kHeaderLen)..<data.count] // 去掉头部，只放裸数据
-                _onHandle(header: header, data: bodyData)
-            }
-        }
-        
-        // 监听数据
-        tcpClient?.readData(withTimeout: -1, tag: 0)
+    func onHandleData(_ header: IMHeader, _ data: Data?) {
+        IMLog.debug(item: "onHandleData ,cmdId=\(header.commandId),len=\(String(describing: data?.count))")
     }
     
     // disconnect
-    func socketDidDisconnect(_ sock: GCDAsyncSocket, withError err: Error?) {
-        print("socket disconnected,error:\(String(describing: err))")
+    func onDisconnect(_ err: Error?) {
+        IMLog.debug(item: "socket disconnected,error:\(String(describing: err))")
+    }
+}
+
+// MARK: IMManagerProtocol
+
+extension IMManager {
+    /// 登录
+    /// - Parameters:
+    ///   - userId: 用户ID
+    ///   - nick: 昵称
+    ///   - userToken: 认证口令
+    ///   - serverIp: 服务器IP
+    ///   - port: 服务器端口
+    ///   - callback: 登录结果回调
+    func auth(userId: UInt64, nick: String, userToken: String, serverIp: String, port: UInt16, callback: IMResultCallback<CIM_Login_CIMAuthTokenRsp>?) -> Bool {
+        return client!.auth(userId: userId, nick: nick, userToken: userToken, serverIp: serverIp, port: port, callback: callback)
+    }
+    
+    /// 发送一个具有响应的请求
+    /// - Parameters:
+    ///   - cmdId: 命令ID，见CIM_Def_CIMCmdID
+    ///   - body: 数据部
+    ///   - callback: 响应结果回调
+    func send(cmdId: CIM_Def_CIMCmdID, body: Data, callback: IMResponseCallback?) {
+        // 发送
+        let header = client!.send(cmdId: cmdId, body: body)
+        
+        // 把请求加入到待响应列表中，以seq序号为key
+        let req = IMRequest(header: header, callback: callback)
+        requestDic[req.seq] = req
+    }
+    
+    /// 发送不需要响应的消息
+    /// - Parameters:
+    ///   - cmdId: 命令ID，见CIM_Def_CIMCmdID
+    ///   - body: 数据部
+    func sendNotify(cmdId: CIM_Def_CIMCmdID, body: Data) {
+        _ = client!.send(cmdId: cmdId, body: body)
     }
 }
 
@@ -197,16 +161,8 @@ extension IMManager {
     }
     
     // 消息处理
-    internal func _onHandle(header: IMHeader, data: Data){
-        // 心跳包，直接回复
-        if header.commandId == CIM_Def_CIMCmdID.kCimCidLoginHeartbeat.rawValue {
-            lastHeartBeat = Int32(NSDate().timeIntervalSince1970)
-            print("receive headerbeat,lastHeartBeat=\(lastHeartBeat)")
-            //sendNotify(cmdId: CIM_Def_CIMCmdID.kCimCidLoginHeartbeat, body: try! CIM_Login_CIMHeartBeat().serializedData())
-            return
-        }
-        
-        switch Int(header.commandId)  {
+    internal func _onHandle(header: IMHeader, data: Data) {
+        switch Int(header.commandId) {
         case CIM_Def_CIMCmdID.kCimCidLoginAuthTokenRsp.rawValue:
             _handleAuthRsp(header: header, data: data)
         case CIM_Def_CIMCmdID.kCimCidListRecentContactSessionRsp.rawValue:
@@ -220,7 +176,7 @@ extension IMManager {
         case CIM_Def_CIMCmdID.kCimCidMsgReadNotify.rawValue:
             _handleMsgReadNotify(header: header, data: data)
         default:
-            print("unknown msg,cmdId=\(header.commandId)")
+            IMLog.warn(item: "unknown msg,cmdId=\(header.commandId)")
         }
     }
     
@@ -229,9 +185,9 @@ extension IMManager {
         // 查找响应对应的请求并回调结果
         let item = requestDic.removeValue(forKey: header.seqNumber)
         if item == nil {
-            print("WARRN:unknown msg,cmdId=\(header.commandId),seq=\(header.seqNumber)")
+            IMLog.warn(item: "WARRN:unknown msg,cmdId=\(header.commandId),seq=\(header.seqNumber)")
         } else {
-            print("DEBUG:find callback,cmdId=\(header.commandId),seq=\(header.seqNumber)")
+            IMLog.debug(item: "DEBUG:find callback,cmdId=\(header.commandId),seq=\(header.seqNumber)")
             
             // IMRequest.IMResponseCallback?
             // 回调结果
@@ -247,10 +203,10 @@ extension IMManager {
         do {
             rsp = try CIM_List_CIMRecentContactSessionRsp(serializedData: data)
         } catch {
-            print("parse _handleRecentSessionList error")
+            IMLog.error(item: "parse _handleRecentSessionList error")
         }
         if rsp != nil {
-            print("_handleRecentSessionList unreadCount=\(rsp!.unreadCounts),count=\(rsp!.contactSessionList.count)")
+            IMLog.info(item: "_handleRecentSessionList unreadCount=\(rsp!.unreadCounts),count=\(rsp!.contactSessionList.count)")
         }
     }
     
@@ -260,10 +216,10 @@ extension IMManager {
         do {
             rsp = try CIM_List_CIMGetMsgListRsp(serializedData: data)
         } catch {
-            print("parse _handleGetMsgList error")
+            IMLog.error(item: "parse _handleGetMsgList error")
         }
         if rsp != nil {
-            print("_handleGetMsgList count=\(rsp!.msgList.count)")
+            IMLog.info(item: "_handleGetMsgList count=\(rsp!.msgList.count)")
         }
     }
     
@@ -273,7 +229,7 @@ extension IMManager {
         do {
             msg = try CIM_Message_CIMMsgData(serializedData: data)
         } catch {
-            print("parse _handleMsgData error")
+            IMLog.error(item: "parse _handleMsgData error")
         }
         if msg != nil {
             print("_handleMsgData fromId=\(msg!.fromUserID),msgType=\(msg!.msgType),sessionType=\(msg!.sessionType),clientMsgId=\(msg!.msgID)")
@@ -286,10 +242,10 @@ extension IMManager {
         do {
             ack = try CIM_Message_CIMMsgDataAck(serializedData: data)
         } catch {
-            print("parse _handleMsgDataAck error")
+            IMLog.error(item: "parse _handleMsgDataAck error")
         }
         if ack != nil {
-            print("_handleMsgDataAck toId=\(ack!.toSessionID),resCode=\(ack!.resCode),clientMsgId=\(ack!.msgID),serverMsgId=\(ack!.serverMsgID)")
+            IMLog.info(item: "_handleMsgDataAck toId=\(ack!.toSessionID),resCode=\(ack!.resCode),clientMsgId=\(ack!.msgID),serverMsgId=\(ack!.serverMsgID)")
         }
     }
     
@@ -299,10 +255,10 @@ extension IMManager {
         do {
             notify = try CIM_Message_CIMMsgDataReadNotify(serializedData: data)
         } catch {
-            print("parse _handleMsgReadNotify error")
+            IMLog.error(item: "parse _handleMsgReadNotify error")
         }
         if notify != nil {
-            print("_handleMsgReadNotify userId=\(notify!.userID),sessionId=\(notify!.sessionID),serverMsgId=\(notify!.msgID),sessionType=\(notify!.sessionType)")
+            IMLog.info(item: "_handleMsgReadNotify userId=\(notify!.userID),sessionId=\(notify!.sessionID),serverMsgId=\(notify!.msgID),sessionType=\(notify!.sessionType)")
         }
     }
 }
