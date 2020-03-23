@@ -51,6 +51,7 @@ class IMLoginManager: IMClientDelegateStatus, IMClientDelegateData {
     fileprivate var client: IMClient
     fileprivate var timer: Timer? // 自动登录，心跳超时检测定时器
     fileprivate var lastHeartBeat: Int32 = 0 // 上一次收到服务器心跳的时间戳
+    fileprivate var haveLogin: Bool = false // 是否用户主动登录过，用以区分是否启动重连机制
     
     fileprivate var lastAuthTime: Int32 = 0 // 上一次认证时间
     fileprivate var lastAuthTimeInterval: Int32 = 1 // 重连间隔，避免对服务端造成dos攻击
@@ -91,6 +92,7 @@ class IMLoginManager: IMClientDelegateStatus, IMClientDelegateData {
             }
         }
         
+        haveLogin = true
         lastAuthTime = Int32(NSDate().timeIntervalSince1970) // 记住认证时间戳
         loginStep = IMLoginStep.Linking
         
@@ -152,11 +154,11 @@ extension IMLoginManager {
     
     func onDisconnect(_ err: Error?) {
         // 只通知1次
-        if isLogin {
-            _onUpdateLoginStep(step: .LoseConnection)
-        } else {
-            loginStep = .LoseConnection
-        }
+        // if isLogin || loginStep == .Linking {
+        _onUpdateLoginStep(step: .LoseConnection)
+        // } else {
+        //    loginStep = .LoseConnection
+        // }
         isLogin = false
     }
     
@@ -203,6 +205,7 @@ extension IMLoginManager {
             
             // 登录成功
             if res.resultCode == CIM_Def_CIMErrorCode.kCimErrSuccsse {
+                isLogin = true
                 loginTime = Int32(NSDate().timeIntervalSince1970)
                 
                 // 更新登录进度

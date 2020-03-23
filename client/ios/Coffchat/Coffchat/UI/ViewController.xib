@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ViewController" customModule="Coffchat" customModuleProvider="target">
+            <connections>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" id="Qox-WI-JPI">
+                    <rect key="frame" x="0" y="0" width="414" height="896"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="lanuch" translatesAutoresizingMaskIntoConstraints="NO" id="jA1-lK-hO8">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        </imageView>
+                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="f8G-yW-VNV">
+                            <rect key="frame" x="0.0" y="861" width="414" height="30"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XW2-nA-Tuv">
+                                    <rect key="frame" x="0.0" y="0.0" width="202" height="30"/>
+                                    <state key="normal" title="登 录"/>
+                                    <connections>
+                                        <action selector="loginPress:" destination="-1" eventType="touchDown" id="iKb-dd-fMB"/>
+                                    </connections>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uTm-zU-gYd">
+                                    <rect key="frame" x="212" y="0.0" width="202" height="30"/>
+                                    <state key="normal" title="注 册"/>
+                                </button>
+                            </subviews>
+                            <rect key="contentStretch" x="0.0" y="0.0" width="0.0" height="0.0"/>
+                        </stackView>
+                    </subviews>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                    <constraints>
+                        <constraint firstItem="jA1-lK-hO8" firstAttribute="leading" secondItem="Qox-WI-JPI" secondAttribute="leading" id="7AN-v4-S3D"/>
+                        <constraint firstItem="jA1-lK-hO8" firstAttribute="top" secondItem="Qox-WI-JPI" secondAttribute="top" id="8lm-1H-gUw"/>
+                        <constraint firstItem="jzM-dG-O3V" firstAttribute="bottom" secondItem="f8G-yW-VNV" secondAttribute="bottom" constant="5" id="C2S-7u-Ul0"/>
+                        <constraint firstItem="jzM-dG-O3V" firstAttribute="trailing" secondItem="f8G-yW-VNV" secondAttribute="trailing" id="Ggc-xx-h4B"/>
+                        <constraint firstItem="jA1-lK-hO8" firstAttribute="centerX" secondItem="Qox-WI-JPI" secondAttribute="centerX" id="IRT-JI-4RK"/>
+                        <constraint firstItem="f8G-yW-VNV" firstAttribute="leading" secondItem="jzM-dG-O3V" secondAttribute="leading" id="Nzo-3D-jzC"/>
+                        <constraint firstItem="jA1-lK-hO8" firstAttribute="centerY" secondItem="Qox-WI-JPI" secondAttribute="centerY" id="XjS-mq-xbs"/>
+                        <constraint firstItem="f8G-yW-VNV" firstAttribute="centerX" secondItem="Qox-WI-JPI" secondAttribute="centerX" id="n8s-ZF-N9H"/>
+                    </constraints>
+                    <viewLayoutGuide key="safeArea" id="jzM-dG-O3V"/>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <point key="canvasLocation" x="137.68115942028987" y="150"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="lanuch" width="790" height="776"/>
+    </resources>
+</document>

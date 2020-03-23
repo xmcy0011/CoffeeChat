@@ -16,6 +16,11 @@
 		F417B02A2419D4F000E1AAC0 /* CIM.Voip.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = F417B0252419D4F000E1AAC0 /* CIM.Voip.pb.swift */; };
 		F41AE38B24174224009B0E0C /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41AE38924174224009B0E0C /* LoginViewController.swift */; };
 		F41AE38C24174224009B0E0C /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F41AE38A24174224009B0E0C /* LoginViewController.xib */; };
+		F41CB8A0242866E4007570BF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41CB89E242866E4007570BF /* ViewController.swift */; };
+		F41CB8A1242866E4007570BF /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F41CB89F242866E4007570BF /* ViewController.xib */; };
+		F41CB8A6242881DC007570BF /* MainTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41CB8A4242881DC007570BF /* MainTabViewController.swift */; };
+		F41CB8A7242881DC007570BF /* MainTabViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F41CB8A5242881DC007570BF /* MainTabViewController.xib */; };
+		F41CB8AA242882FE007570BF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F41CB8A8242882FE007570BF /* Main.storyboard */; };
 		F42F794524273B7300A50A0A /* IMLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42F794424273B7300A50A0A /* IMLog.swift */; };
 		F42F794A2427453800A50A0A /* IMLoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42F79492427453800A50A0A /* IMLoginManager.swift */; };
 		F42F794C2427772F00A50A0A /* IMConversationManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42F794B2427772F00A50A0A /* IMConversationManagerTests.swift */; };
@@ -28,11 +33,8 @@
 		F4BC8F3F241F243200ED38C9 /* IMClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BC8F3E241F243200ED38C9 /* IMClientTests.swift */; };
 		F4C05A10241391E000D1E293 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C05A0F241391E000D1E293 /* AppDelegate.swift */; };
 		F4C05A12241391E000D1E293 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C05A11241391E000D1E293 /* SceneDelegate.swift */; };
-		F4C05A14241391E000D1E293 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C05A13241391E000D1E293 /* ViewController.swift */; };
-		F4C05A17241391E000D1E293 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4C05A15241391E000D1E293 /* Main.storyboard */; };
 		F4C05A1A241391E000D1E293 /* Coffchat.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F4C05A18241391E000D1E293 /* Coffchat.xcdatamodeld */; };
 		F4C05A1C241391E100D1E293 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F4C05A1B241391E100D1E293 /* Assets.xcassets */; };
-		F4C05A1F241391E100D1E293 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4C05A1D241391E100D1E293 /* LaunchScreen.storyboard */; };
 		F4D3B7AD2417BED500524D9A /* IMClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D3B7AC2417BED500524D9A /* IMClient.swift */; };
 /* End PBXBuildFile section */
 
@@ -57,6 +59,11 @@
 		F417B0252419D4F000E1AAC0 /* CIM.Voip.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CIM.Voip.pb.swift; sourceTree = "<group>"; };
 		F41AE38924174224009B0E0C /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		F41AE38A24174224009B0E0C /* LoginViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoginViewController.xib; sourceTree = "<group>"; };
+		F41CB89E242866E4007570BF /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		F41CB89F242866E4007570BF /* ViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ViewController.xib; sourceTree = "<group>"; };
+		F41CB8A4242881DC007570BF /* MainTabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabViewController.swift; sourceTree = "<group>"; };
+		F41CB8A5242881DC007570BF /* MainTabViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainTabViewController.xib; sourceTree = "<group>"; };
+		F41CB8A9242882FE007570BF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		F42F794424273B7300A50A0A /* IMLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMLog.swift; sourceTree = "<group>"; };
 		F42F79492427453800A50A0A /* IMLoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMLoginManager.swift; sourceTree = "<group>"; };
 		F42F794B2427772F00A50A0A /* IMConversationManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMConversationManagerTests.swift; sourceTree = "<group>"; };
@@ -73,11 +80,8 @@
 		F4C05A0C241391E000D1E293 /* Coffchat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Coffchat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4C05A0F241391E000D1E293 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F4C05A11241391E000D1E293 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		F4C05A13241391E000D1E293 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		F4C05A16241391E000D1E293 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		F4C05A19241391E000D1E293 /* Coffchat.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Coffchat.xcdatamodel; sourceTree = "<group>"; };
 		F4C05A1B241391E100D1E293 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		F4C05A1E241391E100D1E293 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F4C05A20241391E100D1E293 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F4D3B7AC2417BED500524D9A /* IMClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -132,6 +136,28 @@
 			path = pb;
 			sourceTree = "<group>";
 		};
+		F41CB8A224288176007570BF /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				F41CB8A8242882FE007570BF /* Main.storyboard */,
+				F41CB89E242866E4007570BF /* ViewController.swift */,
+				F41CB89F242866E4007570BF /* ViewController.xib */,
+				F41CB8A32428817E007570BF /* Controller */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		F41CB8A32428817E007570BF /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				F41AE38924174224009B0E0C /* LoginViewController.swift */,
+				F41AE38A24174224009B0E0C /* LoginViewController.xib */,
+				F41CB8A4242881DC007570BF /* MainTabViewController.swift */,
+				F41CB8A5242881DC007570BF /* MainTabViewController.xib */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
 		F42F79482427450D00A50A0A /* core */ = {
 			isa = PBXGroup;
 			children = (
@@ -176,15 +202,11 @@
 		F4C05A0E241391E000D1E293 /* Coffchat */ = {
 			isa = PBXGroup;
 			children = (
+				F41CB8A224288176007570BF /* UI */,
 				F4D3B7AB2417BEAB00524D9A /* CIMSdk */,
 				F4C05A0F241391E000D1E293 /* AppDelegate.swift */,
 				F4C05A11241391E000D1E293 /* SceneDelegate.swift */,
-				F4C05A13241391E000D1E293 /* ViewController.swift */,
-				F41AE38924174224009B0E0C /* LoginViewController.swift */,
-				F41AE38A24174224009B0E0C /* LoginViewController.xib */,
-				F4C05A15241391E000D1E293 /* Main.storyboard */,
 				F4C05A1B241391E100D1E293 /* Assets.xcassets */,
-				F4C05A1D241391E100D1E293 /* LaunchScreen.storyboard */,
 				F4C05A20241391E100D1E293 /* Info.plist */,
 				F4C05A18241391E000D1E293 /* Coffchat.xcdatamodeld */,
 			);
@@ -303,9 +325,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				F41AE38C24174224009B0E0C /* LoginViewController.xib in Resources */,
-				F4C05A1F241391E100D1E293 /* LaunchScreen.storyboard in Resources */,
+				F41CB8AA242882FE007570BF /* Main.storyboard in Resources */,
+				F41CB8A7242881DC007570BF /* MainTabViewController.xib in Resources */,
 				F4C05A1C241391E100D1E293 /* Assets.xcassets in Resources */,
-				F4C05A17241391E000D1E293 /* Main.storyboard in Resources */,
+				F41CB8A1242866E4007570BF /* ViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -369,12 +392,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F41CB8A6242881DC007570BF /* MainTabViewController.swift in Sources */,
 				F4D3B7AD2417BED500524D9A /* IMClient.swift in Sources */,
 				F417B0292419D4F000E1AAC0 /* CIM.Def.pb.swift in Sources */,
 				F417B02A2419D4F000E1AAC0 /* CIM.Voip.pb.swift in Sources */,
 				F4840BE62424C2930005EF04 /* IMManager.swift in Sources */,
 				F417B0262419D4F000E1AAC0 /* CIM.Login.pb.swift in Sources */,
-				F4C05A14241391E000D1E293 /* ViewController.swift in Sources */,
 				F43CA151241FA2E90065373F /* IMRequest.swift in Sources */,
 				F4C05A10241391E000D1E293 /* AppDelegate.swift in Sources */,
 				F4C05A12241391E000D1E293 /* SceneDelegate.swift in Sources */,
@@ -382,6 +405,7 @@
 				F40A2CDE2419F0820090C230 /* IMHeader.swift in Sources */,
 				F48654182426721400D39970 /* IMRecentSession.swift in Sources */,
 				F4C05A1A241391E000D1E293 /* Coffchat.xcdatamodeld in Sources */,
+				F41CB8A0242866E4007570BF /* ViewController.swift in Sources */,
 				F486541624266E8600D39970 /* IMConversationManager.swift in Sources */,
 				F417B0272419D4F000E1AAC0 /* CIM.List.pb.swift in Sources */,
 				F42F794524273B7300A50A0A /* IMLog.swift in Sources */,
@@ -401,20 +425,12 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		F4C05A15241391E000D1E293 /* Main.storyboard */ = {
+		F41CB8A8242882FE007570BF /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				F4C05A16241391E000D1E293 /* Base */,
+				F41CB8A9242882FE007570BF /* Base */,
 			);
 			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		F4C05A1D241391E100D1E293 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				F4C05A1E241391E100D1E293 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

@@ -9,11 +9,7 @@
 import Alamofire
 import UIKit
 
-// 请定义请求参数
-struct Login: Encodable {
-    let userName: String
-    let pwd: String
-}
+typealias LoginResult = (_ code: Int, _ desc: String) -> Void
 
 class LoginViewController: UIViewController, IMLoginManagerDelegate {
     @IBOutlet var id: UITextField!
@@ -21,6 +17,8 @@ class LoginViewController: UIViewController, IMLoginManagerDelegate {
     @IBOutlet var nick: UITextField!
     @IBOutlet var server: UITextField!
     @IBOutlet var btnLogin: UIButton!
+
+    var loginResultCallback: LoginResult?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,7 +53,7 @@ class LoginViewController: UIViewController, IMLoginManagerDelegate {
             if userId == nil {
                 return
             }
-            _ = IMManager.singleton.loginManager.login(userId: userId!, nick: nick.text!, userToken: token.text!, serverIp: server.text!, port: 8000) { rsp in
+            let ret = IMManager.singleton.loginManager.login(userId: userId!, nick: nick.text!, userToken: token.text!, serverIp: server.text!, port: 8000) { rsp in
                 // 线程安全
                 DispatchQueue.main.async {
                     if rsp.resultCode != .kCimErrSuccsse {
@@ -63,16 +61,16 @@ class LoginViewController: UIViewController, IMLoginManagerDelegate {
                         let ok = UIAlertAction(title: "提醒", style: .cancel, handler: nil)
                         alert.addAction(ok)
                         self.present(alert, animated: true, completion: nil)
-                    } else {}
+                    } else {
+                        if self.loginResultCallback != nil {
+                            self.loginResultCallback!(rsp.resultCode.rawValue, rsp.resultString)
+                        }
+                        //self.navigationController?.popViewController(animated: true)
+                    }
                 }
             }
         }
         // _ = client.connect(ip: "10.0.106.117", port: 8000)
-    }
-
-    @IBAction func onCancelBtnClick(_ sender: Any) {
-        // client.close()
-        dismiss(animated: true, completion: nil)
     }
 
     func check() -> Bool {
@@ -108,6 +106,12 @@ class LoginViewController: UIViewController, IMLoginManagerDelegate {
                 self.btnLogin.setTitle("认证中...", for: .normal)
             case .LoginOK:
                 self.btnLogin.setTitle("登录成功", for: .normal)
+            case .LoseConnection:
+                let alert = UIAlertController(title: "提醒", message: "登录失败:服务器无响应", preferredStyle: .alert)
+                let ok = UIAlertAction(title: "提醒", style: .cancel, handler: nil)
+                alert.addAction(ok)
+                self.present(alert, animated: true, completion: nil)
+                self.btnLogin.setTitle("登录", for: .normal)
             default:
                 self.btnLogin.setTitle("登录", for: .normal)
             }
