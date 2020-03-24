@@ -47,8 +47,9 @@ class ViewController: UIViewController {
         // 如果登录成功，跳转到主页面
         if IMManager.singleton.loginManager.isLogin {
             let home = MainTabViewController()
-            self.navigationController?.popViewController(animated: true) // 移除登录界面
+            self.navigationController?.popViewController(animated: false) // 移除登录界面
             self.navigationController?.pushViewController(home, animated: true) // 主界面
+            //self.navigationController?.popToViewController(loginView, animated: false) // 移除其他界面，直到该界面为止
         }
     }
 }

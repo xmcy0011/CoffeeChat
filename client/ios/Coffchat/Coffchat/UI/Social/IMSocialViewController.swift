@@ -1,19 +1,18 @@
 //
-//  MainTabViewController.swift
+//  IMSocialViewController.swift
 //  Coffchat
 //
-//  Created by xuyingchun on 2020/3/23.
+//  Created by xuyingchun on 2020/3/24.
 //  Copyright © 2020 Xuyingchun Inc. All rights reserved.
 //
 
 import UIKit
 
-class MainTabViewController: UIViewController {
+class IMSocialViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.navigationController?.hidesBarsOnTap = true
         // Do any additional setup after loading the view.
     }
 

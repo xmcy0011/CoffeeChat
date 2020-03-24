@@ -35,6 +35,15 @@
 		F4C05A12241391E000D1E293 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C05A11241391E000D1E293 /* SceneDelegate.swift */; };
 		F4C05A1A241391E000D1E293 /* Coffchat.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F4C05A18241391E000D1E293 /* Coffchat.xcdatamodeld */; };
 		F4C05A1C241391E100D1E293 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F4C05A1B241391E100D1E293 /* Assets.xcassets */; };
+		F4C510A72429A9E1000BCDEA /* IMMessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C510A52429A9E1000BCDEA /* IMMessageViewController.swift */; };
+		F4C510A82429A9E1000BCDEA /* IMMessageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4C510A62429A9E1000BCDEA /* IMMessageViewController.xib */; };
+		F4C510AB2429AA11000BCDEA /* IMFriendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C510A92429AA11000BCDEA /* IMFriendViewController.swift */; };
+		F4C510AC2429AA11000BCDEA /* IMFriendViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4C510AA2429AA11000BCDEA /* IMFriendViewController.xib */; };
+		F4C510AF2429AA20000BCDEA /* IMSocialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C510AD2429AA20000BCDEA /* IMSocialViewController.swift */; };
+		F4C510B02429AA20000BCDEA /* IMSocialViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4C510AE2429AA20000BCDEA /* IMSocialViewController.xib */; };
+		F4C510B32429AA2E000BCDEA /* IMMeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C510B12429AA2E000BCDEA /* IMMeViewController.swift */; };
+		F4C510B42429AA2E000BCDEA /* IMMeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4C510B22429AA2E000BCDEA /* IMMeViewController.xib */; };
+		F4C510B62429B245000BCDEA /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F4C510B52429B245000BCDEA /* Media.xcassets */; };
 		F4D3B7AD2417BED500524D9A /* IMClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D3B7AC2417BED500524D9A /* IMClient.swift */; };
 /* End PBXBuildFile section */
 
@@ -83,6 +92,15 @@
 		F4C05A19241391E000D1E293 /* Coffchat.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Coffchat.xcdatamodel; sourceTree = "<group>"; };
 		F4C05A1B241391E100D1E293 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F4C05A20241391E100D1E293 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F4C510A52429A9E1000BCDEA /* IMMessageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMMessageViewController.swift; sourceTree = "<group>"; };
+		F4C510A62429A9E1000BCDEA /* IMMessageViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IMMessageViewController.xib; sourceTree = "<group>"; };
+		F4C510A92429AA11000BCDEA /* IMFriendViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMFriendViewController.swift; sourceTree = "<group>"; };
+		F4C510AA2429AA11000BCDEA /* IMFriendViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IMFriendViewController.xib; sourceTree = "<group>"; };
+		F4C510AD2429AA20000BCDEA /* IMSocialViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSocialViewController.swift; sourceTree = "<group>"; };
+		F4C510AE2429AA20000BCDEA /* IMSocialViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IMSocialViewController.xib; sourceTree = "<group>"; };
+		F4C510B12429AA2E000BCDEA /* IMMeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMMeViewController.swift; sourceTree = "<group>"; };
+		F4C510B22429AA2E000BCDEA /* IMMeViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IMMeViewController.xib; sourceTree = "<group>"; };
+		F4C510B52429B245000BCDEA /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		F4D3B7AC2417BED500524D9A /* IMClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -139,23 +157,18 @@
 		F41CB8A224288176007570BF /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				F4C510A42429A93A000BCDEA /* Me */,
+				F4C510A32429A8D0000BCDEA /* Social */,
+				F4C510A22429A883000BCDEA /* Friend */,
+				F4C510A12429A37F000BCDEA /* Message */,
+				F4C510A02429A352000BCDEA /* Login */,
+				F41CB8A4242881DC007570BF /* MainTabViewController.swift */,
+				F41CB8A5242881DC007570BF /* MainTabViewController.xib */,
 				F41CB8A8242882FE007570BF /* Main.storyboard */,
 				F41CB89E242866E4007570BF /* ViewController.swift */,
 				F41CB89F242866E4007570BF /* ViewController.xib */,
-				F41CB8A32428817E007570BF /* Controller */,
 			);
 			path = UI;
-			sourceTree = "<group>";
-		};
-		F41CB8A32428817E007570BF /* Controller */ = {
-			isa = PBXGroup;
-			children = (
-				F41AE38924174224009B0E0C /* LoginViewController.swift */,
-				F41AE38A24174224009B0E0C /* LoginViewController.xib */,
-				F41CB8A4242881DC007570BF /* MainTabViewController.swift */,
-				F41CB8A5242881DC007570BF /* MainTabViewController.xib */,
-			);
-			path = Controller;
 			sourceTree = "<group>";
 		};
 		F42F79482427450D00A50A0A /* core */ = {
@@ -202,15 +215,61 @@
 		F4C05A0E241391E000D1E293 /* Coffchat */ = {
 			isa = PBXGroup;
 			children = (
-				F41CB8A224288176007570BF /* UI */,
-				F4D3B7AB2417BEAB00524D9A /* CIMSdk */,
+				F4C05A20241391E100D1E293 /* Info.plist */,
 				F4C05A0F241391E000D1E293 /* AppDelegate.swift */,
 				F4C05A11241391E000D1E293 /* SceneDelegate.swift */,
 				F4C05A1B241391E100D1E293 /* Assets.xcassets */,
-				F4C05A20241391E100D1E293 /* Info.plist */,
+				F4C510B52429B245000BCDEA /* Media.xcassets */,
+				F4D3B7AB2417BEAB00524D9A /* CIMSdk */,
 				F4C05A18241391E000D1E293 /* Coffchat.xcdatamodeld */,
+				F41CB8A224288176007570BF /* UI */,
 			);
 			path = Coffchat;
+			sourceTree = "<group>";
+		};
+		F4C510A02429A352000BCDEA /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				F41AE38924174224009B0E0C /* LoginViewController.swift */,
+				F41AE38A24174224009B0E0C /* LoginViewController.xib */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
+		F4C510A12429A37F000BCDEA /* Message */ = {
+			isa = PBXGroup;
+			children = (
+				F4C510A52429A9E1000BCDEA /* IMMessageViewController.swift */,
+				F4C510A62429A9E1000BCDEA /* IMMessageViewController.xib */,
+			);
+			path = Message;
+			sourceTree = "<group>";
+		};
+		F4C510A22429A883000BCDEA /* Friend */ = {
+			isa = PBXGroup;
+			children = (
+				F4C510A92429AA11000BCDEA /* IMFriendViewController.swift */,
+				F4C510AA2429AA11000BCDEA /* IMFriendViewController.xib */,
+			);
+			path = Friend;
+			sourceTree = "<group>";
+		};
+		F4C510A32429A8D0000BCDEA /* Social */ = {
+			isa = PBXGroup;
+			children = (
+				F4C510AD2429AA20000BCDEA /* IMSocialViewController.swift */,
+				F4C510AE2429AA20000BCDEA /* IMSocialViewController.xib */,
+			);
+			path = Social;
+			sourceTree = "<group>";
+		};
+		F4C510A42429A93A000BCDEA /* Me */ = {
+			isa = PBXGroup;
+			children = (
+				F4C510B12429AA2E000BCDEA /* IMMeViewController.swift */,
+				F4C510B22429AA2E000BCDEA /* IMMeViewController.xib */,
+			);
+			path = Me;
 			sourceTree = "<group>";
 		};
 		F4D3B7AB2417BEAB00524D9A /* CIMSdk */ = {
@@ -324,10 +383,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F4C510B62429B245000BCDEA /* Media.xcassets in Resources */,
 				F41AE38C24174224009B0E0C /* LoginViewController.xib in Resources */,
 				F41CB8AA242882FE007570BF /* Main.storyboard in Resources */,
+				F4C510A82429A9E1000BCDEA /* IMMessageViewController.xib in Resources */,
+				F4C510B02429AA20000BCDEA /* IMSocialViewController.xib in Resources */,
+				F4C510AC2429AA11000BCDEA /* IMFriendViewController.xib in Resources */,
 				F41CB8A7242881DC007570BF /* MainTabViewController.xib in Resources */,
 				F4C05A1C241391E100D1E293 /* Assets.xcassets in Resources */,
+				F4C510B42429AA2E000BCDEA /* IMMeViewController.xib in Resources */,
 				F41CB8A1242866E4007570BF /* ViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -397,8 +461,10 @@
 				F417B0292419D4F000E1AAC0 /* CIM.Def.pb.swift in Sources */,
 				F417B02A2419D4F000E1AAC0 /* CIM.Voip.pb.swift in Sources */,
 				F4840BE62424C2930005EF04 /* IMManager.swift in Sources */,
+				F4C510B32429AA2E000BCDEA /* IMMeViewController.swift in Sources */,
 				F417B0262419D4F000E1AAC0 /* CIM.Login.pb.swift in Sources */,
 				F43CA151241FA2E90065373F /* IMRequest.swift in Sources */,
+				F4C510AF2429AA20000BCDEA /* IMSocialViewController.swift in Sources */,
 				F4C05A10241391E000D1E293 /* AppDelegate.swift in Sources */,
 				F4C05A12241391E000D1E293 /* SceneDelegate.swift in Sources */,
 				F41AE38B24174224009B0E0C /* LoginViewController.swift in Sources */,
@@ -409,7 +475,9 @@
 				F486541624266E8600D39970 /* IMConversationManager.swift in Sources */,
 				F417B0272419D4F000E1AAC0 /* CIM.List.pb.swift in Sources */,
 				F42F794524273B7300A50A0A /* IMLog.swift in Sources */,
+				F4C510AB2429AA11000BCDEA /* IMFriendViewController.swift in Sources */,
 				F417B0282419D4F000E1AAC0 /* CIM.Message.pb.swift in Sources */,
+				F4C510A72429A9E1000BCDEA /* IMMessageViewController.swift in Sources */,
 				F42F794A2427453800A50A0A /* IMLoginManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

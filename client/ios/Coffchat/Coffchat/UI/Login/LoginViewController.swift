@@ -53,7 +53,7 @@ class LoginViewController: UIViewController, IMLoginManagerDelegate {
             if userId == nil {
                 return
             }
-            let ret = IMManager.singleton.loginManager.login(userId: userId!, nick: nick.text!, userToken: token.text!, serverIp: server.text!, port: 8000) { rsp in
+            _ = IMManager.singleton.loginManager.login(userId: userId!, nick: nick.text!, userToken: token.text!, serverIp: server.text!, port: 8000) { rsp in
                 // 线程安全
                 DispatchQueue.main.async {
                     if rsp.resultCode != .kCimErrSuccsse {
