@@ -21,6 +21,10 @@
 		F41CB8A6242881DC007570BF /* MainTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41CB8A4242881DC007570BF /* MainTabViewController.swift */; };
 		F41CB8A7242881DC007570BF /* MainTabViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F41CB8A5242881DC007570BF /* MainTabViewController.xib */; };
 		F41CB8AA242882FE007570BF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F41CB8A8242882FE007570BF /* Main.storyboard */; };
+		F42C73ED242B295200B4F6CC /* IMChatViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42C73EB242B295200B4F6CC /* IMChatViewCell.swift */; };
+		F42C73EE242B295200B4F6CC /* IMChatViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F42C73EC242B295200B4F6CC /* IMChatViewCell.xib */; };
+		F42C73F2242B343100B4F6CC /* IMChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42C73F0242B343100B4F6CC /* IMChatViewController.swift */; };
+		F42C73F3242B343100B4F6CC /* IMChatViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F42C73F1242B343100B4F6CC /* IMChatViewController.xib */; };
 		F42F794524273B7300A50A0A /* IMLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42F794424273B7300A50A0A /* IMLog.swift */; };
 		F42F794A2427453800A50A0A /* IMLoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42F79492427453800A50A0A /* IMLoginManager.swift */; };
 		F42F794C2427772F00A50A0A /* IMConversationManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42F794B2427772F00A50A0A /* IMConversationManagerTests.swift */; };
@@ -33,10 +37,7 @@
 		F4BC8F3F241F243200ED38C9 /* IMClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BC8F3E241F243200ED38C9 /* IMClientTests.swift */; };
 		F4C05A10241391E000D1E293 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C05A0F241391E000D1E293 /* AppDelegate.swift */; };
 		F4C05A12241391E000D1E293 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C05A11241391E000D1E293 /* SceneDelegate.swift */; };
-		F4C05A1A241391E000D1E293 /* Coffchat.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F4C05A18241391E000D1E293 /* Coffchat.xcdatamodeld */; };
 		F4C05A1C241391E100D1E293 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F4C05A1B241391E100D1E293 /* Assets.xcassets */; };
-		F4C510A72429A9E1000BCDEA /* IMMessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C510A52429A9E1000BCDEA /* IMMessageViewController.swift */; };
-		F4C510A82429A9E1000BCDEA /* IMMessageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4C510A62429A9E1000BCDEA /* IMMessageViewController.xib */; };
 		F4C510AB2429AA11000BCDEA /* IMFriendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C510A92429AA11000BCDEA /* IMFriendViewController.swift */; };
 		F4C510AC2429AA11000BCDEA /* IMFriendViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4C510AA2429AA11000BCDEA /* IMFriendViewController.xib */; };
 		F4C510AF2429AA20000BCDEA /* IMSocialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C510AD2429AA20000BCDEA /* IMSocialViewController.swift */; };
@@ -45,6 +46,9 @@
 		F4C510B42429AA2E000BCDEA /* IMMeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4C510B22429AA2E000BCDEA /* IMMeViewController.xib */; };
 		F4C510B62429B245000BCDEA /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F4C510B52429B245000BCDEA /* Media.xcassets */; };
 		F4D3B7AD2417BED500524D9A /* IMClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D3B7AC2417BED500524D9A /* IMClient.swift */; };
+		F4DAF915242B70DF00963220 /* IMSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4DAF914242B70DF00963220 /* IMSession.swift */; };
+		F4DAF917242B715100963220 /* IMMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4DAF916242B715100963220 /* IMMessage.swift */; };
+		F4DAF91A242B872300963220 /* SessionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4DAF919242B872300963220 /* SessionModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,6 +77,10 @@
 		F41CB8A4242881DC007570BF /* MainTabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabViewController.swift; sourceTree = "<group>"; };
 		F41CB8A5242881DC007570BF /* MainTabViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainTabViewController.xib; sourceTree = "<group>"; };
 		F41CB8A9242882FE007570BF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		F42C73EB242B295200B4F6CC /* IMChatViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMChatViewCell.swift; sourceTree = "<group>"; };
+		F42C73EC242B295200B4F6CC /* IMChatViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IMChatViewCell.xib; sourceTree = "<group>"; };
+		F42C73F0242B343100B4F6CC /* IMChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMChatViewController.swift; sourceTree = "<group>"; };
+		F42C73F1242B343100B4F6CC /* IMChatViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IMChatViewController.xib; sourceTree = "<group>"; };
 		F42F794424273B7300A50A0A /* IMLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMLog.swift; sourceTree = "<group>"; };
 		F42F79492427453800A50A0A /* IMLoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMLoginManager.swift; sourceTree = "<group>"; };
 		F42F794B2427772F00A50A0A /* IMConversationManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMConversationManagerTests.swift; sourceTree = "<group>"; };
@@ -89,11 +97,8 @@
 		F4C05A0C241391E000D1E293 /* Coffchat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Coffchat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4C05A0F241391E000D1E293 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F4C05A11241391E000D1E293 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		F4C05A19241391E000D1E293 /* Coffchat.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Coffchat.xcdatamodel; sourceTree = "<group>"; };
 		F4C05A1B241391E100D1E293 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F4C05A20241391E100D1E293 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F4C510A52429A9E1000BCDEA /* IMMessageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMMessageViewController.swift; sourceTree = "<group>"; };
-		F4C510A62429A9E1000BCDEA /* IMMessageViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IMMessageViewController.xib; sourceTree = "<group>"; };
 		F4C510A92429AA11000BCDEA /* IMFriendViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMFriendViewController.swift; sourceTree = "<group>"; };
 		F4C510AA2429AA11000BCDEA /* IMFriendViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IMFriendViewController.xib; sourceTree = "<group>"; };
 		F4C510AD2429AA20000BCDEA /* IMSocialViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSocialViewController.swift; sourceTree = "<group>"; };
@@ -102,6 +107,9 @@
 		F4C510B22429AA2E000BCDEA /* IMMeViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IMMeViewController.xib; sourceTree = "<group>"; };
 		F4C510B52429B245000BCDEA /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		F4D3B7AC2417BED500524D9A /* IMClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMClient.swift; sourceTree = "<group>"; };
+		F4DAF914242B70DF00963220 /* IMSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSession.swift; sourceTree = "<group>"; };
+		F4DAF916242B715100963220 /* IMMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMMessage.swift; sourceTree = "<group>"; };
+		F4DAF919242B872300963220 /* SessionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,6 +146,8 @@
 				F40A2CDD2419F0820090C230 /* IMHeader.swift */,
 				F43CA150241FA2E90065373F /* IMRequest.swift */,
 				F48654172426721400D39970 /* IMRecentSession.swift */,
+				F4DAF914242B70DF00963220 /* IMSession.swift */,
+				F4DAF916242B715100963220 /* IMMessage.swift */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -160,7 +170,7 @@
 				F4C510A42429A93A000BCDEA /* Me */,
 				F4C510A32429A8D0000BCDEA /* Social */,
 				F4C510A22429A883000BCDEA /* Friend */,
-				F4C510A12429A37F000BCDEA /* Message */,
+				F4C510A12429A37F000BCDEA /* Chat */,
 				F4C510A02429A352000BCDEA /* Login */,
 				F41CB8A4242881DC007570BF /* MainTabViewController.swift */,
 				F41CB8A5242881DC007570BF /* MainTabViewController.xib */,
@@ -221,7 +231,7 @@
 				F4C05A1B241391E100D1E293 /* Assets.xcassets */,
 				F4C510B52429B245000BCDEA /* Media.xcassets */,
 				F4D3B7AB2417BEAB00524D9A /* CIMSdk */,
-				F4C05A18241391E000D1E293 /* Coffchat.xcdatamodeld */,
+				F4DAF918242B86F200963220 /* Models */,
 				F41CB8A224288176007570BF /* UI */,
 			);
 			path = Coffchat;
@@ -236,13 +246,15 @@
 			path = Login;
 			sourceTree = "<group>";
 		};
-		F4C510A12429A37F000BCDEA /* Message */ = {
+		F4C510A12429A37F000BCDEA /* Chat */ = {
 			isa = PBXGroup;
 			children = (
-				F4C510A52429A9E1000BCDEA /* IMMessageViewController.swift */,
-				F4C510A62429A9E1000BCDEA /* IMMessageViewController.xib */,
+				F42C73EB242B295200B4F6CC /* IMChatViewCell.swift */,
+				F42C73EC242B295200B4F6CC /* IMChatViewCell.xib */,
+				F42C73F0242B343100B4F6CC /* IMChatViewController.swift */,
+				F42C73F1242B343100B4F6CC /* IMChatViewController.xib */,
 			);
-			path = Message;
+			path = Chat;
 			sourceTree = "<group>";
 		};
 		F4C510A22429A883000BCDEA /* Friend */ = {
@@ -283,6 +295,14 @@
 				F42F79492427453800A50A0A /* IMLoginManager.swift */,
 			);
 			path = CIMSdk;
+			sourceTree = "<group>";
+		};
+		F4DAF918242B86F200963220 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				F4DAF919242B872300963220 /* SessionModel.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		FA3EA038AF5D43481DAC1DF7 /* Frameworks */ = {
@@ -385,10 +405,11 @@
 			files = (
 				F4C510B62429B245000BCDEA /* Media.xcassets in Resources */,
 				F41AE38C24174224009B0E0C /* LoginViewController.xib in Resources */,
+				F42C73F3242B343100B4F6CC /* IMChatViewController.xib in Resources */,
 				F41CB8AA242882FE007570BF /* Main.storyboard in Resources */,
-				F4C510A82429A9E1000BCDEA /* IMMessageViewController.xib in Resources */,
 				F4C510B02429AA20000BCDEA /* IMSocialViewController.xib in Resources */,
 				F4C510AC2429AA11000BCDEA /* IMFriendViewController.xib in Resources */,
+				F42C73EE242B295200B4F6CC /* IMChatViewCell.xib in Resources */,
 				F41CB8A7242881DC007570BF /* MainTabViewController.xib in Resources */,
 				F4C05A1C241391E100D1E293 /* Assets.xcassets in Resources */,
 				F4C510B42429AA2E000BCDEA /* IMMeViewController.xib in Resources */,
@@ -459,8 +480,10 @@
 				F41CB8A6242881DC007570BF /* MainTabViewController.swift in Sources */,
 				F4D3B7AD2417BED500524D9A /* IMClient.swift in Sources */,
 				F417B0292419D4F000E1AAC0 /* CIM.Def.pb.swift in Sources */,
+				F42C73F2242B343100B4F6CC /* IMChatViewController.swift in Sources */,
 				F417B02A2419D4F000E1AAC0 /* CIM.Voip.pb.swift in Sources */,
 				F4840BE62424C2930005EF04 /* IMManager.swift in Sources */,
+				F4DAF917242B715100963220 /* IMMessage.swift in Sources */,
 				F4C510B32429AA2E000BCDEA /* IMMeViewController.swift in Sources */,
 				F417B0262419D4F000E1AAC0 /* CIM.Login.pb.swift in Sources */,
 				F43CA151241FA2E90065373F /* IMRequest.swift in Sources */,
@@ -470,14 +493,15 @@
 				F41AE38B24174224009B0E0C /* LoginViewController.swift in Sources */,
 				F40A2CDE2419F0820090C230 /* IMHeader.swift in Sources */,
 				F48654182426721400D39970 /* IMRecentSession.swift in Sources */,
-				F4C05A1A241391E000D1E293 /* Coffchat.xcdatamodeld in Sources */,
 				F41CB8A0242866E4007570BF /* ViewController.swift in Sources */,
+				F42C73ED242B295200B4F6CC /* IMChatViewCell.swift in Sources */,
 				F486541624266E8600D39970 /* IMConversationManager.swift in Sources */,
 				F417B0272419D4F000E1AAC0 /* CIM.List.pb.swift in Sources */,
 				F42F794524273B7300A50A0A /* IMLog.swift in Sources */,
+				F4DAF915242B70DF00963220 /* IMSession.swift in Sources */,
+				F4DAF91A242B872300963220 /* SessionModel.swift in Sources */,
 				F4C510AB2429AA11000BCDEA /* IMFriendViewController.swift in Sources */,
 				F417B0282419D4F000E1AAC0 /* CIM.Message.pb.swift in Sources */,
-				F4C510A72429A9E1000BCDEA /* IMMessageViewController.swift in Sources */,
 				F42F794A2427453800A50A0A /* IMLoginManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -723,19 +747,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCVersionGroup section */
-		F4C05A18241391E000D1E293 /* Coffchat.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				F4C05A19241391E000D1E293 /* Coffchat.xcdatamodel */,
-			);
-			currentVersion = F4C05A19241391E000D1E293 /* Coffchat.xcdatamodel */;
-			path = Coffchat.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = F4C05A04241391E000D1E293 /* Project object */;
 }

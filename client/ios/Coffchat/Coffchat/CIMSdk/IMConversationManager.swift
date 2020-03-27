@@ -23,7 +23,7 @@ class IMConversationManager: IMConversationManagerDelegate, IMClientDelegateData
     fileprivate var getAllRecentSessionsCallback: IMResultCallback<CIM_List_CIMRecentContactSessionRsp>?
 
     /// 总的未读消息计数
-    public var totalUnreadCount: Int
+    public var totalUnreadCount: UInt32
 
     // public var allRecentSessions:[IMRecentSession]
 
@@ -86,7 +86,7 @@ extension IMConversationManager {
 
         if res != nil {
             IMLog.info(item: "unread_counts=\(res!.unreadCounts),session_count=\(res!.contactSessionList.count)")
-
+            totalUnreadCount = res!.unreadCounts
             // 回调
             getAllRecentSessionsCallback?(res!)
         }

@@ -19,7 +19,7 @@ class MainTabViewController: UITabBarController {
         let me = IMMeViewController()
         let social = IMSocialViewController()
         let friend = IMFriendViewController()
-        let message = IMMessageViewController()
+        let message = IMChatViewController()
 
         // 如果不设置，也可以工作，但是标签栏没有任何显示
         message.tabBarItem.title = "消息"

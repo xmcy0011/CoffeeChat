@@ -187,7 +187,7 @@ class IMClient: NSObject, GCDAsyncSocketDelegate {
             item = it.next()
             
             if abs(nowTimestamp - req.createTimestamp) > maxWaitTimeLen {
-                IMLog.warn(item: "request timeout,seq=\(req.seq),cmdId=\(req.header.commandId) ")
+                IMLog.warn(item: "request timeout,seq=\(req.seq),cmdId=\(req.header.commandId),now=\(nowTimestamp),reqTime=\(req.createTimestamp) ")
                 // next已经改变，放心移除
                 requestDic.removeValue(forKey: req.seq)
                 req.timeoutCallback?()
@@ -226,6 +226,9 @@ extension IMClient {
                 IMLog.error(item: "readHeader error!")
             } else {
                 IMLog.debug(item: "parse IMHeader success,cmd=\(header.commandId),seq=\(header.seqNumber)")
+                
+                // 超时请求队列移除
+                requestDic.removeValue(forKey: header.seqNumber)
                 
                 // 处理消息
                 let bodyData = data[Int(kHeaderLen)..<data.count] // 去掉头部，只放裸数据
