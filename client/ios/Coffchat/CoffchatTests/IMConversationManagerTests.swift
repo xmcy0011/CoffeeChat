@@ -17,7 +17,7 @@ class IMConversationManagerTests: XCTestCase {
         _ = IMManager.singleton.loginManager.login(userId: 1008, nick: "1008", userToken: "12345", serverIp: "192.168.31.174", port: 8000) { rsp in
             XCTAssert(rsp.resultCode == .kCimErrSuccsse)
 
-            IMManager.singleton.conversationManager.getAllRecentSessions(callback: { rspSession in
+            IMManager.singleton.conversationManager.queryAllRecentSessions(callback: { rspSession in
                 XCTAssert(rspSession.contactSessionList.count > 0)
                 ex.fulfill()
             }, timeout: {

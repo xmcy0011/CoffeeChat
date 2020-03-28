@@ -49,6 +49,10 @@
 		F4DAF915242B70DF00963220 /* IMSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4DAF914242B70DF00963220 /* IMSession.swift */; };
 		F4DAF917242B715100963220 /* IMMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4DAF916242B715100963220 /* IMMessage.swift */; };
 		F4DAF91A242B872300963220 /* SessionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4DAF919242B872300963220 /* SessionModel.swift */; };
+		F4EBFABC242F396900AF26B2 /* IMChatContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4EBFABA242F396900AF26B2 /* IMChatContentViewController.swift */; };
+		F4EBFABD242F396900AF26B2 /* IMChatContentViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4EBFABB242F396900AF26B2 /* IMChatContentViewController.xib */; };
+		F4EBFAC5242F4CE600AF26B2 /* IMMessageTextCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4EBFAC3242F4CE600AF26B2 /* IMMessageTextCell.swift */; };
+		F4EBFAC6242F4CE600AF26B2 /* IMMessageTextCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4EBFAC4242F4CE600AF26B2 /* IMMessageTextCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -110,6 +114,10 @@
 		F4DAF914242B70DF00963220 /* IMSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSession.swift; sourceTree = "<group>"; };
 		F4DAF916242B715100963220 /* IMMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMMessage.swift; sourceTree = "<group>"; };
 		F4DAF919242B872300963220 /* SessionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionModel.swift; sourceTree = "<group>"; };
+		F4EBFABA242F396900AF26B2 /* IMChatContentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMChatContentViewController.swift; sourceTree = "<group>"; };
+		F4EBFABB242F396900AF26B2 /* IMChatContentViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IMChatContentViewController.xib; sourceTree = "<group>"; };
+		F4EBFAC3242F4CE600AF26B2 /* IMMessageTextCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMMessageTextCell.swift; sourceTree = "<group>"; };
+		F4EBFAC4242F4CE600AF26B2 /* IMMessageTextCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IMMessageTextCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -249,6 +257,7 @@
 		F4C510A12429A37F000BCDEA /* Chat */ = {
 			isa = PBXGroup;
 			children = (
+				F4EBFAB9242F382200AF26B2 /* Message */,
 				F42C73EB242B295200B4F6CC /* IMChatViewCell.swift */,
 				F42C73EC242B295200B4F6CC /* IMChatViewCell.xib */,
 				F42C73F0242B343100B4F6CC /* IMChatViewController.swift */,
@@ -303,6 +312,25 @@
 				F4DAF919242B872300963220 /* SessionModel.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		F4EBFAB9242F382200AF26B2 /* Message */ = {
+			isa = PBXGroup;
+			children = (
+				F4EBFABE242F41C400AF26B2 /* Views */,
+				F4EBFABA242F396900AF26B2 /* IMChatContentViewController.swift */,
+				F4EBFABB242F396900AF26B2 /* IMChatContentViewController.xib */,
+			);
+			path = Message;
+			sourceTree = "<group>";
+		};
+		F4EBFABE242F41C400AF26B2 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F4EBFAC3242F4CE600AF26B2 /* IMMessageTextCell.swift */,
+				F4EBFAC4242F4CE600AF26B2 /* IMMessageTextCell.xib */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		FA3EA038AF5D43481DAC1DF7 /* Frameworks */ = {
@@ -407,6 +435,8 @@
 				F41AE38C24174224009B0E0C /* LoginViewController.xib in Resources */,
 				F42C73F3242B343100B4F6CC /* IMChatViewController.xib in Resources */,
 				F41CB8AA242882FE007570BF /* Main.storyboard in Resources */,
+				F4EBFABD242F396900AF26B2 /* IMChatContentViewController.xib in Resources */,
+				F4EBFAC6242F4CE600AF26B2 /* IMMessageTextCell.xib in Resources */,
 				F4C510B02429AA20000BCDEA /* IMSocialViewController.xib in Resources */,
 				F4C510AC2429AA11000BCDEA /* IMFriendViewController.xib in Resources */,
 				F42C73EE242B295200B4F6CC /* IMChatViewCell.xib in Resources */,
@@ -501,7 +531,9 @@
 				F4DAF915242B70DF00963220 /* IMSession.swift in Sources */,
 				F4DAF91A242B872300963220 /* SessionModel.swift in Sources */,
 				F4C510AB2429AA11000BCDEA /* IMFriendViewController.swift in Sources */,
+				F4EBFABC242F396900AF26B2 /* IMChatContentViewController.swift in Sources */,
 				F417B0282419D4F000E1AAC0 /* CIM.Message.pb.swift in Sources */,
+				F4EBFAC5242F4CE600AF26B2 /* IMMessageTextCell.swift in Sources */,
 				F42F794A2427453800A50A0A /* IMLoginManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

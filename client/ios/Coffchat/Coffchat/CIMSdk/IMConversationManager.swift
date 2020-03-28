@@ -20,7 +20,8 @@ class IMConversationManager: IMConversationManagerDelegate, IMClientDelegateData
     fileprivate var client: IMClient
 
     fileprivate var delegateDic: [String: IMConversationManagerDelegate]
-    fileprivate var getAllRecentSessionsCallback: IMResultCallback<CIM_List_CIMRecentContactSessionRsp>?
+    fileprivate var queryAllRecentSessionsCallback: IMResultCallback<CIM_List_CIMRecentContactSessionRsp>?
+    fileprivate var queryMsgListCallback: IMResultCallback<CIM_List_CIMGetMsgListRsp>?
 
     /// 总的未读消息计数
     public var totalUnreadCount: UInt32
@@ -36,16 +37,38 @@ class IMConversationManager: IMConversationManagerDelegate, IMClientDelegateData
     }
 
     /// 查询会话列表
-    /// - Parameter timeout: 超时回调
-    func getAllRecentSessions(callback: IMResultCallback<CIM_List_CIMRecentContactSessionRsp>?, timeout: IMResponseTimeoutCallback?) {
+    /// - Parameters:
+    ///     - callback: 结果回调
+    ///     - timeout: 超时回调
+    func queryAllRecentSessions(callback: IMResultCallback<CIM_List_CIMRecentContactSessionRsp>?, timeout: IMResponseTimeoutCallback?) {
         var req = CIM_List_CIMRecentContactSessionReq()
         req.userID = IMManager.singleton.loginManager.userId!
         req.latestUpdateTime = 0
 
-        getAllRecentSessionsCallback = callback
+        queryAllRecentSessionsCallback = callback
 
         // 发送请求
         client.sendRequest(cmdId: .kCimCidListRecentContactSessionReq, body: try! req.serializedData(), timeout: timeout)
+    }
+
+    /// 查询历史聊天记录
+    /// - Parameters:
+    ///   - sessionId：会话ID
+    ///   - sessionType：会话类型
+    ///   - endMsgId：结束消息ID
+    ///   - limitCount：数量限制，最大100
+    ///   - callback: 结果回调
+    ///   - timeout: 超时回调
+    func queryMsgList(sessionId: UInt64, sessionType: CIM_Def_CIMSessionType, endMsgId: UInt64, limitCount: Int, callback: IMResultCallback<CIM_List_CIMGetMsgListRsp>?, timeout: IMResponseTimeoutCallback?) {
+        var req = CIM_List_CIMGetMsgListReq()
+        req.userID = IMManager.singleton.loginManager.userId!
+        req.sessionID = sessionId
+        req.sessionType = sessionType
+        req.endMsgID = endMsgId
+        req.limitCount = UInt32(limitCount)
+
+        queryMsgListCallback = callback
+        client.sendRequest(cmdId: .kCimCidListMsgReq, body: try! req.serializedData(), timeout: timeout)
     }
 
     /// 注册回调
@@ -76,6 +99,7 @@ extension IMConversationManager {
         }
     }
 
+    // 会话列表响应
     func _onHandleRecentSessonList(data: Data) {
         var res: CIM_List_CIMRecentContactSessionRsp?
         do {
@@ -88,11 +112,24 @@ extension IMConversationManager {
             IMLog.info(item: "unread_counts=\(res!.unreadCounts),session_count=\(res!.contactSessionList.count)")
             totalUnreadCount = res!.unreadCounts
             // 回调
-            getAllRecentSessionsCallback?(res!)
+            queryAllRecentSessionsCallback?(res!)
         }
     }
 
-    func _onHandleMsgList(data: Data) {}
+    // 聊天历史响应
+    func _onHandleMsgList(data: Data) {
+        var res: CIM_List_CIMGetMsgListRsp?
+        do {
+            try res = CIM_List_CIMGetMsgListRsp(serializedData: data)
+        } catch {
+            IMLog.warn(item: "parse CIM_List_CIMGetMsgListRsp error:\(error)")
+        }
+
+        if res != nil {
+            IMLog.info(item: "session_id=\(res!.sessionID),session_type=\(res!.sessionType),msg_count=\(res!.msgList.count)")
+            queryMsgListCallback?(res!)
+        }
+    }
 }
 
 // MARK: IMConversationManagerDelegate

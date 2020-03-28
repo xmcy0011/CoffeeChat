@@ -8,6 +8,7 @@
 
 import UIKit
 
+/// 会话列表
 class IMChatViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet var sessionTabView: UITableView!
     var list: [SessionModel] = []
@@ -15,11 +16,7 @@ class IMChatViewController: UIViewController, UITableViewDelegate, UITableViewDa
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // let name = String(describing: IMChatViewCell.self)
-        // let nib = UINib(nibName: name, bundle: nil)
-        // sessionList.register(nib, forCellReuseIdentifier: name)
-        self.tabBarItem.title = "闲聊"
-        self.title = "消息"
+        title = "CoffeeChat"
 
         // 注册自定义的Cell的实际类型
         sessionTabView.register(UINib(nibName: "IMChatViewCell", bundle: nil), forCellReuseIdentifier: "IMChatViewCell")
@@ -29,7 +26,7 @@ class IMChatViewController: UIViewController, UITableViewDelegate, UITableViewDa
         sessionTabView.delegate = self
 
         // Do any additional setup after loading the view.
-        IMManager.singleton.conversationManager.getAllRecentSessions(callback: { rsp in
+        IMManager.singleton.conversationManager.queryAllRecentSessions(callback: { rsp in
             for item in rsp.contactSessionList {
                 let session = IMSession(id: item.sessionID, type: item.sessionType)
 
@@ -49,27 +46,23 @@ class IMChatViewController: UIViewController, UITableViewDelegate, UITableViewDa
             print("查询会话超时")
         })
     }
-
-    /*
-     // MARK: - Navigation
-
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-         // Get the new view controller using segue.destination.
-         // Pass the selected object to the new view controller.
-     }
-     */
 }
 
 // MARK: UITableViewDelegate
 
 extension IMChatViewController {
+    // 行高
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        // 也可以写死
-        // return 65.0
-
-        // 自动计算行高，需要先设置estimatedRowHeight
+        // 自动计算行高，需要先设置estimatedRowHeight 或者 写死 return 65.0
         return sessionTabView.estimatedRowHeight
+    }
+
+    // 选中一行
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let sessionInfo = list[indexPath.row]
+        let chatContentView = IMChatContentViewController(session: sessionInfo)
+        // 跳转聊天页面
+        navigationController?.pushViewController(chatContentView, animated: true)
     }
 }
 
