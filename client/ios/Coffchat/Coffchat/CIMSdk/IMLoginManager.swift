@@ -50,6 +50,7 @@ protocol IMLoginManagerDelegate {
 class IMLoginManager: IMClientDelegateStatus, IMClientDelegateData {
     fileprivate var client: IMClient
     fileprivate var timer: Timer? // 自动登录，心跳超时检测定时器
+    fileprivate var timerTick: UInt64 = 0
     fileprivate var lastHeartBeat: Int32 = 0 // 上一次收到服务器心跳的时间戳
     fileprivate var haveLogin: Bool = false // 是否用户主动登录过，用以区分是否启动重连机制
     
@@ -258,8 +259,8 @@ extension IMLoginManager {
         }
         
         // 心跳
-        let tick = Int(t.timeInterval)
-        if tick % 10 == 0 { // 10秒1个
+        timerTick += 1
+        if timerTick % 10 == 0 { // 10秒1个
             let hearbeat = CIM_Login_CIMHeartBeat()
             _ = client.send(cmdId: .kCimCidLoginHeartbeat, body: try! hearbeat.serializedData())
         }
