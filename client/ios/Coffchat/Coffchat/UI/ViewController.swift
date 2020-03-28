@@ -46,7 +46,11 @@ class ViewController: UIViewController {
     func loginCallback(code: Int, desc: String) {
         // 如果登录成功，跳转到主页面
         if IMManager.singleton.loginManager.isLogin {
-            let home = MainTabViewController()
+            // 隐藏导航栏
+            self.navigationController?.setNavigationBarHidden(true, animated: false)
+            self.navigationController?.navigationBar.isHidden = true
+            
+            let home = IMTabViewController()
             self.navigationController?.popViewController(animated: false) // 移除登录界面
             self.navigationController?.pushViewController(home, animated: true) // 主界面
             //self.navigationController?.popToViewController(loginView, animated: false) // 移除其他界面，直到该界面为止

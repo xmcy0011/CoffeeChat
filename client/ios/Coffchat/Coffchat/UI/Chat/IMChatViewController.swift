@@ -18,9 +18,12 @@ class IMChatViewController: UIViewController, UITableViewDelegate, UITableViewDa
         // let name = String(describing: IMChatViewCell.self)
         // let nib = UINib(nibName: name, bundle: nil)
         // sessionList.register(nib, forCellReuseIdentifier: name)
+        self.tabBarItem.title = "闲聊"
+        self.title = "消息"
 
         // 注册自定义的Cell的实际类型
         sessionTabView.register(UINib(nibName: "IMChatViewCell", bundle: nil), forCellReuseIdentifier: "IMChatViewCell")
+        sessionTabView.estimatedRowHeight = 65
 
         sessionTabView.dataSource = self
         sessionTabView.delegate = self
@@ -29,9 +32,9 @@ class IMChatViewController: UIViewController, UITableViewDelegate, UITableViewDa
         IMManager.singleton.conversationManager.getAllRecentSessions(callback: { rsp in
             for item in rsp.contactSessionList {
                 let session = IMSession(id: item.sessionID, type: item.sessionType)
-                
+
                 let msgDataText = String(data: item.msgData, encoding: String.Encoding.utf8)
-                
+
                 let message = IMMessage(clientId: item.msgID, sessionType: item.sessionType, fromId: item.msgFromUserID, toId: item.sessionID, time: item.msgTimeStamp, msgType: item.msgType, data: msgDataText!)
                 let recentSession = IMRecentSession(sessionInfo: session, latestMsg: message, unreadCount: item.unreadCnt, updateTime: item.updatedTime)
                 let sessionModel = SessionModel(recentSession: recentSession)
@@ -56,8 +59,6 @@ class IMChatViewController: UIViewController, UITableViewDelegate, UITableViewDa
          // Pass the selected object to the new view controller.
      }
      */
-
-    
 }
 
 // MARK: UITableViewDelegate
@@ -65,17 +66,16 @@ class IMChatViewController: UIViewController, UITableViewDelegate, UITableViewDa
 extension IMChatViewController {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         // 也可以写死
-        return 65.0
-        
-        // 自动计数行高，好像没啥用？
-        //return sessionTabView.estimatedRowHeight
+        // return 65.0
+
+        // 自动计算行高，需要先设置estimatedRowHeight
+        return sessionTabView.estimatedRowHeight
     }
 }
 
 // MARK: UITableViewDataSource
 
 extension IMChatViewController {
-    
     // 返回数据源有多少行，便于渲染
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return list.count
@@ -86,7 +86,7 @@ extension IMChatViewController {
         // cellId是类名
         let classType = IMChatViewCell.self
         let cellId = String(describing: classType)
-        
+
         // 获取一个可重复使用的Cell，没有就收到创建
         var cell = tableView.dequeueReusableCell(withIdentifier: cellId) as? IMChatViewCell
         if cell == nil {

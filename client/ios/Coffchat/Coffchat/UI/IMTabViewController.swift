@@ -12,10 +12,6 @@ class IMTabViewController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // 隐藏返回按钮
-        self.navigationItem.hidesBackButton = true
-        self.navigationController?.setNavigationBarHidden(true, animated: false)
-
         let me = IMMeViewController()
         let social = IMSocialViewController()
         let friend = IMFriendViewController()

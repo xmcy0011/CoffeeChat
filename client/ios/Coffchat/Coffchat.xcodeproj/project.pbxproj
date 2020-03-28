@@ -18,8 +18,8 @@
 		F41AE38C24174224009B0E0C /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F41AE38A24174224009B0E0C /* LoginViewController.xib */; };
 		F41CB8A0242866E4007570BF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41CB89E242866E4007570BF /* ViewController.swift */; };
 		F41CB8A1242866E4007570BF /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F41CB89F242866E4007570BF /* ViewController.xib */; };
-		F41CB8A6242881DC007570BF /* MainTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41CB8A4242881DC007570BF /* MainTabViewController.swift */; };
-		F41CB8A7242881DC007570BF /* MainTabViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F41CB8A5242881DC007570BF /* MainTabViewController.xib */; };
+		F41CB8A6242881DC007570BF /* IMTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41CB8A4242881DC007570BF /* IMTabViewController.swift */; };
+		F41CB8A7242881DC007570BF /* IMTabViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F41CB8A5242881DC007570BF /* IMTabViewController.xib */; };
 		F41CB8AA242882FE007570BF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F41CB8A8242882FE007570BF /* Main.storyboard */; };
 		F42C73ED242B295200B4F6CC /* IMChatViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42C73EB242B295200B4F6CC /* IMChatViewCell.swift */; };
 		F42C73EE242B295200B4F6CC /* IMChatViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F42C73EC242B295200B4F6CC /* IMChatViewCell.xib */; };
@@ -74,8 +74,8 @@
 		F41AE38A24174224009B0E0C /* LoginViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoginViewController.xib; sourceTree = "<group>"; };
 		F41CB89E242866E4007570BF /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		F41CB89F242866E4007570BF /* ViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ViewController.xib; sourceTree = "<group>"; };
-		F41CB8A4242881DC007570BF /* MainTabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabViewController.swift; sourceTree = "<group>"; };
-		F41CB8A5242881DC007570BF /* MainTabViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainTabViewController.xib; sourceTree = "<group>"; };
+		F41CB8A4242881DC007570BF /* IMTabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMTabViewController.swift; sourceTree = "<group>"; };
+		F41CB8A5242881DC007570BF /* IMTabViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IMTabViewController.xib; sourceTree = "<group>"; };
 		F41CB8A9242882FE007570BF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		F42C73EB242B295200B4F6CC /* IMChatViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMChatViewCell.swift; sourceTree = "<group>"; };
 		F42C73EC242B295200B4F6CC /* IMChatViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IMChatViewCell.xib; sourceTree = "<group>"; };
@@ -172,8 +172,8 @@
 				F4C510A22429A883000BCDEA /* Friend */,
 				F4C510A12429A37F000BCDEA /* Chat */,
 				F4C510A02429A352000BCDEA /* Login */,
-				F41CB8A4242881DC007570BF /* MainTabViewController.swift */,
-				F41CB8A5242881DC007570BF /* MainTabViewController.xib */,
+				F41CB8A4242881DC007570BF /* IMTabViewController.swift */,
+				F41CB8A5242881DC007570BF /* IMTabViewController.xib */,
 				F41CB8A8242882FE007570BF /* Main.storyboard */,
 				F41CB89E242866E4007570BF /* ViewController.swift */,
 				F41CB89F242866E4007570BF /* ViewController.xib */,
@@ -410,7 +410,7 @@
 				F4C510B02429AA20000BCDEA /* IMSocialViewController.xib in Resources */,
 				F4C510AC2429AA11000BCDEA /* IMFriendViewController.xib in Resources */,
 				F42C73EE242B295200B4F6CC /* IMChatViewCell.xib in Resources */,
-				F41CB8A7242881DC007570BF /* MainTabViewController.xib in Resources */,
+				F41CB8A7242881DC007570BF /* IMTabViewController.xib in Resources */,
 				F4C05A1C241391E100D1E293 /* Assets.xcassets in Resources */,
 				F4C510B42429AA2E000BCDEA /* IMMeViewController.xib in Resources */,
 				F41CB8A1242866E4007570BF /* ViewController.xib in Resources */,
@@ -477,7 +477,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F41CB8A6242881DC007570BF /* MainTabViewController.swift in Sources */,
+				F41CB8A6242881DC007570BF /* IMTabViewController.swift in Sources */,
 				F4D3B7AD2417BED500524D9A /* IMClient.swift in Sources */,
 				F417B0292419D4F000E1AAC0 /* CIM.Def.pb.swift in Sources */,
 				F42C73F2242B343100B4F6CC /* IMChatViewController.swift in Sources */,

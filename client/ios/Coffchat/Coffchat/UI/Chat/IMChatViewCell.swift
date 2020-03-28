@@ -18,6 +18,14 @@ class IMChatViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        
+        headImage.layer.masksToBounds = true
+        // 没懂，从TSWechat借用过来
+        headImage.layer.cornerRadius = self.headImage.frame.size.width / 2 / 180 * 30
+        
+        // 会触发离屏渲染，性能受影响 FIXME
+        self.unreadCnt.layer.masksToBounds = true
+        self.unreadCnt.layer.cornerRadius = self.unreadCnt.frame.size.height / 2
     }
     
 //    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
