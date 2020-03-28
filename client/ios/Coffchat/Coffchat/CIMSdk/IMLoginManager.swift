@@ -256,5 +256,12 @@ extension IMLoginManager {
                 _ = login(userId: userId!, nick: userNick!, userToken: userToken!, serverIp: client.ip, port: client.port, callback: nil)
             }
         }
+        
+        // 心跳
+        let tick = Int(t.timeInterval)
+        if tick % 10 == 0 { // 10秒1个
+            let hearbeat = CIM_Login_CIMHeartBeat()
+            _ = client.send(cmdId: .kCimCidLoginHeartbeat, body: try! hearbeat.serializedData())
+        }
     }
 }
