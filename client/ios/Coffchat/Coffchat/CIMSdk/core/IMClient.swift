@@ -221,7 +221,10 @@ extension IMClient {
         // 是否足够长，数据包完整，否则加入到缓冲区
         if IMHeader.isAvailable(data: data) {
             recvBufferLen = 0 // 重置，即使还有数据，以免持续恶化
-            _ = _resolveData(data: data)
+            let len = _resolveData(data: data)
+            if data.count != len{
+                IMLog.error(item: "data is reset,fix me")
+            }
         } else {
             IMLog.warn(item: "data is not enough!")
             

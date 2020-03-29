@@ -52,7 +52,10 @@ class CIMHeaderTests: XCTestCase {
         print("old:\(data)")
         
         let start = 5
-
+        
+        let item = data[0...12]
+        let itemBytes = [UInt8](item)
+        
         // 模拟读取了部分数据（在xcode中，鼠标移动到该变量上，可以点击“!”查看)
         let buffer = data.subdata(in: start..<data.count)
         print("subdata:\(data)")
