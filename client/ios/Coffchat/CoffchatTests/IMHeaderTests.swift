@@ -38,9 +38,29 @@ class CIMHeaderTests: XCTestCase {
         XCTAssert(header2.readHeader(data: data!))
 
         // copy bytes
-        //let data2 = data![Int(kHeaderLen)..<data!.count]
+        // let data2 = data![Int(kHeaderLen)..<data!.count]
         XCTAssert(header.seqNumber == header2.seqNumber)
         XCTAssert(header.commandId == header2.commandId)
+    }
+
+    func testData() {
+        let bytes: [UInt8] = [12, 32, 12, 23, 42, 24, 24, 24, 24, 24, 24, 24, 42, 123, 124, 12, 55, 36, 46, 77, 86]
+        // 构造data对象
+        var data = Data()
+        // 模拟追加数据
+        data.append(Data(bytes: bytes, count: bytes.count))
+        print("old:\(data)")
+        
+        let start = 5
+
+        // 模拟读取了部分数据（在xcode中，鼠标移动到该变量上，可以点击“!”查看)
+        let buffer = data.subdata(in: start..<data.count)
+        print("subdata:\(data)")
+        print("buffer:\(buffer)")
+        
+        // replace
+        data.replaceSubrange(0..<buffer.count, with: buffer)
+        print("replace:\(data)")
     }
 
     func testPerformanceExample() {

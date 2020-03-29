@@ -40,6 +40,8 @@ let DefaultIMClient = IMClient()
 // 负责与服务端通信
 class IMClient: NSObject, GCDAsyncSocketDelegate {
     fileprivate var tcpClient: GCDAsyncSocket?
+    fileprivate var recvBuffer: Data = Data(repeating: 0, count: 10 * 1024 * 1024) // 接收缓冲区，处理tcp粘包
+    fileprivate var recvBufferLen: Int = 0 // 可读的数据量
     fileprivate var seq: UInt16 = 1 // 序号，发送一次后即递增，没加锁FIXME
     fileprivate var checkTimer: Timer? // 超时检测定时器
     // fileprivate var recvBuffer:Data // TCP缓冲区，粘包处理
@@ -216,32 +218,74 @@ extension IMClient {
     func socket(_ sock: GCDAsyncSocket, didRead data: Data, withTag tag: Int) {
         IMLog.debug(item: "IMClient socket receive data,len=\(data.count)")
         
-        // 是否足够长，数据包完整
-        if !IMHeader.isAvailable(data: data) {
-            IMLog.error(item: "bad data!")
+        // 是否足够长，数据包完整，否则加入到缓冲区
+        if IMHeader.isAvailable(data: data) {
+            recvBufferLen = 0 // 重置，即使还有数据，以免持续恶化
+            _ = _resolveData(data: data)
         } else {
-            // 解析协议头
-            let header = IMHeader()
-            if !header.readHeader(data: data) {
-                IMLog.error(item: "readHeader error!")
-            } else {
-                IMLog.debug(item: "parse IMHeader success,cmd=\(header.commandId),seq=\(header.seqNumber)")
-                
-                // 超时请求队列移除
-                requestDic.removeValue(forKey: header.seqNumber)
-                
-                // 处理消息
-                let bodyData = data[Int(kHeaderLen)..<data.count] // 去掉头部，只放裸数据
-                
-                // 回调 FIXME 非线程安全
-                for item in delegateDicData {
-                    item.value.onHandleData(header, bodyData)
+            IMLog.warn(item: "data is not enough!")
+            
+            // 追加上去之后，尝试解析
+            let newLen = recvBufferLen + data.count
+            recvBuffer.replaceSubrange(recvBufferLen..<newLen, with: data)
+            recvBufferLen = newLen
+            
+            var start = 0
+            while true {
+                let reset = recvBuffer.subdata(in: start..<recvBufferLen)
+                // 不足够长
+                if !IMHeader.isAvailable(data: reset) {
+                    break
+                }
+                let len = _resolveData(data: reset)
+                if len == 0 {
+                    IMLog.error(item: "")
+                } else {
+                    start += len
+                }
+            }
+            
+            // 去除解析过的数据
+            if start != 0 {
+                if start == recvBufferLen{
+                    // 读取完毕，不用拷贝
+                    recvBufferLen = 0
+                }else{
+                    // 把后面没有解析的数据移动到最开始
+                    let resetBuffer = data.subdata(in: start..<recvBufferLen)
+                    recvBuffer.replaceSubrange(0..<resetBuffer.count, with: resetBuffer)
+                    recvBufferLen = resetBuffer.count
                 }
             }
         }
         
         // 监听数据
         tcpClient?.readData(withTimeout: -1, tag: 0)
+    }
+    
+    fileprivate func _resolveData(data: Data) -> Int {
+        // 解析协议头
+        let header = IMHeader()
+        if !header.readHeader(data: data) {
+            IMLog.error(item: "readHeader error!")
+        } else {
+            IMLog.debug(item: "parse IMHeader success,cmd=\(header.commandId),seq=\(header.seqNumber)")
+            
+            // 超时请求队列移除
+            requestDic.removeValue(forKey: header.seqNumber)
+            
+            // 处理消息
+            let bodyData = data[Int(kHeaderLen)..<data.count] // 去掉头部，只放裸数据
+            
+            // 回调 FIXME 非线程安全
+            for item in delegateDicData {
+                item.value.onHandleData(header, bodyData)
+            }
+            
+            return Int(header.length)
+        }
+        
+        return 0
     }
     
     // disconnect

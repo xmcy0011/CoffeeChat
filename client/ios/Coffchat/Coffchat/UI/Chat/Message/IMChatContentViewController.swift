@@ -51,7 +51,7 @@ class IMChatContentViewController: UIViewController, UITableViewDataSource, UITa
 
         // 查询历史消息
         IMManager.singleton.conversationManager.queryMsgList(sessionId: sId, sessionType: sType, endMsgId: endMsgId!, limitCount: limitCount, callback: { rsp in
-            print("success query msg list\(rsp)")
+            //print("success query msg list\(rsp)")
             for item in rsp.msgList {
                 let msg = IMMessage(clientId: item.clientMsgID, sessionType: item.sessionType, fromId: item.fromUserID, toId: item.toSessionID, time: item.createTime, msgType: item.msgType, data: String(data: item.msgData, encoding: .utf8)!)
                 msg.serverMsgId = item.serverMsgID
