@@ -59,8 +59,12 @@ extension IMChatViewController {
 
     // 选中一行
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        sessionTabView.deselectRow(at: indexPath, animated: true)
+        
         let sessionInfo = list[indexPath.row]
         let chatContentView = IMChatContentViewController(session: sessionInfo)
+        // 隐藏UITabBarController下面的按钮（好奇怪的写法，怎么不是在self上呢？）
+        chatContentView.hidesBottomBarWhenPushed = true
         // 跳转聊天页面
         navigationController?.pushViewController(chatContentView, animated: true)
     }
