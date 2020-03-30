@@ -30,11 +30,15 @@ class IMChatContentViewController: UIViewController, UITableViewDataSource, UITa
         super.viewDidLoad()
         msgTabView.delegate = self
         msgTabView.dataSource = self
-
+        
         // 注册自定义Cell
         msgTabView.register(UINib(nibName: "IMMessageTextCell", bundle: nil), forCellReuseIdentifier: "IMMessageTextCell")
         // 不显示分割线
         msgTabView.separatorStyle = .none
+
+        msgTabView.estimatedRowHeight = 0
+        msgTabView.estimatedSectionHeaderHeight = 0
+        msgTabView.estimatedSectionFooterHeight = 0
 
         queryMsgList()
     }
@@ -51,7 +55,7 @@ class IMChatContentViewController: UIViewController, UITableViewDataSource, UITa
 
         // 查询历史消息
         IMManager.singleton.conversationManager.queryMsgList(sessionId: sId, sessionType: sType, endMsgId: endMsgId!, limitCount: limitCount, callback: { rsp in
-            //print("success query msg list\(rsp)")
+            // print("success query msg list\(rsp)")
             for item in rsp.msgList {
                 let msg = IMMessage(clientId: item.clientMsgID, sessionType: item.sessionType, fromId: item.fromUserID, toId: item.toSessionID, time: item.createTime, msgType: item.msgType, data: String(data: item.msgData, encoding: .utf8)!)
                 msg.serverMsgId = item.serverMsgID
@@ -72,11 +76,34 @@ class IMChatContentViewController: UIViewController, UITableViewDataSource, UITa
     }
 }
 
+// MARK: UITableViewDelegate
+
+extension IMChatContentViewController{
+    // 禁止选中效果
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+}
+
 // MARK: UITableViewDataSource
 
 extension IMChatContentViewController {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 65
+        let msg = msgList[indexPath.row]
+        // 动态计算每一行文本的高度
+//        if msg.msgType == .kCimMsgTypeText {
+//            return IMMessageTextCell.getTextHeight(text: msg.msgData)
+//        }
+//        return 100
+        var height = IMMessageTextCell.getTextHeight(text: msg.msgData)
+        if height < 65 {
+            height = 65
+        }
+        return height
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
