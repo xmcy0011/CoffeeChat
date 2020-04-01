@@ -49,12 +49,18 @@ class IMMessageTextCell: UITableViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
+        
         // Initialization code
+        
+        // 背景色，通过UITabView和TabCell同时控制
+        self.backgroundColor = IMUIResource.chatBackground
+        // 选中样式，不需要选择效果
+        self.selectionStyle = .none
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
+        
         // Configure the view for the selected state
     }
 
@@ -137,7 +143,7 @@ class IMMessageTextCell: UITableViewCell {
         // 这里吃了大亏，搞了很久。
         // 如果不生效，请检查是否设置了约束
         labelMessage.frame = CGRect(x: leftLabel, y: CGFloat(kTextMarginTop), width: size.width, height: h)
-        labelMessage.backgroundColor = UIColor(red: 77 / 255, green: 166 / 255, blue: 67 / 255, alpha: 0.6)
+        labelMessage.backgroundColor = IMUIResource.chatTextMineColor
     }
 
     // 别人发的消息
@@ -148,7 +154,7 @@ class IMMessageTextCell: UITableViewCell {
         let h = size.height > CGFloat(kMinTextHeight) ? size.height : CGFloat(kMinTextHeight)
 
         labelMessage.frame = CGRect(x: CGFloat(kTextMarginLeft), y: CGFloat(kTextMarginTop), width: w, height: h)
-        labelMessage.backgroundColor = UIColor(red: 190 / 255, green: 190 / 255, blue: 190 / 255, alpha: 0.6)
+        labelMessage.backgroundColor = IMUIResource.chatTextPeerColor
 
         // 头像默认即可，在xib里面有初始位置
         imageHead.frame.origin.x = CGFloat(kImageMarginLeft)

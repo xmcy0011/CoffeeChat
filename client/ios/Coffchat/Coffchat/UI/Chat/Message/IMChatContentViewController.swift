@@ -35,6 +35,7 @@ class IMChatContentViewController: UIViewController, UITableViewDataSource, UITa
         msgTabView.register(UINib(nibName: "IMMessageTextCell", bundle: nil), forCellReuseIdentifier: "IMMessageTextCell")
         // 不显示分割线
         msgTabView.separatorStyle = .none
+        msgTabView.backgroundColor = IMUIResource.chatBackground
 
         msgTabView.estimatedRowHeight = 0
         msgTabView.estimatedSectionHeaderHeight = 0
