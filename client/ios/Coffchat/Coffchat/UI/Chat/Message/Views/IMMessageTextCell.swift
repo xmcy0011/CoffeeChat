@@ -8,10 +8,44 @@
 
 import UIKit
 
+let kMinCellHeight = 65 // 一行最小的高度
+let kMinTextHeight = 45 // 文本最小的高度，保持和头像一样
+
+let kImageHeight = 45 // 头像高度
+let kImageWidth = 45 // 头像宽度
+let kImageMarginLeft = 16 // 头像距离左边的间距
+
+let kTextImageMarginLet = 8 // 文本距离头像的间距
+let kTextMarginTop = 10 // 文本上面的距离
+let kTextMarginLeft = 69 // 文本离屏幕左边的距离（头像宽度45 + 头像左边剧16）
+let kTextMarginRight = 69 // 文本离屏幕右边的距离（头像宽度45 + 头像右边剧16）
+let kTextPadding = 5 // 文本内边距
+
 /// 显示一条文本消息
 class IMMessageTextCell: UITableViewCell {
+    // 头像
     @IBOutlet var imageHead: UIImageView!
-    @IBOutlet var labelMessage: UILabel!
+    // 被CocoaTouch框架赋值的时候，改变文本默认样式
+    // 没有内边距，需要自定义，比较难看，先这样
+    @IBOutlet var labelMessage: UILabel! { didSet {
+        labelMessage.numberOfLines = 0 // 自动换行
+        // 圆角
+        labelMessage.layer.cornerRadius = CGFloat(4)
+        labelMessage.layer.masksToBounds = true
+        labelMessage.backgroundColor = UIColor(red: 190 / 255, green: 190 / 255, blue: 190 / 255, alpha: 0.6)
+        // 内容剧中
+        labelMessage.contentMode = .center
+        } }
+    // 数据模型
+    var model: IMMessage?
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -27,8 +61,15 @@ class IMMessageTextCell: UITableViewCell {
     /// 设置消息
     /// - Parameter message: 消息
     func setContent(message: IMMessage) {
+        model = message
+        // 更新文本内容和头像
         imageHead.image = UIImage(named: "icon_avatar")
         labelMessage.text = message.msgData
+
+        // 标记需要重新刷新布局，但layoutSubviews不会立即调用
+        setNeedsLayout()
+        // self.setNeedsDisplay(self.bounds)
+        // self.draw(self.bounds)
     }
 
     /// 计算文本高度
@@ -36,7 +77,22 @@ class IMMessageTextCell: UITableViewCell {
     ///   - width: 宽带
     ///   - text: 文本
     /// - Returns: 高度
-    class func getTextHeight(text: String) -> CGFloat {
+    class func getCellHeight(text: String) -> CGFloat {
+        let textSize = getTextSize(text: text)
+        if textSize.height > 90 {
+            // IMLog.debug(item: "text height=\(textSize.height),width=\(textSize.width),text=\(text)")
+        }
+
+        var cellHeight = textSize.height + // 文字高度
+            CGFloat(kTextMarginTop * 2) // 上下边距
+
+        // 限制最小高度
+        cellHeight = cellHeight < CGFloat(kMinCellHeight) ? CGFloat(kMinCellHeight) : cellHeight
+        return cellHeight
+    }
+
+    /// 计算文本大小
+    class func getTextSize(text: String) -> CGSize {
         // 创建即可
         let label = UILabel()
         label.text = text
@@ -44,15 +100,57 @@ class IMMessageTextCell: UITableViewCell {
         label.font = .systemFont(ofSize: 13) // 字体
 
         let screenWidth = UIScreen.main.bounds.size.width
-        let kMarginLeft = 72 // 文本离屏幕左边的距离
-        let kMarginRight = 65 // 文本离屏幕右边的距离
-        let kMarginTop = 10 // 文本上面的距离
-        // let kPaddingTop = 5 // 文本内边距
-
-        let width = Int(screenWidth) - kMarginLeft - kMarginRight
-
+        // 文本最大宽度，减去左边距（对方头像）、右边距（我方头像）
+        let width = Int(screenWidth) - kTextMarginLeft - kTextMarginRight
         let boundingRect = label.text!.boundingRect(with: CGSize(width: width, height: 0), options: .usesLineFragmentOrigin, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 13)], context: nil)
+        return boundingRect.size
+    }
 
-        return boundingRect.size.height + CGFloat(kMarginTop*2)
+    /// 确定子视图的布局，这里可以自定义控件位置
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        let userId = IMManager.singleton.loginManager.userId!
+        // 是来自于我的消息，显示在右侧
+        if userId == model!.fromUserId {
+            layoutMeSubviews()
+        } else {
+            layoutOtherSubviews()
+        }
+    }
+
+    // 我发的消息
+    func layoutMeSubviews() {
+        let screenWidth = UIScreen.main.bounds.size.width
+        // 计算头像左边距，屏幕 - 我自己头像宽度 - 和我头像的间距
+        let left = screenWidth - CGFloat(kImageMarginLeft) - CGFloat(kImageWidth)
+        // 设置头像的x坐标
+        imageHead.frame.origin.x = left
+
+        // 测量文本宽高
+        let size = IMMessageTextCell.getTextSize(text: model!.msgData)
+        // 文本左边距 = 屏幕宽度 - 文本宽度 - 左边距离（对方头像大小+固定16边距) - 文本离头像的宽度
+        let leftLabel = screenWidth - size.width - CGFloat(kImageWidth + kImageMarginLeft) - CGFloat(kTextImageMarginLet)
+        // 限制文本最小高度
+        let h = size.height > CGFloat(kMinTextHeight) ? size.height : CGFloat(kMinTextHeight)
+
+        // 这里吃了大亏，搞了很久。
+        // 如果不生效，请检查是否设置了约束
+        labelMessage.frame = CGRect(x: leftLabel, y: CGFloat(kTextMarginTop), width: size.width, height: h)
+        labelMessage.backgroundColor = UIColor(red: 77 / 255, green: 166 / 255, blue: 67 / 255, alpha: 0.6)
+    }
+
+    // 别人发的消息
+    func layoutOtherSubviews() {
+        let size = IMMessageTextCell.getTextSize(text: model!.msgData)
+        let w = size.width
+        // 限制文本最小高度
+        let h = size.height > CGFloat(kMinTextHeight) ? size.height : CGFloat(kMinTextHeight)
+
+        labelMessage.frame = CGRect(x: CGFloat(kTextMarginLeft), y: CGFloat(kTextMarginTop), width: w, height: h)
+        labelMessage.backgroundColor = UIColor(red: 190 / 255, green: 190 / 255, blue: 190 / 255, alpha: 0.6)
+
+        // 头像默认即可，在xib里面有初始位置
+        imageHead.frame.origin.x = CGFloat(kImageMarginLeft)
     }
 }

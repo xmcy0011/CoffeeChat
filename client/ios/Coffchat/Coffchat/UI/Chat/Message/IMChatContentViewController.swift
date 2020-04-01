@@ -30,7 +30,7 @@ class IMChatContentViewController: UIViewController, UITableViewDataSource, UITa
         super.viewDidLoad()
         msgTabView.delegate = self
         msgTabView.dataSource = self
-        
+
         // 注册自定义Cell
         msgTabView.register(UINib(nibName: "IMMessageTextCell", bundle: nil), forCellReuseIdentifier: "IMMessageTextCell")
         // 不显示分割线
@@ -78,7 +78,7 @@ class IMChatContentViewController: UIViewController, UITableViewDataSource, UITa
 
 // MARK: UITableViewDelegate
 
-extension IMChatContentViewController{
+extension IMChatContentViewController {
     // 禁止选中效果
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
@@ -91,7 +91,7 @@ extension IMChatContentViewController {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
-    
+
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let msg = msgList[indexPath.row]
         // 动态计算每一行文本的高度
@@ -99,10 +99,7 @@ extension IMChatContentViewController {
 //            return IMMessageTextCell.getTextHeight(text: msg.msgData)
 //        }
 //        return 100
-        var height = IMMessageTextCell.getTextHeight(text: msg.msgData)
-        if height < 65 {
-            height = 65
-        }
+        let height = IMMessageTextCell.getCellHeight(text: msg.msgData)
         return height
     }
 
@@ -119,7 +116,9 @@ extension IMChatContentViewController {
 
         var cell = tableView.dequeueReusableCell(withIdentifier: cellId) as? IMMessageTextCell
         if cell == nil {
-            cell = IMMessageTextCell()
+            cell = IMMessageTextCell(style: .default, reuseIdentifier: cellId)
+            // 选中效果，不需要
+            cell?.selectionStyle = .none
         }
         cell!.setContent(message: msg)
         return cell!
