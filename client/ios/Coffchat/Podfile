@@ -10,5 +10,6 @@ target 'Coffchat' do
   pod 'CocoaAsyncSocket'        # socket
   #pod 'Socket.IO-Client-Swift', '~> 15.2.0' # socket
   pod 'SwiftProtobuf', '~> 1.0' # protobuf
-
+  pod 'SnapKit', '~> 5.0.0' # 自动布局第三方库
+  
 end

@@ -7,10 +7,15 @@
 //
 
 import UIKit
+import SnapKit
+
+let kSendMsgBarHeight = 50
 
 /// 聊天页面
-class IMChatContentViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class IMChatContentViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, IMChatSendMsgBarDelegate {
     @IBOutlet var msgTabView: UITableView!
+    // 消息发送框
+    var sendMsgBar: IMChatSendMsgBar?
 
     /// 会话信息
     var session: SessionModel
@@ -41,7 +46,37 @@ class IMChatContentViewController: UIViewController, UITableViewDataSource, UITa
         msgTabView.estimatedSectionHeaderHeight = 0
         msgTabView.estimatedSectionFooterHeight = 0
 
+        // 添加子控件
+        setupSubviews()
+
         queryMsgList()
+    }
+
+    // 添加子控件
+    func setupSubviews() {
+        // 聊天框
+        sendMsgBar = getNibInstance(IMChatSendMsgBar.self)
+        sendMsgBar!.delegate = self
+        // 先添加到父视图，在设置约束，否则会崩溃
+        view.addSubview(sendMsgBar!)
+        sendMsgBar!.snp.makeConstraints { [weak self] (make) -> Void in
+            guard let strongSelf = self else { return }
+            // 左 右 底部 高度
+            make.left.equalTo(strongSelf.view.snp.left)
+            make.right.equalTo(strongSelf.view.snp.right)
+            make.bottom.equalTo(strongSelf.view.snp.bottom)
+            make.height.equalTo(kSendMsgBarHeight)
+        }
+    }
+
+    // 初始化控件的实例，根据nib文件
+    func getNibInstance<T>(_ aClass: T.Type) -> T {
+        let name = String(describing: aClass)
+        if Bundle.main.path(forResource: name, ofType: "nib") != nil {
+            return UINib(nibName: name, bundle: nil).instantiate(withOwner: nil, options: nil)[0] as! T
+        } else {
+            fatalError("\(String(describing: aClass)) nib is not exist")
+        }
     }
 
     func queryMsgList() {
@@ -127,5 +162,19 @@ extension IMChatContentViewController {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return msgList.count
+    }
+}
+
+// MARK: IMChatSendMsgBarDelegate
+
+extension IMChatContentViewController {
+    func onSendMsg(_ text: String) {
+        if text.isEmpty {
+            let alert = UIAlertController(title: "提示", message: "请输入内容", preferredStyle: .alert)
+            let action = UIAlertAction(title: "ok", style: .cancel, handler: nil)
+            alert.addAction(action)
+            present(alert, animated: true, completion: nil)
+            return
+        }
     }
 }
