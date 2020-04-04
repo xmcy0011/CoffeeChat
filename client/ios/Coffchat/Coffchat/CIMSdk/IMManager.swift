@@ -41,6 +41,7 @@ let singletonIMManager = IMManager()
 // IM连接
 // 负责与服务端通信
 class IMManager {
+    fileprivate var _chatManager: IMChatManager
     fileprivate var _loginManager: IMLoginManager
     fileprivate var _conversationManager: IMConversationManager
     
@@ -58,6 +59,16 @@ class IMManager {
         return _conversationManager
     }
     
+    // 消息管理
+    public var chatManager: IMChatManager {
+        return _chatManager
+    }
+    
+    // 用户ID
+    public var userId: UInt64? { return loginManager.userId }
+    // 用户昵称
+    public var userNick: String? { return loginManager.userNick }
+    
     /// 单实例
     public class var singleton: IMManager {
         return singletonIMManager
@@ -69,6 +80,7 @@ class IMManager {
         
         _loginManager = IMLoginManager()
         _conversationManager = IMConversationManager()
+        _chatManager = IMChatManager()
     }
     
     // 2、主界面UI显示数据
@@ -96,7 +108,7 @@ extension IMManager {
     /// 初始化消息驱动表
     internal func initHandleMap() {
         // 认证
-        //handleMap[UInt16(CIM_Def_CIMCmdID.kCimCidLoginAuthTokenRsp.rawValue)] = _handleAuthRsp
+        // handleMap[UInt16(CIM_Def_CIMCmdID.kCimCidLoginAuthTokenRsp.rawValue)] = _handleAuthRsp
         // 会话列表
         handleMap[UInt16(CIM_Def_CIMCmdID.kCimCidListRecentContactSessionRsp.rawValue)] = _handleRecentSessionList
         // 历史消息

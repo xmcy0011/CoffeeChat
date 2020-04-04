@@ -29,6 +29,7 @@
 		F42F794524273B7300A50A0A /* IMLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42F794424273B7300A50A0A /* IMLog.swift */; };
 		F42F794A2427453800A50A0A /* IMLoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42F79492427453800A50A0A /* IMLoginManager.swift */; };
 		F42F794C2427772F00A50A0A /* IMConversationManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42F794B2427772F00A50A0A /* IMConversationManagerTests.swift */; };
+		F43C7A9E2438C5FA006C3796 /* IMChatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43C7A9D2438C5FA006C3796 /* IMChatManager.swift */; };
 		F43C90EB2435D548008BF9FC /* IMChatSendMsgBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43C90EA2435D548008BF9FC /* IMChatSendMsgBar.swift */; };
 		F43C90EF2435DAD2008BF9FC /* IMChatSendMsgBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = F43C90EE2435DAD2008BF9FC /* IMChatSendMsgBar.xib */; };
 		F43CA151241FA2E90065373F /* IMRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43CA150241FA2E90065373F /* IMRequest.swift */; };
@@ -95,6 +96,7 @@
 		F42F794424273B7300A50A0A /* IMLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMLog.swift; sourceTree = "<group>"; };
 		F42F79492427453800A50A0A /* IMLoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMLoginManager.swift; sourceTree = "<group>"; };
 		F42F794B2427772F00A50A0A /* IMConversationManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMConversationManagerTests.swift; sourceTree = "<group>"; };
+		F43C7A9D2438C5FA006C3796 /* IMChatManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMChatManager.swift; sourceTree = "<group>"; };
 		F43C90EA2435D548008BF9FC /* IMChatSendMsgBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMChatSendMsgBar.swift; sourceTree = "<group>"; };
 		F43C90EE2435DAD2008BF9FC /* IMChatSendMsgBar.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IMChatSendMsgBar.xib; sourceTree = "<group>"; };
 		F43CA150241FA2E90065373F /* IMRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMRequest.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -334,6 +336,7 @@
 				F4840BE52424C2930005EF04 /* IMManager.swift */,
 				F486541524266E8600D39970 /* IMConversationManager.swift */,
 				F42F79492427453800A50A0A /* IMLoginManager.swift */,
+				F43C7A9D2438C5FA006C3796 /* IMChatManager.swift */,
 			);
 			path = CIMSdk;
 			sourceTree = "<group>";
@@ -555,6 +558,7 @@
 				F417B0262419D4F000E1AAC0 /* CIM.Login.pb.swift in Sources */,
 				F43CA151241FA2E90065373F /* IMRequest.swift in Sources */,
 				F4C510AF2429AA20000BCDEA /* IMSocialViewController.swift in Sources */,
+				F43C7A9E2438C5FA006C3796 /* IMChatManager.swift in Sources */,
 				F46124DC24383A6700298F24 /* IMChatContentViewController+Keyboard.swift in Sources */,
 				F43C90EB2435D548008BF9FC /* IMChatSendMsgBar.swift in Sources */,
 				F4C05A10241391E000D1E293 /* AppDelegate.swift in Sources */,
