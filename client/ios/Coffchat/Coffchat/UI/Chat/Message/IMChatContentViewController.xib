@@ -18,18 +18,13 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="G0e-se-D81">
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="G0e-se-D81">
                     <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                 </tableView>
             </subviews>
             <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-            <constraints>
-                <constraint firstItem="G0e-se-D81" firstAttribute="trailing" secondItem="i5M-Pr-FkT" secondAttribute="trailing" id="Oqa-tB-JdR"/>
-                <constraint firstAttribute="bottom" secondItem="G0e-se-D81" secondAttribute="bottom" id="Rjx-sy-4R1"/>
-                <constraint firstItem="G0e-se-D81" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="d6m-gg-asu"/>
-                <constraint firstItem="G0e-se-D81" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="gtt-Tu-OSt"/>
-            </constraints>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <point key="canvasLocation" x="139" y="153"/>
         </view>

@@ -6,8 +6,8 @@
 //  Copyright © 2020 Xuyingchun Inc. All rights reserved.
 //
 
-import UIKit
 import SnapKit
+import UIKit
 
 let kSendMsgBarHeight = 50
 
@@ -16,6 +16,8 @@ class IMChatContentViewController: UIViewController, UITableViewDataSource, UITa
     @IBOutlet var msgTabView: UITableView!
     // 消息发送框
     var sendMsgBar: IMChatSendMsgBar?
+    // 消息发送框的下边距
+    var sendMsgBarBottomConstranit: Constraint?
 
     /// 会话信息
     var session: SessionModel
@@ -49,7 +51,18 @@ class IMChatContentViewController: UIViewController, UITableViewDataSource, UITa
         // 添加子控件
         setupSubviews()
 
+        // 注册键盘出现事件 #selector 绑定object-c
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardShow(note:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardHidden(note:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidShow(note:)), name: UIResponder.keyboardDidShowNotification, object: nil)
+
+        // 查询历史聊天记录
         queryMsgList()
+    }
+
+    deinit {
+        // 取消注册
+        NotificationCenter.default.removeObserver(self)
     }
 
     // 添加子控件
@@ -64,8 +77,17 @@ class IMChatContentViewController: UIViewController, UITableViewDataSource, UITa
             // 左 右 底部 高度
             make.left.equalTo(strongSelf.view.snp.left)
             make.right.equalTo(strongSelf.view.snp.right)
-            make.bottom.equalTo(strongSelf.view.snp.bottom)
+            // 获取下边距的引用，便于处理键盘显示时，把输入框挤上去
+            strongSelf.sendMsgBarBottomConstranit = make.bottom.equalTo(strongSelf.view.snp.bottom).constraint
             make.height.equalTo(kSendMsgBarHeight)
+        }
+
+        // 键盘出现时，改变tabview的下边距，以显示全部内容
+        msgTabView.snp.makeConstraints { (make) -> Void in
+            // 上 左 右 全屏绑定
+            make.top.left.right.equalTo(self.view)
+            // 下边距是消息输入框的上边距，这里很关键。
+            make.bottom.equalTo(self.sendMsgBar!.snp.top)
         }
     }
 
@@ -105,6 +127,9 @@ class IMChatContentViewController: UIViewController, UITableViewDataSource, UITa
 
             DispatchQueue.main.async {
                 self.msgTabView.reloadData()
+
+                // 滚动到底部，不要动画
+                self.msgTabView.scrollToBottom(animated: false)
             }
         }, timeout: {
             print("timeout")
