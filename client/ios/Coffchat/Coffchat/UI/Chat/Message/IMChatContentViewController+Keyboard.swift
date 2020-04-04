@@ -56,7 +56,8 @@ extension IMChatContentViewController {
             animations: {
                 self.sendMsgBarBottomConstranit?.update(offset: -heightOffset)
                 self.view.layoutIfNeeded()
-                if isShowing {
+                // 有足够多的内容，才滚动到底部
+                if isShowing && self.msgTabView.canScrollToBottom {
                     self.msgTabView.scrollToBottom(animated: false)
                 }
             },
