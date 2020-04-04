@@ -201,5 +201,15 @@ extension IMChatContentViewController {
             present(alert, animated: true, completion: nil)
             return
         }
+        
+        sendMsgBar?.textInput.text = ""
+        
+        // 追加
+        let fromId = IMManager.singleton.loginManager.userId
+        msgList.append(IMMessage(clientId: "", sessionType: .kCimSessionTypeSingle, fromId: fromId!, toId: 0, time: 0, msgType: .kCimMsgTypeText, data: text))
+        
+        // 刷新tabview
+        let index = IndexPath(row: msgList.count - 1, section: 0)
+        msgTabView.insertRowsAtBottom([index])
     }
 }
