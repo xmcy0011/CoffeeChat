@@ -31,7 +31,7 @@ class IMLog {
             // 获取文件名
             let fileName = (file as NSString).lastPathComponent
             // 打印日志内容
-        print("\(getNowTheTime()) [debug] [\(fileName):\(line) \(function)] | \(item)")
+            print("\(getNowTheTime()) [debug] [\(fileName):\(line) \(function)] | \(item)")
         #endif
     }
     

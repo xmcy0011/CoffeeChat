@@ -34,6 +34,7 @@ protocol IMClientDelegateData {
 }
 
 let kClientVersion = "0.0.1"
+let kHeartbeatTime = 20
 let DefaultIMClient = IMClient()
 
 // IM连接
@@ -180,7 +181,6 @@ class IMClient: NSObject, GCDAsyncSocketDelegate {
     
     func _checkTimer(t: Timer) {
         let nowTimestamp = Int32(NSDate.now.timeIntervalSince1970)
-        let maxWaitTimeLen = 10 // 最大等待时间
         
         var it = requestDic.makeIterator()
         var item = it.next()
@@ -188,7 +188,7 @@ class IMClient: NSObject, GCDAsyncSocketDelegate {
             let req = (item?.value)!
             item = it.next()
             
-            if abs(nowTimestamp - req.createTimestamp) > maxWaitTimeLen {
+            if abs(nowTimestamp - req.createTimestamp) > kHeartbeatTime {
                 IMLog.warn(item: "request timeout,seq=\(req.seq),cmdId=\(req.header.commandId),now=\(nowTimestamp),reqTime=\(req.createTimestamp) ")
                 // next已经改变，放心移除
                 requestDic.removeValue(forKey: req.seq)
