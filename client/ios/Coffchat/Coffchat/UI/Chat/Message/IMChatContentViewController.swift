@@ -12,7 +12,8 @@ import UIKit
 let kSendMsgBarHeight = 50
 
 /// 聊天页面
-class IMChatContentViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, IMChatSendMsgBarDelegate {
+class IMChatContentViewController: UIViewController, UITableViewDataSource, UITableViewDelegate,
+    IMChatSendMsgBarDelegate, IMChatManagerDelegate {
     @IBOutlet var msgTabView: UITableView!
     // 消息发送框
     var sendMsgBar: IMChatSendMsgBar?
@@ -58,11 +59,15 @@ class IMChatContentViewController: UIViewController, UITableViewDataSource, UITa
 
         // 查询历史聊天记录
         queryMsgList()
+
+        // 注册消息委托
+        IMManager.singleton.chatManager.register(key: "IMChatContentViewController", delegate: self)
     }
 
     deinit {
         // 取消注册
         NotificationCenter.default.removeObserver(self)
+        IMManager.singleton.chatManager.unregister(key: "IMChatContentViewController")
     }
 
     // 添加子控件
@@ -201,15 +206,48 @@ extension IMChatContentViewController {
             present(alert, animated: true, completion: nil)
             return
         }
-        
+
         sendMsgBar?.textInput.text = ""
-        
+
+        let sessionId = session.rectSession.session.sessionId
+        let sessionType = session.rectSession.session.sessionType
+
         // 追加
         let fromId = IMManager.singleton.loginManager.userId
-        msgList.append(IMMessage(clientId: "", sessionType: .kCimSessionTypeSingle, fromId: fromId!, toId: 0, time: 0, msgType: .kCimMsgTypeText, data: text))
-        
+        let msg = IMMessage(clientId: "", sessionType: sessionType, fromId: fromId!, toId: sessionId, time: 0, msgType: .kCimMsgTypeText, data: text)
+        appendMsg(msg: msg)
+
+        // 发消息
+        IMManager.singleton.chatManager.sendTextMessage(toSessionId: sessionId, sessionType: sessionType, text: text)
+    }
+
+    func appendMsg(msg: IMMessage) {
+        // 追加
+        msgList.append(msg)
+
         // 刷新tabview
         let index = IndexPath(row: msgList.count - 1, section: 0)
         msgTabView.insertRowsAtBottom([index])
+    }
+}
+
+// MARK: IMChatManagerDelegate
+
+extension IMChatContentViewController {
+    // 发送消息结果
+    func sendMessageResult(msg: IMMessage, result: IMSendResult, _ code: CIM_Def_CIMResCode) {
+        // 自己的消息
+        if msg.toSessionId == session.rectSession.session.sessionId {
+            IMLog.info(item: "消息发送结果，msgId:\(msg.clientMsgId),result:\(result),sessionId:\(msg.toSessionId)")
+        }
+    }
+
+    // 收到一条消息
+    func onRecvMessage(msg: IMMessage) {
+        if msg.toSessionId == session.rectSession.session.sessionId {
+            DispatchQueue.main.async {
+                self.appendMsg(msg: msg)
+            }
+        }
     }
 }
