@@ -43,6 +43,12 @@ func main() {
 	logger.InitLogger("log/log.log", "debug")
 	defer logger.Logger.Sync() // flushes buffer, if any
 
+	// 崩溃时，打印错误
+	defer func() {
+		err := recover()
+		logger.Sugar.Error(err)
+	}()
+
 	//启用CPU 性能分析
 	if *profFlag == 1 {
 		f, err := os.OpenFile("cpu.prof", os.O_RDWR|os.O_CREATE, 0644)
