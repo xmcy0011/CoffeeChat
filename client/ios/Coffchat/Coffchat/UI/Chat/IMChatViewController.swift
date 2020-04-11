@@ -9,7 +9,7 @@
 import UIKit
 
 /// 会话列表
-class IMChatViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class IMChatViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, IMConversationManagerDelegate {
     @IBOutlet var sessionTabView: UITableView!
     var list: [SessionModel] = []
 
@@ -25,7 +25,9 @@ class IMChatViewController: UIViewController, UITableViewDelegate, UITableViewDa
         sessionTabView.dataSource = self
         sessionTabView.delegate = self
 
-        // Do any additional setup after loading the view.
+        // 注册委托
+        IMManager.singleton.conversationManager.register(key: "IMChatViewController", delegate: self)
+        // 查询会话列表
         IMManager.singleton.conversationManager.queryAllRecentSessions(callback: { rsp in
             for item in rsp.contactSessionList {
                 let session = IMSession(id: item.sessionID, type: item.sessionType)
@@ -46,6 +48,33 @@ class IMChatViewController: UIViewController, UITableViewDelegate, UITableViewDa
             print("查询会话超时")
         })
     }
+
+    override func viewWillAppear(_ animated: Bool) {
+        sessionTabView.reloadData()
+    }
+}
+
+// MARK: IMConversationManagerDelegate - 会话委托回调
+
+extension IMChatViewController {
+    func didLoadAllRecentSession() {}
+
+    func didUpdateRecentSession(session: IMRecentSession, totalUnreadCount: Int32) {
+        IMLog.info(item: "didUpdateRecentSession")
+
+        // 更新最后一条会话信息
+        for i in 0..<list.count {
+            if list[i].rectSession.session.sessionId == session.session.sessionId {
+                list[i].rectSession.latestMsg = session.latestMsg
+                list[i].rectSession.unreadCnt = session.unreadCnt
+                // 会报错，暂时通过viewWillAppear重新加载数据源
+//                DispatchQueue.main.async {
+//                    self.sessionTabView.reloadSections([i], with: .none)
+//                }
+                break
+            }
+        }
+    }
 }
 
 // MARK: UITableViewDelegate
@@ -60,7 +89,7 @@ extension IMChatViewController {
     // 选中一行
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         sessionTabView.deselectRow(at: indexPath, animated: true)
-        
+
         let sessionInfo = list[indexPath.row]
         let chatContentView = IMChatContentViewController(session: sessionInfo)
         // 隐藏UITabBarController下面的按钮（好奇怪的写法，怎么不是在self上呢？）

@@ -93,6 +93,10 @@ class IMChatManager: IMClientDelegateData {
 
         IMLog.info(item: "send msg,clientMsgId:\(msg2.clientMsgId),msgType:\(msg2.msgType),to:\(msg2.toSessionId)")
 
+        // 更新会话最后一条消息
+        let message = IMMessage(clientId: msg.msgID, sessionType: msg.sessionType, fromId: msg.fromUserID, toId: msg.toSessionID, time: UInt32(msg.createTime), msgType: msg.msgType, data: String(data: msg.msgData, encoding: .utf8)!)
+        IMManager.singleton.conversationManager.updateRecentSession(sessionId: msg.toSessionID, sessionType: msg.sessionType, msg: message)
+
         _ = client.send(cmdId: .kCimCidMsgData, body: try! msg.serializedData())
     }
 
