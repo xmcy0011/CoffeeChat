@@ -69,7 +69,8 @@ extension IMChatViewController {
                 list[i].rectSession.unreadCnt = session.unreadCnt
                 // FIXME: 会有只显示一次的警告？有什么影响？
                 DispatchQueue.main.async {
-                    self.sessionTabView.reloadSections([i], with: .none)
+                    self.sessionTabView.reloadData()
+                    //self.sessionTabView.reloadSections([i], with: .none)
                 }
                 break
             }
