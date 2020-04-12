@@ -176,9 +176,12 @@ extension IMConversationManager {
         } catch {
             IMLog.error(item: "parse error:\(error)")
         }
+        IMLog.info(item: "recv new msg,update session latestMsg,from=\(msg.fromUserID),to=\(msg.toSessionID),msgType=\(msg.msgType)")
 
-        let message = IMMessage(clientId: msg.msgID, sessionType: msg.sessionType, fromId: msg.fromUserID, toId: msg.toSessionID, time: UInt32(msg.createTime), msgType: msg.msgType, data: String(data: msg.msgData, encoding: .utf8)!)
-        updateRecentSession(sessionId: msg.toSessionID, sessionType: msg.sessionType, msg: message)
+        // 转换一下sessionId，单聊用fromId，群聊直接使用toSessionId
+        let sessionId = IMChatManager.getSessionIdFromMsg(msg: msg)
+        let message = IMMessage(clientId: msg.msgID, sessionType: msg.sessionType, fromId: msg.fromUserID, toId: sessionId, time: UInt32(msg.createTime), msgType: msg.msgType, data: String(data: msg.msgData, encoding: .utf8)!)
+        updateRecentSession(sessionId: sessionId, sessionType: msg.sessionType, msg: message)
     }
 
     /// 更新会话的信息，且回调界面
@@ -198,6 +201,8 @@ extension IMConversationManager {
                 totalUnreadCount = totalUnreadCount + 1
                 item.value.didUpdateRecentSession(session: recentSession!, totalUnreadCount: Int32(totalUnreadCount))
             }
+        } else {
+            IMLog.warn(item: "not find session key,sessionId=\(sessionId),sessionType=\(sessionType)")
         }
     }
 

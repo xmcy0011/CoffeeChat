@@ -67,10 +67,10 @@ extension IMChatViewController {
             if list[i].rectSession.session.sessionId == session.session.sessionId {
                 list[i].rectSession.latestMsg = session.latestMsg
                 list[i].rectSession.unreadCnt = session.unreadCnt
-                // 会报错，暂时通过viewWillAppear重新加载数据源
-//                DispatchQueue.main.async {
-//                    self.sessionTabView.reloadSections([i], with: .none)
-//                }
+                // FIXME: 会有只显示一次的警告？有什么影响？
+                DispatchQueue.main.async {
+                    self.sessionTabView.reloadSections([i], with: .none)
+                }
                 break
             }
         }
