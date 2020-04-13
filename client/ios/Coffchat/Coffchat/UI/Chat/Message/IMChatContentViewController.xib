@@ -9,7 +9,9 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="IMChatContentViewController" customModule="Coffchat" customModuleProvider="target">
             <connections>
+                <outlet property="indicatorView" destination="X2H-yM-c0B" id="e9v-9t-WhL"/>
                 <outlet property="msgTabView" destination="G0e-se-D81" id="wfT-gc-Dug"/>
+                <outlet property="refreshView" destination="tz3-7S-YD4" id="hA1-To-hdV"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -27,6 +29,27 @@
             <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <point key="canvasLocation" x="139" y="153"/>
+        </view>
+        <view contentMode="scaleToFill" id="tz3-7S-YD4">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="40"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="X2H-yM-c0B">
+                    <rect key="frame" x="150" y="10" width="20" height="20"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="20" id="Ldc-OL-eyC"/>
+                        <constraint firstAttribute="width" constant="20" id="ocB-QH-u6h"/>
+                    </constraints>
+                </activityIndicatorView>
+            </subviews>
+            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="X2H-yM-c0B" firstAttribute="centerX" secondItem="tz3-7S-YD4" secondAttribute="centerX" id="48f-A7-M05"/>
+                <constraint firstItem="X2H-yM-c0B" firstAttribute="centerY" secondItem="tz3-7S-YD4" secondAttribute="centerY" id="4fK-vj-xYU"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="n66-Th-y2f"/>
+            <point key="canvasLocation" x="137.68115942028987" y="327.45535714285711"/>
         </view>
     </objects>
 </document>

@@ -10,19 +10,26 @@ import SnapKit
 import UIKit
 
 let kSendMsgBarHeight = 50
+let kStartAnimateOffset = CGFloat(30)
 
 /// 聊天页面
-class IMChatContentViewController: UIViewController, UITableViewDataSource, UITableViewDelegate,
+class IMChatContentViewController: UIViewController, UITableViewDataSource, UIScrollViewDelegate, UITableViewDelegate,
     IMChatSendMsgBarDelegate, IMChatManagerDelegate {
     @IBOutlet var msgTabView: UITableView!
+    @IBOutlet var refreshView: UIView! // tabview顶部视图，背景色透明，里面放了一个UIActivityIndicatorView
+    @IBOutlet var indicatorView: UIActivityIndicatorView! // 一个系统自带的菊花，可以显示动画
+
     // 消息发送框
     var sendMsgBar: IMChatSendMsgBar?
     // 消息发送框的下边距
     var sendMsgBarBottomConstranit: Constraint?
 
-    /// 会话信息
+    // 会话信息
     var session: SessionModel
     var msgList: [IMMessage] = []
+
+    // 是否正在刷新历史记录中
+    var isRefreshMsgLst: Bool = false
 
     init(session: SessionModel) {
         self.session = session
@@ -44,7 +51,7 @@ class IMChatContentViewController: UIViewController, UITableViewDataSource, UITa
         // 不显示分割线
         msgTabView.separatorStyle = .none
         msgTabView.backgroundColor = IMUIResource.chatBackground
-
+        // msgTabView.tableHeaderView = refreshView // 顶部显示
         msgTabView.estimatedRowHeight = 0
         msgTabView.estimatedSectionHeaderHeight = 0
         msgTabView.estimatedSectionFooterHeight = 0
@@ -58,7 +65,7 @@ class IMChatContentViewController: UIViewController, UITableViewDataSource, UITa
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidShow(note:)), name: UIResponder.keyboardDidShowNotification, object: nil)
 
         // 查询历史聊天记录
-        queryMsgList()
+        queryMsgList(endMsgId: 0)
 
         // 注册消息委托
         IMManager.singleton.chatManager.register(key: "IMChatContentViewController", delegate: self)
@@ -106,18 +113,30 @@ class IMChatContentViewController: UIViewController, UITableViewDataSource, UITa
         }
     }
 
-    func queryMsgList() {
+    /// 刷新历史记录
+    @objc
+    func refreshMsgList() {
+        if !isRefreshMsgLst {
+            indicatorView.startAnimating()
+            
+            if msgList.count > 0{
+                queryMsgList(endMsgId: msgList[msgList.count - 1].serverMsgId!)
+            }else{
+                queryMsgList(endMsgId: 0)
+            }
+        }
+    }
+
+    func queryMsgList(endMsgId: UInt64) {
+        isRefreshMsgLst = true
+        
         let sId = session.rectSession.session.sessionId
         let sType = session.rectSession.session.sessionType
-        var endMsgId = session.rectSession.latestMsg.serverMsgId
+        // var endMsgId = session.rectSession.latestMsg.serverMsgId
         let limitCount = 20
 
-        if endMsgId == nil {
-            endMsgId = 0
-        }
-
         // 查询历史消息
-        IMManager.singleton.conversationManager.queryMsgList(sessionId: sId, sessionType: sType, endMsgId: endMsgId!, limitCount: limitCount, callback: { rsp in
+        IMManager.singleton.conversationManager.queryMsgList(sessionId: sId, sessionType: sType, endMsgId: endMsgId, limitCount: limitCount, callback: { rsp in
             // print("success query msg list\(rsp)")
             for item in rsp.msgList {
                 let msg = IMMessage(clientId: item.clientMsgID, sessionType: item.sessionType, fromId: item.fromUserID, toId: item.toSessionID, time: item.createTime, msgType: item.msgType, data: String(data: item.msgData, encoding: .utf8)!)
@@ -131,6 +150,16 @@ class IMChatContentViewController: UIViewController, UITableViewDataSource, UITa
             }
 
             DispatchQueue.main.async {
+                // 如果超过20个，可能有历史聊天记录，显示刷新按钮
+                self.isRefreshMsgLst = false
+                self.indicatorView.stopAnimating()
+                if self.msgList.count >= 20 {
+                    if self.msgTabView.tableHeaderView == nil {
+                        self.msgTabView.tableHeaderView = self.refreshView
+                    }
+                } else {
+                    self.msgTabView.tableHeaderView = nil // 隐藏刷新按钮
+                }
                 self.msgTabView.reloadData()
 
                 // 滚动到底部，不要动画
@@ -192,6 +221,26 @@ extension IMChatContentViewController {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return msgList.count
+    }
+}
+
+// MARK: UIScrollViewDelegate
+
+extension IMChatContentViewController {
+    // 滚动过程中
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView.contentOffset.y < kStartAnimateOffset {
+            IMLog.info(item: "pull to refresh msg list")
+            refreshMsgList()
+        }
+    }
+
+    // 停止拖拽滚动条
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if scrollView.contentOffset.y - scrollView.contentInset.top < kStartAnimateOffset {
+            IMLog.info(item: "pull to refresh msg list")
+            refreshMsgList()
+        }
     }
 }
 
