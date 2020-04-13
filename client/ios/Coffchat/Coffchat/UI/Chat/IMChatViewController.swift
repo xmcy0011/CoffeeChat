@@ -21,7 +21,7 @@ class IMChatViewController: UIViewController, UITableViewDelegate, UITableViewDa
         // 注册自定义的Cell的实际类型
         sessionTabView.register(UINib(nibName: "IMChatViewCell", bundle: nil), forCellReuseIdentifier: "IMChatViewCell")
         sessionTabView.estimatedRowHeight = 65
-
+        sessionTabView.tableFooterView = UIView() // 设置之后可以去除空行单元格之间的空白线
         sessionTabView.dataSource = self
         sessionTabView.delegate = self
 
