@@ -11,6 +11,7 @@ import UIKit
 
 let kSendMsgBarHeight = 50
 let kStartAnimateOffset = CGFloat(30)
+let kLimitPullMsgCount = 20
 
 /// 聊天页面
 class IMChatContentViewController: UIViewController, UITableViewDataSource, UIScrollViewDelegate, UITableViewDelegate,
@@ -51,7 +52,6 @@ class IMChatContentViewController: UIViewController, UITableViewDataSource, UISc
         // 不显示分割线
         msgTabView.separatorStyle = .none
         msgTabView.backgroundColor = IMUIResource.chatBackground
-        // msgTabView.tableHeaderView = refreshView // 顶部显示
         msgTabView.estimatedRowHeight = 0
         msgTabView.estimatedSectionHeaderHeight = 0
         msgTabView.estimatedSectionFooterHeight = 0
@@ -118,17 +118,17 @@ class IMChatContentViewController: UIViewController, UITableViewDataSource, UISc
     func refreshMsgList() {
         if !isRefreshMsgLst {
             isRefreshMsgLst = true
-            
+
             // 菊花转起来
             indicatorView.startAnimating()
+            msgTabView.tableHeaderView?.isHidden = false
 
             let backgroundQueue = DispatchQueue.global(qos: .background)
             backgroundQueue.async {
                 sleep(1) // 如果网络太快，看不到效果
-                if self.msgList.count > 0 {
-                    self.queryMsgList(endMsgId: self.msgList[self.msgList.count - 1].serverMsgId!)
-                } else {
-                    self.queryMsgList(endMsgId: 0)
+                // 如果条数不足20，不需要查询
+                if self.msgList.count >= kLimitPullMsgCount{
+                    self.queryMsgList(endMsgId: self.msgList[0].serverMsgId!)
                 }
             }
         }
@@ -139,11 +139,9 @@ class IMChatContentViewController: UIViewController, UITableViewDataSource, UISc
 
         let sId = session.rectSession.session.sessionId
         let sType = session.rectSession.session.sessionType
-        // var endMsgId = session.rectSession.latestMsg.serverMsgId
-        let limitCount = 20
 
         // 查询历史消息
-        IMManager.singleton.conversationManager.queryMsgList(sessionId: sId, sessionType: sType, endMsgId: endMsgId, limitCount: limitCount, callback: { rsp in
+        IMManager.singleton.conversationManager.queryMsgList(sessionId: sId, sessionType: sType, endMsgId: endMsgId, limitCount: kLimitPullMsgCount, callback: { rsp in
             // print("success query msg list\(rsp)")
             var tempList: [IMMessage] = []
 
@@ -157,21 +155,28 @@ class IMChatContentViewController: UIViewController, UITableViewDataSource, UISc
                 msg.msgStatus = item.msgStatus
                 tempList.append(msg)
             }
-            // 插入，按时间顺序显示
-            self.msgList.insert(contentsOf: tempList, at: 0)
 
             DispatchQueue.main.async {
                 // 如果超过20个，可能有历史聊天记录，显示刷新按钮
                 self.isRefreshMsgLst = false
                 self.indicatorView.stopAnimating()
-                if self.msgList.count >= 20 {
+                if tempList.count >= kLimitPullMsgCount {
                     if self.msgTabView.tableHeaderView == nil {
                         self.msgTabView.tableHeaderView = self.refreshView
                     }
                 } else {
-                    self.msgTabView.tableHeaderView = nil // 隐藏刷新按钮
+                    self.msgTabView.tableHeaderView?.isHidden = true // 隐藏刷新按钮
                 }
+            }
 
+            if tempList.count == 0 {
+                return
+            }
+
+            // 插入，按时间顺序显示
+            self.msgList.insert(contentsOf: tempList, at: 0)
+
+            DispatchQueue.main.async {
                 if endMsgId == 0 {
                     // 滚动到底部，不要动画
                     self.msgTabView.reloadData()

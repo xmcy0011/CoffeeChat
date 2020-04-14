@@ -163,7 +163,7 @@ extension IMConversationManager {
         }
 
         if res != nil {
-            IMLog.info(item: "session_id=\(res!.sessionID),session_type=\(res!.sessionType),msg_count=\(res!.msgList.count)")
+            IMLog.info(item: "session_id=\(res!.sessionID),session_type=\(res!.sessionType),msg_count=\(res!.msgList.count),endMsgId:\(res!.endMsgID)")
             queryMsgListCallback?(res!)
         }
     }
