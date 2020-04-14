@@ -117,19 +117,26 @@ class IMChatContentViewController: UIViewController, UITableViewDataSource, UISc
     @objc
     func refreshMsgList() {
         if !isRefreshMsgLst {
-            indicatorView.startAnimating()
+            isRefreshMsgLst = true
             
-            if msgList.count > 0{
-                queryMsgList(endMsgId: msgList[msgList.count - 1].serverMsgId!)
-            }else{
-                queryMsgList(endMsgId: 0)
+            // 菊花转起来
+            indicatorView.startAnimating()
+
+            let backgroundQueue = DispatchQueue.global(qos: .background)
+            backgroundQueue.async {
+                sleep(1) // 如果网络太快，看不到效果
+                if self.msgList.count > 0 {
+                    self.queryMsgList(endMsgId: self.msgList[self.msgList.count - 1].serverMsgId!)
+                } else {
+                    self.queryMsgList(endMsgId: 0)
+                }
             }
         }
     }
 
     func queryMsgList(endMsgId: UInt64) {
         isRefreshMsgLst = true
-        
+
         let sId = session.rectSession.session.sessionId
         let sType = session.rectSession.session.sessionType
         // var endMsgId = session.rectSession.latestMsg.serverMsgId
@@ -138,6 +145,8 @@ class IMChatContentViewController: UIViewController, UITableViewDataSource, UISc
         // 查询历史消息
         IMManager.singleton.conversationManager.queryMsgList(sessionId: sId, sessionType: sType, endMsgId: endMsgId, limitCount: limitCount, callback: { rsp in
             // print("success query msg list\(rsp)")
+            var tempList: [IMMessage] = []
+
             for item in rsp.msgList {
                 let msg = IMMessage(clientId: item.clientMsgID, sessionType: item.sessionType, fromId: item.fromUserID, toId: item.toSessionID, time: item.createTime, msgType: item.msgType, data: String(data: item.msgData, encoding: .utf8)!)
                 msg.serverMsgId = item.serverMsgID
@@ -146,8 +155,10 @@ class IMChatContentViewController: UIViewController, UITableViewDataSource, UISc
                 msg.senderClientType = item.senderClientType
                 msg.attach = item.attach
                 msg.msgStatus = item.msgStatus
-                self.msgList.append(msg)
+                tempList.append(msg)
             }
+            // 插入，按时间顺序显示
+            self.msgList.insert(contentsOf: tempList, at: 0)
 
             DispatchQueue.main.async {
                 // 如果超过20个，可能有历史聊天记录，显示刷新按钮
@@ -160,14 +171,42 @@ class IMChatContentViewController: UIViewController, UITableViewDataSource, UISc
                 } else {
                     self.msgTabView.tableHeaderView = nil // 隐藏刷新按钮
                 }
-                self.msgTabView.reloadData()
 
-                // 滚动到底部，不要动画
-                self.msgTabView.scrollToBottom(animated: false)
+                if endMsgId == 0 {
+                    // 滚动到底部，不要动画
+                    self.msgTabView.reloadData()
+                    self.msgTabView.scrollToBottom(animated: false)
+                } else {
+                    // 参考TSWeChat开源项目，无刷新加载新的历史消息
+                    self.updateTableWithNewRowCount(count: tempList.count)
+                }
             }
         }, timeout: {
             print("timeout")
         })
+    }
+
+    // 下拉刷新加载数据， inert rows
+    func updateTableWithNewRowCount(count: Int) {
+        var contentOffset = msgTabView.contentOffset
+
+        UIView.setAnimationsEnabled(false)
+        msgTabView.beginUpdates()
+
+        var heightForNewRows: CGFloat = 0
+        var indexPaths = [IndexPath]()
+        for i in 0 ..< count {
+            let indexPath = IndexPath(row: i, section: 0)
+            indexPaths.append(indexPath)
+
+            heightForNewRows += tableView(msgTabView, heightForRowAt: indexPath)
+        }
+        contentOffset.y += heightForNewRows
+
+        msgTabView.insertRows(at: indexPaths, with: UITableView.RowAnimation.none)
+        msgTabView.endUpdates()
+        UIView.setAnimationsEnabled(true)
+        msgTabView.setContentOffset(contentOffset, animated: false)
     }
 }
 
