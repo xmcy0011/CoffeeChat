@@ -40,6 +40,7 @@ message CIMGetMsgListRsp {
   uint64 user_id = 1;
   CIM.Def.CIMSessionType session_type = 2;
   uint64 session_id = 3;
+  uint64 end_msg_id = 4; // 结束服务器消息id(不包含在查询结果中)
   //   uint64 from_time_stamp = 4;     // 起始时间点，单位：毫秒
   //   uint64 end_time_stamp = 5;      // 结束时间点，单位：毫秒
   repeated CIM.Def.CIMMsgInfo msg_list = 6; // 消息列表

@@ -38,6 +38,7 @@ const CIMGetMsgListRsp$json = const {
     const {'1': 'user_id', '3': 1, '4': 1, '5': 4, '10': 'userId'},
     const {'1': 'session_type', '3': 2, '4': 1, '5': 14, '6': '.CIM.Def.CIMSessionType', '10': 'sessionType'},
     const {'1': 'session_id', '3': 3, '4': 1, '5': 4, '10': 'sessionId'},
+    const {'1': 'end_msg_id', '3': 4, '4': 1, '5': 4, '10': 'endMsgId'},
     const {'1': 'msg_list', '3': 6, '4': 3, '5': 11, '6': '.CIM.Def.CIMMsgInfo', '10': 'msgList'},
   ],
 };

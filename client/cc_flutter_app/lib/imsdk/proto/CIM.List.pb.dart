@@ -129,6 +129,7 @@ class CIMGetMsgListRsp extends $pb.GeneratedMessage {
     ..a<Int64>(1, 'userId', $pb.PbFieldType.OU6, Int64.ZERO)
     ..e<$0.CIMSessionType>(2, 'sessionType', $pb.PbFieldType.OE, $0.CIMSessionType.kCIM_SESSION_TYPE_Invalid, $0.CIMSessionType.valueOf, $0.CIMSessionType.values)
     ..a<Int64>(3, 'sessionId', $pb.PbFieldType.OU6, Int64.ZERO)
+    ..a<Int64>(4, 'endMsgId', $pb.PbFieldType.OU6, Int64.ZERO)
     ..pc<$0.CIMMsgInfo>(6, 'msgList', $pb.PbFieldType.PM,$0.CIMMsgInfo.create)
     ..hasRequiredFields = false
   ;
@@ -160,6 +161,11 @@ class CIMGetMsgListRsp extends $pb.GeneratedMessage {
   $core.bool hasSessionId() => $_has(2);
   void clearSessionId() => clearField(3);
 
-  $core.List<$0.CIMMsgInfo> get msgList => $_getList(3);
+  Int64 get endMsgId => $_getI64(3);
+  set endMsgId(Int64 v) { $_setInt64(3, v); }
+  $core.bool hasEndMsgId() => $_has(3);
+  void clearEndMsgId() => clearField(4);
+
+  $core.List<$0.CIMMsgInfo> get msgList => $_getList(4);
 }
 

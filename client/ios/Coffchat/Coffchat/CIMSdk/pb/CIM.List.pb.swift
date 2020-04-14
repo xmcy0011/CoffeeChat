@@ -95,6 +95,9 @@ struct CIM_List_CIMGetMsgListRsp {
 
   var sessionID: UInt64 = 0
 
+  /// 结束服务器消息id(不包含在查询结果中)
+  var endMsgID: UInt64 = 0
+
   ///   uint64 from_time_stamp = 4;     // 起始时间点，单位：毫秒
   ///   uint64 end_time_stamp = 5;      // 结束时间点，单位：毫秒
   var msgList: [CIM_Def_CIMMsgInfo] = []
@@ -243,6 +246,7 @@ extension CIM_List_CIMGetMsgListRsp: SwiftProtobuf.Message, SwiftProtobuf._Messa
     1: .standard(proto: "user_id"),
     2: .standard(proto: "session_type"),
     3: .standard(proto: "session_id"),
+    4: .standard(proto: "end_msg_id"),
     6: .standard(proto: "msg_list"),
   ]
 
@@ -252,6 +256,7 @@ extension CIM_List_CIMGetMsgListRsp: SwiftProtobuf.Message, SwiftProtobuf._Messa
       case 1: try decoder.decodeSingularUInt64Field(value: &self.userID)
       case 2: try decoder.decodeSingularEnumField(value: &self.sessionType)
       case 3: try decoder.decodeSingularUInt64Field(value: &self.sessionID)
+      case 4: try decoder.decodeSingularUInt64Field(value: &self.endMsgID)
       case 6: try decoder.decodeRepeatedMessageField(value: &self.msgList)
       default: break
       }
@@ -268,6 +273,9 @@ extension CIM_List_CIMGetMsgListRsp: SwiftProtobuf.Message, SwiftProtobuf._Messa
     if self.sessionID != 0 {
       try visitor.visitSingularUInt64Field(value: self.sessionID, fieldNumber: 3)
     }
+    if self.endMsgID != 0 {
+      try visitor.visitSingularUInt64Field(value: self.endMsgID, fieldNumber: 4)
+    }
     if !self.msgList.isEmpty {
       try visitor.visitRepeatedMessageField(value: self.msgList, fieldNumber: 6)
     }
@@ -278,6 +286,7 @@ extension CIM_List_CIMGetMsgListRsp: SwiftProtobuf.Message, SwiftProtobuf._Messa
     if lhs.userID != rhs.userID {return false}
     if lhs.sessionType != rhs.sessionType {return false}
     if lhs.sessionID != rhs.sessionID {return false}
+    if lhs.endMsgID != rhs.endMsgID {return false}
     if lhs.msgList != rhs.msgList {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true

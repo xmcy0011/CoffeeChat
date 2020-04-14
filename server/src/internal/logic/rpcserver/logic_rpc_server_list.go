@@ -136,6 +136,7 @@ func (s *LogicServer) GetMsgList(ctx context.Context, in *cim.CIMGetMsgListReq) 
 		UserId:      in.UserId,
 		SessionType: in.SessionType,
 		SessionId:   in.SessionId,
+		EndMsgId:    in.EndMsgId,
 	}
 	rsp.MsgList = make([]*cim.CIMMsgInfo, 0)
 	for i := range msgList {
