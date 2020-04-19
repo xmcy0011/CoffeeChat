@@ -1,3 +1,6 @@
+# fixed: trunk URL couldn't be downloaded: https://cdn.cocoapods.org/all_pods_versions_b_e_4.txt, error: execution expired
+source 'https://github.com/CocoaPods/Specs.git'
+
 # Uncomment the next line to define a global platform for your project
 platform :ios, '13.0'
 
@@ -11,5 +14,5 @@ target 'Coffchat' do
   #pod 'Socket.IO-Client-Swift', '~> 15.2.0' # socket
   pod 'SwiftProtobuf', '~> 1.0' # protobuf
   pod 'SnapKit', '~> 5.0.0' # 自动布局第三方库
-  
+  pod 'SwiftyJSON', '~> 4.0' # json解析库
 end

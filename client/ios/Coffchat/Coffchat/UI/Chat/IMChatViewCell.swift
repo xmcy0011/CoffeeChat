@@ -6,6 +6,7 @@
 //  Copyright © 2020 Xuyingchun Inc. All rights reserved.
 //
 
+import SwiftyJSON
 import UIKit
 
 class IMChatViewCell: UITableViewCell {
@@ -21,11 +22,11 @@ class IMChatViewCell: UITableViewCell {
         
         headImage.layer.masksToBounds = true
         // 没懂，从TSWechat借用过来
-        headImage.layer.cornerRadius = self.headImage.frame.size.width / 2 / 180 * 30
+        headImage.layer.cornerRadius = headImage.frame.size.width / 2 / 180 * 30
         
         // 会触发离屏渲染，性能受影响 FIXME
-        self.unreadCnt.layer.masksToBounds = true
-        self.unreadCnt.layer.cornerRadius = self.unreadCnt.frame.size.height / 2
+        unreadCnt.layer.masksToBounds = true
+        unreadCnt.layer.cornerRadius = unreadCnt.frame.size.height / 2
     }
     
 //    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -68,5 +69,24 @@ class IMChatViewCell: UITableViewCell {
         
         // 最近一条消息
         latestMsg.text = sessionModel.rectSession.latestMsg.msgData
+        
+        // 最近一条消息
+        let msg = sessionModel.rectSession.latestMsg
+        if msg.msgType == .kCimMsgTypeRobot {
+            let dataFromString = msg.msgData.data(using: .utf8)
+            do {
+                let json = try JSON(data: dataFromString!)
+                let type = json["content"]["type"].string
+                if type == "text" {
+                    latestMsg.text = json["content"]["content"].string
+                } else {
+                    IMLog.error(item: "unknown type:\(String(describing: type))")
+                }
+            } catch {
+                IMLog.error(item: "parse json error:\(error)")
+            }
+        } else {
+            latestMsg.text = msg.msgData
+        }
     }
 }

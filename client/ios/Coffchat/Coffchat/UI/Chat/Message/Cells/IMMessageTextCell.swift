@@ -6,6 +6,7 @@
 //  Copyright © 2020 Xuyingchun Inc. All rights reserved.
 //
 
+import SwiftyJSON
 import UIKit
 
 let kMinCellHeight = 65 // 一行最小的高度
@@ -49,18 +50,18 @@ class IMMessageTextCell: UITableViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        
+
         // Initialization code
-        
+
         // 背景色，通过UITabView和TabCell同时控制
-        self.backgroundColor = IMUIResource.chatBackground
+        backgroundColor = IMUIResource.chatBackground
         // 选中样式，不需要选择效果
-        self.selectionStyle = .none
+        selectionStyle = .none
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        
+
         // Configure the view for the selected state
     }
 
@@ -70,7 +71,23 @@ class IMMessageTextCell: UITableViewCell {
         model = message
         // 更新文本内容和头像
         imageHead.image = UIImage(named: "icon_avatar")
-        labelMessage.text = message.msgData
+
+        if message.msgType == .kCimMsgTypeRobot {
+            let dataFromString = message.msgData.data(using: .utf8)
+            do {
+                let json = try JSON(data: dataFromString!)
+                let type = json["content"]["type"].string
+                if type == "text" {
+                    labelMessage.text = json["content"]["content"].string
+                } else {
+                    IMLog.error(item: "unknown type:\(String(describing: type))")
+                }
+            } catch {
+                IMLog.error(item: "parse json error:\(error)")
+            }
+        } else {
+            labelMessage.text = message.msgData
+        }
 
         // 标记需要重新刷新布局，但layoutSubviews不会立即调用
         setNeedsLayout()

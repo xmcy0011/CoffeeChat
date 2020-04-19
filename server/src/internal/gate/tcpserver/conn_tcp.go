@@ -395,6 +395,7 @@ func (tcp *TcpConn) onHandleMsgData(header *cim.ImHeader, buff []byte) {
 			req.ToSessionId = toUserId // change
 			req.MsgId = uuid.NewV4().String()
 			req.CreateTime = int32(time.Now().Unix())
+			req.MsgType = cim.CIMMsgType_kCIM_MSG_TYPE_ROBOT
 
 			data, _ := json.Marshal(answer)
 			req.MsgData = data

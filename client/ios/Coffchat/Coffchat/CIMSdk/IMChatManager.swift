@@ -123,7 +123,7 @@ class IMChatManager: IMClientDelegateData {
         }
         return msg.toSessionID
     }
-
+    
     // 检测
     func timerTick(_ t: Timer) {
         let now = Int32(NSDate().timeIntervalSince1970)
