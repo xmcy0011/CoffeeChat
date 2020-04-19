@@ -73,7 +73,7 @@ class IMChatContentViewController: UIViewController, UITableViewDataSource, UISc
 
     override func viewWillDisappear(_ animated: Bool) {
         // 取消注册
-        //NotificationCenter.default.removeObserver(self)
+        // NotificationCenter.default.removeObserver(self)
         IMManager.singleton.chatManager.unregister(key: "IMChatContentViewController")
     }
 
@@ -238,7 +238,14 @@ extension IMChatContentViewController {
 //            return IMMessageTextCell.getTextHeight(text: msg.msgData)
 //        }
 //        return 100
-        let height = IMMessageTextCell.getCellHeight(text: msg.msgData)
+
+        var text = msg.msgData
+        if msg.msgType == .kCimMsgTypeRobot {
+            text = IMMsgParser.resolveRobotMsg(msgType: msg.msgType, msgData: msg.msgData)
+        }
+
+        // 动态计算文本高度
+        let height = IMMessageTextCell.getCellHeight(text: text)
         return height
     }
 

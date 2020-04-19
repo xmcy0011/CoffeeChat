@@ -40,6 +40,7 @@
 		F46124DC24383A6700298F24 /* IMChatContentViewController+Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46124DB24383A6700298F24 /* IMChatContentViewController+Keyboard.swift */; };
 		F46124DF243855D600298F24 /* UIScrollView+Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46124DE243855D600298F24 /* UIScrollView+Chat.swift */; };
 		F46124E1243856A500298F24 /* UITableView+Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46124E0243856A500298F24 /* UITableView+Chat.swift */; };
+		F46566EF244C531A00B0A35F /* IMMsgParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46566EE244C531A00B0A35F /* IMMsgParser.swift */; };
 		F47BACD92445C3F800FD63D1 /* ImageTextTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47BACD72445C3F800FD63D1 /* ImageTextTableViewCell.swift */; };
 		F47BACDA2445C3F800FD63D1 /* ImageTextTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F47BACD82445C3F800FD63D1 /* ImageTextTableViewCell.xib */; };
 		F4840BE62424C2930005EF04 /* IMManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4840BE52424C2930005EF04 /* IMManager.swift */; };
@@ -113,6 +114,7 @@
 		F46124DB24383A6700298F24 /* IMChatContentViewController+Keyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "IMChatContentViewController+Keyboard.swift"; sourceTree = "<group>"; };
 		F46124DE243855D600298F24 /* UIScrollView+Chat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScrollView+Chat.swift"; sourceTree = "<group>"; };
 		F46124E0243856A500298F24 /* UITableView+Chat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Chat.swift"; sourceTree = "<group>"; };
+		F46566EE244C531A00B0A35F /* IMMsgParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMMsgParser.swift; sourceTree = "<group>"; };
 		F47BACD72445C3F800FD63D1 /* ImageTextTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageTextTableViewCell.swift; sourceTree = "<group>"; };
 		F47BACD82445C3F800FD63D1 /* ImageTextTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ImageTextTableViewCell.xib; sourceTree = "<group>"; };
 		F4840BE52424C2930005EF04 /* IMManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMManager.swift; sourceTree = "<group>"; };
@@ -253,6 +255,14 @@
 			path = UIHelper;
 			sourceTree = "<group>";
 		};
+		F46566ED244C530400B0A35F /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				F46566EE244C531A00B0A35F /* IMMsgParser.swift */,
+			);
+			path = Helper;
+			sourceTree = "<group>";
+		};
 		F4BC8F33241F223100ED38C9 /* CoffchatTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -313,6 +323,7 @@
 		F4C510A12429A37F000BCDEA /* Chat */ = {
 			isa = PBXGroup;
 			children = (
+				F46566ED244C530400B0A35F /* Helper */,
 				F4EBFAB9242F382200AF26B2 /* Message */,
 				F42C73EB242B295200B4F6CC /* IMChatViewCell.swift */,
 				F42C73EC242B295200B4F6CC /* IMChatViewCell.xib */,
@@ -578,6 +589,7 @@
 				F4D3B7AD2417BED500524D9A /* IMClient.swift in Sources */,
 				F43D96472446FFB3004802AA /* IMLoginoutTableViewCell.swift in Sources */,
 				F417B0292419D4F000E1AAC0 /* CIM.Def.pb.swift in Sources */,
+				F46566EF244C531A00B0A35F /* IMMsgParser.swift in Sources */,
 				F42C73F2242B343100B4F6CC /* IMChatViewController.swift in Sources */,
 				F46124E1243856A500298F24 /* UITableView+Chat.swift in Sources */,
 				F417B02A2419D4F000E1AAC0 /* CIM.Voip.pb.swift in Sources */,

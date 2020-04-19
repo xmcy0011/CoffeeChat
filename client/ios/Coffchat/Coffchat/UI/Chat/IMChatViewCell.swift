@@ -73,18 +73,7 @@ class IMChatViewCell: UITableViewCell {
         // 最近一条消息
         let msg = sessionModel.rectSession.latestMsg
         if msg.msgType == .kCimMsgTypeRobot {
-            let dataFromString = msg.msgData.data(using: .utf8)
-            do {
-                let json = try JSON(data: dataFromString!)
-                let type = json["content"]["type"].string
-                if type == "text" {
-                    latestMsg.text = json["content"]["content"].string
-                } else {
-                    IMLog.error(item: "unknown type:\(String(describing: type))")
-                }
-            } catch {
-                IMLog.error(item: "parse json error:\(error)")
-            }
+            latestMsg.text = IMMsgParser.resolveRobotMsg(msgType: msg.msgType, msgData: msg.msgData)
         } else {
             latestMsg.text = msg.msgData
         }

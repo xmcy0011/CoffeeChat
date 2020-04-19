@@ -72,19 +72,9 @@ class IMMessageTextCell: UITableViewCell {
         // 更新文本内容和头像
         imageHead.image = UIImage(named: "icon_avatar")
 
+        // 文本内容
         if message.msgType == .kCimMsgTypeRobot {
-            let dataFromString = message.msgData.data(using: .utf8)
-            do {
-                let json = try JSON(data: dataFromString!)
-                let type = json["content"]["type"].string
-                if type == "text" {
-                    labelMessage.text = json["content"]["content"].string
-                } else {
-                    IMLog.error(item: "unknown type:\(String(describing: type))")
-                }
-            } catch {
-                IMLog.error(item: "parse json error:\(error)")
-            }
+            labelMessage.text = IMMsgParser.resolveRobotMsg(msgType: message.msgType, msgData: message.msgData)
         } else {
             labelMessage.text = message.msgData
         }
@@ -165,7 +155,13 @@ class IMMessageTextCell: UITableViewCell {
 
     // 别人发的消息
     func layoutOtherSubviews() {
-        let size = IMMessageTextCell.getTextSize(text: model!.msgData)
+        // 转换文本
+        var test = model!.msgData
+        if model!.msgType == .kCimMsgTypeRobot {
+            test = IMMsgParser.resolveRobotMsg(msgType: model!.msgType, msgData: model!.msgData)
+        }
+
+        let size = IMMessageTextCell.getTextSize(text: test)
         let w = size.width
         // 限制文本最小高度
         let h = size.height > CGFloat(kMinTextHeight) ? size.height : CGFloat(kMinTextHeight)
