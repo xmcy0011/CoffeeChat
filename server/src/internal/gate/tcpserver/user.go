@@ -58,9 +58,11 @@ func (u *User) Broadcast(cmdId uint16, data proto.Message) {
 }
 
 func (u *User) BroadcastMessage(data *cim.CIMMsgData) {
-	// FIXED ME
-	// 按照每个客户端类型统计ack列表更好
-	u.ackMsgMap[data.MsgId] = data
+	if data.MsgType != cim.CIMMsgType_kCIM_MSG_TYPE_ROBOT{
+		// FIXED ME
+		// 按照每个客户端类型统计ack列表更好
+		u.ackMsgMap[data.MsgId] = data
+	}
 
 	// update counter
 	downMsgTotalCount.Inc()
