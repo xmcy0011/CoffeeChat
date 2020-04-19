@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/CoffeeChat/server/src/api/cim"
 	"github.com/CoffeeChat/server/src/internal/gate/conf"
 	"github.com/CoffeeChat/server/src/pkg/def"
 	"github.com/CoffeeChat/server/src/pkg/logger"
@@ -57,15 +58,28 @@ type JwtPayloadQuestion struct {
 
 var DefaultRobotClient = &RobotClient{Name: "思知机器人"}
 
-// 解析机器人消息中的问题（上行）
-func (r *RobotClient) ResolveQuestion(msgData []byte) (string, error) {
-	req := RobotQuestion{}
+func (r *RobotClient) IsRobotUser(toId uint64) {
 
-	err := json.Unmarshal(msgData, &req)
-	if err != nil {
-		return "", err
+}
+
+// 解析机器人消息中的问题（上行）
+func (r *RobotClient) ResolveQuestion(msg *cim.CIMMsgData) (string, error) {
+	switch msg.MsgType {
+	case cim.CIMMsgType_kCIM_MSG_TYPE_TEXT:
+		return string(msg.MsgData), nil
+	case cim.CIMMsgType_kCIM_MSG_TYPE_AUDIO:
+		return "[语音]", nil
+	case cim.CIMMsgType_kCIM_MSG_TYPE_VIDEO:
+		return "[视频]", nil
+	case cim.CIMMsgType_kCIM_MSG_TYPE_FILE:
+		return "[文件]", nil
+	case cim.CIMMsgType_kCIM_MSG_TYPE_LOCATION:
+		return "[位置]", nil
+	case cim.CIMMsgType_kCIM_MSG_TYPE_IMAGE:
+		return "[图片]", nil
+	default:
+		return string(msg.MsgData), nil
 	}
-	return req.Body, nil
 }
 
 // 从思知机器人获取答案
