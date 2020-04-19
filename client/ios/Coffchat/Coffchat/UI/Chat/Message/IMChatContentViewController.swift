@@ -71,9 +71,9 @@ class IMChatContentViewController: UIViewController, UITableViewDataSource, UISc
         IMManager.singleton.chatManager.register(key: "IMChatContentViewController", delegate: self)
     }
 
-    deinit {
+    override func viewWillDisappear(_ animated: Bool) {
         // 取消注册
-        NotificationCenter.default.removeObserver(self)
+        //NotificationCenter.default.removeObserver(self)
         IMManager.singleton.chatManager.unregister(key: "IMChatContentViewController")
     }
 
@@ -127,7 +127,7 @@ class IMChatContentViewController: UIViewController, UITableViewDataSource, UISc
             backgroundQueue.async {
                 sleep(1) // 如果网络太快，看不到效果
                 // 如果条数不足20，不需要查询
-                if self.msgList.count >= kLimitPullMsgCount{
+                if self.msgList.count >= kLimitPullMsgCount {
                     self.queryMsgList(endMsgId: self.msgList[0].serverMsgId!)
                 }
             }

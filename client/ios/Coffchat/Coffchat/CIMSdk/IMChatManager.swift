@@ -116,14 +116,14 @@ class IMChatManager: IMClientDelegateData {
     /// 获取SessionId
     /// - Parameter msg: 消息
     /// - Returns: 结果
-    internal class func getSessionIdFromMsg(msg:CIM_Message_CIMMsgData) -> UInt64{
+    internal class func getSessionIdFromMsg(msg: CIM_Message_CIMMsgData) -> UInt64 {
         // 单聊的时候，toSessionId代表自己的ID，为了便于UI更新，需要转换一下
-        if msg.sessionType == .kCimSessionTypeSingle{
+        if msg.sessionType == .kCimSessionTypeSingle {
             return msg.fromUserID
         }
         return msg.toSessionID
     }
-    
+
     // 检测
     func timerTick(_ t: Timer) {
         let now = Int32(NSDate().timeIntervalSince1970)
@@ -159,6 +159,8 @@ class IMChatManager: IMClientDelegateData {
     func register(key: String, delegate: IMChatManagerDelegate) {
         if delegateDic[key] == nil {
             delegateDic[key] = delegate
+        } else {
+            IMLog.warn(item: "duplicate key:\(key)")
         }
     }
 
@@ -215,7 +217,7 @@ extension IMChatManager {
 
         // 处理一下sessionId，单聊时代表接收方的用户ID，此时需要替换成fromUserId
         let sessionId = IMChatManager.getSessionIdFromMsg(msg: res)
-        
+
         // 回调
         let msg = IMMessage(clientId: res.msgID, sessionType: res.sessionType, fromId: res.fromUserID, toId: sessionId, time: UInt32(res.createTime), msgType: res.msgType, data: String(data: res.msgData, encoding: .utf8)!)
         for item in delegateDic {
