@@ -16,7 +16,7 @@ class IMChatViewController: UIViewController, UITableViewDelegate, UITableViewDa
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        title = "CoffeeChat"
+        title = "消息"
 
         // 注册自定义的Cell的实际类型
         sessionTabView.register(UINib(nibName: "IMChatViewCell", bundle: nil), forCellReuseIdentifier: "IMChatViewCell")
@@ -24,7 +24,7 @@ class IMChatViewController: UIViewController, UITableViewDelegate, UITableViewDa
         sessionTabView.tableFooterView = UIView() // 设置之后可以去除空行单元格之间的空白线
         sessionTabView.dataSource = self
         sessionTabView.delegate = self
-
+        
         // 注册委托
         IMManager.singleton.conversationManager.register(key: "IMChatViewController", delegate: self)
         // 查询会话列表

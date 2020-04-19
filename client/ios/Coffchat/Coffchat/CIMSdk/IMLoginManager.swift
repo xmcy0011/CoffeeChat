@@ -126,6 +126,10 @@ class IMLoginManager: IMClientDelegateStatus, IMClientDelegateData {
             timer!.invalidate() // 销毁timer
             timer = nil
         }
+        if loginStep != .Default {
+            client.disconnect()
+        }
+        loginStep = .Default
     }
     
     func register(key: String, delegate: IMLoginManagerDelegate) -> Bool {

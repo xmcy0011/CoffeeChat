@@ -16,13 +16,24 @@ class IMSettingViewController: UIViewController, UITableViewDataSource, UITableV
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
         tabView.estimatedRowHeight = 45
         tabView.dataSource = self
         tabView.delegate = self
         tabView.tableFooterView = UIView() // 去横线
         tabView.backgroundColor = UIColor(red: 0xf5 / 255, green: 0xf6 / 255, blue: 0xf7 / 255, alpha: 1)
         tabView.register(UINib(nibName: "IMLoginoutTableViewCell", bundle: nil), forCellReuseIdentifier: "IMLoginoutTableViewCell")
+    }
+    
+    // 登出
+    func onLogout(_act: UIAlertAction) {
+        // self.navigationController?.popViewController(animated: false)
+        // self.navigationController?.popToRootViewController(animated: false)
+        // self.navigationController?.pushViewController(ViewController(), animated: false)
+        
+        let view = ViewController()
+        let nav = UINavigationController(rootViewController: view)
+        self.view.window?.rootViewController = nav
+        _ = IMManager.singleton.loginManager.logout(callback: nil)
     }
     
     // MARK: UITableViewDelegate
@@ -36,7 +47,17 @@ class IMSettingViewController: UIViewController, UITableViewDataSource, UITableV
     }
     
     // 点击某一个
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {}
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.section == 1, indexPath.row == 0 { // 登出
+            // actionSheet会报错："<NSLayoutConstraint:0x600003fdf340 UIView:0x7f9ed0d41ae0.width == - 16   (active)>
+            let alertController = UIAlertController(title: "提示", message: "确定退出吗？", preferredStyle: .actionSheet)
+            let okAction = UIAlertAction(title: "确定", style: .destructive, handler: onLogout)
+            let noAction = UIAlertAction(title: "取消", style: .cancel, handler: nil)
+            alertController.addAction(okAction)
+            alertController.addAction(noAction)
+            present(alertController, animated: true, completion: nil)
+        }
+    }
     
     // MARK: UITableViewDataSource
     

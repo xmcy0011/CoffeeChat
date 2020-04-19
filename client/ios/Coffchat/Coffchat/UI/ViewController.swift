@@ -51,7 +51,7 @@ class ViewController: UIViewController {
             self.navigationController?.navigationBar.isHidden = true
             
             let home = IMTabViewController()
-            self.navigationController?.popViewController(animated: false) // 移除登录界面
+            //self.navigationController?.popViewController(animated: false) // 移除登录界面
             self.navigationController?.pushViewController(home, animated: true) // 主界面
             //self.navigationController?.popToViewController(loginView, animated: false) // 移除其他界面，直到该界面为止
         }
