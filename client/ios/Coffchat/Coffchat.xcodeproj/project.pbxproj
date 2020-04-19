@@ -33,9 +33,15 @@
 		F43C90EB2435D548008BF9FC /* IMChatSendMsgBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43C90EA2435D548008BF9FC /* IMChatSendMsgBar.swift */; };
 		F43C90EF2435DAD2008BF9FC /* IMChatSendMsgBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = F43C90EE2435DAD2008BF9FC /* IMChatSendMsgBar.xib */; };
 		F43CA151241FA2E90065373F /* IMRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43CA150241FA2E90065373F /* IMRequest.swift */; };
+		F43D96432446F903004802AA /* IMSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43D96412446F903004802AA /* IMSettingViewController.swift */; };
+		F43D96442446F903004802AA /* IMSettingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F43D96422446F903004802AA /* IMSettingViewController.xib */; };
+		F43D96472446FFB3004802AA /* IMLoginoutTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43D96452446FFB3004802AA /* IMLoginoutTableViewCell.swift */; };
+		F43D96482446FFB3004802AA /* IMLoginoutTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F43D96462446FFB3004802AA /* IMLoginoutTableViewCell.xib */; };
 		F46124DC24383A6700298F24 /* IMChatContentViewController+Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46124DB24383A6700298F24 /* IMChatContentViewController+Keyboard.swift */; };
 		F46124DF243855D600298F24 /* UIScrollView+Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46124DE243855D600298F24 /* UIScrollView+Chat.swift */; };
 		F46124E1243856A500298F24 /* UITableView+Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46124E0243856A500298F24 /* UITableView+Chat.swift */; };
+		F47BACD92445C3F800FD63D1 /* ImageTextTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47BACD72445C3F800FD63D1 /* ImageTextTableViewCell.swift */; };
+		F47BACDA2445C3F800FD63D1 /* ImageTextTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F47BACD82445C3F800FD63D1 /* ImageTextTableViewCell.xib */; };
 		F4840BE62424C2930005EF04 /* IMManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4840BE52424C2930005EF04 /* IMManager.swift */; };
 		F48654142426694400D39970 /* IMLoginManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48654132426694400D39970 /* IMLoginManagerTests.swift */; };
 		F486541624266E8600D39970 /* IMConversationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F486541524266E8600D39970 /* IMConversationManager.swift */; };
@@ -100,9 +106,15 @@
 		F43C90EA2435D548008BF9FC /* IMChatSendMsgBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMChatSendMsgBar.swift; sourceTree = "<group>"; };
 		F43C90EE2435DAD2008BF9FC /* IMChatSendMsgBar.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IMChatSendMsgBar.xib; sourceTree = "<group>"; };
 		F43CA150241FA2E90065373F /* IMRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMRequest.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		F43D96412446F903004802AA /* IMSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSettingViewController.swift; sourceTree = "<group>"; };
+		F43D96422446F903004802AA /* IMSettingViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IMSettingViewController.xib; sourceTree = "<group>"; };
+		F43D96452446FFB3004802AA /* IMLoginoutTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMLoginoutTableViewCell.swift; sourceTree = "<group>"; };
+		F43D96462446FFB3004802AA /* IMLoginoutTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IMLoginoutTableViewCell.xib; sourceTree = "<group>"; };
 		F46124DB24383A6700298F24 /* IMChatContentViewController+Keyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "IMChatContentViewController+Keyboard.swift"; sourceTree = "<group>"; };
 		F46124DE243855D600298F24 /* UIScrollView+Chat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScrollView+Chat.swift"; sourceTree = "<group>"; };
 		F46124E0243856A500298F24 /* UITableView+Chat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Chat.swift"; sourceTree = "<group>"; };
+		F47BACD72445C3F800FD63D1 /* ImageTextTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageTextTableViewCell.swift; sourceTree = "<group>"; };
+		F47BACD82445C3F800FD63D1 /* ImageTextTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ImageTextTableViewCell.xib; sourceTree = "<group>"; };
 		F4840BE52424C2930005EF04 /* IMManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMManager.swift; sourceTree = "<group>"; };
 		F48654132426694400D39970 /* IMLoginManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMLoginManagerTests.swift; sourceTree = "<group>"; };
 		F486541524266E8600D39970 /* IMConversationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMConversationManager.swift; sourceTree = "<group>"; };
@@ -221,6 +233,17 @@
 			path = core;
 			sourceTree = "<group>";
 		};
+		F43D96402446F8D1004802AA /* Setting */ = {
+			isa = PBXGroup;
+			children = (
+				F43D96412446F903004802AA /* IMSettingViewController.swift */,
+				F43D96422446F903004802AA /* IMSettingViewController.xib */,
+				F43D96452446FFB3004802AA /* IMLoginoutTableViewCell.swift */,
+				F43D96462446FFB3004802AA /* IMLoginoutTableViewCell.xib */,
+			);
+			path = Setting;
+			sourceTree = "<group>";
+		};
 		F46124DD243855AF00298F24 /* UIHelper */ = {
 			isa = PBXGroup;
 			children = (
@@ -321,8 +344,11 @@
 		F4C510A42429A93A000BCDEA /* Me */ = {
 			isa = PBXGroup;
 			children = (
+				F43D96402446F8D1004802AA /* Setting */,
 				F4C510B12429AA2E000BCDEA /* IMMeViewController.swift */,
 				F4C510B22429AA2E000BCDEA /* IMMeViewController.xib */,
+				F47BACD72445C3F800FD63D1 /* ImageTextTableViewCell.swift */,
+				F47BACD82445C3F800FD63D1 /* ImageTextTableViewCell.xib */,
 			);
 			path = Me;
 			sourceTree = "<group>";
@@ -472,6 +498,7 @@
 				F43C90EF2435DAD2008BF9FC /* IMChatSendMsgBar.xib in Resources */,
 				F41AE38C24174224009B0E0C /* LoginViewController.xib in Resources */,
 				F42C73F3242B343100B4F6CC /* IMChatViewController.xib in Resources */,
+				F47BACDA2445C3F800FD63D1 /* ImageTextTableViewCell.xib in Resources */,
 				F41CB8AA242882FE007570BF /* Main.storyboard in Resources */,
 				F4EBFABD242F396900AF26B2 /* IMChatContentViewController.xib in Resources */,
 				F4EBFAC6242F4CE600AF26B2 /* IMMessageTextCell.xib in Resources */,
@@ -482,6 +509,8 @@
 				F4C05A1C241391E100D1E293 /* Assets.xcassets in Resources */,
 				F4C510B42429AA2E000BCDEA /* IMMeViewController.xib in Resources */,
 				F41CB8A1242866E4007570BF /* ViewController.xib in Resources */,
+				F43D96442446F903004802AA /* IMSettingViewController.xib in Resources */,
+				F43D96482446FFB3004802AA /* IMLoginoutTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -547,14 +576,17 @@
 			files = (
 				F41CB8A6242881DC007570BF /* IMTabViewController.swift in Sources */,
 				F4D3B7AD2417BED500524D9A /* IMClient.swift in Sources */,
+				F43D96472446FFB3004802AA /* IMLoginoutTableViewCell.swift in Sources */,
 				F417B0292419D4F000E1AAC0 /* CIM.Def.pb.swift in Sources */,
 				F42C73F2242B343100B4F6CC /* IMChatViewController.swift in Sources */,
 				F46124E1243856A500298F24 /* UITableView+Chat.swift in Sources */,
 				F417B02A2419D4F000E1AAC0 /* CIM.Voip.pb.swift in Sources */,
 				F46124DF243855D600298F24 /* UIScrollView+Chat.swift in Sources */,
 				F4840BE62424C2930005EF04 /* IMManager.swift in Sources */,
+				F47BACD92445C3F800FD63D1 /* ImageTextTableViewCell.swift in Sources */,
 				F4DAF917242B715100963220 /* IMMessage.swift in Sources */,
 				F4C510B32429AA2E000BCDEA /* IMMeViewController.swift in Sources */,
+				F43D96432446F903004802AA /* IMSettingViewController.swift in Sources */,
 				F417B0262419D4F000E1AAC0 /* CIM.Login.pb.swift in Sources */,
 				F43CA151241FA2E90065373F /* IMRequest.swift in Sources */,
 				F4C510AF2429AA20000BCDEA /* IMSocialViewController.swift in Sources */,
