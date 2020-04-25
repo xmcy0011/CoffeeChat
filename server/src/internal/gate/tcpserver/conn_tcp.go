@@ -445,10 +445,11 @@ func (tcp *TcpConn) onHandleSetReadMessaged(header *cim.ImHeader, buff []byte) {
 		return
 	}
 
-	if req.MsgId == 0 {
-		logger.Sugar.Warn("onHandleSetReadMessaged invalid msgId=0")
-		return
-	}
+	// 目前没用，注释掉
+	//if req.MsgId == 0 {
+	//	logger.Sugar.Warn("onHandleSetReadMessaged invalid msgId=0")
+	//	return
+	//}
 
 	logger.Sugar.Infof("onHandleSetReadMessaged user_id:%d,session_id:%d,msg_id=%d,session_type=%d",
 		req.UserId, req.SessionId, req.MsgId, req.SessionType)

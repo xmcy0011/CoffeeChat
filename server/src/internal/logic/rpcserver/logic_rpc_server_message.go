@@ -45,7 +45,7 @@ func (s *LogicServer) SendMsgData(ctx context.Context, in *cim.CIMMsgData) (*cim
 	return ack, nil
 }
 
-// 消息收到ACK
+// 消息已读
 func (s *LogicServer) ReadAckMsgData(ctx context.Context, in *cim.CIMMsgDataReadAck) (*cim.Empty, error) {
 	logger.Sugar.Infof("ReadAckMsgData,userId=%d,toSessionId=%d,msgId=%d,sessionType=%d",
 		in.UserId, in.SessionId, in.MsgId, in.SessionType)
