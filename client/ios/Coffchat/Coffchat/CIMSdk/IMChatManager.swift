@@ -169,6 +169,10 @@ class IMChatManager: IMClientDelegateData {
     func unregister(key: String) {
         delegateDic.removeValue(forKey: key)
     }
+    
+    func unregisterAll(){
+        delegateDic.removeAll()
+    }
 }
 
 // MARK: IMClientDelegateData

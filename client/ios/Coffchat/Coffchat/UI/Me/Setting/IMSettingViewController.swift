@@ -30,9 +30,17 @@ class IMSettingViewController: UIViewController, UITableViewDataSource, UITableV
         // self.navigationController?.popToRootViewController(animated: false)
         // self.navigationController?.pushViewController(ViewController(), animated: false)
         
+        // 把所有的释放
+        self.navigationController?.popToRootViewController(animated: false)
+        // 重新构建
         let view = ViewController()
         let nav = UINavigationController(rootViewController: view)
         self.view.window?.rootViewController = nav
+    
+        // 各种回调注销
+        IMManager.singleton.conversationManager.unregisterAll()
+        IMManager.singleton.chatManager.unregisterAll()
+        
         _ = IMManager.singleton.loginManager.logout(callback: nil)
     }
     

@@ -46,7 +46,7 @@ class IMChatContentViewController: UIViewController, UITableViewDataSource, UISc
         super.viewDidLoad()
         msgTabView.delegate = self
         msgTabView.dataSource = self
-        self.title = session.nickName
+        title = session.nickName
 
         // 注册自定义Cell
         msgTabView.register(UINib(nibName: "IMMessageTextCell", bundle: nil), forCellReuseIdentifier: "IMMessageTextCell")
@@ -67,6 +67,12 @@ class IMChatContentViewController: UIViewController, UITableViewDataSource, UISc
 
         // 查询历史聊天记录
         queryMsgList(endMsgId: 0)
+
+        // 设置会话已读，清楚未读计数
+        if session.unreadNumber != 0 {
+            IMManager.singleton.conversationManager.notifyAllMsgsRead(sessionId: session.rectSession.session.sessionId,
+                                                                      sessionType: session.rectSession.session.sessionType)
+        }
 
         // 注册消息委托
         IMManager.singleton.chatManager.register(key: "IMChatContentViewController", delegate: self)

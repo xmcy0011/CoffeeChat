@@ -80,6 +80,37 @@ class IMConversationManager: IMClientDelegateData {
         client.sendRequest(cmdId: .kCimCidListMsgReq, body: try! req.serializedData(), timeout: timeout)
     }
 
+    /// 设置会话所有消息已读
+    /// - Parameters:
+    ///   - sessionId: 会话
+    ///   - sessionType: 会话类型
+    func notifyAllMsgsRead(sessionId: UInt64, sessionType: CIM_Def_CIMSessionType) {
+        var req = CIM_Message_CIMMsgDataReadAck()
+        req.sessionID = sessionId
+        req.userID = IMManager.singleton.loginManager.userId!
+        req.msgID = 0
+        req.sessionType = sessionType
+        client.sendRequest(cmdId: .kCimCidMsgReadAck, body: try! req.serializedData(), timeout: nil)
+
+        IMLog.info(item: "notifyAllMessagesRead sessionId:\(sessionId),sessionType:\(sessionType)")
+
+        // 回调，更新UI界面
+        DispatchQueue.main.async {
+            for item in self.delegateDic {
+                // 查找会话
+                let key = self.getAllRecentSessionsKey(sessionId: sessionId, sessionType: sessionType)
+                let value = self.allRecentSessions[key]
+                if value != nil {
+                    self.totalUnreadCount = self.totalUnreadCount - value!.unreadCnt
+                    value?.unreadCnt = 0
+                    item.value.didUpdateRecentSession(session: value!, totalUnreadCount: Int32(self.totalUnreadCount))
+                } else {
+                    IMLog.debug(item: "session key:\(key) not find")
+                }
+            }
+        }
+    }
+
     /// 注册回调
     /// - Parameters:
     ///   - key: 唯一标识
@@ -94,6 +125,10 @@ class IMConversationManager: IMClientDelegateData {
     /// - Parameter key: 唯一标识
     func unregister(key: String) {
         delegateDic.removeValue(forKey: key)
+    }
+    
+    func unregisterAll() {
+        delegateDic.removeAll()
     }
 }
 

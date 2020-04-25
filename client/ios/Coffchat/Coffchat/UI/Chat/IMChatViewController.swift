@@ -24,7 +24,7 @@ class IMChatViewController: UIViewController, UITableViewDelegate, UITableViewDa
         sessionTabView.tableFooterView = UIView() // 设置之后可以去除空行单元格之间的空白线
         sessionTabView.dataSource = self
         sessionTabView.delegate = self
-        
+
         // 注册委托
         IMManager.singleton.conversationManager.register(key: "IMChatViewController", delegate: self)
         // 查询会话列表
@@ -60,17 +60,16 @@ extension IMChatViewController {
     func didLoadAllRecentSession() {}
 
     func didUpdateRecentSession(session: IMRecentSession, totalUnreadCount: Int32) {
-        IMLog.info(item: "didUpdateRecentSession")
+        IMLog.info(item: "didUpdateRecentSession sessionId:\(session.session.sessionId),total:\(totalUnreadCount),sessionUnread:\(session.unreadCnt)")
 
         // 更新最后一条会话信息
         for i in 0..<list.count {
             if list[i].rectSession.session.sessionId == session.session.sessionId {
+                IMLog.debug(item: "didUpdateRecentSession find sessionId:\(session.session.sessionId),update unreadCount")
                 list[i].rectSession.latestMsg = session.latestMsg
                 list[i].rectSession.unreadCnt = session.unreadCnt
-                // FIXME: 会有只显示一次的警告？有什么影响？
                 DispatchQueue.main.async {
-                    self.sessionTabView.reloadData()
-                    //self.sessionTabView.reloadSections([i], with: .none)
+                    self.sessionTabView.reloadRows(at: [IndexPath(row: i, section: 0)], with: .none)
                 }
                 break
             }
