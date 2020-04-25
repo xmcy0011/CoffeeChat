@@ -11,7 +11,7 @@ import UIKit
 
 typealias LoginResult = (_ code: Int, _ desc: String) -> Void
 
-class LoginViewController: UIViewController, IMLoginManagerDelegate {
+class LoginViewController: UIViewController, IMLoginManagerDelegate, UITextFieldDelegate {
     @IBOutlet var id: UITextField!
     @IBOutlet var token: UITextField!
     @IBOutlet var nick: UITextField!
@@ -25,6 +25,11 @@ class LoginViewController: UIViewController, IMLoginManagerDelegate {
 
         _ = IMManager.singleton.loginManager.register(key: "LoginViewController", delegate: self)
 
+        id.delegate = self
+        token.delegate = self
+        nick.delegate = self
+        server.delegate = self
+        
         hideKeyboardWhenTappedAround()
         // Do any additional setup after loading the view.
         // 使用Alamofire发送HTTP请求
@@ -51,7 +56,7 @@ class LoginViewController: UIViewController, IMLoginManagerDelegate {
         nick.resignFirstResponder()
         server.resignFirstResponder()
     }
-
+    
     @IBAction func onLoginBtnClick(_ sender: Any) {
         if check() {
             let userId = UInt64(id.text!)
@@ -124,4 +129,14 @@ class LoginViewController: UIViewController, IMLoginManagerDelegate {
     }
 
     func onAutoLoginFailed(code: Error) {}
+}
+
+// MARK: UITextFieldDelegate
+
+extension LoginViewController{
+    // 点击返回，隐藏键盘
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view?.endEditing(false)
+        return true
+    }
 }
