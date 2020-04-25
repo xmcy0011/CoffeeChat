@@ -25,6 +25,7 @@ class LoginViewController: UIViewController, IMLoginManagerDelegate {
 
         _ = IMManager.singleton.loginManager.register(key: "LoginViewController", delegate: self)
 
+        hideKeyboardWhenTappedAround()
         // Do any additional setup after loading the view.
         // 使用Alamofire发送HTTP请求
 //        let req = Login(userName: "10091009", pwd: "12345")
@@ -37,15 +38,19 @@ class LoginViewController: UIViewController, IMLoginManagerDelegate {
         _ = IMManager.singleton.loginManager.unregister(key: "LoginViewController")
     }
 
-    /*
-     // MARK: - Navigation
+    // 点击空白处，隐藏键盘
+    func hideKeyboardWhenTappedAround() {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
 
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-         // Get the new view controller using segue.destination.
-         // Pass the selected object to the new view controller.
-     }
-     */
+    @objc func dismissKeyboard() {
+        id.resignFirstResponder()
+        token.resignFirstResponder()
+        nick.resignFirstResponder()
+        server.resignFirstResponder()
+    }
 
     @IBAction func onLoginBtnClick(_ sender: Any) {
         if check() {
@@ -65,7 +70,7 @@ class LoginViewController: UIViewController, IMLoginManagerDelegate {
                         if self.loginResultCallback != nil {
                             self.loginResultCallback!(rsp.resultCode.rawValue, rsp.resultString)
                         }
-                        //self.navigationController?.popViewController(animated: true)
+                        // self.navigationController?.popViewController(animated: true)
                     }
                 }
             }
