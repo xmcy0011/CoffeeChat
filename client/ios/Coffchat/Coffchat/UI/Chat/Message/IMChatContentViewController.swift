@@ -46,6 +46,7 @@ class IMChatContentViewController: UIViewController, UITableViewDataSource, UISc
         super.viewDidLoad()
         msgTabView.delegate = self
         msgTabView.dataSource = self
+        self.title = session.nickName
 
         // 注册自定义Cell
         msgTabView.register(UINib(nibName: "IMMessageTextCell", bundle: nil), forCellReuseIdentifier: "IMMessageTextCell")
