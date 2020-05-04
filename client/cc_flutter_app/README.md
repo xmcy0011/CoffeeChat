@@ -67,5 +67,20 @@ samples, guidance on mobile development, and a full API reference.
 ## 预览
 具体见 demo 文件夹下的图片
 
+## 运行
+
+公网：106.14.172.35
+im_gate:8000/tcp，登录、消息处理等
+im_http:18080/http，用户注册
+
+测试账号：1007、1008
+密码：12345
+
+## 常见错误
+
+### Building for iOS Simulator, but the linked and embedded framework 'App.framework' was built for iOS. (in target 'Runner' from project 'Runner')
+1. 删除ios/flutter/app.framework
+2. 重新编译
+
 ## 联系我
 email：xmcy0011@sina.com

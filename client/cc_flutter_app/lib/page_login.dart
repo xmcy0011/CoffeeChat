@@ -27,7 +27,7 @@ class _PageLoginStatefulWidgetState extends State<PageLoginStatefulWidget> {
   final _usernameController = TextEditingController(text: "1008");
   final _nicknameController = TextEditingController(text: "三生三世十里桃花");
   final _passwordController = TextEditingController(text: "12345");
-  final _serverIpController = TextEditingController(text: "10.0.107.254");
+  final _serverIpController = TextEditingController(text: "106.14.172.35");
   static const kShrineBrown900 = Color(0xFF442B2D);
 
   @override
