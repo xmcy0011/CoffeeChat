@@ -230,11 +230,14 @@ extension IMConversationManager {
         if recentSession != nil {
             // 更新最后一条消息
             recentSession!.latestMsg = msg
-            recentSession!.unreadCnt += 1
-
+            // 不是自己发送的消息，才更新未读计数
+            if msg.fromUserId != IMManager.singleton.loginManager.userId{
+                recentSession!.unreadCnt += 1
+                totalUnreadCount += 1
+            }
+            
             // 回调，更新UI界面
             for item in delegateDic {
-                totalUnreadCount += 1
                 item.value.didUpdateRecentSession(session: recentSession!, totalUnreadCount: Int32(totalUnreadCount))
             }
         } else {

@@ -111,7 +111,15 @@ class IMChatManager: IMClientDelegateData {
         sendMessage(toSessionId: toSessionId, msgType: .kCimMsgTypeText, sessionType: sessionType, msgData: textData)
     }
 
-    func sendMessageReceipt() {}
+    /// 设置消息已读
+    /// - Parameters:
+    ///   - sessionId: 会话ID
+    ///   - sessionType: 会话类型
+    ///   - endMsgId: 已读的消息ID，在这之前的消息都设置为已读状态，目前只针对整个会话生效。
+    ///   - timeStamp: 时间戳
+    func sendMessageReceipt(sessionId: UInt64, sessionType: CIM_Def_CIMSessionType /* , endMsgId: UInt64, timeStamp: UInt64 */ ) {
+        IMManager.singleton.conversationManager.notifyAllMsgsRead(sessionId: sessionId, sessionType: sessionType)
+    }
 
     /// 获取SessionId
     /// - Parameter msg: 消息
@@ -123,7 +131,7 @@ class IMChatManager: IMClientDelegateData {
         }
         return msg.toSessionID
     }
-    
+
     // 检测
     func timerTick(_ t: Timer) {
         let now = Int32(NSDate().timeIntervalSince1970)
@@ -169,8 +177,8 @@ class IMChatManager: IMClientDelegateData {
     func unregister(key: String) {
         delegateDic.removeValue(forKey: key)
     }
-    
-    func unregisterAll(){
+
+    func unregisterAll() {
         delegateDic.removeAll()
     }
 }

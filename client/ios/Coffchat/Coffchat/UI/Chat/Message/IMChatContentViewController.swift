@@ -355,6 +355,8 @@ extension IMChatContentViewController {
             DispatchQueue.main.async {
                 self.appendMsg(msg: msg)
             }
+            // 设置消息已读
+            IMManager.singleton.chatManager.sendMessageReceipt(sessionId: msg.toSessionId, sessionType: msg.sessionType)
         }
     }
 }
