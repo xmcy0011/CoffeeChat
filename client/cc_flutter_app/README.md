@@ -76,11 +76,17 @@ im_http:18080/http，用户注册
 测试账号：1007、1008  
 密码：12345  
 
-## 常见错误
+## 常见问题
 
 ### Building for iOS Simulator, but the linked and embedded framework 'App.framework' was built for iOS. (in target 'Runner' from project 'Runner')
 1. 删除ios/flutter/app.framework
 2. 重新编译
+
+### ios图标替换
+1. mac电脑下载安装icon maker(链接:https://pan.baidu.com/s/1j2WZSJ83RYu6hLnK4ICSYw  密码:1t9p)
+2. 打开后，选择一张png图标，然后勾选Rounded Corner，点击IOS。
+3. 把生成的目录IOS/Assets.xcassets/AppIcon.appiconset复制替换到ios/Runner/Assets.xcassets/AppIcon.appiconset
+4. 重新编译即可
 
 ## 联系我
 email：xmcy0011@sina.com
