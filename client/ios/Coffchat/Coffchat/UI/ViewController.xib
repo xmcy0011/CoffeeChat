@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -18,14 +18,14 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" id="Qox-WI-JPI">
-                    <rect key="frame" x="0" y="0" width="414" height="896"/>
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="lanuch" translatesAutoresizingMaskIntoConstraints="NO" id="jA1-lK-hO8">
                             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         </imageView>
                         <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="f8G-yW-VNV">
-                            <rect key="frame" x="0.0" y="861" width="414" height="30"/>
+                            <rect key="frame" x="0.0" y="762" width="414" height="30"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XW2-nA-Tuv">
                                     <rect key="frame" x="0.0" y="0.0" width="202" height="30"/>
@@ -46,12 +46,11 @@
                     <constraints>
                         <constraint firstItem="jA1-lK-hO8" firstAttribute="leading" secondItem="Qox-WI-JPI" secondAttribute="leading" id="7AN-v4-S3D"/>
                         <constraint firstItem="jA1-lK-hO8" firstAttribute="top" secondItem="Qox-WI-JPI" secondAttribute="top" id="8lm-1H-gUw"/>
-                        <constraint firstItem="jzM-dG-O3V" firstAttribute="bottom" secondItem="f8G-yW-VNV" secondAttribute="bottom" constant="5" id="C2S-7u-Ul0"/>
-                        <constraint firstItem="jzM-dG-O3V" firstAttribute="trailing" secondItem="f8G-yW-VNV" secondAttribute="trailing" id="Ggc-xx-h4B"/>
                         <constraint firstItem="jA1-lK-hO8" firstAttribute="centerX" secondItem="Qox-WI-JPI" secondAttribute="centerX" id="IRT-JI-4RK"/>
-                        <constraint firstItem="f8G-yW-VNV" firstAttribute="leading" secondItem="jzM-dG-O3V" secondAttribute="leading" id="Nzo-3D-jzC"/>
+                        <constraint firstItem="jzM-dG-O3V" firstAttribute="bottom" secondItem="f8G-yW-VNV" secondAttribute="bottom" constant="70" id="Kg1-5y-cUv"/>
                         <constraint firstItem="jA1-lK-hO8" firstAttribute="centerY" secondItem="Qox-WI-JPI" secondAttribute="centerY" id="XjS-mq-xbs"/>
-                        <constraint firstItem="f8G-yW-VNV" firstAttribute="centerX" secondItem="Qox-WI-JPI" secondAttribute="centerX" id="n8s-ZF-N9H"/>
+                        <constraint firstItem="jzM-dG-O3V" firstAttribute="trailing" secondItem="f8G-yW-VNV" secondAttribute="trailing" id="qfw-QK-1I5"/>
+                        <constraint firstItem="f8G-yW-VNV" firstAttribute="leading" secondItem="jzM-dG-O3V" secondAttribute="leading" id="xP7-Gr-VLI"/>
                     </constraints>
                     <viewLayoutGuide key="safeArea" id="jzM-dG-O3V"/>
                 </view>
