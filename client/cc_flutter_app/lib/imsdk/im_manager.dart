@@ -232,15 +232,24 @@ class IMManager extends IMessage {
     if (msg.msgType == CIMMsgType.kCIM_MSG_TYPE_ROBOT) {
       if (msg.fromUserId == IMManager.singleton.userId.toInt()) {
         // 来自于机器人
-        var data = jsonDecode(msg.msgData);
-        if (data != null) {
-          return data['body'].toString();
+        try {
+          var data = jsonDecode(msg.msgData);
+          if (data != null) {
+            return data['body'].toString();
+          }
+        } catch (e) {
+          LogUtil.error("IMManager", "jsonDecode error:$e,str:${msg.msgData}");
         }
       } else {
         // 上行消息
-        Map<String, dynamic> data = jsonDecode(msg.msgData);
-        if (data != null && data.containsKey('content') && data['content']['type'].toString() == "text") {
-          return data['content']['content'].toString();
+        // 来自于机器人
+        try {
+          Map<String, dynamic> data = jsonDecode(msg.msgData);
+          if (data != null && data.containsKey('content') && data['content']['type'].toString() == "text") {
+            return data['content']['content'].toString();
+          }
+        } catch (e) {
+          LogUtil.error("IMManager", "jsonDecode error:$e,str:${msg.msgData}");
         }
       }
     }
