@@ -36,7 +36,7 @@ class IMConversationManager: IMClientDelegateData {
 
     /// 所有的会话列表
     public var allRecentSessions: [String: IMRecentSession] = [:]
-
+    
     init() {
         delegateDic = [:]
         totalUnreadCount = 0
@@ -178,7 +178,7 @@ extension IMConversationManager {
     }
 
     // 获取存储会话信息的key
-    fileprivate func getAllRecentSessionsKey(sessionId: UInt64, sessionType: CIM_Def_CIMSessionType) -> String {
+    internal func getAllRecentSessionsKey(sessionId: UInt64, sessionType: CIM_Def_CIMSessionType) -> String {
         var key = "single_\(sessionId)"
         if sessionType == .kCimSessionTypeGroup {
             key = "single_\(sessionId)"
@@ -230,10 +230,11 @@ extension IMConversationManager {
         if recentSession != nil {
             // 更新最后一条消息
             recentSession!.latestMsg = msg
+            recentSession!.unreadCnt += 1
 
             // 回调，更新UI界面
             for item in delegateDic {
-                totalUnreadCount = totalUnreadCount + 1
+                totalUnreadCount += 1
                 item.value.didUpdateRecentSession(session: recentSession!, totalUnreadCount: Int32(totalUnreadCount))
             }
         } else {
