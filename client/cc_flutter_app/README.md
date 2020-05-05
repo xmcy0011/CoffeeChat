@@ -69,12 +69,12 @@ samples, guidance on mobile development, and a full API reference.
 
 ## 运行
 
-公网：106.14.172.35
-im_gate:8000/tcp，登录、消息处理等
-im_http:18080/http，用户注册
+公网：106.14.172.35  
+im_gate:8000/tcp，登录、消息处理等  
+im_http:18080/http，用户注册  
 
-测试账号：1007、1008
-密码：12345
+测试账号：1007、1008  
+密码：12345  
 
 ## 常见错误
 
