@@ -433,10 +433,11 @@ class _PageMessageState extends State<PageMessage> {
 
     // 机器人会话，注意消息类型和内容
     if (this.sessionInfo.isRobotSession) {
-      Map<String, dynamic> toJson = {
-        'body': text,
-      };
-      msgInfo.msgData = jsonEncode(toJson);
+      // 不需要json，直接文本即可
+//      Map<String, dynamic> toJson = {
+//        'body': text,
+//      };
+//      msgInfo.msgData = jsonEncode(toJson);
       msgInfo.msgType = CIMMsgType.kCIM_MSG_TYPE_ROBOT;
     }
 

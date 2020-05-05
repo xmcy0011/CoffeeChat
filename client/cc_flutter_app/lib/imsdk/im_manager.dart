@@ -231,18 +231,10 @@ class IMManager extends IMessage {
   String resolveRobotMessage(IMMessage msg) {
     if (msg.msgType == CIMMsgType.kCIM_MSG_TYPE_ROBOT) {
       if (msg.fromUserId == IMManager.singleton.userId.toInt()) {
-        // 来自于机器人
-        try {
-          var data = jsonDecode(msg.msgData);
-          if (data != null) {
-            return data['body'].toString();
-          }
-        } catch (e) {
-          LogUtil.error("IMManager", "jsonDecode error:$e,str:${msg.msgData}");
-        }
+        // 上行消息，我发给机器人的
+        return msg.msgData;
       } else {
-        // 上行消息
-        // 来自于机器人
+        // 下行消息（来自于机器人）
         try {
           Map<String, dynamic> data = jsonDecode(msg.msgData);
           if (data != null && data.containsKey('content') && data['content']['type'].toString() == "text") {
