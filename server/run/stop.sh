@@ -19,8 +19,14 @@ stop(){
 
   if [[ -f server.pid ]]; then
     pid=$(cat server.pid)
-    echo "kill $1 pid=$pid"
-    kill "${pid}"
+    
+    # 先检测进程是否真的存在
+    if ps -p ${pid} > /dev/null; then
+      echo "kill $1 pid=$pid"
+      kill ${pid}
+    else
+      echo "pid=$pid not exist"
+    fi
   fi
   
   ps aux|grep `cat server.pid`

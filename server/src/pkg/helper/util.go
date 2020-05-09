@@ -17,12 +17,14 @@ func WritePid(pidFileName string) error {
 
 	//const pidFile = "server.pid"
 	var fileHandle *os.File
-	if !IsExist(pidFileName) {
-		fileHandle, err = os.Create(pidFileName)
-	} else {
-		fileHandle, err = os.OpenFile(pidFileName, os.O_RDWR, os.ModePerm)
+	if IsExist(pidFileName) {
+		err = os.Remove(pidFileName)
+		if err != nil {
+			return err
+		}
 	}
 
+	fileHandle, err = os.Create(pidFileName)
 	if err != nil {
 		return err
 	}
