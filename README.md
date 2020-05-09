@@ -79,7 +79,7 @@ opensource im with server(go) and client(flutter+swift)
 - [ ] 端到端加密
 - [ ] 高清语音消息
 - [ ] 文件上传下载
-- [x] 语音通话
+- [x] 语音通话(声网FlutterSDK)
 - [ ] 视频通话
 - [ ] electron 跨平台桌面客户端
 - [x] flutter 跨平台移动端
@@ -101,7 +101,10 @@ opensource im with server(go) and client(flutter+swift)
 
 ### 聊天机器人功能
 
-- [ ] 图灵机器人接入
+- [] 图灵机器人接入
+- [] 小爱机器人接入
+- [x] 思知机器人接入
+- [x] 微信机器人接入
 
 ## Architecture
 
