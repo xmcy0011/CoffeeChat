@@ -227,6 +227,16 @@ extension IMChatManager {
 
         IMLog.info(item: "recv new msg,from:\(res.fromUserID),to:\(res.toSessionID),msgType:\(res.msgType)")
 
+        // 回复ack
+        var req = CIM_Message_CIMMsgDataAck()
+        req.fromUserID = IMManager.singleton.loginManager.userId!
+        req.toSessionID = res.fromUserID
+        req.serverMsgID = 0 // fixed me
+        req.msgID = res.msgID
+        req.sessionType = res.sessionType
+        _ = client.send(cmdId: .kCimCidMsgDataAck, body: try! req.serializedData())
+        //IMLog.info(item: "send msg ack from:\(res.fromUserID),to:\(res.toSessionID)")
+
         // 处理一下sessionId，单聊时代表接收方的用户ID，此时需要替换成fromUserId
         let sessionId = IMChatManager.getSessionIdFromMsg(msg: res)
 
