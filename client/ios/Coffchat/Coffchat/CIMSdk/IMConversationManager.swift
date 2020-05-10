@@ -230,6 +230,7 @@ extension IMConversationManager {
         if recentSession != nil {
             // 更新最后一条消息
             recentSession!.latestMsg = msg
+            recentSession!.updatedTime = UInt32(NSDate().timeIntervalSince1970)
             // 不是自己发送的消息，才更新未读计数
             if msg.fromUserId != IMManager.singleton.loginManager.userId{
                 recentSession!.unreadCnt += 1

@@ -68,6 +68,7 @@ extension IMChatViewController {
                 IMLog.debug(item: "didUpdateRecentSession find sessionId:\(session.session.sessionId),update unreadCount")
                 list[i].rectSession.latestMsg = session.latestMsg
                 list[i].rectSession.unreadCnt = session.unreadCnt
+                list[i].rectSession.updatedTime = session.updatedTime
                 DispatchQueue.main.async {
                     self.sessionTabView.reloadRows(at: [IndexPath(row: i, section: 0)], with: .none)
                 }
