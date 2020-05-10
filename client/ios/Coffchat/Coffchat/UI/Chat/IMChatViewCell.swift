@@ -53,15 +53,8 @@ class IMChatViewCell: UITableViewCell {
         // 昵称
         nickName.text = sessionModel.nickName
         
-        let seconds = Double(sessionModel.rectSession.updatedTime)
-        let timeInterval: TimeInterval = TimeInterval(seconds)
-        let date = Date(timeIntervalSince1970: timeInterval)
-        
-        let formmat1 = DateFormatter()
-        formmat1.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        let string = formmat1.string(from: date)
         // 最后一条消息发送时间
-        updateDate.text = string
+        updateDate.text = IMMsgParser.timeFormat(timestamp: sessionModel.rectSession.updatedTime)
         
         // 未读计数
         unreadCnt.text = sessionModel.unreadNumber > 99 ? "99+" : String(sessionModel.unreadNumber)

@@ -67,6 +67,7 @@
 		F4EBFABD242F396900AF26B2 /* IMChatContentViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4EBFABB242F396900AF26B2 /* IMChatContentViewController.xib */; };
 		F4EBFAC5242F4CE600AF26B2 /* IMMessageTextCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4EBFAC3242F4CE600AF26B2 /* IMMessageTextCell.swift */; };
 		F4EBFAC6242F4CE600AF26B2 /* IMMessageTextCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4EBFAC4242F4CE600AF26B2 /* IMMessageTextCell.xib */; };
+		F4EE58442467FF720075DCB9 /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4EE58432467FF720075DCB9 /* Date+Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -146,6 +147,7 @@
 		F4EBFABB242F396900AF26B2 /* IMChatContentViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IMChatContentViewController.xib; sourceTree = "<group>"; };
 		F4EBFAC3242F4CE600AF26B2 /* IMMessageTextCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMMessageTextCell.swift; sourceTree = "<group>"; };
 		F4EBFAC4242F4CE600AF26B2 /* IMMessageTextCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IMMessageTextCell.xib; sourceTree = "<group>"; };
+		F4EE58432467FF720075DCB9 /* Date+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -249,6 +251,7 @@
 		F46124DD243855AF00298F24 /* UIHelper */ = {
 			isa = PBXGroup;
 			children = (
+				F4EE58432467FF720075DCB9 /* Date+Extension.swift */,
 				F46124DE243855D600298F24 /* UIScrollView+Chat.swift */,
 				F46124E0243856A500298F24 /* UITableView+Chat.swift */,
 			);
@@ -589,6 +592,7 @@
 				F4D3B7AD2417BED500524D9A /* IMClient.swift in Sources */,
 				F43D96472446FFB3004802AA /* IMLoginoutTableViewCell.swift in Sources */,
 				F417B0292419D4F000E1AAC0 /* CIM.Def.pb.swift in Sources */,
+				F4EE58442467FF720075DCB9 /* Date+Extension.swift in Sources */,
 				F46566EF244C531A00B0A35F /* IMMsgParser.swift in Sources */,
 				F42C73F2242B343100B4F6CC /* IMChatViewController.swift in Sources */,
 				F46124E1243856A500298F24 /* UITableView+Chat.swift in Sources */,
