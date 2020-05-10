@@ -78,15 +78,21 @@ func tcpConnRead(tcpConn *TcpConn) {
 
 			// 有效数据=len-HeaderLen，但是这里需要偏移HeaderLen刚好抵消
 			dataLen := header.Length
-			data := buffer[cim.IMHeaderLen:dataLen]
+			if dataLen > kBufferMaxLen {
+				logger.Sugar.Warnf("bad package,error:invalid len:%d", dataLen)
+				writeOffset = 0
+				break
+			} else {
+				data := buffer[cim.IMHeaderLen:dataLen]
 
-			// 回调处理
-			tcpConn.OnRead(header, data)
+				// 回调处理
+				tcpConn.OnRead(header, data)
 
-			// 处理粘包问题，把余下的数据拷贝到数组起始位置
-			resetBuf := buffer[dataLen:writeOffset]
-			copy(buffer, resetBuf)
-			writeOffset -= int(dataLen)
+				// 处理粘包问题，把余下的数据拷贝到数组起始位置
+				resetBuf := buffer[dataLen:writeOffset]
+				copy(buffer, resetBuf)
+				writeOffset -= int(dataLen)
+			}
 		}
 
 		// safe
