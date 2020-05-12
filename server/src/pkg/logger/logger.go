@@ -63,9 +63,9 @@ func NewEncoderConfig() zapcore.EncoderConfig {
 
 // filename: like "log/log.log"
 // level:debug,info,warn,error,dpanic,panic,fatal
-func InitLogger(filename string, level string) {
+func InitLogger(log string, level string) {
 	w := zapcore.AddSync(&lumberjack.Logger{
-		Filename:   filename,
+		Filename:   log,
 		MaxSize:    500, // megabytes
 		MaxBackups: 3,
 		MaxAge:     28, // days
@@ -79,11 +79,54 @@ func InitLogger(filename string, level string) {
 		lv = zapcore.InfoLevel
 	}
 
+	// level级别以上的一个文件，如果是info，则warn\error\painc等包含
 	core := zapcore.NewCore(
 		zapcore.NewConsoleEncoder(NewEncoderConfig()),
 		zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout), w),
 		lv,
 	)
+
 	Logger = zap.New(core, zap.AddCaller())
+	Sugar = Logger.Sugar()
+}
+
+func InitLoggerEx(infoLog, warnLog string, level string) {
+	w1 := zapcore.AddSync(&lumberjack.Logger{
+		Filename:   infoLog,
+		MaxSize:    500, // megabytes
+		MaxBackups: 3,
+		MaxAge:     28, // days
+		Compress:   true,
+	})
+	w2 := zapcore.AddSync(&lumberjack.Logger{
+		Filename:   warnLog,
+		MaxSize:    500, // megabytes
+		MaxBackups: 3,
+		MaxAge:     28, // days
+		Compress:   true,
+	})
+
+	var lv zapcore.Level
+	err := lv.UnmarshalText([]byte(level))
+	if err != nil {
+		fmt.Println("level ", level, ", error:", err.Error())
+		lv = zapcore.InfoLevel
+	}
+
+	// level级别以上的一个文件，如果是info，则warn\error\painc等包含
+	coreInfo := zapcore.NewCore(
+		zapcore.NewConsoleEncoder(NewEncoderConfig()),
+		zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout), w1),
+		lv,
+	)
+	// warn级别以上的一个文件，便于排查问题
+	coreWarn := zapcore.NewCore(
+		zapcore.NewConsoleEncoder(NewEncoderConfig()),
+		zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout), w2),
+		zapcore.WarnLevel,
+	)
+	tee := zapcore.NewTee(coreInfo, coreWarn)
+
+	Logger = zap.New(tee, zap.AddCaller())
 	Sugar = Logger.Sugar()
 }

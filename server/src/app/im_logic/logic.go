@@ -34,8 +34,8 @@ func waitExit(c chan os.Signal) {
 
 func main() {
 	flag.Parse()
-	
-	logger.InitLogger("log/log.log", "debug")
+
+	logger.InitLoggerEx("log/log.log", "log/log.warn.log", "debug")
 	defer logger.Sugar.Sync()
 
 	_, err := toml.DecodeFile(*defaultConf, conf.DefaultLogicConfig)

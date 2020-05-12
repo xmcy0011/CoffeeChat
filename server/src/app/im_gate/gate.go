@@ -40,7 +40,7 @@ func waitExit(c chan os.Signal) {
 func main() {
 	flag.Parse()
 
-	logger.InitLogger("log/log.log", "debug")
+	logger.InitLoggerEx("log/log.log", "log/log.warn.log", "debug")
 	defer logger.Logger.Sync() // flushes buffer, if any
 
 	// 崩溃时，打印错误

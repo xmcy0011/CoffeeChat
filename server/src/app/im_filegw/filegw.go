@@ -22,7 +22,7 @@ const (
 func main() {
 	flag.Parse()
 
-	logger.InitLogger("log.log", "debug")
+	logger.InitLoggerEx("log.log", "log/log.warn.log", "debug")
 	rand.Seed(time.Now().Unix())
 
 	// resolve filegw.toml

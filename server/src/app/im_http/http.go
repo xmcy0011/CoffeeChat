@@ -11,13 +11,13 @@ import (
 )
 
 var (
-	configFile  = flag.String("conf", "http-example.toml", "the config path")
+	configFile = flag.String("conf", "http-example.toml", "the config path")
 	//configFile  = flag.String("conf", "app/im_http/http-example.toml", "the config path")
 	pidFileName = "server.pid"
 )
 
 func main() {
-	logger.InitLogger("log/log.log", "debug")
+	logger.InitLoggerEx("log/log.log", "log/log.warn.log", "debug")
 	defer logger.Logger.Sync() // flushes buffer, if any
 	rand.Seed(time.Now().UnixNano())
 
