@@ -82,7 +82,7 @@ func takeStacktrace() string {
 		i++
 		buffer.AppendString(frame.Function)
 		buffer.AppendByte('\n')
-		buffer.AppendByte('\t')
+		buffer.AppendByte(' ')
 		buffer.AppendString(frame.File)
 		buffer.AppendByte(':')
 		buffer.AppendInt(int64(frame.Line))

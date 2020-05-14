@@ -94,7 +94,7 @@ func (c consoleEncoder) EncodeEntry(ent Entry, fields []Field) (*buffer.Buffer, 
 	}
 	for i := range arr.elems {
 		if i > 0 {
-			line.AppendByte('\t')
+			line.AppendByte(' ')
 		}
 		fmt.Fprint(line, arr.elems[i])
 	}
@@ -142,6 +142,6 @@ func (c consoleEncoder) writeContext(line *buffer.Buffer, extra []Field) {
 
 func (c consoleEncoder) addTabIfNecessary(line *buffer.Buffer) {
 	if line.Len() > 0 {
-		line.AppendByte('\t')
+		line.AppendByte(' ')
 	}
 }
