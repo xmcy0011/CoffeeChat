@@ -14,10 +14,11 @@ private let kMsgTimeLabelPaddingTop: CGFloat = 3 // 上下分别留出 3 像素�
 private let kMsgTimeLabelMarginTop: CGFloat = 10 // 顶部 10 px
 
 class IMMessageTimeCell: UITableViewCell {
-    @IBOutlet var timeLabel: UILabel! { didSet {
+    @IBOutlet var timeLabel: UIPaddingLabel! { didSet {
         timeLabel.layer.cornerRadius = 4
         timeLabel.layer.masksToBounds = true
         timeLabel.textColor = UIColor.white
+        timeLabel.textInsets = .init(top: kMsgTimeLabelPaddingLeft, left: kMsgTimeLabelPaddingLeft, bottom: kMsgTimeLabelPaddingLeft, right: kMsgTimeLabelPaddingLeft)
         timeLabel.backgroundColor = UIColor(red: 190 / 255, green: 190 / 255, blue: 190 / 255, alpha: 0.6)
     } }
 

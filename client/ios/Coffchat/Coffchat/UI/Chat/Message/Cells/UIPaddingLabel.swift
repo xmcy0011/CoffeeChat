@@ -10,7 +10,11 @@ import Foundation
 import UIKit
 
 /// 带内边距的文本
+/// label = HomePaddingLabel()
+/// label.font = .systemFont(ofSize: 10, weight: .regular)
+/// label.textInsets = UIEdgeInsets(3, 6, 3, 6)
 class UIPaddingLabel: UILabel {
+    /// 内边距，UIEdgeInsets(3, 6, 3, 6)
     var textInsets: UIEdgeInsets = .zero
 
     override func drawText(in rect: CGRect) {

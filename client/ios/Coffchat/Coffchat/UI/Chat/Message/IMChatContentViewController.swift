@@ -136,7 +136,8 @@ class IMChatContentViewController: UIViewController, UITableViewDataSource, UISc
                 sleep(1) // 如果网络太快，看不到效果
                 // 如果条数不足20，不需要查询
                 if self.msgList.count >= kLimitPullMsgCount {
-                    self.queryMsgList(endMsgId: self.msgList[0].serverMsgId!)
+                    // 0 是时间，1是原来的0，代表消息
+                    self.queryMsgList(endMsgId: self.msgList[1].serverMsgId!)
                 }
             }
         }
