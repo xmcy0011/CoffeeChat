@@ -2,8 +2,8 @@
 //  MainTabViewController.swift
 //  Coffchat
 //
-//  Created by xuyingchun on 2020/3/23.
-//  Copyright © 2020 Xuyingchun Inc. All rights reserved.
+//  Created by fei.xu on 2020/3/23.
+//  Copyright © 2020 Coffeechat Inc. All rights reserved.
 //
 
 import UIKit
