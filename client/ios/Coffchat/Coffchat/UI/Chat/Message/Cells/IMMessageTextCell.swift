@@ -20,7 +20,7 @@ let kTextImageMarginLet = 8 // 文本距离头像的间距
 let kTextMarginTop = 10 // 文本上面的距离
 let kTextMarginLeft = 69 // 文本离屏幕左边的距离（头像宽度45 + 头像左边剧16）
 let kTextMarginRight = 69 // 文本离屏幕右边的距离（头像宽度45 + 头像右边剧16）
-let kTextPadding = 5 // 文本内边距
+let kTextPadding = 10 // 文本内边距
 
 /// 显示一条文本消息
 class IMMessageTextCell: UITableViewCell {
@@ -28,7 +28,7 @@ class IMMessageTextCell: UITableViewCell {
     @IBOutlet var imageHead: UIImageView!
     // 被CocoaTouch框架赋值的时候，改变文本默认样式
     // 没有内边距，需要自定义，比较难看，先这样
-    @IBOutlet var labelMessage: UILabel! { didSet {
+    @IBOutlet var labelMessage: UIPaddingLabel! { didSet {
         labelMessage.numberOfLines = 0 // 自动换行
         // 圆角
         labelMessage.layer.cornerRadius = CGFloat(4)
@@ -36,6 +36,8 @@ class IMMessageTextCell: UITableViewCell {
         labelMessage.backgroundColor = UIColor(red: 190 / 255, green: 190 / 255, blue: 190 / 255, alpha: 0.6)
         // 内容剧中
         labelMessage.contentMode = .center
+        // 内边距
+        labelMessage.textInsets = UIEdgeInsets(top: CGFloat(kTextPadding), left: CGFloat(kTextPadding), bottom: CGFloat(kTextPadding), right: CGFloat(kTextPadding))
         } }
     // 数据模型
     var model: LocalIMMessage?
@@ -87,7 +89,6 @@ class IMMessageTextCell: UITableViewCell {
 
     /// 计算文本高度
     /// - Parameters:
-    ///   - width: 宽带
     ///   - text: 文本
     /// - Returns: 高度
     class func getCellHeight(text: String) -> CGFloat {
@@ -97,7 +98,8 @@ class IMMessageTextCell: UITableViewCell {
         }
 
         var cellHeight = textSize.height + // 文字高度
-            CGFloat(kTextMarginTop * 2) // 上下边距
+            CGFloat(kTextMarginTop * 2) + // 外边距
+            CGFloat(kTextPadding * 2) // 内边距
 
         // 限制最小高度
         cellHeight = cellHeight < CGFloat(kMinCellHeight) ? CGFloat(kMinCellHeight) : cellHeight
@@ -114,9 +116,11 @@ class IMMessageTextCell: UITableViewCell {
 
         let screenWidth = UIScreen.main.bounds.size.width
         // 文本最大宽度，减去左边距（对方头像）、右边距（我方头像）
-        let width = Int(screenWidth) - kTextMarginLeft - kTextMarginRight
+        let width = Int(screenWidth) - kTextMarginLeft - kTextMarginRight - (kTextPadding * 2)
         let boundingRect = label.text!.boundingRect(with: CGSize(width: width, height: 0), options: .usesLineFragmentOrigin, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 13)], context: nil)
-        return boundingRect.size
+
+        let boundSize = boundingRect.size
+        return CGSize(width: boundSize.width + CGFloat(kTextPadding * 2), height: boundSize.height + CGFloat(kTextMarginTop * 2))
     }
 
     /// 确定子视图的布局，这里可以自定义控件位置
