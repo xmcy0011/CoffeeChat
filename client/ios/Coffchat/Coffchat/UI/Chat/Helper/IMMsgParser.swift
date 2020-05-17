@@ -28,7 +28,7 @@ class IMMsgParser {
                     IMLog.error(item: "unknown type:\(String(describing: type))")
                 }
             } catch {
-                IMLog.error(item: "parse json error:\(error)")
+                IMLog.error(item: "parse json error:\(error),msgData:\(msgData)")
             }
         }
         return robotMsg

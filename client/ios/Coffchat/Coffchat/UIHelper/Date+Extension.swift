@@ -38,7 +38,7 @@ public extension Date {
     /// - Parameter date: 时间
     /// - Returns: 格式化时间字符串
     static func messageAgoSinceDate(_ date: Date) -> String {
-        return self.timeAgoSinceDate(date, numericDates: false)
+        return self.timeAgoSinceDate(date)
     }
     
     /// 格式化时间
@@ -46,7 +46,7 @@ public extension Date {
     ///   - date: 时间
     ///   - numericDates: 是否显示数字的时间
     /// - Returns: 格式化时间字符串
-    static func timeAgoSinceDate(_ date: Date, numericDates: Bool) -> String {
+    static func timeAgoSinceDate(_ date: Date) -> String {
         let calendar = Calendar.current
         let now = Date()
         let earliest = (now as NSDate).earlierDate(date)
@@ -61,50 +61,21 @@ public extension Date {
             NSCalendar.Unit.second
         ], from: earliest, to: latest, options: NSCalendar.Options())
         
-        if components.year! >= 2 {
-            return "\(String(describing: components.year)) 年前"
-        } else if components.year! >= 1 {
-            if numericDates {
-                return "1 年前"
-            } else {
-                return "去年"
-            }
-        } else if components.month! >= 2 {
-            return "\(String(describing: components.month)) 月前"
-        } else if components.month! >= 1 {
-            if numericDates {
-                return "1 个月前"
-            } else {
-                return "上个月"
-            }
-        } else if components.weekOfYear! >= 2 {
-            return "\(String(describing: components.weekOfYear)) 周前"
-        } else if components.weekOfYear! >= 1 {
-            if numericDates {
-                return "1 周前"
-            } else {
-                return "上一周"
-            }
-        } else if components.day! >= 2 {
-            return "\(String(describing: components.day)) 天前"
-        } else if components.day! >= 1 {
-            if numericDates {
-                return "1 天前"
-            } else {
-                return "昨天"
-            }
-        } else if components.hour! >= 2 {
-            return "\(String(describing: components.hour)) 小时前"
-        } else if components.hour! >= 1 {
-            return "1 小时前"
-        } else if components.minute! >= 2 {
-            return "\(String(describing: components.minute)) 分钟前"
-        } else if components.minute! >= 1 {
-            return "1 分钟前"
-        } else if components.second! >= 3 {
-            return "\(String(describing: components.second)) 秒前"
-        } else {
-            return "刚刚"
+        // 今日 时分
+        // 昨天 昨天 时分
+        // 最近一周 星期 时分
+        // 其余 年月日 时分
+        let formatHm = DateFormatter()
+        formatHm.dateFormat = "HH:mm"
+        if components.year! >= 1 || components.month! >= 1 || components.weekOfYear! >= 2 {
+            let format = DateFormatter()
+            format.dateFormat = "yyyy年MM月dd日 HH:mm"
+            return format.string(from: date)
+        } else if components.weekOfYear! >= 1 || components.day! >= 2 {
+            return "\(date.week()) \(formatHm.string(from: date))"
+        } else if components.day! >= 1 { // 昨天
+            return "昨天\(formatHm.string(from: date))"
         }
+        return formatHm.string(from: date)
     }
 }

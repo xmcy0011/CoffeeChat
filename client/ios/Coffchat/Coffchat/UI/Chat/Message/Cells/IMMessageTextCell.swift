@@ -38,7 +38,7 @@ class IMMessageTextCell: UITableViewCell {
         labelMessage.contentMode = .center
         } }
     // 数据模型
-    var model: IMMessage?
+    var model: LocalIMMessage?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -67,7 +67,7 @@ class IMMessageTextCell: UITableViewCell {
 
     /// 设置消息
     /// - Parameter message: 消息
-    func setContent(message: IMMessage) {
+    func setContent(message: LocalIMMessage) {
         model = message
         // 更新文本内容和头像
         imageHead.image = UIImage(named: "icon_avatar")

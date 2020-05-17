@@ -27,7 +27,7 @@ class IMChatContentViewController: UIViewController, UITableViewDataSource, UISc
 
     // 会话信息
     var session: SessionModel
-    var msgList: [IMMessage] = []
+    var msgList: [LocalIMMessage] = []
 
     // 是否正在刷新历史记录中
     var isRefreshMsgLst: Bool = false
@@ -50,6 +50,7 @@ class IMChatContentViewController: UIViewController, UITableViewDataSource, UISc
 
         // 注册自定义Cell
         msgTabView.register(UINib(nibName: "IMMessageTextCell", bundle: nil), forCellReuseIdentifier: "IMMessageTextCell")
+        msgTabView.register(UINib(nibName: "IMMessageTimeCell", bundle: nil), forCellReuseIdentifier: "IMMessageTimeCell")
         // 不显示分割线
         msgTabView.separatorStyle = .none
         msgTabView.backgroundColor = IMUIResource.chatBackground
@@ -150,16 +151,26 @@ class IMChatContentViewController: UIViewController, UITableViewDataSource, UISc
         // 查询历史消息
         IMManager.singleton.conversationManager.queryMsgList(sessionId: sId, sessionType: sType, endMsgId: endMsgId, limitCount: kLimitPullMsgCount, callback: { rsp in
             // print("success query msg list\(rsp)")
-            var tempList: [IMMessage] = []
+            var tempList: [LocalIMMessage] = []
+            var lastMsg: LocalIMMessage?
 
             for item in rsp.msgList {
-                let msg = IMMessage(clientId: item.clientMsgID, sessionType: item.sessionType, fromId: item.fromUserID, toId: item.toSessionID, time: item.createTime, msgType: item.msgType, data: String(data: item.msgData, encoding: .utf8)!)
+                let msg = LocalIMMessage(clientId: item.clientMsgID, sessionType: item.sessionType, fromId: item.fromUserID, toId: item.toSessionID, time: item.createTime, msgType: item.msgType, data: String(data: item.msgData, encoding: .utf8)!)
                 msg.serverMsgId = item.serverMsgID
                 msg.msgResCode = item.msgResCode
                 msg.msgFeature = item.msgFeature
                 msg.senderClientType = item.senderClientType
                 msg.attach = item.attach
                 msg.msgStatus = item.msgStatus
+                msg.localMsgType = .Server
+
+                // 超过2分钟，就插入一个TimeCell
+                if lastMsg == nil || (msg.createTime - lastMsg!.createTime > 2 * 60) {
+                    let timeMsg = LocalIMMessage(clientId: "", sessionType: sType, fromId: 0, toId: 0, time: msg.createTime, msgType: .kCimMsgTypeUnknown, data: "")
+                    timeMsg.localMsgType = .LocalTime
+                    tempList.append(timeMsg)
+                }
+                lastMsg = msg
                 tempList.append(msg)
             }
 
@@ -240,41 +251,62 @@ extension IMChatContentViewController {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let msg = msgList[indexPath.row]
-        // 动态计算每一行文本的高度
-//        if msg.msgType == .kCimMsgTypeText {
-//            return IMMessageTextCell.getTextHeight(text: msg.msgData)
-//        }
-//        return 100
+        var height = CGFloat(40)
+        if msg.localMsgType! == .Server {
+            var text = msg.msgData
+            if msg.msgType == .kCimMsgTypeRobot {
+                text = IMMsgParser.resolveRobotMsg(msgType: msg.msgType, msgData: msg.msgData)
+            }
 
-        var text = msg.msgData
-        if msg.msgType == .kCimMsgTypeRobot {
-            text = IMMsgParser.resolveRobotMsg(msgType: msg.msgType, msgData: msg.msgData)
+            // 动态计算文本高度
+            height = IMMessageTextCell.getCellHeight(text: text)
+        } else {
+            if msg.localMsgType! == .LocalTime {
+                return IMMessageTimeCell.getCellHeight()
+            }
         }
-
-        // 动态计算文本高度
-        let height = IMMessageTextCell.getCellHeight(text: text)
         return height
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let msg = msgList[indexPath.row]
-        let cellId = String(describing: IMMessageTextCell.self)
+        var cell: UITableViewCell?
 
-//        switch msg.msgType {
-//        case .kCimMsgTypeText:
-//
-//        default:
-//            print("unknown msg type")
-//        }
-
-        var cell = tableView.dequeueReusableCell(withIdentifier: cellId) as? IMMessageTextCell
-        if cell == nil {
-            cell = IMMessageTextCell(style: .default, reuseIdentifier: cellId)
-            // 选中效果，不需要
-            cell?.selectionStyle = .none
+        switch msg.localMsgType {
+        case .Server:
+            switch msg.msgType {
+            case .kCimMsgTypeText, .kCimMsgTypeRobot:
+                let textCell: IMMessageTextCell = cim_dequeueReusableCell(aClass: IMMessageTextCell.self, tableView: tableView)
+                textCell.setContent(message: msg)
+                cell = textCell
+            default:
+                print("unknown msg type")
+            }
+        case .LocalTime:
+            let timeCell: IMMessageTimeCell = cim_dequeueReusableCell(aClass: IMMessageTimeCell.self, tableView: tableView)
+            timeCell.setContent(model: msg)
+            cell = timeCell
+        default:
+            print("unknown localMsgType type")
         }
-        cell!.setContent(message: msg)
+
+        if cell == nil {
+            let textCell: IMMessageTextCell = cim_dequeueReusableCell(aClass: IMMessageTextCell.self, tableView: tableView)
+            msg.msgData = "暂不支持的消息类型"
+            textCell.setContent(message: msg)
+            cell = textCell
+        }
+
         return cell!
+    }
+
+    func cim_dequeueReusableCell<T: UITableViewCell>(aClass: T.Type, tableView: UITableView) -> T! {
+        let cellId = String(describing: aClass.self)
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId) as? T else {
+            fatalError("\(cellId) not register")
+        }
+        cell.selectionStyle = .none
+        return cell
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -330,7 +362,7 @@ extension IMChatContentViewController {
 
     func appendMsg(msg: IMMessage) {
         // 追加
-        msgList.append(msg)
+        msgList.append(LocalIMMessage(msg: msg))
 
         // 刷新tabview
         let index = IndexPath(row: msgList.count - 1, section: 0)
