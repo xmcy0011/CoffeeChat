@@ -26,21 +26,23 @@
 
 # 方案分析
 ## goim
-![goim架构图-原版](https://github.com/xmcy0011/goim/blob/master/docs/arch.png)  
-![goim架构图](../images/architecture-goim.png)
+![goim架构图-原版](https://github.com/xmcy0011/goim/blob/master/docs/arch.png)    
+![goim架构图](../images/architecture-goim.png)  
 goim是bilibili技术总监毛剑的开源聊天室项目，号称支持100万用户在线，在仔细的梳理了goim的业务流程（在聊天室发一条消息）后绘制出了上面的架构图(图2)。    
 黄线代表一条聊天室消息经过的链路。comet是接入层，负责管理维护客户端的TCP/WebSocket连接等。logic是业务逻辑，比如登录、发消息等。job负责从Kafka消费消息，然后广播到所有comet上。discovery是bilibili开源的类似Zookeeper的服务注册与发现模块，这样comet、logic等都可以很方便的动态扩容。  
 
 ## 其他
-![瓜子IM](https://mmbiz.qpic.cn/mmbiz_png/bwicjdKXbf3oyBmhMK9ArQbI0QRlD134UiaeQU0JRhD518aYnKTDhS2Q2icIjjIpkJrksIWqYGgibvyLhNDFdoTUKw/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1)
+![瓜子IM](https://mmbiz.qpic.cn/mmbiz_png/bwicjdKXbf3oyBmhMK9ArQbI0QRlD134UiaeQU0JRhD518aYnKTDhS2Q2icIjjIpkJrksIWqYGgibvyLhNDFdoTUKw/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1)  
 
 "普通程序员"微信公众号上分享的文章和goim架构类似，都是grpc+mq的混合方式。
 
 ## 最终设计
 
-![coffeechat模块架构](../images/structure-v2.png)
+![coffeechat模块架构](../images/structure-v2.png)  
 
-分步骤来验证：
+如果仅仅在Router部分使用MQ，个人觉得代价有点大（用户量不大，性能不是瓶颈的场景下）。更希望能在Gate和Logic之间使用MQ，来提高系统吞吐量、业务解耦合、流量削峰等，提升系统稳定性。所以，初步架构如上图。
+
+分步来实施：
 1. 先在 Gate 和 Logic 之间引入MQ，Gate与Gate之间广播继续通过Router实现。
 2. Router也从MQ消费，然后广播，类似goim的流程。
 
@@ -49,9 +51,9 @@ goim是bilibili技术总监毛剑的开源聊天室项目，号称支持100万�
 
 参考：  
 [RocketMQ与Kafka对比（18项差异）](https://blog.csdn.net/damacheng/article/details/42846549)  
-[Kafka、RabbitMQ、RocketMQ等消息中间件的对比](https://blog.csdn.net/belvine/article/details/80842240)
+[Kafka、RabbitMQ、RocketMQ等消息中间件的对比](https://blog.csdn.net/belvine/article/details/80842240)  
 
-最后，根据团队技术栈以及Kafka和RocketMQ的源码语言和适用场景，初步决定适用RocketMQ。
+最后，根据团队技术栈以及Kafka和RocketMQ的源码语言和适用场景，决定使用RocketMQ。
 
 ## 为什么选择RocketMQ
 ### 源代码
@@ -75,3 +77,7 @@ RocketMQ是Java写的，结合《RocketMQ技术内幕》能比较深入的研究
 ### 消息投递实时性
 - Kafka使用短轮询方式，实时性取决于轮询间隔时间
 - RocketMQ使用长轮询，同Push方式实时性一致，消息的投递延时通常在几个毫秒。
+
+# demo
+
+切换到rocketmq分支查看。
