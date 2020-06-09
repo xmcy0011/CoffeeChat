@@ -1,3 +1,14 @@
+<!-- TOC -->
+
+- [install](#install)
+    - [mysql](#mysql)
+    - [redis](#redis)
+    - [unable to deduce repository and source type for "google.golang.org/grpc"](#unable-to-deduce-repository-and-source-type-for-googlegolangorggrpc)
+    - [](#)
+    - [端口列表](#端口列表)
+
+<!-- /TOC -->
+
 # install
 
 ```bash
@@ -64,6 +75,8 @@ using proxy
 ```bash
 env http_proxy=http://127.0.0.1:60339 https_proxy=http://127.0.0.1:60339 dep ensure -v
 ```
+
+## 
 
 ## 端口列表
 

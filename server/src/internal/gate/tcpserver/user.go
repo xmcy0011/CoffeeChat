@@ -6,9 +6,9 @@
 package tcpserver
 
 import (
+	"coffeechat/api/cim"
+	"coffeechat/pkg/logger"
 	"container/list"
-	"github.com/CoffeeChat/server/src/api/cim"
-	"github.com/CoffeeChat/server/src/pkg/logger"
 	"github.com/golang/protobuf/proto"
 	"math"
 )
@@ -58,7 +58,7 @@ func (u *User) Broadcast(cmdId uint16, data proto.Message) {
 }
 
 func (u *User) BroadcastMessage(data *cim.CIMMsgData) {
-	if data.MsgType != cim.CIMMsgType_kCIM_MSG_TYPE_ROBOT{
+	if data.MsgType != cim.CIMMsgType_kCIM_MSG_TYPE_ROBOT {
 		// FIXED ME
 		// 按照每个客户端类型统计ack列表更好
 		u.ackMsgMap[data.MsgId] = data

@@ -1,9 +1,9 @@
 package tcpserver
 
 import (
+	"coffeechat/internal/gate/conf"
+	"coffeechat/pkg/logger"
 	"github.com/BurntSushi/toml"
-	"github.com/CoffeeChat/server/src/internal/gate/conf"
-	"github.com/CoffeeChat/server/src/pkg/logger"
 	"testing"
 )
 
@@ -22,7 +22,7 @@ func TestRobotClient_GetWeChatAnswer(t *testing.T) {
 	logger.InitLogger("log.log", "debug")
 
 	_, err := toml.DecodeFile("../../../app/im_gate/gate-example.toml", conf.DefaultConfig)
-	if err != nil{
+	if err != nil {
 		t.Failed()
 		return
 	}

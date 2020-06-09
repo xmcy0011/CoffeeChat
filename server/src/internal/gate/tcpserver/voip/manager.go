@@ -1,7 +1,7 @@
 package voip
 
 import (
-	"github.com/CoffeeChat/server/src/pkg/logger"
+	"coffeechat/pkg/logger"
 	"strconv"
 )
 

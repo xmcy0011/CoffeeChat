@@ -1,9 +1,10 @@
 package mq
 
+/*
 import (
-	"github.com/CoffeeChat/server/src/api/cim"
-	"github.com/CoffeeChat/server/src/internal/logic/conf"
-	"github.com/CoffeeChat/server/src/pkg/logger"
+	"coffeechat/api/cim"
+	"coffeechat/internal/logic/conf"
+	"coffeechat/pkg/logger"
 	"gopkg.in/Shopify/sarama.v2"
 	"strconv"
 )
@@ -71,3 +72,4 @@ func onHandleMsgAck(con sarama.PartitionConsumer) {
 		}
 	}
 }
+*/

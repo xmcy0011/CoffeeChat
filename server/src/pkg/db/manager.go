@@ -1,6 +1,6 @@
 package db
 
-import "github.com/CoffeeChat/server/src/pkg/logger"
+import "coffeechat/pkg/logger"
 
 const kDbMasterName = "Master"
 const kDbSlaveName = "Slave"

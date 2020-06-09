@@ -1,8 +1,8 @@
 package filegw
 
 import (
+	"coffeechat/pkg/logger"
 	"context"
-	"github.com/CoffeeChat/server/src/pkg/logger"
 	"github.com/minio/minio-go"
 	"io"
 	"strconv"

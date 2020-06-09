@@ -1,12 +1,12 @@
 package tcpserver
 
 import (
+	"coffeechat/api/cim"
+	"coffeechat/pkg/def"
+	"coffeechat/pkg/logger"
 	"container/list"
 	"context"
 	"encoding/json"
-	"github.com/CoffeeChat/server/src/api/cim"
-	"github.com/CoffeeChat/server/src/pkg/def"
-	"github.com/CoffeeChat/server/src/pkg/logger"
 	"github.com/golang/protobuf/proto"
 	uuid "github.com/satori/go.uuid"
 	"go.uber.org/atomic"

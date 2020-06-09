@@ -1,10 +1,10 @@
 package dao
 
 import (
+	"coffeechat/api/cim"
+	"coffeechat/pkg/db"
+	"coffeechat/pkg/logger"
 	"fmt"
-	"github.com/CoffeeChat/server/src/api/cim"
-	"github.com/CoffeeChat/server/src/pkg/db"
-	"github.com/CoffeeChat/server/src/pkg/logger"
 )
 
 const kRedisKeyUnread = "unread"

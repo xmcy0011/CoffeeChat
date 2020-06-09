@@ -1,11 +1,11 @@
 package tcpserver
 
 import (
+	"coffeechat/api/cim"
+	"coffeechat/internal/gate/tcpserver/voip"
+	"coffeechat/pkg/logger"
 	"context"
 	"encoding/json"
-	"github.com/CoffeeChat/server/src/api/cim"
-	"github.com/CoffeeChat/server/src/internal/gate/tcpserver/voip"
-	"github.com/CoffeeChat/server/src/pkg/logger"
 	"github.com/golang/protobuf/proto"
 	uuid "github.com/satori/go.uuid"
 	"time"

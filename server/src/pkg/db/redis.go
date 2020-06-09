@@ -7,9 +7,9 @@
 package db
 
 import (
+	"coffeechat/pkg/logger"
 	"errors"
 	"fmt"
-	"github.com/CoffeeChat/server/src/pkg/logger"
 	"github.com/go-redis/redis"
 	"time"
 )

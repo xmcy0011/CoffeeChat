@@ -1,7 +1,7 @@
 package tcpserver
 
 import (
-	"github.com/CoffeeChat/server/src/pkg/logger"
+	"coffeechat/pkg/logger"
 	"net"
 	"testing"
 	"time"

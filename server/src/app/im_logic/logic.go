@@ -1,13 +1,13 @@
 package main
 
 import (
+	"coffeechat/internal/logic/conf"
+	"coffeechat/internal/logic/rpcserver"
+	"coffeechat/pkg/db"
+	"coffeechat/pkg/helper"
+	"coffeechat/pkg/logger"
 	"flag"
 	"github.com/BurntSushi/toml"
-	"github.com/CoffeeChat/server/src/internal/logic/conf"
-	"github.com/CoffeeChat/server/src/internal/logic/rpcserver"
-	"github.com/CoffeeChat/server/src/pkg/db"
-	"github.com/CoffeeChat/server/src/pkg/helper"
-	"github.com/CoffeeChat/server/src/pkg/logger"
 	"os"
 	"os/signal"
 	"syscall"

@@ -1,13 +1,13 @@
 package tcpserver
 
 import (
+	"coffeechat/api/cim"
+	"coffeechat/internal/gate/conf"
+	"coffeechat/pkg/def"
+	"coffeechat/pkg/logger"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/CoffeeChat/server/src/api/cim"
-	"github.com/CoffeeChat/server/src/internal/gate/conf"
-	"github.com/CoffeeChat/server/src/pkg/def"
-	"github.com/CoffeeChat/server/src/pkg/logger"
 	"github.com/dgrijalva/jwt-go"
 	"io/ioutil"
 	"net/http"
