@@ -1,18 +1,6 @@
-# Minio Go Client SDK for Amazon S3 Compatible Cloud Storage [![Slack](https://slack.minio.io/slack?type=svg)](https://slack.minio.io) [![Sourcegraph](https://sourcegraph.com/github.com/minio/minio-go/-/badge.svg)](https://sourcegraph.com/github.com/minio/minio-go?badge)
+# Minio Go Client SDK for Amazon S3 Compatible Cloud Storage [![Slack](https://slack.minio.io/slack?type=svg)](https://slack.minio.io) [![Sourcegraph](https://sourcegraph.com/github.com/minio/minio-go/-/badge.svg)](https://sourcegraph.com/github.com/minio/minio-go?badge) [![Apache V2 License](http://img.shields.io/badge/license-Apache%20V2-blue.svg)](https://github.com/minio/minio-go/blob/master/LICENSE)
 
 The Minio Go Client SDK provides simple APIs to access any Amazon S3 compatible object storage.
-
-**Supported cloud storage providers:** 
-
-- AWS Signature Version 4
-   - Amazon S3
-   - Minio
-
-- AWS Signature Version 2
-   - Google Cloud Storage (Compatibility Mode)
-   - Openstack Swift + Swift3 middleware
-   - Ceph Object Gateway
-   - Riak CS
 
 This quickstart guide will show you how to install the Minio client SDK, connect to Minio, and provide a walkthrough for a simple file uploader. For a complete list of APIs and examples, please take a look at the [Go Client API Reference](https://docs.minio.io/docs/golang-client-api-reference).
 
@@ -26,9 +14,9 @@ go get -u github.com/minio/minio-go
 ## Initialize Minio Client
 Minio client requires the following four parameters specified to connect to an Amazon S3 compatible object storage.
 
-| Parameter  | Description| 
+| Parameter  | Description|
 | :---         |     :---     |
-| endpoint   | URL to object storage service.   | 
+| endpoint   | URL to object storage service.   |
 | accessKeyID | Access key is the user ID that uniquely identifies your account. |   
 | secretAccessKey | Secret key is the password to your account. |
 | secure | Set this value to 'true' to enable secure (HTTPS) access. |
@@ -55,6 +43,7 @@ func main() {
 	}
 
 	log.Printf("%#v\n", minioClient) // minioClient is now setup
+}
 ```
 
 ## Quick Start Example - File Uploader
@@ -96,8 +85,9 @@ func main() {
 		} else {
 			log.Fatalln(err)
 		}
+	} else {
+		log.Printf("Successfully created %s\n", bucketName)
 	}
-	log.Printf("Successfully created %s\n", bucketName)
 
 	// Upload the zip file
 	objectName := "golden-oldies.zip"
@@ -105,7 +95,7 @@ func main() {
 	contentType := "application/zip"
 
 	// Upload the zip file with FPutObject
-	n, err := minioClient.FPutObject(bucketName, objectName, filePath, contentType)
+	n, err := minioClient.FPutObject(bucketName, objectName, filePath, minio.PutObjectOptions{ContentType:contentType})
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -117,7 +107,7 @@ func main() {
 ### Run FileUploader
 ```sh
 go run file-uploader.go
-2016/08/13 17:03:28 Successfully created mymusic 
+2016/08/13 17:03:28 Successfully created mymusic
 2016/08/13 17:03:40 Successfully uploaded golden-oldies.zip of size 16253413
 
 mc ls play/mymusic/
@@ -125,7 +115,7 @@ mc ls play/mymusic/
 ```
 
 ## API Reference
-The full API Reference is available here. 
+The full API Reference is available here.
 
 * [Complete API Reference](https://docs.minio.io/docs/golang-client-api-reference)
 
@@ -141,7 +131,6 @@ The full API Reference is available here.
 ### API Reference : Bucket policy Operations
 * [`SetBucketPolicy`](https://docs.minio.io/docs/golang-client-api-reference#SetBucketPolicy)
 * [`GetBucketPolicy`](https://docs.minio.io/docs/golang-client-api-reference#GetBucketPolicy)
-* [`ListBucketPolicies`](https://docs.minio.io/docs/golang-client-api-reference#ListBucketPolicies)
 
 ### API Reference : Bucket notification Operations
 * [`SetBucketNotification`](https://docs.minio.io/docs/golang-client-api-reference#SetBucketNotification)
@@ -151,21 +140,23 @@ The full API Reference is available here.
 
 ### API Reference : File Object Operations
 * [`FPutObject`](https://docs.minio.io/docs/golang-client-api-reference#FPutObject)
-* [`FGetObject`](https://docs.minio.io/docs/golang-client-api-reference#FPutObject)
+* [`FGetObject`](https://docs.minio.io/docs/golang-client-api-reference#FGetObject)
+* [`FPutObjectWithContext`](https://docs.minio.io/docs/golang-client-api-reference#FPutObjectWithContext)
+* [`FGetObjectWithContext`](https://docs.minio.io/docs/golang-client-api-reference#FGetObjectWithContext)
 
 ### API Reference : Object Operations
 * [`GetObject`](https://docs.minio.io/docs/golang-client-api-reference#GetObject)
 * [`PutObject`](https://docs.minio.io/docs/golang-client-api-reference#PutObject)
+* [`GetObjectWithContext`](https://docs.minio.io/docs/golang-client-api-reference#GetObjectWithContext)
+* [`PutObjectWithContext`](https://docs.minio.io/docs/golang-client-api-reference#PutObjectWithContext)
 * [`PutObjectStreaming`](https://docs.minio.io/docs/golang-client-api-reference#PutObjectStreaming)
 * [`StatObject`](https://docs.minio.io/docs/golang-client-api-reference#StatObject)
 * [`CopyObject`](https://docs.minio.io/docs/golang-client-api-reference#CopyObject)
 * [`RemoveObject`](https://docs.minio.io/docs/golang-client-api-reference#RemoveObject)
 * [`RemoveObjects`](https://docs.minio.io/docs/golang-client-api-reference#RemoveObjects)
 * [`RemoveIncompleteUpload`](https://docs.minio.io/docs/golang-client-api-reference#RemoveIncompleteUpload)
+* [`SelectObjectContent`](https://docs.minio.io/docs/golang-client-api-reference#SelectObjectContent)
 
-### API Reference: Encrypted Object Operations
-* [`GetEncryptedObject`](https://docs.minio.io/docs/golang-client-api-reference#GetEncryptedObject)
-* [`PutEncryptedObject`](https://docs.minio.io/docs/golang-client-api-reference#PutEncryptedObject)
 
 ### API Reference : Presigned Operations
 * [`PresignedGetObject`](https://docs.minio.io/docs/golang-client-api-reference#PresignedGetObject)
@@ -194,7 +185,11 @@ The full API Reference is available here.
 * [setbucketpolicy.go](https://github.com/minio/minio-go/blob/master/examples/s3/setbucketpolicy.go)
 * [getbucketpolicy.go](https://github.com/minio/minio-go/blob/master/examples/s3/getbucketpolicy.go)
 * [listbucketpolicies.go](https://github.com/minio/minio-go/blob/master/examples/s3/listbucketpolicies.go)
- 
+
+### Full Examples : Bucket lifecycle Operations
+* [setbucketlifecycle.go](https://github.com/minio/minio-go/blob/master/examples/s3/setbucketlifecycle.go)
+* [getbucketlifecycle.go](https://github.com/minio/minio-go/blob/master/examples/s3/getbucketlifecycle.go)
+
 ### Full Examples : Bucket notification Operations
 * [setbucketnotification.go](https://github.com/minio/minio-go/blob/master/examples/s3/setbucketnotification.go)
 * [getbucketnotification.go](https://github.com/minio/minio-go/blob/master/examples/s3/getbucketnotification.go)
@@ -204,10 +199,14 @@ The full API Reference is available here.
 ### Full Examples : File Object Operations
 * [fputobject.go](https://github.com/minio/minio-go/blob/master/examples/s3/fputobject.go)
 * [fgetobject.go](https://github.com/minio/minio-go/blob/master/examples/s3/fgetobject.go)
+* [fputobject-context.go](https://github.com/minio/minio-go/blob/master/examples/s3/fputobject-context.go)
+* [fgetobject-context.go](https://github.com/minio/minio-go/blob/master/examples/s3/fgetobject-context.go)
 
 ### Full Examples : Object Operations
 * [putobject.go](https://github.com/minio/minio-go/blob/master/examples/s3/putobject.go)
 * [getobject.go](https://github.com/minio/minio-go/blob/master/examples/s3/getobject.go)
+* [putobject-context.go](https://github.com/minio/minio-go/blob/master/examples/s3/putobject-context.go)
+* [getobject-context.go](https://github.com/minio/minio-go/blob/master/examples/s3/getobject-context.go)
 * [statobject.go](https://github.com/minio/minio-go/blob/master/examples/s3/statobject.go)
 * [copyobject.go](https://github.com/minio/minio-go/blob/master/examples/s3/copyobject.go)
 * [removeobject.go](https://github.com/minio/minio-go/blob/master/examples/s3/removeobject.go)
@@ -217,6 +216,7 @@ The full API Reference is available here.
 ### Full Examples : Encrypted Object Operations
 * [put-encrypted-object.go](https://github.com/minio/minio-go/blob/master/examples/s3/put-encrypted-object.go)
 * [get-encrypted-object.go](https://github.com/minio/minio-go/blob/master/examples/s3/get-encrypted-object.go)
+* [fput-encrypted-object.go](https://github.com/minio/minio-go/blob/master/examples/s3/fputencrypted-object.go)
 
 ### Full Examples : Presigned Operations
 * [presignedgetobject.go](https://github.com/minio/minio-go/blob/master/examples/s3/presignedgetobject.go)
@@ -226,7 +226,7 @@ The full API Reference is available here.
 
 ## Explore Further
 * [Complete Documentation](https://docs.minio.io)
-* [Minio Go Client SDK API Reference](https://docs.minio.io/docs/golang-client-api-reference) 
+* [Minio Go Client SDK API Reference](https://docs.minio.io/docs/golang-client-api-reference)
 * [Go Music Player App Full Application Example](https://docs.minio.io/docs/go-music-player-app)
 
 ## Contribute
@@ -235,3 +235,5 @@ The full API Reference is available here.
 [![Build Status](https://travis-ci.org/minio/minio-go.svg)](https://travis-ci.org/minio/minio-go)
 [![Build status](https://ci.appveyor.com/api/projects/status/1d05e6nvxcelmrak?svg=true)](https://ci.appveyor.com/project/harshavardhana/minio-go)
 
+## License
+This SDK is distributed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0), see [LICENSE](./LICENSE) and [NOTICE](./NOTICE) for more information.

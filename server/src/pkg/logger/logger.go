@@ -79,6 +79,12 @@ func InitLogger(log string, level string) {
 		lv = zapcore.InfoLevel
 	}
 
+	// 正式入门看完之后，有一种醍醐灌顶的感受。
+	// 回顾这些年的工作，广度确实有，从程序员到项目经理，然后再到产品经理，UI设计。
+	// 从C#到C++，从WINDOWS到前端（VUE，ElementUI）再到移动端（Flutter，IOS）
+	// 从SDK到音视频编解码到VOIP到IM，从自定义协议到Protobuf
+	// 从安防到大数据（地图SDK、ArcGIS地图引擎），还有最近的@胖猫人工智能
+
 	// level级别以上的一个文件，如果是info，则warn\error\painc等包含
 	core := zapcore.NewCore(
 		zapcore.NewConsoleEncoder(NewEncoderConfig()),
