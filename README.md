@@ -101,8 +101,8 @@ opensource im with server(go) and client(flutter+swift)
 
 ### 聊天机器人功能
 
-- [] 图灵机器人接入
-- [] 小爱机器人接入
+- [ ] 图灵机器人接入
+- [ ] 小爱机器人接入
 - [x] 思知机器人接入
 - [x] 微信机器人接入
 
