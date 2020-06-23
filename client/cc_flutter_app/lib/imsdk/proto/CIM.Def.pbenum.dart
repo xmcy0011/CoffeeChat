@@ -325,3 +325,22 @@ class CIMResCode extends $pb.ProtobufEnum {
   const CIMResCode._($core.int v, $core.String n) : super(v, n);
 }
 
+class CIMPushMsg_CIMPushMsgType extends $pb.ProtobufEnum {
+  static const CIMPushMsg_CIMPushMsgType kCIM_UNKNOWN = CIMPushMsg_CIMPushMsgType._(0, 'kCIM_UNKNOWN');
+  static const CIMPushMsg_CIMPushMsgType kCIM_PUSH = CIMPushMsg_CIMPushMsgType._(1, 'kCIM_PUSH');
+  static const CIMPushMsg_CIMPushMsgType kCIM_ROOM = CIMPushMsg_CIMPushMsgType._(2, 'kCIM_ROOM');
+  static const CIMPushMsg_CIMPushMsgType kCIM_BROADCAST = CIMPushMsg_CIMPushMsgType._(3, 'kCIM_BROADCAST');
+
+  static const $core.List<CIMPushMsg_CIMPushMsgType> values = <CIMPushMsg_CIMPushMsgType> [
+    kCIM_UNKNOWN,
+    kCIM_PUSH,
+    kCIM_ROOM,
+    kCIM_BROADCAST,
+  ];
+
+  static final $core.Map<$core.int, CIMPushMsg_CIMPushMsgType> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static CIMPushMsg_CIMPushMsgType valueOf($core.int value) => _byValue[value];
+
+  const CIMPushMsg_CIMPushMsgType._($core.int v, $core.String n) : super(v, n);
+}
+

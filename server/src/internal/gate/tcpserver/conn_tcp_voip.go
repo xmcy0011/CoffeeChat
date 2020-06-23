@@ -258,8 +258,14 @@ func (tcp *TcpConn) onHandleVOIPByeReq(header *cim.ImHeader, buff []byte) {
 	ctx, cancelFun := context.WithTimeout(context.Background(), time.Second*kBusinessTimeOut)
 	defer cancelFun()
 
+	msg := cim.CIMInternalMsgData{
+		UserId:  tcp.userId,
+		Key:     "",
+		Server:  tcp.server,
+		MsgData: nil,
+	}
 	// save to db
-	_, err = conn.SendMsgData(ctx, data)
+	_, err = conn.SendMsgData(ctx, &msg)
 	if err != nil {
 		// 上行消息丢失计数+1
 		upMissMsgCount.Inc()

@@ -13,20 +13,23 @@ import (
 )
 
 // 发消息
-func (s *LogicServer) SendMsgData(ctx context.Context, in *cim.CIMMsgData) (*cim.CIMMsgDataAck, error) {
-	logger.Sugar.Infof("SendMsgData,fromId=%d,toId=%d,msgId=%s,createTime=%d,msgType=%d,sessionType=%d",
-		in.FromUserId, in.ToSessionId, in.MsgId, in.CreateTime, in.MsgType, in.SessionType)
+func (s *LogicServer) SendMsgData(ctx context.Context, in *cim.CIMInternalMsgData) (*cim.CIMMsgDataAck, error) {
+	msg := in.MsgData
 
-	if in.FromUserId == in.ToSessionId {
+	logger.Sugar.Infof("SendMsgData,fromId=%d,toId=%d,msgId=%s,createTime=%d,msgType=%d,sessionType=%d",
+		msg.FromUserId, msg.ToSessionId, msg.MsgId, msg.CreateTime, msg.MsgType, msg.SessionType)
+
+	if msg.FromUserId == msg.ToSessionId {
 		return nil, errors.New("FromUserId equals ToSessionId")
 	}
 
 	// 机器人消息，对方无需未读计数
-	isToRobot := def.IsRobot(in.ToSessionId) && in.MsgType == cim.CIMMsgType_kCIM_MSG_TYPE_ROBOT
+	isToRobot := def.IsRobot(msg.ToSessionId) && msg.MsgType == cim.CIMMsgType_kCIM_MSG_TYPE_ROBOT
 
-	serverMsgId, err := dao.DefaultMessage.SaveMessage(in.FromUserId, in.ToSessionId, in.MsgId, in.CreateTime, in.MsgType, in.SessionType, string(in.MsgData), isToRobot)
+	serverMsgId, err := dao.DefaultMessage.SaveMessage(msg.FromUserId, msg.ToSessionId, msg.MsgId, msg.CreateTime,
+		msg.MsgType, msg.SessionType, string(msg.MsgData), isToRobot)
 	if err != nil {
-		logger.Sugar.Error("save message failed:%s,fromId=%d,toId=%d,msgId=%s", err.Error(), in.FromUserId, in.ToSessionId, in.MsgId)
+		logger.Sugar.Error("save message failed:%s,fromId=%d,toId=%d,msgId=%s", err.Error(), msg.FromUserId, msg.ToSessionId, msg.MsgId)
 		return nil, err
 	}
 
@@ -34,13 +37,13 @@ func (s *LogicServer) SendMsgData(ctx context.Context, in *cim.CIMMsgData) (*cim
 
 	// return ack
 	ack := &cim.CIMMsgDataAck{
-		FromUserId:  in.FromUserId,
-		ToSessionId: in.ToSessionId,
-		MsgId:       in.MsgId,
+		FromUserId:  msg.FromUserId,
+		ToSessionId: msg.ToSessionId,
+		MsgId:       msg.MsgId,
 		ServerMsgId: serverMsgId,
 		ResCode:     cim.CIMResCode_kCIM_RES_CODE_OK,
-		CreateTime:  in.CreateTime,
-		SessionType: in.SessionType,
+		CreateTime:  msg.CreateTime,
+		SessionType: msg.SessionType,
 	}
 	return ack, nil
 }

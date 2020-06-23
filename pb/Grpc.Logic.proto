@@ -1,37 +1,44 @@
 syntax = "proto3";
 
 package CIM.Grpc;
-option go_package="cim";
+option go_package = ".;cim";
 option optimize_for = LITE_RUNTIME;
 
-//import "CIM.Def.proto";
+// import "CIM.Def.proto";
 import "CIM.List.proto";
 import "CIM.Login.proto";
 import "CIM.Message.proto";
 import "Grpc.Def.proto";
 
+message CIMInternalMsgData {
+  uint64 user_id = 1;                  // 用户ID
+  string key = 2;                      // 预留
+  string server = 3;                   // 来源服务器
+  CIM.Message.CIMMsgData msg_data = 4; // 消息
+}
+
 // logic的grpc接口定义
 service Logic {
-    // 传递我方信息，双向GRPC
-    rpc SayHello(Hello) returns(Empty){}
+  // 传递我方信息，双向GRPC
+  rpc SayHello(Hello) returns (Empty) {}
 
-    // ping
-    rpc Ping(CIM.Login.CIMHeartBeat) returns(CIM.Login.CIMHeartBeat) {}
-    // 验证token
-    rpc AuthToken(CIM.Login.CIMAuthTokenReq) returns(CIM.Login.CIMAuthTokenRsp) {}
+  // ping
+  rpc Ping(CIM.Login.CIMHeartBeat) returns (CIM.Login.CIMHeartBeat) {}
+  // 验证token
+  rpc AuthToken(CIM.Login.CIMAuthTokenReq) returns (CIM.Login.CIMAuthTokenRsp) {}
 
-    // 查询会话列表
-    rpc RecentContactSession(CIM.List.CIMRecentContactSessionReq) returns(CIM.List.CIMRecentContactSessionRsp) {}
-    // 查询历史消息列表
-    rpc GetMsgList(CIM.List.CIMGetMsgListReq) returns(CIM.List.CIMGetMsgListRsp) {}
+  // 查询会话列表
+  rpc RecentContactSession(CIM.List.CIMRecentContactSessionReq) returns (CIM.List.CIMRecentContactSessionRsp) {}
+  // 查询历史消息列表
+  rpc GetMsgList(CIM.List.CIMGetMsgListReq) returns (CIM.List.CIMGetMsgListRsp) {}
 
-    // 发消息
-    rpc SendMsgData(CIM.Message.CIMMsgData) returns(CIM.Message.CIMMsgDataAck) {}
-    // 已读消息回执
-    rpc ReadAckMsgData(CIM.Message.CIMMsgDataReadAck) returns(Empty) {}
+  // 发消息
+  rpc SendMsgData(CIMInternalMsgData) returns (CIM.Message.CIMMsgDataAck) {}
+  // 已读消息回执
+  rpc ReadAckMsgData(CIM.Message.CIMMsgDataReadAck) returns (Empty) {}
 
-    // 创建用户
-    rpc CreateUser(CreateUserAccountInfoReq) returns(CreateUserAccountInfoRsp){}
-    // 查询用户昵称
-    rpc QueryUserNickName(QueryUserNickNameReq) returns(QueryUserNickNameRsp){}
+  // 创建用户
+  rpc CreateUser(CreateUserAccountInfoReq) returns (CreateUserAccountInfoRsp) {}
+  // 查询用户昵称
+  rpc QueryUserNickName(QueryUserNickNameReq) returns (QueryUserNickNameRsp) {}
 }

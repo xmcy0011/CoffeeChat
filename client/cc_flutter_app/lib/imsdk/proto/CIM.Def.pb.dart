@@ -289,3 +289,57 @@ class CIMChannelInfo extends $pb.GeneratedMessage {
   void clearCreatorId() => clearField(3);
 }
 
+class CIMPushMsg extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('CIMPushMsg', package: const $pb.PackageName('CIM.Def'))
+    ..a<$core.int>(1, 'commondId', $pb.PbFieldType.OU3)
+    ..a<$core.int>(2, 'serviceId', $pb.PbFieldType.OU3)
+    ..aOS(3, 'server')
+    ..e<CIMPushMsg_CIMPushMsgType>(4, 'type', $pb.PbFieldType.OE, CIMPushMsg_CIMPushMsgType.kCIM_UNKNOWN, CIMPushMsg_CIMPushMsgType.valueOf, CIMPushMsg_CIMPushMsgType.values)
+    ..a<Int64>(5, 'toId', $pb.PbFieldType.OU6, Int64.ZERO)
+    ..a<$core.List<$core.int>>(6, 'data', $pb.PbFieldType.OY)
+    ..hasRequiredFields = false
+  ;
+
+  CIMPushMsg() : super();
+  CIMPushMsg.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  CIMPushMsg.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  CIMPushMsg clone() => CIMPushMsg()..mergeFromMessage(this);
+  CIMPushMsg copyWith(void Function(CIMPushMsg) updates) => super.copyWith((message) => updates(message as CIMPushMsg));
+  $pb.BuilderInfo get info_ => _i;
+  static CIMPushMsg create() => CIMPushMsg();
+  CIMPushMsg createEmptyInstance() => create();
+  static $pb.PbList<CIMPushMsg> createRepeated() => $pb.PbList<CIMPushMsg>();
+  static CIMPushMsg getDefault() => _defaultInstance ??= create()..freeze();
+  static CIMPushMsg _defaultInstance;
+
+  $core.int get commondId => $_get(0, 0);
+  set commondId($core.int v) { $_setUnsignedInt32(0, v); }
+  $core.bool hasCommondId() => $_has(0);
+  void clearCommondId() => clearField(1);
+
+  $core.int get serviceId => $_get(1, 0);
+  set serviceId($core.int v) { $_setUnsignedInt32(1, v); }
+  $core.bool hasServiceId() => $_has(1);
+  void clearServiceId() => clearField(2);
+
+  $core.String get server => $_getS(2, '');
+  set server($core.String v) { $_setString(2, v); }
+  $core.bool hasServer() => $_has(2);
+  void clearServer() => clearField(3);
+
+  CIMPushMsg_CIMPushMsgType get type => $_getN(3);
+  set type(CIMPushMsg_CIMPushMsgType v) { setField(4, v); }
+  $core.bool hasType() => $_has(3);
+  void clearType() => clearField(4);
+
+  Int64 get toId => $_getI64(4);
+  set toId(Int64 v) { $_setInt64(4, v); }
+  $core.bool hasToId() => $_has(4);
+  void clearToId() => clearField(5);
+
+  $core.List<$core.int> get data => $_getN(5);
+  set data($core.List<$core.int> v) { $_setBytes(5, v); }
+  $core.bool hasData() => $_has(5);
+  void clearData() => clearField(6);
+}
+

@@ -1,35 +1,35 @@
 syntax = "proto3";
 
 package CIM.Grpc;
-option go_package="cim";
+option go_package = ".;cim";
 option optimize_for = LITE_RUNTIME;
 
 import "CIM.Def.proto";
 
-message Empty{}
+message Empty {}
 
 message Hello {
-    string ip = 1;
-    int32 port = 2;
+  string ip = 1;
+  int32 port = 2;
 }
 
 // 创建用户账户授权信息
 message CreateUserAccountInfoReq {
-    uint64 user_id = 1;          // 用户ID
-    string user_nick_name = 2;   // 用户昵称
-    string user_token = 3;       // 口令，最小6位
+  uint64 user_id = 1;        // 用户ID
+  string user_nick_name = 2; // 用户昵称
+  string user_token = 3;     // 口令，最小6位
 }
 
 message CreateUserAccountInfoRsp {
-    CIM.Def.CIMErrorCode error_code = 1;         // 结果
+  CIM.Def.CIMErrorCode error_code = 1; // 结果
 }
 
 // 查询用户昵称
 message QueryUserNickNameReq {
-    uint64 user_id = 1;          // 用户ID
+  uint64 user_id = 1; // 用户ID
 }
 
 message QueryUserNickNameRsp {
-    CIM.Def.CIMErrorCode error_code = 1;         // 结果
-    string nick_name = 2; // 昵称
+  CIM.Def.CIMErrorCode error_code = 1; // 结果
+  string nick_name = 2;                // 昵称
 }

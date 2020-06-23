@@ -227,3 +227,26 @@ const CIMChannelInfo$json = const {
   ],
 };
 
+const CIMPushMsg$json = const {
+  '1': 'CIMPushMsg',
+  '2': const [
+    const {'1': 'commond_id', '3': 1, '4': 1, '5': 13, '10': 'commondId'},
+    const {'1': 'service_id', '3': 2, '4': 1, '5': 13, '10': 'serviceId'},
+    const {'1': 'server', '3': 3, '4': 1, '5': 9, '10': 'server'},
+    const {'1': 'type', '3': 4, '4': 1, '5': 14, '6': '.CIM.Def.CIMPushMsg.CIMPushMsgType', '10': 'type'},
+    const {'1': 'toId', '3': 5, '4': 1, '5': 4, '10': 'toId'},
+    const {'1': 'data', '3': 6, '4': 1, '5': 12, '10': 'data'},
+  ],
+  '4': const [CIMPushMsg_CIMPushMsgType$json],
+};
+
+const CIMPushMsg_CIMPushMsgType$json = const {
+  '1': 'CIMPushMsgType',
+  '2': const [
+    const {'1': 'kCIM_UNKNOWN', '2': 0},
+    const {'1': 'kCIM_PUSH', '2': 1},
+    const {'1': 'kCIM_ROOM', '2': 2},
+    const {'1': 'kCIM_BROADCAST', '2': 3},
+  ],
+};
+

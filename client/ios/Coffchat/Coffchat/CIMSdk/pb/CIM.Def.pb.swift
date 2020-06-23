@@ -1093,6 +1093,90 @@ struct CIM_Def_CIMChannelInfo {
   init() {}
 }
 
+struct CIM_Def_CIMPushMsg {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// 消息ID
+  var commondID: UInt32 = 0
+
+  /// 模块ID
+  var serviceID: UInt32 = 0
+
+  /// 来源服务器
+  var server: String = String()
+
+  /// 类型
+  var type: CIM_Def_CIMPushMsg.CIMPushMsgType = .kCimUnknown
+
+  /// 目标ID，type=ROOM，代表群ID。type=PUSH，代表用户ID
+  var toID: UInt64 = 0
+
+  /// 数据
+  var data: Data = SwiftProtobuf.Internal.emptyData
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  enum CIMPushMsgType: SwiftProtobuf.Enum {
+    typealias RawValue = Int
+
+    /// 未知
+    case kCimUnknown // = 0
+
+    /// 给某个用户推送
+    case kCimPush // = 1
+
+    /// 给群内所有成员推送
+    case kCimRoom // = 2
+
+    /// 给系统所有用户广播
+    case kCimBroadcast // = 3
+    case UNRECOGNIZED(Int)
+
+    init() {
+      self = .kCimUnknown
+    }
+
+    init?(rawValue: Int) {
+      switch rawValue {
+      case 0: self = .kCimUnknown
+      case 1: self = .kCimPush
+      case 2: self = .kCimRoom
+      case 3: self = .kCimBroadcast
+      default: self = .UNRECOGNIZED(rawValue)
+      }
+    }
+
+    var rawValue: Int {
+      switch self {
+      case .kCimUnknown: return 0
+      case .kCimPush: return 1
+      case .kCimRoom: return 2
+      case .kCimBroadcast: return 3
+      case .UNRECOGNIZED(let i): return i
+      }
+    }
+
+  }
+
+  init() {}
+}
+
+#if swift(>=4.2)
+
+extension CIM_Def_CIMPushMsg.CIMPushMsgType: CaseIterable {
+  // The compiler won't synthesize support with the UNRECOGNIZED case.
+  static var allCases: [CIM_Def_CIMPushMsg.CIMPushMsgType] = [
+    .kCimUnknown,
+    .kCimPush,
+    .kCimRoom,
+    .kCimBroadcast,
+  ]
+}
+
+#endif  // swift(>=4.2)
+
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
 fileprivate let _protobuf_package = "CIM.Def"
@@ -1543,4 +1627,72 @@ extension CIM_Def_CIMChannelInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageI
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
+}
+
+extension CIM_Def_CIMPushMsg: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".CIMPushMsg"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "commond_id"),
+    2: .standard(proto: "service_id"),
+    3: .same(proto: "server"),
+    4: .same(proto: "type"),
+    5: .same(proto: "toId"),
+    6: .same(proto: "data"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      switch fieldNumber {
+      case 1: try decoder.decodeSingularUInt32Field(value: &self.commondID)
+      case 2: try decoder.decodeSingularUInt32Field(value: &self.serviceID)
+      case 3: try decoder.decodeSingularStringField(value: &self.server)
+      case 4: try decoder.decodeSingularEnumField(value: &self.type)
+      case 5: try decoder.decodeSingularUInt64Field(value: &self.toID)
+      case 6: try decoder.decodeSingularBytesField(value: &self.data)
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if self.commondID != 0 {
+      try visitor.visitSingularUInt32Field(value: self.commondID, fieldNumber: 1)
+    }
+    if self.serviceID != 0 {
+      try visitor.visitSingularUInt32Field(value: self.serviceID, fieldNumber: 2)
+    }
+    if !self.server.isEmpty {
+      try visitor.visitSingularStringField(value: self.server, fieldNumber: 3)
+    }
+    if self.type != .kCimUnknown {
+      try visitor.visitSingularEnumField(value: self.type, fieldNumber: 4)
+    }
+    if self.toID != 0 {
+      try visitor.visitSingularUInt64Field(value: self.toID, fieldNumber: 5)
+    }
+    if !self.data.isEmpty {
+      try visitor.visitSingularBytesField(value: self.data, fieldNumber: 6)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: CIM_Def_CIMPushMsg, rhs: CIM_Def_CIMPushMsg) -> Bool {
+    if lhs.commondID != rhs.commondID {return false}
+    if lhs.serviceID != rhs.serviceID {return false}
+    if lhs.server != rhs.server {return false}
+    if lhs.type != rhs.type {return false}
+    if lhs.toID != rhs.toID {return false}
+    if lhs.data != rhs.data {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension CIM_Def_CIMPushMsg.CIMPushMsgType: SwiftProtobuf._ProtoNameProviding {
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    0: .same(proto: "kCIM_UNKNOWN"),
+    1: .same(proto: "kCIM_PUSH"),
+    2: .same(proto: "kCIM_ROOM"),
+    3: .same(proto: "kCIM_BROADCAST"),
+  ]
 }

@@ -32,6 +32,7 @@ type TcpConn struct {
 	userId        uint64            // 客户端id
 	nickName      string            // 昵称
 	conMutex      sync.Mutex        // 互斥锁
+	server        string            // 服务标志，便于Logic通过MQ广播给其他Gate，对源服务器进行过滤，避免重复发送消息
 
 	seq *atomic.Uint32 // 给客户端返回的seq号
 
@@ -53,6 +54,7 @@ func NewTcpConn() *TcpConn {
 		loginTime:              0,
 		isLogin:                false,
 		seq:                    atomic.NewUint32(0),
+		server:                 DefaultServer,
 	}
 	return conn
 }
@@ -346,7 +348,13 @@ func (tcp *TcpConn) onHandleMsgData(header *cim.ImHeader, buff []byte) {
 	ctx, cancelFun := context.WithTimeout(context.Background(), time.Second*kBusinessTimeOut)
 	defer cancelFun()
 
-	rsp, err := conn.SendMsgData(ctx, req)
+	internalMsg := cim.CIMInternalMsgData{
+		UserId:  tcp.userId,
+		Key:     "",
+		Server:  tcp.server,
+		MsgData: req,
+	}
+	rsp, err := conn.SendMsgData(ctx, &internalMsg)
 	if err != nil {
 		// 上行消息丢失计数+1
 		upMissMsgCount.Inc()
@@ -401,7 +409,7 @@ func (tcp *TcpConn) onHandleMsgData(header *cim.ImHeader, buff []byte) {
 			req.MsgData = data
 
 			ctx, _ = context.WithTimeout(context.Background(), time.Second*kBusinessTimeOut)
-			_, err = conn.SendMsgData(ctx, req)
+			_, err = conn.SendMsgData(ctx, &internalMsg)
 			if err != nil {
 				// 上行消息丢失计数+1
 				upMissMsgCount.Inc()

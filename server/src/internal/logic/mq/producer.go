@@ -1,31 +1,35 @@
 package mq
 
 import (
+	"github.com/apache/rocketmq-client-go/v2"
 	"github.com/apache/rocketmq-client-go/v2/primitive"
-	"sync"
+	"github.com/apache/rocketmq-client-go/v2/producer"
 )
 
 type MsgProducer struct {
+	producer rocketmq.Producer
 }
 
 var DefaultMsgProducer = &MsgProducer{}
 
-func (m *MsgProducer) StartProducer(nameSrv []string) {
-	//p, err := rocketmq.NewTransactionProducer()
+// nameSrv，example: 127.0.0.1:9876
+func (m *MsgProducer) StartProducer(nameSrv []string) error {
+	p, err := rocketmq.NewProducer(
+		producer.WithNsResovler(primitive.NewPassthroughResolver(nameSrv)),
+		producer.WithRetry(2),
+	)
+	if err != nil {
+		return err
+	}
+	DefaultMsgProducer.producer = p
+
+	return p.Start()
 }
 
-type MsgListener struct {
-	localTrans    *sync.Map // 本地事物存储
-	transactionId uint64    // 事物ID，幂等处理
+func (m *MsgProducer) Stop() error {
+	if DefaultMsgProducer.producer != nil {
+		return DefaultMsgProducer.producer.Shutdown()
+	}
+	return nil
 }
 
-//  When send transactional prepare(half) message succeed, this method will be invoked to execute local transaction.
-func (m *MsgListener) ExecuteLocalTransaction(msg *primitive.Message) primitive.LocalTransactionState {
-	return primitive.UnknowState
-}
-
-// When no response to prepare(half) message. broker will send check message to check the transaction status, and this
-// method will be invoked to get local transaction status.
-func (m *MsgListener) CheckLocalTransaction(msg *primitive.MessageExt) primitive.LocalTransactionState {
-	return primitive.UnknowState
-}

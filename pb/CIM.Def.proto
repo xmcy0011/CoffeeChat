@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package CIM.Def;
 option java_package = "com.coffeechat.protobuf";
-option go_package = "cim";
+option go_package = ".;cim";
 option optimize_for = LITE_RUNTIME;
 
 // 外部消息：客户端 <-> 服务器消息定义
@@ -284,4 +284,19 @@ message CIMChannelInfo {
   string channel_name = 1;  // 频道名称
   string channel_token = 2; // 频道授权令牌
   uint64 creator_id = 3;    // 频道创建者
+}
+
+message CIMPushMsg {
+  enum CIMPushMsgType {
+    kCIM_UNKNOWN = 0;   // 未知
+    kCIM_PUSH = 1;      // 给某个用户推送
+    kCIM_ROOM = 2;      // 给群内所有成员推送
+    kCIM_BROADCAST = 3; // 给系统所有用户广播
+  }
+  uint32 commond_id = 1;   // 消息ID
+  uint32 service_id = 2;   // 模块ID
+  string server = 3;       // 来源服务器
+  CIMPushMsgType type = 4; // 类型
+  uint64 toId = 5; // 目标ID，type=ROOM，代表群ID。type=PUSH，代表用户ID
+  bytes data = 6; // 数据
 }

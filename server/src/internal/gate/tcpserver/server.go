@@ -4,12 +4,18 @@ import (
 	"coffeechat/api/cim"
 	"coffeechat/internal/gate/conf"
 	"coffeechat/pkg/logger"
+	"fmt"
 	"net"
 	"os"
 	"strconv"
 )
 
+// 服务标志，通过Ip和端口来区分
+var DefaultServer = "127.0.0.1:8000"
+
 func StartServer() {
+	DefaultServer = fmt.Sprintf("%s:%d", conf.DefaultConfig.ListenIp, conf.DefaultConfig.ListenPort)
+
 	// connect logic grpc server
 	StartGrpcClient(conf.DefaultConfig.Logic)
 	// listen from logic grpc caller
