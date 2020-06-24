@@ -8,16 +8,16 @@ type Config struct {
 
 	Db []db.DatabaseConfig // db config
 
-	Kafka *Kafka // mq
-	Redis *Redis // redis config
+	RocketMq *RocketMq // mq
+	Redis    *Redis    // redis config
 }
 
 var DefaultLogicConfig = &Config{}
 
-// kafka config
-type Kafka struct {
-	TopicPrefix string // Topic由前缀+cmdID组成，如msg_data消息id为301，则Topic=CoffeeChat_301
-	Brokers     []string
+// rocketmq config
+type RocketMq struct {
+	Enable      bool     // 是否启用rocketmq，集群模式下需要启用，单机情况下不需要启用
+	NameServers []string // namesrv
 }
 
 type Redis struct {

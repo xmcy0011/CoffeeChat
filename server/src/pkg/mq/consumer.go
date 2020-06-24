@@ -1,5 +1,15 @@
 package mq
 
+import (
+	"coffeechat/api/cim"
+	"coffeechat/pkg/logger"
+	"context"
+	"github.com/apache/rocketmq-client-go/v2"
+	"github.com/apache/rocketmq-client-go/v2/consumer"
+	"github.com/apache/rocketmq-client-go/v2/primitive"
+	"github.com/golang/protobuf/proto"
+)
+
 /*
 import (
 	"coffeechat/api/cim"
@@ -73,3 +83,65 @@ func onHandleMsgAck(con sarama.PartitionConsumer) {
 	}
 }
 */
+
+type MsgConsumer struct {
+	consumer    rocketmq.PushConsumer
+	pushMsgChan chan *cim.CIMPushMsg
+}
+
+var DefaultMsgConsumer = NewMsgConsumer()
+
+func NewMsgConsumer() *MsgConsumer {
+	return &MsgConsumer{
+		pushMsgChan: make(chan *cim.CIMPushMsg),
+	}
+}
+
+func (m *MsgConsumer) StartConsumer(groupName string, nameServers []string) error {
+	c, err := rocketmq.NewPushConsumer(
+		consumer.WithGroupName(groupName),
+		consumer.WithNsResovler(primitive.NewPassthroughResolver(nameServers)))
+	if err != nil {
+		return err
+	}
+
+	m.consumer = c
+
+	// topic: msg_push
+	err = c.Subscribe(getPushMsgTopic(), consumer.MessageSelector{}, m.onMsgPush)
+	if err != nil {
+		return err
+	}
+	return c.Start()
+}
+
+func (m *MsgConsumer) Shutdown() error {
+	if m.consumer != nil {
+		close(m.pushMsgChan)
+		err := m.consumer.Shutdown()
+		m.consumer = nil
+		m.pushMsgChan = nil
+		return err
+	}
+	return nil
+}
+
+// get a read-only chan
+func (m *MsgConsumer) Messages() <-chan *cim.CIMPushMsg {
+	return m.pushMsgChan
+}
+
+func (m *MsgConsumer) onMsgPush(ctx context.Context, msgs ...*primitive.MessageExt) (result consumer.ConsumeResult, err error) {
+	for i := range msgs {
+		logger.Sugar.Infof("subscribe callback: %v", msgs[i])
+
+		msg := &cim.CIMPushMsg{}
+		err = proto.Unmarshal(msgs[i].Body, msg)
+		if err != nil {
+			logger.Sugar.Info(err)
+		} else {
+			m.pushMsgChan <- msg
+		}
+	}
+	return consumer.ConsumeSuccess, nil
+}
