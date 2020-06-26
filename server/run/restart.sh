@@ -8,7 +8,7 @@ print_help(){
 }
 
 stop(){
-  cd $1
+  cd ${CUR_DIR}/$1
   files=$(ls *.toml 2> /dev/null | wc -l)
   if [[ "$files" == "0" ]] ;then
     #if [[ ! -e "*.toml" ]] ;then
@@ -47,19 +47,25 @@ start(){
   ps aux|grep `cat server.pid`
 }
 
+restart(){
+  stop $1
+  start $1 conf=$2
+}
+
 case $1 in
   im_gate)
-    stop $1
-    start $1 conf=im_gate.conf
+    restart $1 im_gate.conf
     ;;
   im_logic)
-    stop $1
-    start $1 conf=im_logic.conf
+    restart $1 im_logic.conf
     ;;
   im_http)
-    stop $1
-    start $1 conf=im_http.conf
+    restart $1 im_http.conf
     ;;
+  all)
+    restart im_gate im_gate.conf
+    restart im_logic im_logic.conf
+    restart im_http im_http.conf
   *)
     print_help
     ;;

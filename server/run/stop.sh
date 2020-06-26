@@ -1,5 +1,7 @@
 #/bin/sh
 
+cur=`pwd`
+
 print_help(){
   echo "Usage: "
   echo "  ./stop.sh (im_gate|im_logic|im_http)"
@@ -7,7 +9,7 @@ print_help(){
 }
 
 stop(){
-  cd $1
+  cd $cur/$1
   files=$(ls *.toml 2> /dev/null | wc -l)
   if [[ "$files" == "0" ]] ;then
     #if [[ ! -e "*.toml" ]] ;then
@@ -41,6 +43,11 @@ case $1 in
     ;;
   im_http)
     stop $1
+    ;;
+  all)
+    stop im_gate
+    stop im_logic
+    stop im_http
     ;;
   *)
     print_help
