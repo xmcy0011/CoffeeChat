@@ -4,15 +4,11 @@ opensource im with server(go) and client(flutter+swift)
 
 ## Preview
 
-![登录界面](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/flutter/login_x200.jpg)  
-![会话界面](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/flutter/session_x200.jpg)  
-![设置界面](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/flutter/setting_x200.jpg)  
-![聊天界面](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/flutter/chat_x200.jpg)  
-![发起聊天](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/flutter/invite_chat_x200.jpg)  
-![语音通话-发起](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/flutter/voip_invite_x200.png)  
-![语音通话-来电](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/flutter/voip_incoming_x200.png)  
-![语音通话-通话中](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/flutter/voip_calling_x200.png)  
-![语音通话-结束](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/flutter/voip_end_x200.png)  
+### flutter
+![screenshot](./images/flutter/screenshot.jpg)  
+
+### swift
+![screenshot](./images/swift/screenshot.jpg)  
 
 ## Features
 
@@ -101,8 +97,8 @@ opensource im with server(go) and client(flutter+swift)
 
 ### 聊天机器人功能
 
-- [] 图灵机器人接入
-- [] 小爱机器人接入
+- [ ] 图灵机器人接入
+- [ ] 小爱机器人接入
 - [x] 思知机器人接入
 - [x] 微信机器人接入
 
