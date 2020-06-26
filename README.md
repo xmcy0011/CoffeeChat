@@ -5,10 +5,10 @@ opensource im with server(go) and client(flutter+swift)
 ## Preview
 
 ### flutter
-![screenshot](./images/flutter/screenshot.jpg)  
+![screenshot](./images/flutter/screenshot.png)  
 
 ### swift
-![screenshot](./images/swift/screenshot.jpg)  
+![screenshot](./images/swift/screenshot.png)  
 
 ## Features
 
