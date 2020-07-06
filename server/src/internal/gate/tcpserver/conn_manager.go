@@ -1,9 +1,9 @@
 package tcpserver
 
 import (
+	"coffeechat/api/cim"
+	"coffeechat/pkg/logger"
 	"container/list"
-	"github.com/CoffeeChat/server/src/api/cim"
-	"github.com/CoffeeChat/server/src/pkg/logger"
 	"github.com/golang/protobuf/proto"
 	"net"
 	"time"

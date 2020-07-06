@@ -1,11 +1,11 @@
 package main
 
 import (
+	"coffeechat/internal/httpd"
+	"coffeechat/pkg/helper"
+	"coffeechat/pkg/logger"
 	"flag"
 	"github.com/BurntSushi/toml"
-	"github.com/CoffeeChat/server/src/internal/httpd"
-	"github.com/CoffeeChat/server/src/pkg/helper"
-	"github.com/CoffeeChat/server/src/pkg/logger"
 	"math/rand"
 	"time"
 )

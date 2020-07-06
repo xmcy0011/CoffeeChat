@@ -1,8 +1,8 @@
 package rpcserver
 
 import (
-	"github.com/CoffeeChat/server/src/api/cim"
-	"github.com/CoffeeChat/server/src/pkg/logger"
+	"coffeechat/api/cim"
+	"coffeechat/pkg/logger"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/keepalive"
 	"net"

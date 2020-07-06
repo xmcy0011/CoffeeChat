@@ -1,9 +1,9 @@
 package rpcserver
 
 import (
+	"coffeechat/api/cim"
+	"coffeechat/pkg/logger"
 	"context"
-	"github.com/CoffeeChat/server/src/api/cim"
-	"github.com/CoffeeChat/server/src/pkg/logger"
 	"google.golang.org/grpc"
 	"testing"
 	"time"

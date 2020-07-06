@@ -1,11 +1,11 @@
 package dao
 
 import (
+	"coffeechat/api/cim"
+	"coffeechat/internal/logic/conf"
+	"coffeechat/pkg/db"
+	"coffeechat/pkg/logger"
 	"github.com/BurntSushi/toml"
-	"github.com/CoffeeChat/server/src/api/cim"
-	"github.com/CoffeeChat/server/src/internal/logic/conf"
-	"github.com/CoffeeChat/server/src/pkg/db"
-	"github.com/CoffeeChat/server/src/pkg/logger"
 	"testing"
 	"time"
 )

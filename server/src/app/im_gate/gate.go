@@ -1,12 +1,12 @@
 package main
 
 import (
+	"coffeechat/internal/gate/conf"
+	"coffeechat/internal/gate/tcpserver"
+	"coffeechat/pkg/helper"
+	"coffeechat/pkg/logger"
 	"flag"
 	"github.com/BurntSushi/toml"
-	"github.com/CoffeeChat/server/src/internal/gate/conf"
-	"github.com/CoffeeChat/server/src/internal/gate/tcpserver"
-	"github.com/CoffeeChat/server/src/pkg/helper"
-	"github.com/CoffeeChat/server/src/pkg/logger"
 	"os"
 	"os/signal"
 	"runtime/pprof"

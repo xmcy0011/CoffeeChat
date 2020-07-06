@@ -2,10 +2,10 @@ package main
 
 import (
 	"bufio"
+	"coffeechat/api/cim"
+	"coffeechat/pkg/logger"
 	"errors"
 	"fmt"
-	"github.com/CoffeeChat/server/src/api/cim"
-	"github.com/CoffeeChat/server/src/pkg/logger"
 	"github.com/golang/protobuf/proto"
 	uuid "github.com/satori/go.uuid"
 	"net"

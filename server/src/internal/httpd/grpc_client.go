@@ -1,10 +1,10 @@
 package httpd
 
 import (
+	"coffeechat/api/cim"
+	"coffeechat/pkg/logger"
 	"context"
 	"fmt"
-	"github.com/CoffeeChat/server/src/api/cim"
-	"github.com/CoffeeChat/server/src/pkg/logger"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/connectivity"
 	"math/rand"

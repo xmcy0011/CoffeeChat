@@ -2,8 +2,8 @@ package tcpserver
 
 import (
 	"github.com/BurntSushi/toml"
-	"github.com/CoffeeChat/server/src/internal/gate/conf"
-	"github.com/CoffeeChat/server/src/pkg/logger"
+	"coffeechat/internal/gate/conf"
+	"coffeechat/pkg/logger"
 	"testing"
 )
 

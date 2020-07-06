@@ -1,11 +1,11 @@
 package httpd
 
 import (
+	"coffeechat/api/cim"
+	"coffeechat/pkg/logger"
 	"context"
 	"encoding/json"
 	"errors"
-	"github.com/CoffeeChat/server/src/api/cim"
-	"github.com/CoffeeChat/server/src/pkg/logger"
 	"io/ioutil"
 	"net/http"
 	"strconv"

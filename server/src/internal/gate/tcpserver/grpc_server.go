@@ -1,10 +1,10 @@
 package tcpserver
 
 import (
+	"coffeechat/api/cim"
+	"coffeechat/internal/gate/conf"
+	"coffeechat/pkg/logger"
 	"context"
-	"github.com/CoffeeChat/server/src/api/cim"
-	"github.com/CoffeeChat/server/src/internal/gate/conf"
-	"github.com/CoffeeChat/server/src/pkg/logger"
 	"google.golang.org/grpc"
 	"net"
 	"strconv"

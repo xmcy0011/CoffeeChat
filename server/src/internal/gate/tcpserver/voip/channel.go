@@ -1,6 +1,6 @@
 package voip
 
-import "github.com/CoffeeChat/server/src/api/cim"
+import "coffeechat/api/cim"
 
 type AVState int32
 

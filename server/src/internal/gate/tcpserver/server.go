@@ -1,9 +1,9 @@
 package tcpserver
 
 import (
-	"github.com/CoffeeChat/server/src/api/cim"
-	"github.com/CoffeeChat/server/src/internal/gate/conf"
-	"github.com/CoffeeChat/server/src/pkg/logger"
+	"coffeechat/api/cim"
+	"coffeechat/internal/gate/conf"
+	"coffeechat/pkg/logger"
 	"net"
 	"os"
 	"strconv"

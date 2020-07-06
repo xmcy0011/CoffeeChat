@@ -1,10 +1,10 @@
 package rpcserver
 
 import (
-	"github.com/CoffeeChat/server/src/api/cim"
-	"github.com/CoffeeChat/server/src/internal/logic/dao"
-	"github.com/CoffeeChat/server/src/pkg/def"
-	"github.com/CoffeeChat/server/src/pkg/logger"
+	"coffeechat/api/cim"
+	"coffeechat/internal/logic/dao"
+	"coffeechat/pkg/def"
+	"coffeechat/pkg/logger"
 	"github.com/satori/go.uuid"
 	"time"
 )

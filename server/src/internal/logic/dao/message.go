@@ -1,12 +1,12 @@
 package dao
 
 import (
+	"coffeechat/api/cim"
+	"coffeechat/internal/logic/model"
+	"coffeechat/pkg/db"
+	"coffeechat/pkg/def"
+	"coffeechat/pkg/logger"
 	"fmt"
-	"github.com/CoffeeChat/server/src/api/cim"
-	"github.com/CoffeeChat/server/src/internal/logic/model"
-	"github.com/CoffeeChat/server/src/pkg/db"
-	"github.com/CoffeeChat/server/src/pkg/def"
-	"github.com/CoffeeChat/server/src/pkg/logger"
 	"sort"
 	"strconv"
 	"time"

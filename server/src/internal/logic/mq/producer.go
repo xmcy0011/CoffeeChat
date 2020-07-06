@@ -1,6 +1,6 @@
 package mq
 
-import "github.com/CoffeeChat/server/src/internal/logic/conf"
+import "coffeechat/internal/logic/conf"
 
 func StartProducer(kafka conf.Kafka) {
 

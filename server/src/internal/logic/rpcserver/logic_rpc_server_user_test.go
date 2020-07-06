@@ -1,12 +1,12 @@
 package rpcserver
 
 import (
+	"coffeechat/api/cim"
+	"coffeechat/internal/logic/conf"
+	"coffeechat/pkg/db"
+	"coffeechat/pkg/logger"
 	"context"
 	"github.com/BurntSushi/toml"
-	"github.com/CoffeeChat/server/src/api/cim"
-	"github.com/CoffeeChat/server/src/internal/logic/conf"
-	"github.com/CoffeeChat/server/src/pkg/db"
-	"github.com/CoffeeChat/server/src/pkg/logger"
 	"google.golang.org/grpc"
 	"testing"
 	"time"
@@ -48,7 +48,7 @@ func TestLogicServer_CreateUser(t *testing.T) {
 		UserId:       1001,
 		UserNickName: "小姐姐真美腻",
 		//UserNickName: "  ", //test empty
-		UserToken:    "123456",
+		UserToken: "123456",
 	})
 
 	if err != nil {

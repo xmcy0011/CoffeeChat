@@ -1,11 +1,11 @@
 package rpcserver
 
 import (
+	"coffeechat/api/cim"
+	"coffeechat/internal/logic/dao"
+	"coffeechat/pkg/logger"
 	"context"
 	"errors"
-	"github.com/CoffeeChat/server/src/api/cim"
-	"github.com/CoffeeChat/server/src/internal/logic/dao"
-	"github.com/CoffeeChat/server/src/pkg/logger"
 	"strconv"
 )
 

@@ -3,7 +3,7 @@ package cim
 import (
 	"bytes"
 	"encoding/binary"
-	"github.com/CoffeeChat/server/src/pkg/logger"
+	"coffeechat/pkg/logger"
 	"github.com/golang/protobuf/proto"
 	"sync"
 )

@@ -1,12 +1,12 @@
 package main
 
 import (
+	"coffeechat/internal/filegw"
+	"coffeechat/internal/filegw/conf"
+	"coffeechat/pkg/helper"
+	"coffeechat/pkg/logger"
 	"flag"
 	"github.com/BurntSushi/toml"
-	"github.com/CoffeeChat/server/src/internal/filegw"
-	"github.com/CoffeeChat/server/src/internal/filegw/conf"
-	"github.com/CoffeeChat/server/src/pkg/helper"
-	"github.com/CoffeeChat/server/src/pkg/logger"
 	"math/rand"
 	"time"
 )

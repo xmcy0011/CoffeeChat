@@ -1,11 +1,11 @@
 package dao
 
 import (
+	"coffeechat/internal/logic/model"
+	"coffeechat/pkg/db"
+	"coffeechat/pkg/logger"
 	"errors"
 	"fmt"
-	"github.com/CoffeeChat/server/src/internal/logic/model"
-	"github.com/CoffeeChat/server/src/pkg/db"
-	"github.com/CoffeeChat/server/src/pkg/logger"
 	"time"
 )
 

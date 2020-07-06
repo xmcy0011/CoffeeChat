@@ -1,14 +1,14 @@
 package rpcserver
 
 import (
+	"coffeechat/api/cim"
+	"coffeechat/internal/logic/dao"
+	"coffeechat/pkg/db"
+	"coffeechat/pkg/def"
+	"coffeechat/pkg/logger"
 	"context"
 	"errors"
 	"fmt"
-	"github.com/CoffeeChat/server/src/api/cim"
-	"github.com/CoffeeChat/server/src/internal/logic/dao"
-	"github.com/CoffeeChat/server/src/pkg/db"
-	"github.com/CoffeeChat/server/src/pkg/def"
-	"github.com/CoffeeChat/server/src/pkg/logger"
 	"strings"
 )
 

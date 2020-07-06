@@ -1,10 +1,10 @@
 package filegw
 
 import (
+	"coffeechat/internal/filegw/conf"
+	"coffeechat/pkg/logger"
 	"encoding/json"
 	"fmt"
-	"github.com/CoffeeChat/server/src/internal/filegw/conf"
-	"github.com/CoffeeChat/server/src/pkg/logger"
 	uuid "github.com/satori/go.uuid"
 	"io"
 	"net/http"

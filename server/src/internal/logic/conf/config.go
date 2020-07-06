@@ -1,6 +1,6 @@
 package conf
 
-import "github.com/CoffeeChat/server/src/pkg/db"
+import "coffeechat/pkg/db"
 
 type Config struct {
 	ListenIp   string
