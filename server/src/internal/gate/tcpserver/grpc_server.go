@@ -52,7 +52,7 @@ func (g *GrpcGateServer) SendMsgData(ctx context.Context, in *cim.CIMInternalMsg
 			user.BroadcastMessage(in.MsgData)
 		}
 	}
-	return nil, nil
+	return &cim.Empty{}, nil
 }
 
 // 消息已读ACK通知

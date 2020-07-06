@@ -93,7 +93,7 @@ func (s *Server) onHandlePushMsg(cmdId uint32, server string, to uint64, data []
 			logger.Sugar.Warn("unknown cmdId:", cmdId)
 		}
 
-		logger.Sugar.Info("pushMsg gate:%s", address)
+		logger.Sugar.Info("pushMsg gate:", address)
 	}
 }
 

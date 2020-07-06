@@ -67,7 +67,7 @@ func (s *LogicServer) ReadAckMsgData(ctx context.Context, in *cim.CIMInternalMsg
 		if err != nil {
 			logger.Sugar.Warnf("marshal error:", err.Error())
 		} else {
-			err = mq.DefaultMsgProducer.PushMsg(in.ReadAck.SessionId, in.Server.Server, uint32(cim.CIMCmdID_kCIM_CID_MSG_READ_NOTIFY), 0, data)
+			err = mq.DefaultMsgProducer.PushMsg(in.ReadAck.SessionId, in.Server.Server, uint32(cim.CIMIntenralCmdID_kCIM_SID_MSG_READ_NOTIFY), 0, data)
 			if err != nil {
 				logger.Sugar.Warnf(err.Error())
 			}
@@ -87,9 +87,9 @@ func (s *LogicServer) mqMessagePush(in *cim.CIMInternalMsgData) {
 		return
 	}
 	if in.MsgData.SessionType == cim.CIMSessionType_kCIM_SESSION_TYPE_GROUP {
-		err = mq.DefaultMsgProducer.PushRoomMsg(in.MsgData.ToSessionId, in.Server.Server, uint32(cim.CIMCmdID_kCIM_CID_MSG_DATA), 0, data)
+		err = mq.DefaultMsgProducer.PushRoomMsg(in.MsgData.ToSessionId, in.Server.Server, uint32(cim.CIMIntenralCmdID_kCIM_SID_MSG_DATA), 0, data)
 	} else if in.MsgData.SessionType == cim.CIMSessionType_kCIM_SESSION_TYPE_SINGLE {
-		err = mq.DefaultMsgProducer.PushMsg(in.MsgData.ToSessionId, in.Server.Server, uint32(cim.CIMCmdID_kCIM_CID_MSG_DATA), 0, data)
+		err = mq.DefaultMsgProducer.PushMsg(in.MsgData.ToSessionId, in.Server.Server, uint32(cim.CIMIntenralCmdID_kCIM_SID_MSG_DATA), 0, data)
 	}
 	if err != nil {
 		logger.Sugar.Warnf(err.Error())
