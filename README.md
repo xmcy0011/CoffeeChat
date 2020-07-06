@@ -151,7 +151,7 @@ brew isntall golang # 安装go
 vim ~/.bash_profile # 加入如下配置
 
 export GOROOT=/usr/local/Cellar/go/1.12.5/libexec
-export GOPATH="/Users/xuyc/repo/go" # 注意，这里很关键，是你存放代码的路径
+export GOPATH="/Users/xuyc/repo/go" # 使用go mod后，代码不能存放到gopath下，请注意。
 export GOBIN=$GOROOT/bin
 export PATH=$PATH:$GOBIN:$GOROOT/bin
 
@@ -159,9 +159,9 @@ source ~/.bash_profile # 生效
 go env # 确认goroot和gopath正确
 
 # git clone 
-cd /Users/xuyc/repo/go #注意gopath一定要和上面环境变量对应
-mkdir -p src/github.com
-cd src/github.com
+cd /Users/xuyc/repo #注意不是gopath路径！
+mkdir github
+cd github
 git clone https://github.com/xmcy0011/CoffeeChat.git
 ```
 

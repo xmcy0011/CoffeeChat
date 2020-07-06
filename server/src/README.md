@@ -1,7 +1,8 @@
 # install
 
+~~dep ensure -update~~
 ```bash
-dep ensure -update
+go mod tidy
 ```
 
 ## mysql
@@ -61,9 +62,18 @@ requirepass coffeechat  # 访问密码
 
 using proxy
 
+for dep:
 ```bash
 env http_proxy=http://127.0.0.1:60339 https_proxy=http://127.0.0.1:60339 dep ensure -v
 ```
+
+for go mod:
+```bash
+export GO111MODULE=on
+export GOPROXY=https://goproxy.io
+go mod tidy
+```
+
 
 ## 端口列表
 
