@@ -2,14 +2,14 @@ package rpcserver
 
 import (
 	"coffeechat/api/cim"
+	"coffeechat/internal/logic/conf"
 	"coffeechat/internal/logic/dao"
-	"coffeechat/pkg/db"
 	"coffeechat/pkg/def"
 	"coffeechat/pkg/logger"
+	"coffeechat/pkg/mq"
 	"context"
 	"errors"
-	"fmt"
-	"strings"
+	"github.com/golang/protobuf/proto"
 )
 
 // 发消息
@@ -24,7 +24,7 @@ func (s *LogicServer) SendMsgData(ctx context.Context, in *cim.CIMInternalMsgDat
 	}
 
 	// 机器人消息，对方无需未读计数
-	isToRobot := def.IsRobot(msg.ToSessionId) && msg.MsgType == cim.CIMMsgType_kCIM_MSG_TYPE_ROBOT
+	isToRobot := def.IsRobot(msg.ToSessionId) // && msg.MsgType == cim.CIMMsgType_kCIM_MSG_TYPE_ROBOT
 
 	serverMsgId, err := dao.DefaultMessage.SaveMessage(msg.FromUserId, msg.ToSessionId, msg.MsgId, msg.CreateTime,
 		msg.MsgType, msg.SessionType, string(msg.MsgData), isToRobot)
@@ -33,7 +33,11 @@ func (s *LogicServer) SendMsgData(ctx context.Context, in *cim.CIMInternalMsgDat
 		return nil, err
 	}
 
-	// sync broadcast user
+	// if enable rocketMq,
+	// producer mq to rocketMq,then job server will consume and broadcast on other gate server user,without in.Server
+	if conf.DefaultLogicConfig.RocketMq.Enable && !isToRobot {
+		s.mqMessagePush(in)
+	}
 
 	// return ack
 	ack := &cim.CIMMsgDataAck{
@@ -49,50 +53,45 @@ func (s *LogicServer) SendMsgData(ctx context.Context, in *cim.CIMInternalMsgDat
 }
 
 // 消息已读
-func (s *LogicServer) ReadAckMsgData(ctx context.Context, in *cim.CIMMsgDataReadAck) (*cim.Empty, error) {
+func (s *LogicServer) ReadAckMsgData(ctx context.Context, in *cim.CIMInternalMsgDataReadAck) (*cim.Empty, error) {
 	logger.Sugar.Infof("ReadAckMsgData,userId=%d,toSessionId=%d,msgId=%d,sessionType=%d",
-		in.UserId, in.SessionId, in.MsgId, in.SessionType)
+		in.ReadAck.UserId, in.ReadAck.SessionId, in.ReadAck.MsgId, in.ReadAck.SessionType)
 
 	// 清除该用户的未读消息计数
-	dao.DefaultUnread.ClearUnreadCount(in.UserId, in.SessionId, in.SessionType)
+	dao.DefaultUnread.ClearUnreadCount(in.ReadAck.UserId, in.ReadAck.SessionId, in.ReadAck.SessionType)
+
+	// FIXED ME
+	// 单聊广播已读消息通知，群聊目前没有已读未读功能
+	if conf.DefaultLogicConfig.RocketMq.Enable && in.ReadAck.SessionType == cim.CIMSessionType_kCIM_SESSION_TYPE_SINGLE {
+		data, err := proto.Marshal(in)
+		if err != nil {
+			logger.Sugar.Warnf("marshal error:", err.Error())
+		} else {
+			err = mq.DefaultMsgProducer.PushMsg(in.ReadAck.SessionId, in.Server.Server, uint32(cim.CIMCmdID_kCIM_CID_MSG_READ_NOTIFY), 0, data)
+			if err != nil {
+				logger.Sugar.Warnf(err.Error())
+			}
+		}
+	}
+
 	return &cim.Empty{}, nil
 }
 
-// 广播单聊消息
-func (s *LogicServer) messageBroadcastSingle(in *cim.CIMMsgData) {
-	// 1.find online user
-	// 2.find gate gRPC server
-	// 3.call SendMsgData
-	// 4.etc ...
-	redisConn := db.DefaultRedisPool.GetOnlinePool()
-	key := fmt.Sprintf("%s_%d", db.KOnlineKeyName, in.ToSessionId)
-	userMap, err := redisConn.HGetAll(key).Result()
-	if err != nil || len(userMap) == 0 {
-		logger.Sugar.Debugf("messageBroadcastSingle from:%d,to:%d,he/she is not online,don't need broadcast",
-			in.FromUserId, in.ToSessionId /*, err.Error()*/)
+// 广播消息
+func (s *LogicServer) mqMessagePush(in *cim.CIMInternalMsgData) {
+	logger.Sugar.Infof("mqMessagePush toId:%d,fromServer:%s", in.MsgData.ToSessionId, in.Server.Server)
+
+	data, err := proto.Marshal(in)
+	if err != nil {
+		logger.Sugar.Warnf("marshal error:", err.Error())
 		return
 	}
-
-	// serverIp:true/false 用 serverId:true/false代替是不是好一些，因为可以有多个ip
-	for i := range userMap {
-		arr := strings.Split(userMap[i], ":")
-		if len(arr) >= 2 && arr[0] == "true" {
-			// find gate gRPC server
-			gateClient, ok := gateRpcClientMap[i]
-			if ok {
-				// send msg
-				ack, err := gateClient.SendMsgData(context.Background(), in)
-				if err != nil {
-					logger.Sugar.Errorf("%d->[%s]%d,broadcast error:%s", in.FromUserId, i, in.ToSessionId, err.Error())
-				}
-				if ack != nil {
-					logger.Sugar.Infof("%d->[%s]%d,broadcast result_code:%s", in.FromUserId, i, in.ToSessionId, ack.ResCode)
-				} else {
-					logger.Sugar.Infof("%d->[%s]%d,broadcast success ,but ack is null", in.FromUserId, i, in.ToSessionId)
-				}
-			} else {
-				logger.Sugar.Errorf("%d->[%s]%d,broadcast error,can't find %s gateClient server", in.FromUserId, i, in.ToSessionId, i)
-			}
-		}
+	if in.MsgData.SessionType == cim.CIMSessionType_kCIM_SESSION_TYPE_GROUP {
+		err = mq.DefaultMsgProducer.PushRoomMsg(in.MsgData.ToSessionId, in.Server.Server, uint32(cim.CIMCmdID_kCIM_CID_MSG_DATA), 0, data)
+	} else if in.MsgData.SessionType == cim.CIMSessionType_kCIM_SESSION_TYPE_SINGLE {
+		err = mq.DefaultMsgProducer.PushMsg(in.MsgData.ToSessionId, in.Server.Server, uint32(cim.CIMCmdID_kCIM_CID_MSG_DATA), 0, data)
+	}
+	if err != nil {
+		logger.Sugar.Warnf(err.Error())
 	}
 }

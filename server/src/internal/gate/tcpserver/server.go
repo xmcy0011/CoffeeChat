@@ -11,10 +11,10 @@ import (
 )
 
 // 服务标志，通过Ip和端口来区分
-var DefaultServer = "127.0.0.1:8000"
+var DefaultServer = "127.0.0.1:7900"
 
 func StartServer() {
-	DefaultServer = fmt.Sprintf("%s:%d", conf.DefaultConfig.ListenIp, conf.DefaultConfig.ListenPort)
+	DefaultServer = fmt.Sprintf("%s:%d", conf.DefaultConfig.ListenIpGrpc, conf.DefaultConfig.ListenPortGrpc)
 
 	// connect logic grpc server
 	StartGrpcClient(conf.DefaultConfig.Logic)
@@ -84,7 +84,7 @@ func tcpConnRead(tcpConn *TcpConn) {
 
 			// 有效数据=len-HeaderLen，但是这里需要偏移HeaderLen刚好抵消
 			dataLen := header.Length
-			if dataLen > kBufferMaxLen || dataLen <= cim.IMHeaderLen {
+			if dataLen > kBufferMaxLen || dataLen < cim.IMHeaderLen {
 				logger.Sugar.Warnf("bad package,error:invalid len:%d", dataLen)
 				writeOffset = 0
 				break

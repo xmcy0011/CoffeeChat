@@ -5,10 +5,10 @@ import (
 	"coffeechat/internal/gate/conf"
 	"coffeechat/pkg/logger"
 	"context"
+	"errors"
 	"fmt"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/connectivity"
-	"time"
 )
 
 // all grpc client connections
@@ -18,70 +18,22 @@ var kMaxLogicClientConnect = 0
 const kMaxCheckInterval = 32 // s
 
 type LogicGrpcClient struct {
-	instance    cim.LogicClient
-	conn        *grpc.ClientConn
-	config      conf.LogicConfig
-	index       int
-	isConnected bool
+	instance cim.LogicClient
+	conn     *grpc.ClientConn
+	config   conf.LogicConfig
+	index    int
 }
 
 func init() {
 	logicClientMap = make(map[int]*LogicGrpcClient)
-	c := time.Tick(time.Duration(time.Second * 1))
-
-	go func() {
-		var checkTime int64 = 1
-		var tick int64 = 0
-		for {
-			<-c
-
-			// 1s 2s 4s 8s 16s 32s
-			if tick%checkTime == 0 {
-				var isConnected = true
-				for i := range logicClientMap {
-					if logicClientMap[i].conn.GetState() != connectivity.Ready {
-						logger.Sugar.Errorf("grpc server not connected,%s:%d,index=%d",
-							logicClientMap[i].config.Ip, logicClientMap[i].config.Port, logicClientMap[i].index)
-						isConnected = false
-						logicClientMap[i].isConnected = false
-					} else {
-						if !logicClientMap[i].isConnected {
-							// gRPC sayHello
-							for j := 1; j <= 3; j++ {
-								err := sayHello(logicClientMap[i].instance)
-								if err != nil {
-									logger.Sugar.Infof("grpc server connected success,but sayHello failed,retry=%d,%s:%d,index=%d,err=%s",
-										j, logicClientMap[i].config.Ip, logicClientMap[i].config.Port, logicClientMap[i].index, err.Error())
-									time.Sleep(10 * time.Millisecond)
-								} else {
-									logger.Sugar.Infof("grpc server connected success,%s:%d,index=%d",
-										logicClientMap[i].config.Ip, logicClientMap[i].config.Port, logicClientMap[i].index)
-									logicClientMap[i].isConnected = true
-									break
-								}
-							}
-						}
-					}
-				}
-				if checkTime > kMaxCheckInterval {
-					checkTime = 1
-				}
-				if !isConnected {
-					checkTime *= 2
-				}
-			}
-
-			tick++
-		}
-	}()
 }
 
-func StartGrpcClient(config []conf.LogicConfig) {
+func StartGrpcClient(config []conf.LogicConfig) error {
 	logger.Sugar.Info("start grpc client")
 
 	if len(config) < 2 {
 		logger.Sugar.Fatal("at least 2 logic connections are required")
-		return
+		return errors.New("at least 2 logic connections are required")
 	}
 
 	for i := range config {
@@ -97,35 +49,35 @@ func StartGrpcClient(config []conf.LogicConfig) {
 			client := cim.NewLogicClient(conn)
 			// save
 			logicClientMap[kMaxLogicClientConnect] = &LogicGrpcClient{
-				instance:    client,
-				conn:        conn,
-				config:      config[i],
-				index:       i,
-				isConnected: true,
+				instance: client,
+				conn:     conn,
+				config:   config[i],
+				index:    i,
 			}
-			// sayHello
-			err := sayHello(client)
+			// ping
+			err := ping(client)
 			if err != nil {
 				// if failed, the routine will try again
-				logicClientMap[kMaxLogicClientConnect].isConnected = false
+				return err
 			}
 		}
 		kMaxLogicClientConnect++
 	}
+	return nil
 }
 
-func sayHello(conn cim.LogicClient) error {
-	heart := &cim.Hello{
-		Ip:   conf.DefaultConfig.ListenIpGrpc,
-		Port: int32(conf.DefaultConfig.ListenPortGrpc),
-	}
-	_, err := conn.SayHello(context.Background(), heart)
+func ping(conn cim.LogicClient) error {
+	heart := &cim.CIMHeartBeat{}
+	_, err := conn.Ping(context.Background(), heart)
 	return err
 }
 
 // 获取登录验证的业务连接 0-0
 func GetLoginConn() cim.LogicClient {
-	return logicClientMap[0].instance
+	if logicClientMap[0].conn.GetState() == connectivity.Ready {
+		return logicClientMap[0].instance
+	}
+	return GetMessageConn()
 }
 
 // 获取处理消息的业务连接 1-1

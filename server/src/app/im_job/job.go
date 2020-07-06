@@ -1,8 +1,8 @@
 package main
 
 import (
-	"coffeechat/internal/gate/conf"
-	"coffeechat/internal/gate/tcpserver"
+	"coffeechat/internal/job"
+	"coffeechat/internal/job/conf"
 	"coffeechat/pkg/helper"
 	"coffeechat/pkg/logger"
 	"flag"
@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	configFile  = flag.String("conf", "gate-example.toml", "the config path")
+	configFile  = flag.String("conf", "job-example.toml", "the config path")
 	profFlag    = flag.Int("prof", 0, "write cpu profile, to used be p-prof tool")
 	pidFileName = "server.pid"
 	f           *os.File
@@ -43,14 +43,6 @@ func main() {
 	logger.InitLoggerEx("log/log.log", "log/log.warn.log", "debug")
 	defer logger.Logger.Sync() // flushes buffer, if any
 
-	// 崩溃时，打印错误
-	//defer func() {
-	//	err := recover()
-	//	if err != nil{
-	//		logger.Sugar.Error(err)
-	//	}
-	//}()
-
 	//启用CPU 性能分析
 	if *profFlag == 1 {
 		f, err := os.OpenFile("cpu.prof", os.O_RDWR|os.O_CREATE, 0644)
@@ -65,7 +57,7 @@ func main() {
 	_, err := toml.DecodeFile(*configFile, conf.DefaultConfig)
 	if err != nil {
 		logger.Sugar.Errorf("load config error:%s,try again", err.Error())
-		_, err := toml.DecodeFile("im_gate.toml", conf.DefaultConfig)
+		_, err := toml.DecodeFile("im_job.toml", conf.DefaultConfig)
 		if err != nil {
 			logger.Sugar.Error("load config error:", err.Error(), ",exit...")
 			return
@@ -78,7 +70,11 @@ func main() {
 		return
 	}
 
-	go tcpserver.StartServer()
+	// async
+	err = job.DefaultServer.Start()
+	if err != nil {
+		return
+	}
 
 	// before exit, cleanup something ...
 	c := make(chan os.Signal)

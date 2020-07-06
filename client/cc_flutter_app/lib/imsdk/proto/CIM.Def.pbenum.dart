@@ -73,11 +73,17 @@ class CIMIntenralCmdID extends $pb.ProtobufEnum {
   static const CIMIntenralCmdID kCIM_SID_UNKNOWN = CIMIntenralCmdID._(0, 'kCIM_SID_UNKNOWN');
   static const CIMIntenralCmdID kCIM_SID_DB_VALIDATE_REQ = CIMIntenralCmdID._(1793, 'kCIM_SID_DB_VALIDATE_REQ');
   static const CIMIntenralCmdID kCIM_SID_DB_VALIDATE_RSP = CIMIntenralCmdID._(1794, 'kCIM_SID_DB_VALIDATE_RSP');
+  static const CIMIntenralCmdID kCIM_SID_MSG_DATA = CIMIntenralCmdID._(1795, 'kCIM_SID_MSG_DATA');
+  static const CIMIntenralCmdID kCIM_SID_MSG_READ_ACK = CIMIntenralCmdID._(1796, 'kCIM_SID_MSG_READ_ACK');
+  static const CIMIntenralCmdID kCIM_SID_MSG_READ_NOTIFY = CIMIntenralCmdID._(1797, 'kCIM_SID_MSG_READ_NOTIFY');
 
   static const $core.List<CIMIntenralCmdID> values = <CIMIntenralCmdID> [
     kCIM_SID_UNKNOWN,
     kCIM_SID_DB_VALIDATE_REQ,
     kCIM_SID_DB_VALIDATE_RSP,
+    kCIM_SID_MSG_DATA,
+    kCIM_SID_MSG_READ_ACK,
+    kCIM_SID_MSG_READ_NOTIFY,
   ];
 
   static final $core.Map<$core.int, CIMIntenralCmdID> _byValue = $pb.ProtobufEnum.initByValue(values);

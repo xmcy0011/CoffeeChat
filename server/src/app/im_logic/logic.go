@@ -6,6 +6,7 @@ import (
 	"coffeechat/pkg/db"
 	"coffeechat/pkg/helper"
 	"coffeechat/pkg/logger"
+	"coffeechat/pkg/mq"
 	"flag"
 	"github.com/BurntSushi/toml"
 	"os"
@@ -67,6 +68,15 @@ func main() {
 	if err != nil {
 		logger.Sugar.Fatal("redis cache init failed:", err.Error())
 		return
+	}
+
+	// init rocketmq
+	if conf.DefaultLogicConfig.RocketMq.Enable {
+		err = mq.DefaultMsgProducer.StartProducer(conf.DefaultLogicConfig.RocketMq.NameServers)
+		if err != nil {
+			logger.Sugar.Fatal("rocketMq init failed:", err.Error())
+			return
+		}
 	}
 
 	// start rpc server

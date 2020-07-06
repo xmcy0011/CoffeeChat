@@ -46,6 +46,10 @@ enum CIMIntenralCmdID {
 
   kCIM_SID_DB_VALIDATE_REQ = 0x0701; // 验证口令请求
   kCIM_SID_DB_VALIDATE_RSP = 0x0702; //
+
+  kCIM_SID_MSG_DATA = 0x0703;       // 发送消息
+  kCIM_SID_MSG_READ_ACK = 0x0704;   // 消息已读回复（我方）
+  kCIM_SID_MSG_READ_NOTIFY = 0x0705;// 已读消息通知（对方）
 }
 
 enum CIMErrorCode {

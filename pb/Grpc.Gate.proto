@@ -4,20 +4,18 @@ package CIM.Grpc;
 option go_package = ".;cim";
 option optimize_for = LITE_RUNTIME;
 
-// import "CIM.Def.proto";
-// import "CIM.List.proto";
 import "CIM.Login.proto";
-import "CIM.Message.proto";
 import "Grpc.Def.proto";
+import "CIM.Server.proto";
 
 service Gate {
   // ping
   rpc Ping(CIM.Login.CIMHeartBeat) returns (CIM.Login.CIMHeartBeat) {}
 
   // 发消息
-  rpc SendMsgData(CIM.Message.CIMMsgData) returns (CIM.Message.CIMMsgDataAck) {}
-  // 消息收到ACK
-  rpc AckMsgData(CIM.Message.CIMMsgDataAck) returns (Empty) {}
+  rpc SendMsgData(CIM.Server.CIMInternalMsgData) returns (Empty) {}
+  // 消息收到通知
+  rpc AckMsgData(CIM.Server.CIMInternalMsgDataReadNotify) returns (Empty) {}
 
   // 停止接收消息
   rpc StopReceivePacket(Empty) returns (Empty) {}

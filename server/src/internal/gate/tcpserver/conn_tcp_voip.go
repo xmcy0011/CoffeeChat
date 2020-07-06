@@ -259,9 +259,11 @@ func (tcp *TcpConn) onHandleVOIPByeReq(header *cim.ImHeader, buff []byte) {
 	defer cancelFun()
 
 	msg := cim.CIMInternalMsgData{
-		UserId:  tcp.userId,
-		Key:     "",
-		Server:  tcp.server,
+		Server: &cim.CIMServer{
+			UserId: tcp.userId,
+			Key:    "",
+			Server: tcp.server,
+		},
 		MsgData: nil,
 	}
 	// save to db

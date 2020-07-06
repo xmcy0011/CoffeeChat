@@ -1,4 +1,4 @@
-ListenIp="127.0.0.1"
+ListenIp="0.0.0.0"
 ListenPort=10600
 
 # 主库，读写，优先写
@@ -25,16 +25,16 @@ Password="12345"
 MaxConnCnt=16
 
 [RocketMq]
-Enable=false # 是否启用rocketmq，如果需要部署多台gate，则需要打开
+Enable=true # 是否启用rocketmq，如果需要部署多台gate，则需要打开
 #NameServers=["127.0.0.1:9876","127.0.0.1:9876"]
-NameServers=["127.0.0.1:9876"]
+NameServers=["10.0.107.218:9876"]
 
 [Redis]
 Name="cim"
 #Ip="127.0.0.1"
 Ip="106.14.172.35"
 Port=6379
-KeyPrefix="cim_"        # redis中key的统一前缀
+KeyPrefix="cim|"        # redis中key的统一前缀
 Password="coffeechat"   # redis的密码，不允许为空
 
 [[Redis.Pool]]

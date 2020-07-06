@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package CIM.Server;
+
+import "CIM.Message.proto";
+option java_package = "com.coffeechat.protobuf";
+option go_package = ".;cim";
+option optimize_for = LITE_RUNTIME;
+
+message CIMServer {
+  uint64 user_id = 1; // 用户ID
+  string key = 2;     // 预留
+  string server = 3;  // 来源服务器
+}
+
+// 内部单聊群聊消息
+message CIMInternalMsgData {
+  // cmd id:		0x0703
+  CIMServer server = 1;
+  CIM.Message.CIMMsgData msg_data = 2; // 消息
+}
+
+// 内部会话已读
+message CIMInternalMsgDataReadAck {
+  // cmd id:		0x0704
+  CIMServer server = 1;
+  CIM.Message.CIMMsgDataReadAck read_ack = 2; // 消息已读ACK
+}
+
+// 内部会话已读通知
+message CIMInternalMsgDataReadNotify {
+  // cmd id:		0x0704
+  CIMServer server = 1;
+  CIM.Message.CIMMsgDataReadNotify read_notify = 3; // 消息已读通知
+}

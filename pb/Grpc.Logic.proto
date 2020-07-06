@@ -9,19 +9,10 @@ import "CIM.List.proto";
 import "CIM.Login.proto";
 import "CIM.Message.proto";
 import "Grpc.Def.proto";
-
-message CIMInternalMsgData {
-  uint64 user_id = 1;                  // 用户ID
-  string key = 2;                      // 预留
-  string server = 3;                   // 来源服务器
-  CIM.Message.CIMMsgData msg_data = 4; // 消息
-}
+import "CIM.Server.proto";
 
 // logic的grpc接口定义
 service Logic {
-  // 传递我方信息，双向GRPC
-  rpc SayHello(Hello) returns (Empty) {}
-
   // ping
   rpc Ping(CIM.Login.CIMHeartBeat) returns (CIM.Login.CIMHeartBeat) {}
   // 验证token
@@ -33,9 +24,9 @@ service Logic {
   rpc GetMsgList(CIM.List.CIMGetMsgListReq) returns (CIM.List.CIMGetMsgListRsp) {}
 
   // 发消息
-  rpc SendMsgData(CIMInternalMsgData) returns (CIM.Message.CIMMsgDataAck) {}
+  rpc SendMsgData(CIM.Server.CIMInternalMsgData) returns (CIM.Message.CIMMsgDataAck) {}
   // 已读消息回执
-  rpc ReadAckMsgData(CIM.Message.CIMMsgDataReadAck) returns (Empty) {}
+  rpc ReadAckMsgData(CIM.Server.CIMInternalMsgDataReadAck) returns (Empty) {}
 
   // 创建用户
   rpc CreateUser(CreateUserAccountInfoReq) returns (CreateUserAccountInfoRsp) {}

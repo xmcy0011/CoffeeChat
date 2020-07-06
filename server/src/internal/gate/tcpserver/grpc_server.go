@@ -41,12 +41,22 @@ func (g *GrpcGateServer) Ping(ctx context.Context, in *cim.CIMHeartBeat) (*cim.C
 }
 
 // 发消息
-func (g *GrpcGateServer) SendMsgData(ctx context.Context, in *cim.CIMMsgData) (*cim.CIMMsgDataAck, error) {
+func (g *GrpcGateServer) SendMsgData(ctx context.Context, in *cim.CIMInternalMsgData) (*cim.Empty, error) {
+	logger.Sugar.Info("SendMsgData ,from:%d,to:%d,sessionType:%d,msgType:%d,msgTime:%d", in.MsgData.FromUserId,
+		in.MsgData.ToSessionId, in.MsgData.SessionType, in.MsgData.MsgType, in.MsgData.CreateTime)
+
+	// send to peer
+	if in.MsgData.SessionType == cim.CIMSessionType_kCIM_SESSION_TYPE_SINGLE {
+		user := DefaultUserManager.FindUser(in.MsgData.ToSessionId)
+		if user != nil {
+			user.BroadcastMessage(in.MsgData)
+		}
+	}
 	return nil, nil
 }
 
-// 消息收到ACK
-func (g *GrpcGateServer) AckMsgData(ctx context.Context, in *cim.CIMMsgDataAck) (*cim.Empty, error) {
+// 消息已读ACK通知
+func (g *GrpcGateServer) AckMsgData(ctx context.Context, in *cim.CIMInternalMsgDataReadNotify) (*cim.Empty, error) {
 	return nil, nil
 }
 

@@ -41,6 +41,9 @@ const CIMIntenralCmdID$json = const {
     const {'1': 'kCIM_SID_UNKNOWN', '2': 0},
     const {'1': 'kCIM_SID_DB_VALIDATE_REQ', '2': 1793},
     const {'1': 'kCIM_SID_DB_VALIDATE_RSP', '2': 1794},
+    const {'1': 'kCIM_SID_MSG_DATA', '2': 1795},
+    const {'1': 'kCIM_SID_MSG_READ_ACK', '2': 1796},
+    const {'1': 'kCIM_SID_MSG_READ_NOTIFY', '2': 1797},
   ],
 };
 

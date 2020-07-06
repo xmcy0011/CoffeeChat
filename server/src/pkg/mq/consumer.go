@@ -8,6 +8,7 @@ import (
 	"github.com/apache/rocketmq-client-go/v2/consumer"
 	"github.com/apache/rocketmq-client-go/v2/primitive"
 	"github.com/golang/protobuf/proto"
+	"time"
 )
 
 /*
@@ -85,21 +86,24 @@ func onHandleMsgAck(con sarama.PartitionConsumer) {
 */
 
 type MsgConsumer struct {
-	consumer    rocketmq.PushConsumer
-	pushMsgChan chan *cim.CIMPushMsg
+	consumer       rocketmq.PushConsumer
+	pushMsgChan    chan *cim.CIMPushMsg
+	startTimeStamp int64
 }
 
 var DefaultMsgConsumer = NewMsgConsumer()
 
 func NewMsgConsumer() *MsgConsumer {
 	return &MsgConsumer{
-		pushMsgChan: make(chan *cim.CIMPushMsg),
+		pushMsgChan:    make(chan *cim.CIMPushMsg),
+		startTimeStamp: time.Now().Unix() * 1000,
 	}
 }
 
 func (m *MsgConsumer) StartConsumer(groupName string, nameServers []string) error {
 	c, err := rocketmq.NewPushConsumer(
 		consumer.WithGroupName(groupName),
+		consumer.WithConsumeFromWhere(consumer.ConsumeFromTimestamp), // default fromLastOffset,we don't need
 		consumer.WithNsResovler(primitive.NewPassthroughResolver(nameServers)))
 	if err != nil {
 		return err
@@ -134,6 +138,12 @@ func (m *MsgConsumer) Messages() <-chan *cim.CIMPushMsg {
 func (m *MsgConsumer) onMsgPush(ctx context.Context, msgs ...*primitive.MessageExt) (result consumer.ConsumeResult, err error) {
 	for i := range msgs {
 		logger.Sugar.Infof("subscribe callback: %v", msgs[i])
+
+		// if msg too old,drop all
+		if msgs[i].BornTimestamp < m.startTimeStamp {
+			logger.Sugar.Warnf("expired msg,dorp it: %v", msgs[i])
+			continue
+		}
 
 		msg := &cim.CIMPushMsg{}
 		err = proto.Unmarshal(msgs[i].Body, msg)

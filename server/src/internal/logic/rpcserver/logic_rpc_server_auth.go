@@ -10,16 +10,6 @@ import (
 	"time"
 )
 
-type LogicServer struct {
-}
-
-var DefaultLogicRpcServer = &LogicServer{}
-var gateRpcClientMap map[string]cim.GateClient
-
-func init() {
-	gateRpcClientMap = make(map[string]cim.GateClient)
-}
-
 // 传递我方信息，双向GRPC
 func (s *LogicServer) SayHello(ctx context.Context, in *cim.Hello) (*cim.Empty, error) {
 	address := in.Ip + ":" + strconv.Itoa(int(in.Port))

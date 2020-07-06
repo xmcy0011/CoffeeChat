@@ -197,6 +197,15 @@ enum CIM_Def_CIMIntenralCmdID: SwiftProtobuf.Enum {
   /// 验证口令请求
   case kCimSidDbValidateReq // = 1793
   case kCimSidDbValidateRsp // = 1794
+
+  /// 发送消息
+  case kCimSidMsgData // = 1795
+
+  /// 消息已读回复（我方）
+  case kCimSidMsgReadAck // = 1796
+
+  /// 已读消息通知（对方）
+  case kCimSidMsgReadNotify // = 1797
   case UNRECOGNIZED(Int)
 
   init() {
@@ -208,6 +217,9 @@ enum CIM_Def_CIMIntenralCmdID: SwiftProtobuf.Enum {
     case 0: self = .kCimSidUnknown
     case 1793: self = .kCimSidDbValidateReq
     case 1794: self = .kCimSidDbValidateRsp
+    case 1795: self = .kCimSidMsgData
+    case 1796: self = .kCimSidMsgReadAck
+    case 1797: self = .kCimSidMsgReadNotify
     default: self = .UNRECOGNIZED(rawValue)
     }
   }
@@ -217,6 +229,9 @@ enum CIM_Def_CIMIntenralCmdID: SwiftProtobuf.Enum {
     case .kCimSidUnknown: return 0
     case .kCimSidDbValidateReq: return 1793
     case .kCimSidDbValidateRsp: return 1794
+    case .kCimSidMsgData: return 1795
+    case .kCimSidMsgReadAck: return 1796
+    case .kCimSidMsgReadNotify: return 1797
     case .UNRECOGNIZED(let i): return i
     }
   }
@@ -231,6 +246,9 @@ extension CIM_Def_CIMIntenralCmdID: CaseIterable {
     .kCimSidUnknown,
     .kCimSidDbValidateReq,
     .kCimSidDbValidateRsp,
+    .kCimSidMsgData,
+    .kCimSidMsgReadAck,
+    .kCimSidMsgReadNotify,
   ]
 }
 
@@ -1216,6 +1234,9 @@ extension CIM_Def_CIMIntenralCmdID: SwiftProtobuf._ProtoNameProviding {
     0: .same(proto: "kCIM_SID_UNKNOWN"),
     1793: .same(proto: "kCIM_SID_DB_VALIDATE_REQ"),
     1794: .same(proto: "kCIM_SID_DB_VALIDATE_RSP"),
+    1795: .same(proto: "kCIM_SID_MSG_DATA"),
+    1796: .same(proto: "kCIM_SID_MSG_READ_ACK"),
+    1797: .same(proto: "kCIM_SID_MSG_READ_NOTIFY"),
   ]
 }
 

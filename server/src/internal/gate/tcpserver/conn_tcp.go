@@ -349,9 +349,11 @@ func (tcp *TcpConn) onHandleMsgData(header *cim.ImHeader, buff []byte) {
 	defer cancelFun()
 
 	internalMsg := cim.CIMInternalMsgData{
-		UserId:  tcp.userId,
-		Key:     "",
-		Server:  tcp.server,
+		Server: &cim.CIMServer{
+			UserId: tcp.userId,
+			Key:    "",
+			Server: tcp.server,
+		},
 		MsgData: req,
 	}
 	rsp, err := conn.SendMsgData(ctx, &internalMsg)
@@ -466,7 +468,15 @@ func (tcp *TcpConn) onHandleSetReadMessaged(header *cim.ImHeader, buff []byte) {
 	ctx, cancelFun := context.WithTimeout(context.Background(), time.Second*kBusinessTimeOut)
 	defer cancelFun()
 
-	_, err = conn.ReadAckMsgData(ctx, req)
+	internalMsgAck := cim.CIMInternalMsgDataReadAck{
+		Server: &cim.CIMServer{
+			UserId: tcp.userId,
+			Key:    "",
+			Server: tcp.server,
+		},
+		ReadAck: req,
+	}
+	_, err = conn.ReadAckMsgData(ctx, &internalMsgAck)
 	if err != nil {
 		logger.Sugar.Infof("onHandleSetReadMessaged ReadAckMsgData(Grpc) user_id:%d,session_id:%d,msg_id=%d,"+
 			"session_type=%d,error=%s", req.UserId, req.SessionId, req.MsgId, req.SessionType, err.Error())
