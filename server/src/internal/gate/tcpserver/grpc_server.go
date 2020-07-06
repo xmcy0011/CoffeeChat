@@ -42,7 +42,7 @@ func (g *GrpcGateServer) Ping(ctx context.Context, in *cim.CIMHeartBeat) (*cim.C
 
 // 发消息
 func (g *GrpcGateServer) SendMsgData(ctx context.Context, in *cim.CIMInternalMsgData) (*cim.Empty, error) {
-	logger.Sugar.Info("SendMsgData ,from:%d,to:%d,sessionType:%d,msgType:%d,msgTime:%d", in.MsgData.FromUserId,
+	logger.Sugar.Infof("SendMsgData ,from:%d,to:%d,sessionType:%d,msgType:%d,msgTime:%d", in.MsgData.FromUserId,
 		in.MsgData.ToSessionId, in.MsgData.SessionType, in.MsgData.MsgType, in.MsgData.CreateTime)
 
 	// send to peer
@@ -57,7 +57,7 @@ func (g *GrpcGateServer) SendMsgData(ctx context.Context, in *cim.CIMInternalMsg
 
 // 消息已读ACK通知
 func (g *GrpcGateServer) AckMsgData(ctx context.Context, in *cim.CIMInternalMsgDataReadNotify) (*cim.Empty, error) {
-	return nil, nil
+	return &cim.Empty{}, nil
 }
 
 // 停止接收消息

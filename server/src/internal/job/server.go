@@ -61,7 +61,7 @@ func (s *Server) consume() {
 func (s *Server) onHandlePushMsg(cmdId uint32, server string, to uint64, data []byte) {
 	for address, conn := range clientMap {
 		// 消息来源服务器不用推送
-		if address != server {
+		if address == server {
 			logger.Sugar.Info("")
 			continue
 		}
