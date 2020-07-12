@@ -7,10 +7,28 @@ Gate -> Logic: gRPC Auth()
 activate Logic
 
 Logic -> DbUser: select
+Logic -> Redis: Save user serverInfo
+note right
+  hash:cim|user_2020
+     |-android-uuid 192.168.0.1
+     |-ios-uuid 192.168.0.100
+end note
 Logic --> Gate: return
 deactivate Logic
 
 Gate --> App: 0x0102 Rsp
+
+App -> Gate: Heartbeat
+activate Logic
+Gate -> Logic:
+Logic -> Logic: key存在设置hash过期，否则新增
+deactivate Logic
+
+App -> Gate: disconnect
+activate Logic
+Gate -> Logic:
+Logic -> Redis: HDEL key,ios-uuid
+deactivate Logic
 @enduml
 
 2.grpc服务注册

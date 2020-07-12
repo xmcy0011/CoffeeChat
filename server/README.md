@@ -1,4 +1,17 @@
-[TOC]
+<!-- TOC -->
+
+- [CoffeeChat - Server](#coffeechat---server)
+    - [编译](#编译)
+    - [安装](#安装)
+        - [mysql](#mysql)
+            - [支持 emoji 设置](#支持-emoji-设置)
+    - [运行](#运行)
+    - [调试](#调试)
+        - [goland](#goland)
+        - [dlv](#dlv)
+            - [生成core dump](#生成core-dump)
+
+<!-- /TOC -->
 
 # CoffeeChat - Server
 
