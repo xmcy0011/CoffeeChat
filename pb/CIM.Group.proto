@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package CIM.Group;
+import "CIM.Def.proto";
+option java_package = "com.coffeechat.protobuf";
+option go_package = "cim";
+option optimize_for = LITE_RUNTIME;

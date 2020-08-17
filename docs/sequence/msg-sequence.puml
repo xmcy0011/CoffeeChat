@@ -1,0 +1,19 @@
+@startuml
+gate -> logic: msg
+logic -> db: validGroup & isInGroup
+logic -> db: check & create session
+logic -> db: get group_msg_id
+logic -> db: save recv_db
+logic -> db: save send_db
+logic -> db: update session
+logic --> gate: ack
+
+' 具体查redis还是mysql？根据实际的场景决定把，后面可能简单些。
+gate <-> redis: get group member
+' gate -> logic: get group member
+' logic -> db: query
+' logic --> gate: group member list
+
+gate -> app1: broadcast msg
+gate -> app2: broadcast msg
+@enduml
