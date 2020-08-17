@@ -17,48 +17,129 @@
 
 ## 编译
 
-1.go环境
+### 安装go
+
+> 推荐安装go1.14（2020年），至少go1.11（2018年）
+
+linux:
+
 ```bash
-brew isntall golang # 安装go
-vim ~/.bash_profile # 加入如下配置
+$ yum search golang 
+$ yum install golang # 安装，截止到2020.08.17最新版1.13.14-1.el6
+$ whereis golang     # 安装位置
+golang: /usr/lib/golang /usr/lib64/golang
+
+$ /usr/lib/golang/bin/go version # 查看go的版本
+go version go1.13.14 linux/amd64
+
+$ vim ~/.bash_profile            # 配置环境变量，加入以下2行
+export PATH=$PATH:/usr/lib/go/bin
+export GOPATH=/home/go
+
+$ source ~/.bash_profile # 生效
+$ go env                 # 确认goroot和gopath正确
+```
+
+mac:
+
+```bash
+$ brew isntall golang # 安装go
+$ brew list golang    # 安装位置
+$ vim ~/.bash_profile # 加入如下配置
 
 export GOROOT=/usr/local/Cellar/go/1.12.5/libexec
 export GOPATH="/Users/xuyc/repo/go" # 注意，这里很关键，是你存放代码的路径
 export GOBIN=$GOROOT/bin
 export PATH=$PATH:$GOBIN:$GOROOT/bin
 
-source ~/.bash_profile # 生效
-go env # 确认goroot和gopath正确
+$ source ~/.bash_profile # 生效
+$ go env                 # 确认goroot和gopath正确
 ```
 
-2.git clone
+### go mod配置
+
+目前go的包管理工具使用的go mod（之前使用go vendor），所以git clone的时候，代码 **不要** 放在 **GOPATH** 下。  
+
+因为被墙的原因，有些包拉不下来，此时可以配置goproxy：
+
 ```bash
-cd /Users/xuyc/repo/go #注意gopath一定要和上面环境变量对应
-mkdir -p src/github.com
-cd src/github.com
-git clone https://github.com/xmcy0011/CoffeeChat.git
+$ go env -w GOPROXY=https://goproxy.cn,direct
 ```
 
-3.build
+PS: go mod至少需要**g1.11(2018.08.25)**以上，go1.13(2019.09.04)默认启用，目前go1.14(2020.02.26)都出来了！
+
+>  https://studygolang.com/topics/10976
+>
+> Go 1.14 正式发布啦！
+> 包含多项重大更新：
+>
+> Go Module 已经可用于生产环境
+> 允许接口方法进行重叠
+> 几乎零成本的 defer 语句
+> 调度器支持非协作异步抢占
+> 全新的页分配器实现
+> 全新的计时器实现
+
+### git clone
+
+linux:
+
 ```bash
-# 完整路径/data/go/src/github.com/CoffeeChat/server/src
-cd CoffeeChat/server/src 
-chmod 777 build.sh
-./build.sh
-ls # 生成 coffeechat.2020.04.14.tar.gz
+$ cd /home
+$ git clone https://github.com/xmcy0011/CoffeeChat.git
 ```
+
+mac:
+
+```bash
+$ cd ~ && mkdir -p repo/github # 创建github目录，注意不能是gopath目录
+$ cd repo/github
+$ git clone https://github.com/xmcy0011/CoffeeChat.git
+```
+
+### build
+
+```bash
+# 完整路径
+# linux: /home/CoffeeChat/server/src
+# mac: /Users/xuyc/repo/github/CoffeeChat/server/src
+
+$ cd CoffeeChat/server/src 
+$ chmod 777 build.sh
+$ ./build.sh
+$ ls # 生成 coffeechat.2020.04.14.tar.gz
+```
+
+
 
 ## 安装
 
 ### mysql
 
-1. 增加权限
-```sql
-insert into mysql.user(Host,User,Password) values("localhost","cim",password("12345"));
-grant all privileges on coffeechat.* to cim@127.0.0.1 identified by '12345';
-flush privileges;
-```
+1. 安装mysql
 
+   ```bash
+   $ yum install mariadb       # 搜索mysql的mariadb分支
+   $ systemctl enable mariadb  # 开机启动
+   $ systemctl restart mariadb # 重启服务
+   ```
+
+   PS：注意，IM服务的logic模块里面logic-example.toml配置文件数据库端口是**13306**，请自己按需更改。
+
+2. 增加权限
+
+   ```bash
+   $ mysql -uroot -p       # 使用mysqlclient
+   $ insert into mysql.user(Host,User,Password) values("localhost","cim",password("12345")); # 增加cim用户
+   $ grant all privileges on coffeechat.* to cim@127.0.0.1 identified by '12345'; # 授权，如果IM服务在其他机器，则增加IM服务器ip的授权即可
+   $ flush privileges;    # 生效
+   
+   $ show databases;       # 【可选】显示所有数据库
+   $ use mysql;            # 【可选】切换到mysql数据库
+   $ select * from user;   # 【可选】查看所有授权
+   ```
+
+   
 #### 支持 emoji 设置
 
 参考https://blog.csdn.net/alinyua/article/details/79599540
@@ -66,6 +147,7 @@ flush privileges;
 1. 修改 mysql 配置文件
 
 ```bash
+$ vim /etc/my.cnf      # 一般在etc目录下，加入或确认以下配置项
 [client]
 default-character-set = utf8mb4
 [mysql]
@@ -80,10 +162,9 @@ init_connect='SET NAMES utf8mb4'
 2. 重启并检查变量
 
 ```bash
-systemctl restart mariadb # 重启
-mysql -uroot -p12345 # 进入mysql client
-
-SHOW VARIABLES WHERE Variable_name LIKE 'character_set_%' OR Variable_name LIKE 'collation%';
+$ systemctl restart mariadb # 重启
+$ mysql -uroot -p12345 # 进入mysql client
+$ SHOW VARIABLES WHERE Variable_name LIKE 'character_set_%' OR Variable_name LIKE 'collation%';
 ```
 
 其中以下需为 utf8mb4,其他没关系(不过实测只要 character_set_database 和 character_set_server 是 utf8mb4 即可正确存取)
@@ -96,21 +177,38 @@ SHOW VARIABLES WHERE Variable_name LIKE 'character_set_%' OR Variable_name LIKE 
 | character_set_results    | (查询结果字符集)             |
 | character_set_server     | (默认的内部操作字符集)       |
 
+
+
+### redis
+
+```bash
+$ yum install redis   # 安装
+$ vim /etc/redis.conf # 设置密码
+requirepass coffeechat
+$ systemctl enable redis  # 开机启动
+$ systemctl restart redis # 启动服务
+```
+
+
+
 ## 运行
 
 ```bash
-tar -czvf coffeechat.2020.04.14.tar.gz # 解压
-cd coffeechat
-chmod 777 *.sh
-./restart.sh im_gate  # 启动网关服务
-./restart.sh im_logic # 启动业务服务
-./restart.sh im_http  # 启动http服务
+$ cd / && mkdir data && cd data    # 创建一个data目录存放运行程序
+$ cp /home/CoffeeChat/server/src/coffeechat.2020.04.14.tar.gz .
+$ tar -czvf coffeechat.2020.04.14.tar.gz # 解压
+$ cd coffeechat
+$ chmod 777 *.sh
+$ ./restart.sh im_logic # 启动业务服务
+$ ./restart.sh im_gate  # 启动网关服务
+$ ./restart.sh im_http  # 启动http服务
+$ ps aux|grep im 		    # 查看是否启动成功
 ```
 
 查看log：
 ```bash
-tail -f im_gate/log/log.log
 tail -f im_logic/log/log.log
+tail -f im_gate/log/log.log
 tail -f im_http/log/log.log
 ```
 
@@ -159,8 +257,6 @@ sysctl -p /etc/sysctl.conf
 chmod 777 coredump.sh
 
 ./coredump.sh
-
-
 ```
 
 3.重新打开终端后执行 **ulimit -a**

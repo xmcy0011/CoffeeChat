@@ -50,6 +50,7 @@ opensource im with server(go) and client(flutter+swift)
 - [ ] Redis 集群
 - [ ] docker
 - [ ] 阿里云OSS对象存储接入（40GB存储一年7块，每月100GB下行带宽一年200）
+- [ ] antispam
 
 ## 客户端特有
 

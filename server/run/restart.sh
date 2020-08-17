@@ -63,9 +63,12 @@ case $1 in
     restart $1 im_http.conf
     ;;
   all)
-    restart im_gate im_gate.conf
     restart im_logic im_logic.conf
+    sleep 2
+    restart im_gate im_gate.conf
+    sleep 2
     restart im_http im_http.conf
+    ;;
   *)
     print_help
     ;;

@@ -45,8 +45,8 @@ case $1 in
     stop $1
     ;;
   all)
-    stop im_gate
     stop im_logic
+    stop im_gate
     stop im_http
     ;;
   *)
