@@ -22,3 +22,4 @@ client/win/bin/cef_temp/
 client/win/bin/coffeechat.exe
 client/win/setup/Niuniu_NSIS_SetupSkin/Output/
 client/win/cim/base/base.vcxproj.user
+client/win/setup/Niuniu_NSIS_SetupSkin/SetupScripts/app.7z

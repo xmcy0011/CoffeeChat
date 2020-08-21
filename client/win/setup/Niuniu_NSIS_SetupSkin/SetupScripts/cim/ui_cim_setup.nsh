@@ -69,7 +69,7 @@ Function DUIPage
 	nsNiuniuSkin::SetWindowTile $hInstallDlg "${PRODUCT_NAME}安装程序"
 	nsNiuniuSkin::ShowPageItem $hInstallDlg "wizardTab" ${INSTALL_PAGE_CONFIG}
 	
-	nsNiuniuSkin::SetControlAttribute $hInstallDlg "licensename" "text" "网易云信服务条款"
+	nsNiuniuSkin::SetControlAttribute $hInstallDlg "licensename" "text" "CoffeeChat服务条款"
 	#nsNiuniuSkin::SetControlAttribute $hInstallDlg "btnAgreement" "text" "  用户许可协议"
 		
     Call BindUIControls	

@@ -2,7 +2,7 @@
 <Windows>
 <!-- 进度 -->
   <VerticalLayout >
-    <VerticalLayout width="480" height="250" roundcorner="5,5" bkimage="file='form\pic.png'">
+    <VerticalLayout name="layout_gb" width="480" height="250" roundcorner="5,5" bkimage="file='form\pic.png'">
 	
 	</VerticalLayout>
 	<VerticalLayout bkcolor="#FFFFFFFF" >   
