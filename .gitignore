@@ -19,3 +19,6 @@ client/win/.vs/
 client/win/tmp/
 client/win/setup/Niuniu_NSIS_SetupSkin/FilesToInstall/
 client/win/bin/cef_temp/
+client/win/bin/coffeechat.exe
+client/win/setup/Niuniu_NSIS_SetupSkin/Output/
+client/win/cim/base/base.vcxproj.user
