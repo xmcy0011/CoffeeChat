@@ -14,3 +14,8 @@ client/ios/Coffchat/Coffchat.xcodeproj/xcuserdata
 client/ios/Coffchat/Pods
 Podfile.lock
 client/ios/Coffchat/Coffchat.xcworkspace/xcuserdata
+client/win/.vs/
+.vs/
+client/win/tmp/
+client/win/setup/Niuniu_NSIS_SetupSkin/FilesToInstall/
+client/win/bin/cef_temp/
