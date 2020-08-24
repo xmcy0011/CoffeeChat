@@ -2,9 +2,14 @@
 
 - [CoffeeChat - Server](#coffeechat---server)
     - [编译](#编译)
+        - [安装go](#安装go)
+        - [go mod配置](#go-mod配置)
+        - [git clone](#git-clone)
+        - [build](#build)
     - [安装](#安装)
         - [mysql](#mysql)
             - [支持 emoji 设置](#支持-emoji-设置)
+        - [redis](#redis)
     - [运行](#运行)
     - [调试](#调试)
         - [goland](#goland)
@@ -139,8 +144,51 @@ $ ls # 生成 coffeechat.2020.04.14.tar.gz
    $ select * from user;   # 【可选】查看所有授权
    ```
 
+3. 初始化表
+
+   ```bash
+   $ mysql -u root -p # 登录
+   $ show databases;  # 确认coffeechat数据库不存在，否执行：drop database coffeechat
+   $ create database coffeechat; # 创建数据库
+   $ use coffeechat;             # 切换
    
-#### 支持 emoji 设置
+   # 创建表，参考完整路径如下：
+   # linux: /home/CoffeeChat/server/setup
+   # mac: /Users/xuyc/repo/github/CoffeeChat/server/setup
+   $ source /home/CoffeeChat/server/setup/cim.sql
+   
+   # 目前send、recv、session和user用到了，群聊的未实现。
+   $ show tables; 
+   +----------------------+
+   | Tables_in_coffeechat |
+   +----------------------+
+   | im_group             |
+   | im_group_member      |
+   | im_message_recv_0    |
+   | im_message_recv_1    |
+   | im_message_recv_2    |
+   | im_message_recv_3    |
+   | im_message_send_0    |
+   | im_message_send_1    |
+   | im_message_send_2    |
+   | im_message_send_3    |
+   | im_session           |
+   | im_user              |
+   +----------------------+
+   12 rows in set (0.00 sec)
+   ```
+
+4. 导入数据
+
+   ```bash
+   # 插入2个用户，用以登录测试。
+   # 注意：没有用户名而是使用用户ID（数字）代替，密码是12345
+   $ INSERT INTO `im_user` (`id`, `user_id`, `user_nick_name`, `user_token`, `user_attach`, `created`, `updated`)
+   VALUES
+   	(1, 1008, '三生三世十里桃花', '12345', NULL, NULL, NULL),
+   	(2, 1009, '夏研小姐姐', '12345', NULL, NULL, NULL);
+   ```
+#### 支持 emoji 设置【可选】
 
 参考https://blog.csdn.net/alinyua/article/details/79599540
 
@@ -177,8 +225,6 @@ $ SHOW VARIABLES WHERE Variable_name LIKE 'character_set_%' OR Variable_name LIK
 | character_set_results    | (查询结果字符集)             |
 | character_set_server     | (默认的内部操作字符集)       |
 
-
-
 ### redis
 
 ```bash
@@ -188,8 +234,6 @@ requirepass coffeechat
 $ systemctl enable redis  # 开机启动
 $ systemctl restart redis # 启动服务
 ```
-
-
 
 ## 运行
 
