@@ -105,12 +105,13 @@ opensource im with server(go) and client(flutter+swift)
 
 ## Architecture
 
-总体架构:![总体架构](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/architecture.png)
+总体架构:  
+![总体架构](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/architecture.png)
 
-逻辑架构:
+逻辑架构:  
 ![逻辑架构](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/architecture2.png)
 
-模块架构:
+模块架构:  
 ![模块架构](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/structure-v2.png)
 
 单聊模块交互图:
@@ -122,7 +123,7 @@ See More [architecture](https://github.com/xmcy0011/CoffeeChat/blob/master/docs/
 
 ### Build
 
-> PS：请切换到**release**分支，编译和运行！
+> PS：请切换到**master**分支，编译和运行！
 
 #### client
 
