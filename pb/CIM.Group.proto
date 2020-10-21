@@ -5,3 +5,177 @@ import "CIM.Def.proto";
 option java_package = "com.coffeechat.protobuf";
 option go_package = "cim";
 option optimize_for = LITE_RUNTIME;
+
+// 创建讨论组群请求（类似微信）：
+// 1.无需对方同意
+// 2.群成员可邀请任何人进群
+// 3.创建人默认为群主，群主可转让，群主退出默认随机一个成员自动成为群主
+// 4.只有群主可修改群公告，踢人
+message CIMGroupCreateReq {
+  // cmd id: 		0x501
+  uint64 user_id = 1;
+  string group_name = 2;              // 群名，不指定则由服务端生成
+  repeated uint64 member_id_list = 3; // 群成员列表
+}
+
+// 群组创建响应
+message CIMGroupCreateRsp {
+  // cmd id: 		0x502
+  uint64 user_id = 1;
+  uint32 result_code = 2;
+  CIMGroupInfo group_info = 3;        // 群信息
+  repeated uint64 member_id_list = 4; // 群成员列表
+}
+
+// 解散群请求
+message CIMGroupDisbandingReq {
+  // cmd id: 		0x503
+  uint64 user_id = 1;
+  uint64 group_id = 2;
+}
+
+message CIMGroupDisbandingRsp {
+  // cmd id: 		0x504
+  uint64 user_id = 1;
+  uint32 result_code = 2;
+}
+
+// 退出群
+message CIMGroupExitReq {
+  // cmd id: 		0x505
+  uint64 user_id = 1;
+  uint64 group_id = 2;
+}
+
+// 退出群
+message CIMGroupExitRsp {
+  // cmd id: 		0x506
+  uint64 user_id = 1;
+  uint32 result_code = 2;
+}
+
+// 查询群列表请求
+message CIMGroupListReq {
+  // cmd id: 		0x507
+  uint64 user_id = 1;
+}
+
+// 查询群列表响应
+message CIMGroupListRsp {
+  // cmd id: 		0x508
+  uint64 user_id = 1;
+  repeated CIMGroupVersionInfo group_version_list = 2;
+}
+
+// 查询群信息请求
+message CIMGroupInfoReq {
+  // cmd id: 		0x509
+  uint64 user_id = 1;
+  repeated CIMGroupVersionInfo group_version_list = 2;
+}
+
+// 查询群信息响应
+message CIMGroupInfoRsp {
+  // cmd id: 		0x510
+  uint64 user_id = 1;
+  repeated CIMGroupInfo group_info_list = 2;
+}
+
+// 邀请人入群请求
+message CIMGroupInviteMemberReq {
+  // cmd id: 		0x511
+  uint64 user_id = 1;
+  uint64 group_id = 2;
+  repeated uint64 member_id_list = 3; // 成员ID列表
+}
+
+// 邀请人入群响应
+message CIMGroupInviteMemberRsp {
+  // cmd id: 		0x512
+  uint64 user_id = 1;
+  uint32 result_code = 2;
+}
+
+// 踢人请求
+message CIMGroupKickOutMemberReq {
+  // cmd id: 		0x513
+  uint64 user_id = 1;
+  uint64 group_id = 2;
+  repeated uint64 member_id_list = 3; // 成员ID列表
+}
+
+// 踢人响应
+message CIMGroupKickOutMemberRsp {
+  // cmd id: 		0x514
+  uint64 user_id = 1;
+  uint32 result_code = 2;
+}
+
+// 群成员变更通知
+message CIMGroupMemberChangedNotify {
+  // cmd id: 		0x515
+  uint64 user_id = 1;
+  uint64 group_id = 2;
+  repeated CIMGroupMemberChangedInfo changed_list = 3;
+}
+
+// 变更详情
+message CIMGroupMemberChangedInfo {
+  uint64 user_id = 1;
+  CIMGroupMemberChangedType type = 2;
+}
+
+// 群成员变更类型
+enum CIMGroupMemberChangedType {
+  kCIM_GROUP_MEMBER_CHANGED_TYPE_DEFAULT = 0; // 无含义，无需处理。兼容性
+  kCIM_GROUP_MEMBER_CHANGED_TYPE_ADD = 1; // 加入
+  kCIM_GROUP_MEMBER_CHANGED_TYPE_DEL = 2; // 移除
+}
+
+// 群组类型
+enum CIMGroupType {
+  kCIM_GROUP_TYPE_UNKNOWN = 0;
+  kCIM_GROUP_TYPE_GROUP_NORMAL = 1; // 普通群（200人）
+  kCIM_GROUP_TYPE_GROUP_SUPER = 2;  // 超级群（2000人）
+}
+
+// 加群模式
+enum CIMGroupJoinModel {
+  kCIM_GROUP_JOIN_MODEL_DEFAULT = 0;   // 所有人可邀请别人加入
+  kCIM_GROUP_JOIN_MODEL_NEED_AUTH = 1; // 需要管理员验证
+  kCIM_GROUP_JOIN_MODEL_REJECT = 2;    // 拒绝所有人
+}
+
+// 被邀请人同意方式
+enum CIMGroupBeInviteMode {
+  kCIM_GROUP_BE_INVITE_MODEL_DEFAULT = 0;    // 不需要同意
+  kCIM_GROUP_BE_INVITE_MODEL_NEED_AGREE = 1; // 需要同意
+}
+
+// 禁言方式
+enum CIMGroupMuteModel {
+  kCIM_GROUP_MUTE_MODEL_DEFAULT = 0; // 不禁言
+  kCIM_GROUP_MUTE_MODEL_ALL = 1;     // 全体禁言
+}
+
+// 群组信息
+message CIMGroupInfo {
+  uint64 group_id = 1;                      // 群组ID
+  string group_name = 2;                    // 群组名称(最大128字符)
+  CIMGroupType group_type = 3;              // 群类型
+  CIMGroupJoinModel join_model = 4;         // 入群模式
+  CIMGroupBeInviteMode be_invite_model = 5; // 被邀请人同意方式
+  CIMGroupMuteModel mute_model = 6;         // 禁言模式
+  uint64 group_owner_id = 7;                // 群主
+  uint32 create_time = 8;                   // 创建时间
+  uint32 update_time = 9;                   // 群信息更新时间
+  string group_intro = 10;  // 群介绍，别人搜索入群的时候显示
+  string announcement = 11; // 群公告
+  string group_avatar = 12; // 群头像
+}
+
+// 群版本信息
+message CIMGroupVersionInfo {
+  uint64 group_id = 1;
+  uint32 group_version = 2;
+}

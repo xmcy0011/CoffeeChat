@@ -38,6 +38,22 @@ enum CIMCmdID {
   kCIM_CID_VOIP_BYE_REQ = 0x0405;          // 5.Bye
   kCIM_CID_VOIP_BYE_RSP = 0x0406;          //
   kCIM_CID_VOIP_BYE_NOTIFY = 0x0407;       // 6.Bye notify
+
+  kCIM_CID_GROUP_CREATE_DEFAULT_REQ = 0x501; // 创建默认群（类似微信的群）
+  kCIM_CID_GROUP_CREATE_DEFAULT_RSP = 0x502;
+  kCIM_CID_GROUP_DISBINGDING_REQ = 0x503; // 解散群
+  kCIM_CID_GROUP_DISBINGDING_RSP = 0x504;
+  kCIM_CID_GROUP_EXIT_REQ = 0x505; // 退出群
+  kCIM_CID_GROUP_EXIT_RSP = 0x506;
+  kCIM_CID_GROUP_LIST_REQ = 0x507; // 查询群列表
+  kCIM_CID_GROUP_LIST_RSP = 0x508;
+  kCIM_CID_GROUP_INFO_REQ = 0x509; // 查询群信息
+  kCIM_CID_GROUP_INFO_RSP = 0x510;
+  kCIM_CID_GROUP_INVITE_MEMBER_REQ = 0x511; // 邀请人入群
+  kCIM_CID_GROUP_INVITE_MEMBER_RSP = 0x512;
+  kCIM_CID_GROUP_KICK_OUT_MEMBER_REQ = 0x513; // 踢人
+  kCIM_CID_GROUP_KICK_OUT_MEMBER_RSP = 0x514;
+  kCIM_CID_GROUP_MEMBER_CHANGED_NOTIFY = 0x515; // 群成员变更通知
 }
 
 // 内部消息：服务器 <-> 服务器消息定义
@@ -92,33 +108,31 @@ enum CIMSessionType {
 {
   "md5":"e10adc3949ba59abbe56e057f20f883e",         # md5,32位
   "size":"1024123",                                 # 文件大小,B
-  "url":"http://file.qiniu.com/15923014023.pdf",    #
-上传云端后得到的文件下载地址 "displayName":"test.pdf",                         #
-文件显示名称 "fileExtension":"pdf",                            # 文件扩展名
-  "icoThumbUrl":"http://file.qiniu.com/1124.png"    #
-上传云端后得到的文件类型图标url（便于维护）
+  "url":"http://file.qiniu.com/15923014023.pdf",    # 下载地址
+  "displayName":"test.pdf",                         # 文件显示名称
+  "fileExtension":"pdf",                            # 文件扩展名
+  "icoThumbUrl":"http://file.qiniu.com/1124.png"    # 类型图标url（便于维护）
 }
 语音：
 {
   "md5":"e10adc3949ba59abbe56e057f20f883e",         # md5,32位
   "size":"1024123",                                 # 文件大小,B
-  "url":"http://file.qiniu.com/15923014023.mp3",    #
-上传云端后得到的文件下载地址 "displayName":"test.mp3",                         #
-文件显示名称 "fileExtension":"pdf",                            # 文件扩展名
+  "url":"http://file.qiniu.com/15923014023.mp3",    # 下载地址
+  "displayName":"test.mp3",                         # 文件显示名称
+  "fileExtension":"pdf",                            # 文件扩展名
   "duration":"120"                                  # 时长，秒
 }
 视频：
 {
   "md5":"e10adc3949ba59abbe56e057f20f883e",         # md5,32位
   "size":"1024123",                                 # 文件大小,B
-  "url":"http://file.qiniu.com/15923014023.mp4",    #
-上传云端后得到的文件下载地址 "displayName":"test.mp4",                         #
-文件显示名称 "fileExtension":"mp4",                            # 文件扩展名
+  "url":"http://file.qiniu.com/15923014023.mp4",    # 下载地址
+  "displayName":"test.mp4",                         # 文件显示名称
+  "fileExtension":"mp4",                            # 文件扩展名
   "duration":"15",                                  # 视频时长，秒
   "width":"1080",                                   # 视频画面宽度
   "height":"1920",                                  # 视频画面高度
-  "thumbUrl":"http://file.qiniu.com/1124.png"       #
-上传云端后得到的视频封面图片url
+  "thumbUrl":"http://file.qiniu.com/1124.png"       # 视频封面图片url
 }
 位置：
 {
@@ -133,8 +147,8 @@ enum CIMSessionType {
 {
   "body":"机器人你好",  # 原始文本数据，在UI中展现
   "content":{
-    "type":"text",    #
-    机器人回答，文本消息，需要配合参数content "content":"你也好"
+    # 机器人回答，文本消息，需要配合参数content "content":"你也好"
+    "type":"text",
   }
 }
 音视频通话：
