@@ -155,10 +155,13 @@ vim ~/.bash_profile # 加入如下配置
 export GOROOT=/usr/local/Cellar/go/1.12.5/libexec
 export GOPATH="/Users/xuyc/repo/go" # 使用go mod后，代码不能存放到gopath下，请注意。
 export GOBIN=$GOROOT/bin
-export PATH=$PATH:$GOBIN:$GOROOT/bin
+export PATH=$PATH:$GOBIN:$GOPATH/bin
 
 source ~/.bash_profile # 生效
-go env # 确认goroot和gopath正确
+go env                 # 确认goroot和gopath正确
+
+unset GOPROXY          # go mod有些包拉不下来，可以配置GOPROXY。但是，对go get无效😭
+go env -w GOPROXY=https://goproxy.cn,direct
 
 # git clone 
 cd /Users/xuyc/repo #注意不是gopath路径！
@@ -179,23 +182,6 @@ go build
 ```bash
 cd server/src/app/logic
 go build
-```
-
-4. **[可省略，不影响编译]** protobuf(google 开源的协议库，以高压缩率、兼容性等出名，中间文件\.proto 结尾，使用 protoc 工具可以生成对应代码源文件)
-
-参考：[Mac 下 Go 安装配置并使用 Protobuf](https://yq.aliyun.com/articles/229907)
-
-```bash
-brew install protobuf # 安装
-protoc --version # protoc工具，翻译.prot文件为对应的文件
-
-# 安装protobuf的golang插件
-go get -u -v github.com/golang/protobuf/proto
-go get -u -v github.com/golang/protobuf/protoc-gen-go
-
-# 使用（请跳过该步骤，这里为了演示），把proto翻译成go源文件
-# 具体见：pb/build.sh
-protoc --go_out=. helloworld.proto
 ```
 
 ### Run

@@ -8,7 +8,7 @@
         - [build](#build)
     - [安装](#安装)
         - [mysql](#mysql)
-            - [支持 emoji 设置](#支持-emoji-设置)
+            - [支持 emoji 设置【可选】](#支持-emoji-设置可选)
         - [redis](#redis)
     - [运行](#运行)
     - [调试](#调试)
@@ -55,7 +55,7 @@ $ vim ~/.bash_profile # 加入如下配置
 export GOROOT=/usr/local/Cellar/go/1.12.5/libexec
 export GOPATH="/Users/xuyc/repo/go" # 注意，这里很关键，是你存放代码的路径
 export GOBIN=$GOROOT/bin
-export PATH=$PATH:$GOBIN:$GOROOT/bin
+export PATH=$PATH:$GOBIN:$GOPATH/bin
 
 $ source ~/.bash_profile # 生效
 $ go env                 # 确认goroot和gopath正确
@@ -68,6 +68,7 @@ $ go env                 # 确认goroot和gopath正确
 因为被墙的原因，有些包拉不下来，此时可以配置goproxy：
 
 ```bash
+$ unset GOPROXY
 $ go env -w GOPROXY=https://goproxy.cn,direct
 ```
 
