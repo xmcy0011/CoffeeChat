@@ -1,0 +1,24 @@
+1.群消息
+@startuml
+app1 -> gate: 1.msg
+gate -> gate: 2.set create_time 
+gate -> logic: 3.msg
+logic -> logic: 4.group exist?
+logic -> logic: 5.member in group?
+logic -> logic: 6.session exist?
+logic <-> redis: 7.get msg id
+logic -> db: 8.insert group msg
+logic -> gate: 9.grpc return
+gate -> app1: 10.ack
+gate <-> logic: 11.query group member
+logic <-> db: 12.query
+gate <- logic: 13.group members
+gate -> gate: 14.user online?
+gate -> app2online: 15.online, broadcast
+gate -> logic: 16.offline, query push shield list
+logic -> db: 17.query
+gate <- logic: 18.member push shield list
+gate -> app3offline:19.push(apns,huawei,xiaomi,etc)
+app3offline -> app3offline: 20.online
+app3offline -> gate: 21.pull group msg
+@enduml
