@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package CIM.Grpc;
-option go_package="cim";
+option go_package=".;cim";
 option optimize_for = LITE_RUNTIME;
 
 import "CIM.Def.proto";

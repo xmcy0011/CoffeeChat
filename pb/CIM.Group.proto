@@ -1,9 +1,8 @@
 syntax = "proto3";
 
 package CIM.Group;
-import "CIM.Def.proto";
 option java_package = "com.coffeechat.protobuf";
-option go_package = "cim";
+option go_package = ".;cim";
 option optimize_for = LITE_RUNTIME;
 
 // 创建讨论组群请求（类似微信）：

@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package CIM.Def;
 option java_package = "com.coffeechat.protobuf";
-option go_package = "cim";
+option go_package = ".;cim";
 option optimize_for = LITE_RUNTIME;
 
 // 外部消息：客户端 <-> 服务器消息定义

@@ -1,11 +1,12 @@
 ///
 //  Generated code. Do not modify.
 //  source: CIM.Def.proto
-///
-// ignore_for_file: camel_case_types,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name
+//
+// @dart = 2.3
+// ignore_for_file: camel_case_types,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type
 
 // ignore_for_file: UNDEFINED_SHOWN_NAME,UNUSED_SHOWN_NAME
-import 'dart:core' as $core show int, dynamic, String, List, Map;
+import 'dart:core' as $core;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 class CIMCmdID extends $pb.ProtobufEnum {
@@ -34,6 +35,21 @@ class CIMCmdID extends $pb.ProtobufEnum {
   static const CIMCmdID kCIM_CID_VOIP_BYE_REQ = CIMCmdID._(1029, 'kCIM_CID_VOIP_BYE_REQ');
   static const CIMCmdID kCIM_CID_VOIP_BYE_RSP = CIMCmdID._(1030, 'kCIM_CID_VOIP_BYE_RSP');
   static const CIMCmdID kCIM_CID_VOIP_BYE_NOTIFY = CIMCmdID._(1031, 'kCIM_CID_VOIP_BYE_NOTIFY');
+  static const CIMCmdID kCIM_CID_GROUP_CREATE_DEFAULT_REQ = CIMCmdID._(1281, 'kCIM_CID_GROUP_CREATE_DEFAULT_REQ');
+  static const CIMCmdID kCIM_CID_GROUP_CREATE_DEFAULT_RSP = CIMCmdID._(1282, 'kCIM_CID_GROUP_CREATE_DEFAULT_RSP');
+  static const CIMCmdID kCIM_CID_GROUP_DISBINGDING_REQ = CIMCmdID._(1283, 'kCIM_CID_GROUP_DISBINGDING_REQ');
+  static const CIMCmdID kCIM_CID_GROUP_DISBINGDING_RSP = CIMCmdID._(1284, 'kCIM_CID_GROUP_DISBINGDING_RSP');
+  static const CIMCmdID kCIM_CID_GROUP_EXIT_REQ = CIMCmdID._(1285, 'kCIM_CID_GROUP_EXIT_REQ');
+  static const CIMCmdID kCIM_CID_GROUP_EXIT_RSP = CIMCmdID._(1286, 'kCIM_CID_GROUP_EXIT_RSP');
+  static const CIMCmdID kCIM_CID_GROUP_LIST_REQ = CIMCmdID._(1287, 'kCIM_CID_GROUP_LIST_REQ');
+  static const CIMCmdID kCIM_CID_GROUP_LIST_RSP = CIMCmdID._(1288, 'kCIM_CID_GROUP_LIST_RSP');
+  static const CIMCmdID kCIM_CID_GROUP_INFO_REQ = CIMCmdID._(1289, 'kCIM_CID_GROUP_INFO_REQ');
+  static const CIMCmdID kCIM_CID_GROUP_INFO_RSP = CIMCmdID._(1296, 'kCIM_CID_GROUP_INFO_RSP');
+  static const CIMCmdID kCIM_CID_GROUP_INVITE_MEMBER_REQ = CIMCmdID._(1297, 'kCIM_CID_GROUP_INVITE_MEMBER_REQ');
+  static const CIMCmdID kCIM_CID_GROUP_INVITE_MEMBER_RSP = CIMCmdID._(1298, 'kCIM_CID_GROUP_INVITE_MEMBER_RSP');
+  static const CIMCmdID kCIM_CID_GROUP_KICK_OUT_MEMBER_REQ = CIMCmdID._(1299, 'kCIM_CID_GROUP_KICK_OUT_MEMBER_REQ');
+  static const CIMCmdID kCIM_CID_GROUP_KICK_OUT_MEMBER_RSP = CIMCmdID._(1300, 'kCIM_CID_GROUP_KICK_OUT_MEMBER_RSP');
+  static const CIMCmdID kCIM_CID_GROUP_MEMBER_CHANGED_NOTIFY = CIMCmdID._(1301, 'kCIM_CID_GROUP_MEMBER_CHANGED_NOTIFY');
 
   static const $core.List<CIMCmdID> values = <CIMCmdID> [
     kCIM_CID_UNKNOWN,
@@ -61,6 +77,21 @@ class CIMCmdID extends $pb.ProtobufEnum {
     kCIM_CID_VOIP_BYE_REQ,
     kCIM_CID_VOIP_BYE_RSP,
     kCIM_CID_VOIP_BYE_NOTIFY,
+    kCIM_CID_GROUP_CREATE_DEFAULT_REQ,
+    kCIM_CID_GROUP_CREATE_DEFAULT_RSP,
+    kCIM_CID_GROUP_DISBINGDING_REQ,
+    kCIM_CID_GROUP_DISBINGDING_RSP,
+    kCIM_CID_GROUP_EXIT_REQ,
+    kCIM_CID_GROUP_EXIT_RSP,
+    kCIM_CID_GROUP_LIST_REQ,
+    kCIM_CID_GROUP_LIST_RSP,
+    kCIM_CID_GROUP_INFO_REQ,
+    kCIM_CID_GROUP_INFO_RSP,
+    kCIM_CID_GROUP_INVITE_MEMBER_REQ,
+    kCIM_CID_GROUP_INVITE_MEMBER_RSP,
+    kCIM_CID_GROUP_KICK_OUT_MEMBER_REQ,
+    kCIM_CID_GROUP_KICK_OUT_MEMBER_RSP,
+    kCIM_CID_GROUP_MEMBER_CHANGED_NOTIFY,
   ];
 
   static final $core.Map<$core.int, CIMCmdID> _byValue = $pb.ProtobufEnum.initByValue(values);

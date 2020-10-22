@@ -1,8 +1,9 @@
 ///
 //  Generated code. Do not modify.
 //  source: CIM.Def.proto
-///
-// ignore_for_file: camel_case_types,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name
+//
+// @dart = 2.3
+// ignore_for_file: camel_case_types,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type
 
 const CIMCmdID$json = const {
   '1': 'CIMCmdID',
@@ -32,6 +33,21 @@ const CIMCmdID$json = const {
     const {'1': 'kCIM_CID_VOIP_BYE_REQ', '2': 1029},
     const {'1': 'kCIM_CID_VOIP_BYE_RSP', '2': 1030},
     const {'1': 'kCIM_CID_VOIP_BYE_NOTIFY', '2': 1031},
+    const {'1': 'kCIM_CID_GROUP_CREATE_DEFAULT_REQ', '2': 1281},
+    const {'1': 'kCIM_CID_GROUP_CREATE_DEFAULT_RSP', '2': 1282},
+    const {'1': 'kCIM_CID_GROUP_DISBINGDING_REQ', '2': 1283},
+    const {'1': 'kCIM_CID_GROUP_DISBINGDING_RSP', '2': 1284},
+    const {'1': 'kCIM_CID_GROUP_EXIT_REQ', '2': 1285},
+    const {'1': 'kCIM_CID_GROUP_EXIT_RSP', '2': 1286},
+    const {'1': 'kCIM_CID_GROUP_LIST_REQ', '2': 1287},
+    const {'1': 'kCIM_CID_GROUP_LIST_RSP', '2': 1288},
+    const {'1': 'kCIM_CID_GROUP_INFO_REQ', '2': 1289},
+    const {'1': 'kCIM_CID_GROUP_INFO_RSP', '2': 1296},
+    const {'1': 'kCIM_CID_GROUP_INVITE_MEMBER_REQ', '2': 1297},
+    const {'1': 'kCIM_CID_GROUP_INVITE_MEMBER_RSP', '2': 1298},
+    const {'1': 'kCIM_CID_GROUP_KICK_OUT_MEMBER_REQ', '2': 1299},
+    const {'1': 'kCIM_CID_GROUP_KICK_OUT_MEMBER_RSP', '2': 1300},
+    const {'1': 'kCIM_CID_GROUP_MEMBER_CHANGED_NOTIFY', '2': 1301},
   ],
 };
 
