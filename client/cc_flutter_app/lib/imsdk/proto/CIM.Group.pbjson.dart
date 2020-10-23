@@ -79,7 +79,8 @@ const CIMGroupDisbandingRsp$json = const {
   '1': 'CIMGroupDisbandingRsp',
   '2': const [
     const {'1': 'user_id', '3': 1, '4': 1, '5': 4, '10': 'userId'},
-    const {'1': 'result_code', '3': 2, '4': 1, '5': 13, '10': 'resultCode'},
+    const {'1': 'group_id', '3': 2, '4': 1, '5': 4, '10': 'groupId'},
+    const {'1': 'result_code', '3': 3, '4': 1, '5': 13, '10': 'resultCode'},
   ],
 };
 
@@ -95,7 +96,8 @@ const CIMGroupExitRsp$json = const {
   '1': 'CIMGroupExitRsp',
   '2': const [
     const {'1': 'user_id', '3': 1, '4': 1, '5': 4, '10': 'userId'},
-    const {'1': 'result_code', '3': 2, '4': 1, '5': 13, '10': 'resultCode'},
+    const {'1': 'group_id', '3': 2, '4': 1, '5': 4, '10': 'groupId'},
+    const {'1': 'result_code', '3': 3, '4': 1, '5': 13, '10': 'resultCode'},
   ],
 };
 
@@ -126,7 +128,8 @@ const CIMGroupInfoRsp$json = const {
   '1': 'CIMGroupInfoRsp',
   '2': const [
     const {'1': 'user_id', '3': 1, '4': 1, '5': 4, '10': 'userId'},
-    const {'1': 'group_info_list', '3': 2, '4': 3, '5': 11, '6': '.CIM.Group.CIMGroupInfo', '10': 'groupInfoList'},
+    const {'1': 'result_code', '3': 2, '4': 1, '5': 13, '10': 'resultCode'},
+    const {'1': 'group_info_list', '3': 3, '4': 3, '5': 11, '6': '.CIM.Group.CIMGroupInfo', '10': 'groupInfoList'},
   ],
 };
 
@@ -143,7 +146,8 @@ const CIMGroupInviteMemberRsp$json = const {
   '1': 'CIMGroupInviteMemberRsp',
   '2': const [
     const {'1': 'user_id', '3': 1, '4': 1, '5': 4, '10': 'userId'},
-    const {'1': 'result_code', '3': 2, '4': 1, '5': 13, '10': 'resultCode'},
+    const {'1': 'group_id', '3': 2, '4': 1, '5': 4, '10': 'groupId'},
+    const {'1': 'result_code', '3': 3, '4': 1, '5': 13, '10': 'resultCode'},
   ],
 };
 
@@ -160,7 +164,8 @@ const CIMGroupKickOutMemberRsp$json = const {
   '1': 'CIMGroupKickOutMemberRsp',
   '2': const [
     const {'1': 'user_id', '3': 1, '4': 1, '5': 4, '10': 'userId'},
-    const {'1': 'result_code', '3': 2, '4': 1, '5': 13, '10': 'resultCode'},
+    const {'1': 'group_id', '3': 2, '4': 1, '5': 4, '10': 'groupId'},
+    const {'1': 'result_code', '3': 3, '4': 1, '5': 13, '10': 'resultCode'},
   ],
 };
 

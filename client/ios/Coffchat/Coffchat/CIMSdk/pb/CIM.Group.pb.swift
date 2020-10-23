@@ -340,6 +340,8 @@ struct CIM_Group_CIMGroupDisbandingRsp {
   /// cmd id: 		0x504
   var userID: UInt64 = 0
 
+  var groupID: UInt64 = 0
+
   var resultCode: UInt32 = 0
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
@@ -371,6 +373,8 @@ struct CIM_Group_CIMGroupExitRsp {
 
   /// cmd id: 		0x506
   var userID: UInt64 = 0
+
+  var groupID: UInt64 = 0
 
   var resultCode: UInt32 = 0
 
@@ -434,6 +438,8 @@ struct CIM_Group_CIMGroupInfoRsp {
   /// cmd id: 		0x510
   var userID: UInt64 = 0
 
+  var resultCode: UInt32 = 0
+
   var groupInfoList: [CIM_Group_CIMGroupInfo] = []
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
@@ -469,6 +475,8 @@ struct CIM_Group_CIMGroupInviteMemberRsp {
   /// cmd id: 		0x512
   var userID: UInt64 = 0
 
+  var groupID: UInt64 = 0
+
   var resultCode: UInt32 = 0
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
@@ -503,6 +511,8 @@ struct CIM_Group_CIMGroupKickOutMemberRsp {
 
   /// cmd id: 		0x514
   var userID: UInt64 = 0
+
+  var groupID: UInt64 = 0
 
   var resultCode: UInt32 = 0
 
@@ -775,14 +785,16 @@ extension CIM_Group_CIMGroupDisbandingRsp: SwiftProtobuf.Message, SwiftProtobuf.
   static let protoMessageName: String = _protobuf_package + ".CIMGroupDisbandingRsp"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "user_id"),
-    2: .standard(proto: "result_code"),
+    2: .standard(proto: "group_id"),
+    3: .standard(proto: "result_code"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
       case 1: try decoder.decodeSingularUInt64Field(value: &self.userID)
-      case 2: try decoder.decodeSingularUInt32Field(value: &self.resultCode)
+      case 2: try decoder.decodeSingularUInt64Field(value: &self.groupID)
+      case 3: try decoder.decodeSingularUInt32Field(value: &self.resultCode)
       default: break
       }
     }
@@ -792,14 +804,18 @@ extension CIM_Group_CIMGroupDisbandingRsp: SwiftProtobuf.Message, SwiftProtobuf.
     if self.userID != 0 {
       try visitor.visitSingularUInt64Field(value: self.userID, fieldNumber: 1)
     }
+    if self.groupID != 0 {
+      try visitor.visitSingularUInt64Field(value: self.groupID, fieldNumber: 2)
+    }
     if self.resultCode != 0 {
-      try visitor.visitSingularUInt32Field(value: self.resultCode, fieldNumber: 2)
+      try visitor.visitSingularUInt32Field(value: self.resultCode, fieldNumber: 3)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   static func ==(lhs: CIM_Group_CIMGroupDisbandingRsp, rhs: CIM_Group_CIMGroupDisbandingRsp) -> Bool {
     if lhs.userID != rhs.userID {return false}
+    if lhs.groupID != rhs.groupID {return false}
     if lhs.resultCode != rhs.resultCode {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
@@ -845,14 +861,16 @@ extension CIM_Group_CIMGroupExitRsp: SwiftProtobuf.Message, SwiftProtobuf._Messa
   static let protoMessageName: String = _protobuf_package + ".CIMGroupExitRsp"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "user_id"),
-    2: .standard(proto: "result_code"),
+    2: .standard(proto: "group_id"),
+    3: .standard(proto: "result_code"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
       case 1: try decoder.decodeSingularUInt64Field(value: &self.userID)
-      case 2: try decoder.decodeSingularUInt32Field(value: &self.resultCode)
+      case 2: try decoder.decodeSingularUInt64Field(value: &self.groupID)
+      case 3: try decoder.decodeSingularUInt32Field(value: &self.resultCode)
       default: break
       }
     }
@@ -862,14 +880,18 @@ extension CIM_Group_CIMGroupExitRsp: SwiftProtobuf.Message, SwiftProtobuf._Messa
     if self.userID != 0 {
       try visitor.visitSingularUInt64Field(value: self.userID, fieldNumber: 1)
     }
+    if self.groupID != 0 {
+      try visitor.visitSingularUInt64Field(value: self.groupID, fieldNumber: 2)
+    }
     if self.resultCode != 0 {
-      try visitor.visitSingularUInt32Field(value: self.resultCode, fieldNumber: 2)
+      try visitor.visitSingularUInt32Field(value: self.resultCode, fieldNumber: 3)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   static func ==(lhs: CIM_Group_CIMGroupExitRsp, rhs: CIM_Group_CIMGroupExitRsp) -> Bool {
     if lhs.userID != rhs.userID {return false}
+    if lhs.groupID != rhs.groupID {return false}
     if lhs.resultCode != rhs.resultCode {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
@@ -979,14 +1001,16 @@ extension CIM_Group_CIMGroupInfoRsp: SwiftProtobuf.Message, SwiftProtobuf._Messa
   static let protoMessageName: String = _protobuf_package + ".CIMGroupInfoRsp"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "user_id"),
-    2: .standard(proto: "group_info_list"),
+    2: .standard(proto: "result_code"),
+    3: .standard(proto: "group_info_list"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
       case 1: try decoder.decodeSingularUInt64Field(value: &self.userID)
-      case 2: try decoder.decodeRepeatedMessageField(value: &self.groupInfoList)
+      case 2: try decoder.decodeSingularUInt32Field(value: &self.resultCode)
+      case 3: try decoder.decodeRepeatedMessageField(value: &self.groupInfoList)
       default: break
       }
     }
@@ -996,14 +1020,18 @@ extension CIM_Group_CIMGroupInfoRsp: SwiftProtobuf.Message, SwiftProtobuf._Messa
     if self.userID != 0 {
       try visitor.visitSingularUInt64Field(value: self.userID, fieldNumber: 1)
     }
+    if self.resultCode != 0 {
+      try visitor.visitSingularUInt32Field(value: self.resultCode, fieldNumber: 2)
+    }
     if !self.groupInfoList.isEmpty {
-      try visitor.visitRepeatedMessageField(value: self.groupInfoList, fieldNumber: 2)
+      try visitor.visitRepeatedMessageField(value: self.groupInfoList, fieldNumber: 3)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   static func ==(lhs: CIM_Group_CIMGroupInfoRsp, rhs: CIM_Group_CIMGroupInfoRsp) -> Bool {
     if lhs.userID != rhs.userID {return false}
+    if lhs.resultCode != rhs.resultCode {return false}
     if lhs.groupInfoList != rhs.groupInfoList {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
@@ -1055,14 +1083,16 @@ extension CIM_Group_CIMGroupInviteMemberRsp: SwiftProtobuf.Message, SwiftProtobu
   static let protoMessageName: String = _protobuf_package + ".CIMGroupInviteMemberRsp"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "user_id"),
-    2: .standard(proto: "result_code"),
+    2: .standard(proto: "group_id"),
+    3: .standard(proto: "result_code"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
       case 1: try decoder.decodeSingularUInt64Field(value: &self.userID)
-      case 2: try decoder.decodeSingularUInt32Field(value: &self.resultCode)
+      case 2: try decoder.decodeSingularUInt64Field(value: &self.groupID)
+      case 3: try decoder.decodeSingularUInt32Field(value: &self.resultCode)
       default: break
       }
     }
@@ -1072,14 +1102,18 @@ extension CIM_Group_CIMGroupInviteMemberRsp: SwiftProtobuf.Message, SwiftProtobu
     if self.userID != 0 {
       try visitor.visitSingularUInt64Field(value: self.userID, fieldNumber: 1)
     }
+    if self.groupID != 0 {
+      try visitor.visitSingularUInt64Field(value: self.groupID, fieldNumber: 2)
+    }
     if self.resultCode != 0 {
-      try visitor.visitSingularUInt32Field(value: self.resultCode, fieldNumber: 2)
+      try visitor.visitSingularUInt32Field(value: self.resultCode, fieldNumber: 3)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   static func ==(lhs: CIM_Group_CIMGroupInviteMemberRsp, rhs: CIM_Group_CIMGroupInviteMemberRsp) -> Bool {
     if lhs.userID != rhs.userID {return false}
+    if lhs.groupID != rhs.groupID {return false}
     if lhs.resultCode != rhs.resultCode {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
@@ -1131,14 +1165,16 @@ extension CIM_Group_CIMGroupKickOutMemberRsp: SwiftProtobuf.Message, SwiftProtob
   static let protoMessageName: String = _protobuf_package + ".CIMGroupKickOutMemberRsp"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "user_id"),
-    2: .standard(proto: "result_code"),
+    2: .standard(proto: "group_id"),
+    3: .standard(proto: "result_code"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
       case 1: try decoder.decodeSingularUInt64Field(value: &self.userID)
-      case 2: try decoder.decodeSingularUInt32Field(value: &self.resultCode)
+      case 2: try decoder.decodeSingularUInt64Field(value: &self.groupID)
+      case 3: try decoder.decodeSingularUInt32Field(value: &self.resultCode)
       default: break
       }
     }
@@ -1148,14 +1184,18 @@ extension CIM_Group_CIMGroupKickOutMemberRsp: SwiftProtobuf.Message, SwiftProtob
     if self.userID != 0 {
       try visitor.visitSingularUInt64Field(value: self.userID, fieldNumber: 1)
     }
+    if self.groupID != 0 {
+      try visitor.visitSingularUInt64Field(value: self.groupID, fieldNumber: 2)
+    }
     if self.resultCode != 0 {
-      try visitor.visitSingularUInt32Field(value: self.resultCode, fieldNumber: 2)
+      try visitor.visitSingularUInt32Field(value: self.resultCode, fieldNumber: 3)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   static func ==(lhs: CIM_Group_CIMGroupKickOutMemberRsp, rhs: CIM_Group_CIMGroupKickOutMemberRsp) -> Bool {
     if lhs.userID != rhs.userID {return false}
+    if lhs.groupID != rhs.groupID {return false}
     if lhs.resultCode != rhs.resultCode {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true

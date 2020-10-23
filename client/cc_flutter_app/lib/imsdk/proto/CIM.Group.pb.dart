@@ -160,7 +160,8 @@ class CIMGroupDisbandingReq extends $pb.GeneratedMessage {
 class CIMGroupDisbandingRsp extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('CIMGroupDisbandingRsp', package: const $pb.PackageName('CIM.Group'), createEmptyInstance: create)
     ..a<$fixnum.Int64>(1, 'userId', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
-    ..a<$core.int>(2, 'resultCode', $pb.PbFieldType.OU3)
+    ..a<$fixnum.Int64>(2, 'groupId', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
+    ..a<$core.int>(3, 'resultCode', $pb.PbFieldType.OU3)
     ..hasRequiredFields = false
   ;
 
@@ -189,13 +190,22 @@ class CIMGroupDisbandingRsp extends $pb.GeneratedMessage {
   void clearUserId() => clearField(1);
 
   @$pb.TagNumber(2)
-  $core.int get resultCode => $_getIZ(1);
+  $fixnum.Int64 get groupId => $_getI64(1);
   @$pb.TagNumber(2)
-  set resultCode($core.int v) { $_setUnsignedInt32(1, v); }
+  set groupId($fixnum.Int64 v) { $_setInt64(1, v); }
   @$pb.TagNumber(2)
-  $core.bool hasResultCode() => $_has(1);
+  $core.bool hasGroupId() => $_has(1);
   @$pb.TagNumber(2)
-  void clearResultCode() => clearField(2);
+  void clearGroupId() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.int get resultCode => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set resultCode($core.int v) { $_setUnsignedInt32(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasResultCode() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearResultCode() => clearField(3);
 }
 
 class CIMGroupExitReq extends $pb.GeneratedMessage {
@@ -242,7 +252,8 @@ class CIMGroupExitReq extends $pb.GeneratedMessage {
 class CIMGroupExitRsp extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('CIMGroupExitRsp', package: const $pb.PackageName('CIM.Group'), createEmptyInstance: create)
     ..a<$fixnum.Int64>(1, 'userId', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
-    ..a<$core.int>(2, 'resultCode', $pb.PbFieldType.OU3)
+    ..a<$fixnum.Int64>(2, 'groupId', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
+    ..a<$core.int>(3, 'resultCode', $pb.PbFieldType.OU3)
     ..hasRequiredFields = false
   ;
 
@@ -271,13 +282,22 @@ class CIMGroupExitRsp extends $pb.GeneratedMessage {
   void clearUserId() => clearField(1);
 
   @$pb.TagNumber(2)
-  $core.int get resultCode => $_getIZ(1);
+  $fixnum.Int64 get groupId => $_getI64(1);
   @$pb.TagNumber(2)
-  set resultCode($core.int v) { $_setUnsignedInt32(1, v); }
+  set groupId($fixnum.Int64 v) { $_setInt64(1, v); }
   @$pb.TagNumber(2)
-  $core.bool hasResultCode() => $_has(1);
+  $core.bool hasGroupId() => $_has(1);
   @$pb.TagNumber(2)
-  void clearResultCode() => clearField(2);
+  void clearGroupId() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.int get resultCode => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set resultCode($core.int v) { $_setUnsignedInt32(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasResultCode() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearResultCode() => clearField(3);
 }
 
 class CIMGroupListReq extends $pb.GeneratedMessage {
@@ -384,7 +404,8 @@ class CIMGroupInfoReq extends $pb.GeneratedMessage {
 class CIMGroupInfoRsp extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('CIMGroupInfoRsp', package: const $pb.PackageName('CIM.Group'), createEmptyInstance: create)
     ..a<$fixnum.Int64>(1, 'userId', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
-    ..pc<CIMGroupInfo>(2, 'groupInfoList', $pb.PbFieldType.PM, subBuilder: CIMGroupInfo.create)
+    ..a<$core.int>(2, 'resultCode', $pb.PbFieldType.OU3)
+    ..pc<CIMGroupInfo>(3, 'groupInfoList', $pb.PbFieldType.PM, subBuilder: CIMGroupInfo.create)
     ..hasRequiredFields = false
   ;
 
@@ -413,7 +434,16 @@ class CIMGroupInfoRsp extends $pb.GeneratedMessage {
   void clearUserId() => clearField(1);
 
   @$pb.TagNumber(2)
-  $core.List<CIMGroupInfo> get groupInfoList => $_getList(1);
+  $core.int get resultCode => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set resultCode($core.int v) { $_setUnsignedInt32(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasResultCode() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearResultCode() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.List<CIMGroupInfo> get groupInfoList => $_getList(2);
 }
 
 class CIMGroupInviteMemberReq extends $pb.GeneratedMessage {
@@ -464,7 +494,8 @@ class CIMGroupInviteMemberReq extends $pb.GeneratedMessage {
 class CIMGroupInviteMemberRsp extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('CIMGroupInviteMemberRsp', package: const $pb.PackageName('CIM.Group'), createEmptyInstance: create)
     ..a<$fixnum.Int64>(1, 'userId', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
-    ..a<$core.int>(2, 'resultCode', $pb.PbFieldType.OU3)
+    ..a<$fixnum.Int64>(2, 'groupId', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
+    ..a<$core.int>(3, 'resultCode', $pb.PbFieldType.OU3)
     ..hasRequiredFields = false
   ;
 
@@ -493,13 +524,22 @@ class CIMGroupInviteMemberRsp extends $pb.GeneratedMessage {
   void clearUserId() => clearField(1);
 
   @$pb.TagNumber(2)
-  $core.int get resultCode => $_getIZ(1);
+  $fixnum.Int64 get groupId => $_getI64(1);
   @$pb.TagNumber(2)
-  set resultCode($core.int v) { $_setUnsignedInt32(1, v); }
+  set groupId($fixnum.Int64 v) { $_setInt64(1, v); }
   @$pb.TagNumber(2)
-  $core.bool hasResultCode() => $_has(1);
+  $core.bool hasGroupId() => $_has(1);
   @$pb.TagNumber(2)
-  void clearResultCode() => clearField(2);
+  void clearGroupId() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.int get resultCode => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set resultCode($core.int v) { $_setUnsignedInt32(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasResultCode() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearResultCode() => clearField(3);
 }
 
 class CIMGroupKickOutMemberReq extends $pb.GeneratedMessage {
@@ -550,7 +590,8 @@ class CIMGroupKickOutMemberReq extends $pb.GeneratedMessage {
 class CIMGroupKickOutMemberRsp extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('CIMGroupKickOutMemberRsp', package: const $pb.PackageName('CIM.Group'), createEmptyInstance: create)
     ..a<$fixnum.Int64>(1, 'userId', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
-    ..a<$core.int>(2, 'resultCode', $pb.PbFieldType.OU3)
+    ..a<$fixnum.Int64>(2, 'groupId', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
+    ..a<$core.int>(3, 'resultCode', $pb.PbFieldType.OU3)
     ..hasRequiredFields = false
   ;
 
@@ -579,13 +620,22 @@ class CIMGroupKickOutMemberRsp extends $pb.GeneratedMessage {
   void clearUserId() => clearField(1);
 
   @$pb.TagNumber(2)
-  $core.int get resultCode => $_getIZ(1);
+  $fixnum.Int64 get groupId => $_getI64(1);
   @$pb.TagNumber(2)
-  set resultCode($core.int v) { $_setUnsignedInt32(1, v); }
+  set groupId($fixnum.Int64 v) { $_setInt64(1, v); }
   @$pb.TagNumber(2)
-  $core.bool hasResultCode() => $_has(1);
+  $core.bool hasGroupId() => $_has(1);
   @$pb.TagNumber(2)
-  void clearResultCode() => clearField(2);
+  void clearGroupId() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.int get resultCode => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set resultCode($core.int v) { $_setUnsignedInt32(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasResultCode() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearResultCode() => clearField(3);
 }
 
 class CIMGroupMemberChangedNotify extends $pb.GeneratedMessage {

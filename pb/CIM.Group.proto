@@ -36,7 +36,8 @@ message CIMGroupDisbandingReq {
 message CIMGroupDisbandingRsp {
   // cmd id: 		0x504
   uint64 user_id = 1;
-  uint32 result_code = 2;
+  uint64 group_id = 2;
+  uint32 result_code = 3;
 }
 
 // 退出群
@@ -50,7 +51,8 @@ message CIMGroupExitReq {
 message CIMGroupExitRsp {
   // cmd id: 		0x506
   uint64 user_id = 1;
-  uint32 result_code = 2;
+  uint64 group_id = 2;
+  uint32 result_code = 3;
 }
 
 // 查询群列表请求
@@ -77,7 +79,8 @@ message CIMGroupInfoReq {
 message CIMGroupInfoRsp {
   // cmd id: 		0x510
   uint64 user_id = 1;
-  repeated CIMGroupInfo group_info_list = 2;
+  uint32 result_code = 2;
+  repeated CIMGroupInfo group_info_list = 3;
 }
 
 // 邀请人入群请求
@@ -92,7 +95,8 @@ message CIMGroupInviteMemberReq {
 message CIMGroupInviteMemberRsp {
   // cmd id: 		0x512
   uint64 user_id = 1;
-  uint32 result_code = 2;
+  uint64 group_id = 2;
+  uint32 result_code = 3;
 }
 
 // 踢人请求
@@ -107,7 +111,8 @@ message CIMGroupKickOutMemberReq {
 message CIMGroupKickOutMemberRsp {
   // cmd id: 		0x514
   uint64 user_id = 1;
-  uint32 result_code = 2;
+  uint64 group_id = 2;
+  uint32 result_code = 3;
 }
 
 // 群成员变更通知
