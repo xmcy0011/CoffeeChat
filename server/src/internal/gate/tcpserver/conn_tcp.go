@@ -1,12 +1,12 @@
 package tcpserver
 
 import (
-	"container/list"
-	"context"
-	"encoding/json"
 	"coffeechat/api/cim"
 	"coffeechat/pkg/def"
 	"coffeechat/pkg/logger"
+	"container/list"
+	"context"
+	"encoding/json"
 	"github.com/golang/protobuf/proto"
 	uuid "github.com/satori/go.uuid"
 	"go.uber.org/atomic"
@@ -137,6 +137,20 @@ func (tcp *TcpConn) OnRead(header *cim.ImHeader, buff []byte) {
 		tcp.onHandleVOIPInviteReplyAck(header, buff)
 	case uint16(cim.CIMCmdID_kCIM_CID_VOIP_BYE_REQ):
 		tcp.onHandleVOIPByeReq(header, buff)
+	case uint16(cim.CIMCmdID_kCIM_CID_GROUP_CREATE_DEFAULT_REQ):
+		tcp.onHandleCreateGroupReq(header, buff)
+	case uint16(cim.CIMCmdID_kCIM_CID_GROUP_DISBINGDING_REQ):
+		tcp.onHandleDisbandingGroupReq(header, buff)
+	case uint16(cim.CIMCmdID_kCIM_CID_GROUP_EXIT_REQ):
+		tcp.onHandleGroupExitReq(header, buff)
+	case uint16(cim.CIMCmdID_kCIM_CID_GROUP_LIST_REQ):
+		tcp.onHandleGroupListReq(header, buff)
+	case uint16(cim.CIMCmdID_kCIM_CID_GROUP_INFO_REQ):
+		tcp.onHandleGroupInfoReq(header, buff)
+	case uint16(cim.CIMCmdID_kCIM_CID_GROUP_INVITE_MEMBER_REQ):
+		tcp.onHandleGroupInviteMemberReq(header, buff)
+	case uint16(cim.CIMCmdID_kCIM_CID_GROUP_KICK_OUT_MEMBER_REQ):
+		tcp.onHandleGroupKickOutMemberReq(header, buff)
 	default:
 		logger.Sugar.Errorf("unknown command_id=%d", header.CommandId)
 		break
