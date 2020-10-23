@@ -26,10 +26,19 @@ CREATE TABLE `im_session` (
 CREATE TABLE `im_group` (
   `group_id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '群组id',
   `group_name` varchar(32) NOT NULL DEFAULT '' COMMENT '群名',
+  `group_version` tinyint(4) NOT NULL DEFAULT '0' COMMENT '群版本',
   `create_user_id` bigint(20) NOT NULL COMMENT '创建者id',
-  `create_time` int(11) NOT NULL COMMENT '创建时间',
   `owner` bigint(20) NOT NULL COMMENT '群主',
-  `announcement` varchar(1024) NOT NULL DEFAULT '' COMMENT '群公告',
+  `announcement` varchar(1024) DEFAULT '' COMMENT '群公告',
+  `intro` varchar(128) DEFAULT '' COMMENT '群介绍',
+  `avatar` varchar(256) NOT NULL DEFAULT '' COMMENT '群头像url',
+  `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '群类型 0：未知，1：普通群，2：超级群',
+  `join_model` tinyint(4) NOT NULL DEFAULT '0' COMMENT '入群模式 0：所有人可邀请别人加入，1：需要管理员验证，2：拒绝所有人 ',
+  `be_invite_model` tinyint(4) NOT NULL DEFAULT '0' COMMENT '被邀请人同意方式 0：不需要同意，1：需要',
+  `mute_model` tinyint(4) NOT NULL DEFAULT '0' COMMENT '禁言模式 0：不禁言，1：全体禁言',
+  `created` int(11) NOT NULL COMMENT '创建时间戳',
+  `updated` int(11) NOT NULL COMMENT '更新时间戳',
+  `del_flag` tinyint(4) NOT NULL DEFAULT '0' COMMENT '删除 0：否，1：是',
   PRIMARY KEY (`group_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -37,6 +46,9 @@ CREATE TABLE `im_group_member` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `group_id` bigint(20) NOT NULL COMMENT '群组id',
   `user_id` bigint(20) NOT NULL COMMENT '用户id',
+  `created` int(11) NOT NULL COMMENT '创建时间戳',
+  `updated` int(11) NOT NULL COMMENT '更新时间戳',
+  `del_flag` tinyint(4) NOT NULL DEFAULT '0' COMMENT '删除 0：否，1：是',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
