@@ -23,6 +23,7 @@ require (
 	go.uber.org/zap v1.10.0
 	google.golang.org/appengine v1.6.6 // indirect
 	google.golang.org/grpc v1.30.0
+	google.golang.org/protobuf v1.23.0
 	gopkg.in/check.v1 v1.0.0-20200227125254-8fa46927fb4f // indirect
 	gopkg.in/ini.v1 v1.57.0 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0-20170531160350-a96e63847dc3

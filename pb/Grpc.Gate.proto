@@ -5,7 +5,7 @@ option go_package=".;cim";
 option optimize_for = LITE_RUNTIME;
 
 //import "CIM.Def.proto";
-//import "CIM.List.proto";
+import "CIM.Group.proto";
 import "CIM.Login.proto";
 import "CIM.Message.proto";
 import "Grpc.Def.proto";
@@ -21,4 +21,7 @@ service Gate{
 
     // 停止接收消息
     rpc StopReceivePacket(Empty) returns(Empty) {}
+
+    // 群成员变更通知
+    rpc GroupMemberChanged(CIM.Group.CIMGroupMemberChangedNotify) returns(Empty){}
 }

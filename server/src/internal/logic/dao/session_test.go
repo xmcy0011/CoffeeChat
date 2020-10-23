@@ -12,7 +12,7 @@ import (
 
 func TestSession_AddUserSession(t *testing.T) {
 	logger.InitLogger("../../../log/log.log", "debug")
-	_, err := toml.DecodeFile("../../../app/logic/logic-example.toml", conf.DefaultLogicConfig)
+	_, err := toml.DecodeFile("../../../app/im_logic/logic-example.toml", conf.DefaultLogicConfig)
 	if err != nil {
 		t.Fatal(err.Error())
 	}
@@ -39,7 +39,7 @@ func TestSession_AddUserSession(t *testing.T) {
 
 func TestSession_UpdateUpdated(t *testing.T) {
 	logger.InitLogger("../../../log/log.log", "debug")
-	_, err := toml.DecodeFile("../../../app/logic/logic-example.toml", conf.DefaultLogicConfig)
+	_, err := toml.DecodeFile("../../../app/im_logic/logic-example.toml", conf.DefaultLogicConfig)
 	if err != nil {
 		t.Fatal(err.Error())
 	}
@@ -64,12 +64,12 @@ func TestSession_UpdateUpdated(t *testing.T) {
 
 	time.Sleep(time.Second * 3)
 	timeStamp := int(time.Now().Unix())
-	err = DefaultSession.UpdateUpdated(id1, timeStamp)
+	err = DefaultSession.UpdateUpdated(uint64(id1), timeStamp)
 	if err != nil {
 		t.Fatal(err.Error())
 	}
 
-	err = DefaultSession.UpdateUpdated(id2, timeStamp)
+	err = DefaultSession.UpdateUpdated(uint64(id2), timeStamp)
 	if err != nil {
 		t.Fatal(err.Error())
 	}

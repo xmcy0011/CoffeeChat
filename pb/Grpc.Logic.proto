@@ -8,6 +8,7 @@ option optimize_for = LITE_RUNTIME;
 import "CIM.List.proto";
 import "CIM.Login.proto";
 import "CIM.Message.proto";
+import "CIM.Group.proto";
 import "Grpc.Def.proto";
 
 // logic的grpc接口定义
@@ -34,4 +35,19 @@ service Logic {
     rpc CreateUser(CreateUserAccountInfoReq) returns(CreateUserAccountInfoRsp){}
     // 查询用户昵称
     rpc QueryUserNickName(QueryUserNickNameReq) returns(QueryUserNickNameRsp){}
+
+    // 创建群
+    rpc CreateGroup(CIM.Group.CIMGroupCreateReq) returns(CIM.Group.CIMGroupCreateRsp){}
+    // 解散群
+    rpc DisbandingGroup(CIM.Group.CIMGroupDisbandingReq) returns(CIM.Group.CIMGroupDisbandingRsp){}
+    // 退出群
+    rpc GroupExit(CIM.Group.CIMGroupExitReq) returns(CIM.Group.CIMGroupExitRsp){}
+    // 查询群列表
+    rpc GroupList(CIM.Group.CIMGroupListReq) returns(CIM.Group.CIMGroupListRsp){}
+    // 查询群详情
+    rpc QueryGroupInfo(CIM.Group.CIMGroupInfoReq) returns(CIM.Group.CIMGroupInfoRsp){}
+    // 加人
+    rpc GroupInviteMember(CIM.Group.CIMGroupInviteMemberReq) returns(CIM.Group.CIMGroupInviteMemberRsp){}
+    // 踢人
+    rpc GroupKickOutMember(CIM.Group.CIMGroupKickOutMemberReq) returns(CIM.Group.CIMGroupKickOutMemberRsp){}
 }
