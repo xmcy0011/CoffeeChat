@@ -49,19 +49,21 @@ func TestGroup_Del(t *testing.T) {
 	t.Logf("test del incorrect group")
 	err = DefaultGroup.Del(kTestOwnerId, kTestGroupId+1)
 	if err == nil {
-		t.Failed()
+		t.Fail()
+		return
 	}
 
 	t.Logf("test del incorrect owner group")
 	err = DefaultGroup.Del(kTestOwnerId+1, kTestGroupId)
 	if err == nil {
-		t.Failed()
+		t.Fail()
+		return
 	}
 
 	t.Logf("test del group")
 	err = DefaultGroup.Del(kTestOwnerId, kTestGroupId)
 	if err != nil {
-		t.Failed()
+		t.Fail()
 	} else {
 		t.Logf("del group,id=%d", kTestGroupId)
 	}
@@ -82,12 +84,13 @@ func TestGroup_GetOwnerId(t *testing.T) {
 
 	id, err := DefaultGroup.GetOwnerId(kTestGroupId)
 	if err != nil {
-		t.Failed()
+		t.Fail()
+		return
 	}
 	t.Logf("group_id=%d owner=%d", kTestGroupId, id)
 
 	if id != kTestOwnerId {
-		t.Failed()
+		t.Fail()
 	}
 }
 
@@ -106,12 +109,13 @@ func TestGroup_Get(t *testing.T) {
 
 	info, err := DefaultGroup.Get(kTestGroupId)
 	if err != nil {
-		t.Failed()
+		t.Fail()
+		return
 	}
 
 	t.Logf("groupInfo=%v", info)
 
 	if info == nil || info.GroupName != kTestGroupName {
-		t.Failed()
+		t.Fail()
 	}
 }
