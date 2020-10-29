@@ -54,3 +54,9 @@ func (g *GrpcGateServer) AckMsgData(ctx context.Context, in *cim.CIMMsgDataAck) 
 func (g *GrpcGateServer) StopReceivePacket(ctx context.Context, in *cim.Empty) (*cim.Empty, error) {
 	return nil, nil
 }
+
+// 群成员变更通知
+func (g *GrpcGateServer) GroupMemberChanged(ctx context.Context, in *cim.CIMGroupMemberChangedNotify) (*cim.Empty, error) {
+	logger.Sugar.Info("GroupMemberChanged groupId:%d,memberId:%v", in.GroupId, in.ChangedList)
+	return nil, nil
+}

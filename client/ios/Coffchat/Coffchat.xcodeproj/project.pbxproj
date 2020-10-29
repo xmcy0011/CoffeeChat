@@ -37,6 +37,9 @@
 		F43D96442446F903004802AA /* IMSettingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F43D96422446F903004802AA /* IMSettingViewController.xib */; };
 		F43D96472446FFB3004802AA /* IMLoginoutTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43D96452446FFB3004802AA /* IMLoginoutTableViewCell.swift */; };
 		F43D96482446FFB3004802AA /* IMLoginoutTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F43D96462446FFB3004802AA /* IMLoginoutTableViewCell.xib */; };
+		F44715ED25484A2900EB7811 /* IMGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44715EC25484A2900EB7811 /* IMGroup.swift */; };
+		F44715EF25484A7500EB7811 /* IMGroupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44715EE25484A7500EB7811 /* IMGroupManager.swift */; };
+		F44715F125484BE500EB7811 /* CIM.Group.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44715F025484BE500EB7811 /* CIM.Group.pb.swift */; };
 		F46124DC24383A6700298F24 /* IMChatContentViewController+Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46124DB24383A6700298F24 /* IMChatContentViewController+Keyboard.swift */; };
 		F46124DF243855D600298F24 /* UIScrollView+Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46124DE243855D600298F24 /* UIScrollView+Chat.swift */; };
 		F46124E1243856A500298F24 /* UITableView+Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46124E0243856A500298F24 /* UITableView+Chat.swift */; };
@@ -47,6 +50,9 @@
 		F48654142426694400D39970 /* IMLoginManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48654132426694400D39970 /* IMLoginManagerTests.swift */; };
 		F486541624266E8600D39970 /* IMConversationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F486541524266E8600D39970 /* IMConversationManager.swift */; };
 		F48654182426721400D39970 /* IMRecentSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48654172426721400D39970 /* IMRecentSession.swift */; };
+		F48D2EE6254AC44C00377886 /* IMActionFloatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48D2EE5254AC44C00377886 /* IMActionFloatView.swift */; };
+		F48D2EE8254AC51A00377886 /* UIImage+Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48D2EE7254AC51A00377886 /* UIImage+Chat.swift */; };
+		F48D2EEA254AF72600377886 /* UINavigationItem+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48D2EE9254AF72600377886 /* UINavigationItem+Extension.swift */; };
 		F4B1EA83246C075000EED1FB /* IMMessageTimeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B1EA81246C075000EED1FB /* IMMessageTimeCell.swift */; };
 		F4B1EA84246C075000EED1FB /* IMMessageTimeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4B1EA82246C075000EED1FB /* IMMessageTimeCell.xib */; };
 		F4BC8F3D241F22A700ED38C9 /* IMHeaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BC8F3C241F22A700ED38C9 /* IMHeaderTests.swift */; };
@@ -116,6 +122,9 @@
 		F43D96422446F903004802AA /* IMSettingViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IMSettingViewController.xib; sourceTree = "<group>"; };
 		F43D96452446FFB3004802AA /* IMLoginoutTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMLoginoutTableViewCell.swift; sourceTree = "<group>"; };
 		F43D96462446FFB3004802AA /* IMLoginoutTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IMLoginoutTableViewCell.xib; sourceTree = "<group>"; };
+		F44715EC25484A2900EB7811 /* IMGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMGroup.swift; sourceTree = "<group>"; };
+		F44715EE25484A7500EB7811 /* IMGroupManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMGroupManager.swift; sourceTree = "<group>"; };
+		F44715F025484BE500EB7811 /* CIM.Group.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CIM.Group.pb.swift; sourceTree = "<group>"; };
 		F46124DB24383A6700298F24 /* IMChatContentViewController+Keyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "IMChatContentViewController+Keyboard.swift"; sourceTree = "<group>"; };
 		F46124DE243855D600298F24 /* UIScrollView+Chat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScrollView+Chat.swift"; sourceTree = "<group>"; };
 		F46124E0243856A500298F24 /* UITableView+Chat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Chat.swift"; sourceTree = "<group>"; };
@@ -126,6 +135,9 @@
 		F48654132426694400D39970 /* IMLoginManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMLoginManagerTests.swift; sourceTree = "<group>"; };
 		F486541524266E8600D39970 /* IMConversationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMConversationManager.swift; sourceTree = "<group>"; };
 		F48654172426721400D39970 /* IMRecentSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMRecentSession.swift; sourceTree = "<group>"; };
+		F48D2EE5254AC44C00377886 /* IMActionFloatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMActionFloatView.swift; sourceTree = "<group>"; };
+		F48D2EE7254AC51A00377886 /* UIImage+Chat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Chat.swift"; sourceTree = "<group>"; };
+		F48D2EE9254AF72600377886 /* UINavigationItem+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationItem+Extension.swift"; sourceTree = "<group>"; };
 		F494202F2A92B14FDCFFABCD /* Pods_Coffchat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Coffchat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4B1EA81246C075000EED1FB /* IMMessageTimeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMMessageTimeCell.swift; sourceTree = "<group>"; };
 		F4B1EA82246C075000EED1FB /* IMMessageTimeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IMMessageTimeCell.xib; sourceTree = "<group>"; };
@@ -194,6 +206,7 @@
 				F48654172426721400D39970 /* IMRecentSession.swift */,
 				F4DAF914242B70DF00963220 /* IMSession.swift */,
 				F4DAF916242B715100963220 /* IMMessage.swift */,
+				F44715EC25484A2900EB7811 /* IMGroup.swift */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -201,6 +214,7 @@
 		F417B0202419D3E800E1AAC0 /* pb */ = {
 			isa = PBXGroup;
 			children = (
+				F44715F025484BE500EB7811 /* CIM.Group.pb.swift */,
 				F417B0242419D4F000E1AAC0 /* CIM.Def.pb.swift */,
 				F417B0222419D4F000E1AAC0 /* CIM.List.pb.swift */,
 				F417B0212419D4F000E1AAC0 /* CIM.Login.pb.swift */,
@@ -266,6 +280,8 @@
 				F4EE58432467FF720075DCB9 /* Date+Extension.swift */,
 				F46124DE243855D600298F24 /* UIScrollView+Chat.swift */,
 				F46124E0243856A500298F24 /* UITableView+Chat.swift */,
+				F48D2EE7254AC51A00377886 /* UIImage+Chat.swift */,
+				F48D2EE9254AF72600377886 /* UINavigationItem+Extension.swift */,
 			);
 			path = UIHelper;
 			sourceTree = "<group>";
@@ -345,6 +361,7 @@
 				F42C73F0242B343100B4F6CC /* IMChatViewController.swift */,
 				F42C73F1242B343100B4F6CC /* IMChatViewController.xib */,
 				F4207770243459F20091DD86 /* IMUIResource.swift */,
+				F48D2EE5254AC44C00377886 /* IMActionFloatView.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -389,6 +406,7 @@
 				F486541524266E8600D39970 /* IMConversationManager.swift */,
 				F42F79492427453800A50A0A /* IMLoginManager.swift */,
 				F43C7A9D2438C5FA006C3796 /* IMChatManager.swift */,
+				F44715EE25484A7500EB7811 /* IMGroupManager.swift */,
 			);
 			path = CIMSdk;
 			sourceTree = "<group>";
@@ -609,7 +627,9 @@
 				F4EE58442467FF720075DCB9 /* Date+Extension.swift in Sources */,
 				F46566EF244C531A00B0A35F /* IMMsgParser.swift in Sources */,
 				F42C73F2242B343100B4F6CC /* IMChatViewController.swift in Sources */,
+				F44715F125484BE500EB7811 /* CIM.Group.pb.swift in Sources */,
 				F46124E1243856A500298F24 /* UITableView+Chat.swift in Sources */,
+				F48D2EE8254AC51A00377886 /* UIImage+Chat.swift in Sources */,
 				F417B02A2419D4F000E1AAC0 /* CIM.Voip.pb.swift in Sources */,
 				F46124DF243855D600298F24 /* UIScrollView+Chat.swift in Sources */,
 				F4840BE62424C2930005EF04 /* IMManager.swift in Sources */,
@@ -631,12 +651,16 @@
 				F48654182426721400D39970 /* IMRecentSession.swift in Sources */,
 				F41CB8A0242866E4007570BF /* ViewController.swift in Sources */,
 				F42C73ED242B295200B4F6CC /* IMChatViewCell.swift in Sources */,
+				F48D2EEA254AF72600377886 /* UINavigationItem+Extension.swift in Sources */,
 				F486541624266E8600D39970 /* IMConversationManager.swift in Sources */,
+				F44715ED25484A2900EB7811 /* IMGroup.swift in Sources */,
 				F417B0272419D4F000E1AAC0 /* CIM.List.pb.swift in Sources */,
 				F42F794524273B7300A50A0A /* IMLog.swift in Sources */,
+				F48D2EE6254AC44C00377886 /* IMActionFloatView.swift in Sources */,
 				F4DAF915242B70DF00963220 /* IMSession.swift in Sources */,
 				F4DAF91A242B872300963220 /* SessionModel.swift in Sources */,
 				F4C510AB2429AA11000BCDEA /* IMFriendViewController.swift in Sources */,
+				F44715EF25484A7500EB7811 /* IMGroupManager.swift in Sources */,
 				F4D29BF92471464F00CE4ABC /* UIPaddingLabel.swift in Sources */,
 				F4EBFABC242F396900AF26B2 /* IMChatContentViewController.swift in Sources */,
 				F417B0282419D4F000E1AAC0 /* CIM.Message.pb.swift in Sources */,

@@ -13,6 +13,9 @@ target 'Coffchat' do
   pod 'CocoaAsyncSocket'        # socket
   #pod 'Socket.IO-Client-Swift', '~> 15.2.0' # socket
   pod 'SwiftProtobuf', '~> 1.0' # protobuf
-  pod 'SnapKit', '~> 5.0.0' # 自动布局第三方库
+  pod 'SnapKit', '~> 5.0.0'  # 自动布局第三方库
   pod 'SwiftyJSON', '~> 4.0' # json解析库
+  pod 'Dollar', '9.0.0'      # 操作数组的神器，比如将数组划分成若干个子集
+  pod 'RxSwift', '~> 5'      # 一个组合异步和事件驱动编程的库
+  pod 'RxCocoa', '~> 5'      # iOS响应式编程中的两个主流框架（RxSwift+RxCocoa）
 end

@@ -151,14 +151,10 @@ func (t *Session) AddUserSession(userId uint64, peerId uint64, sessionType cim.C
 }
 
 // 添加用户和群的会话关系
-func (t *Session) AddGroupSession(userId uint64, groupId uint64, sessionType cim.CIMSessionType, sessionStatus cim.CIMSessionStatusType,
-	isRobotSession bool) error {
+func (t *Session) AddGroupSession(userId uint64, groupId uint64, sessionType cim.CIMSessionType, sessionStatus cim.CIMSessionStatusType) error {
 	session := db.DefaultManager.GetDbMaster()
 	if session != nil {
 		robotSession := 0
-		if isRobotSession {
-			robotSession = 1
-		}
 		timeStamp := time.Now().Unix()
 
 		sql := fmt.Sprintf("insert into %s(user_id,peer_id,session_type,session_status,"+

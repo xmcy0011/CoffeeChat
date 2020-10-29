@@ -225,7 +225,7 @@ func (m *Message) saveSingleMessage(fromId uint64, toId uint64, clientMsgId stri
 
 		timeStamp := time.Now().Unix()
 		if sessionModel == nil || sessionModel2 == nil {
-			logger.Sugar.Infof("session %d->%d not exist,create it,session_type=SESSION_TYPE_SINGLE", fromId, toId, )
+			logger.Sugar.Infof("session %d->%d not exist,create it,session_type=SESSION_TYPE_SINGLE", fromId, toId)
 			_, _, err = DefaultSession.AddUserSession(fromId, toId, cim.CIMSessionType_kCIM_SESSION_TYPE_SINGLE,
 				cim.CIMSessionStatusType_kCIM_SESSION_STATUS_OK, false)
 			if err != nil {
@@ -273,8 +273,85 @@ func (m *Message) saveSingleMessage(fromId uint64, toId uint64, clientMsgId stri
 	return 0, def.DefaultError
 }
 
-// not support
 func (m *Message) saveGroupMessage(fromId uint64, groupId uint64, clientMsgId string, createTime int32,
 	msgType cim.CIMMsgType, msgData string) (uint64, error) {
-	return 0, def.DefaultError
+
+	dbMaster := db.DefaultManager.GetDbMaster()
+	if dbMaster == nil {
+		logger.Sugar.Error("no db connect for master")
+	}
+
+	// check group
+	_, err := DefaultGroup.Get(groupId)
+	if err != nil {
+		logger.Sugar.Warnf("saveGroupMessage group=%d not exist,err:%s", groupId, err.Error())
+		return 0, err
+	}
+
+	// check member in group
+	isExist, err := DefaultGroupMember.Exist(groupId, fromId)
+	if err != nil {
+		logger.Sugar.Warnf("saveGroupMessage check member error:%s,group=%d,user_id:%d", err.Error(), groupId, fromId)
+		return 0, err
+	}
+
+	if !isExist {
+		logger.Sugar.Warnf("saveGroupMessage invalid member=%d,group_id", fromId, groupId)
+		return 0, def.DefaultError
+	}
+
+	// session exist?
+	timeStamp := time.Now().Unix()
+	session := DefaultSession.Get(fromId, groupId)
+	if session == nil {
+		err = DefaultSession.AddGroupSession(fromId, groupId, cim.CIMSessionType_kCIM_SESSION_TYPE_GROUP,
+			cim.CIMSessionStatusType_kCIM_SESSION_STATUS_OK)
+		if err != nil {
+			logger.Sugar.Error("create session %d->%d,session_type:SESSION_TYPE_GROUP,error:%s", fromId, groupId, err.Error())
+			return 0, err
+		}
+	} else {
+		// update latest session time
+		_ = DefaultSession.UpdateUpdated(session.Id, int(timeStamp))
+	}
+
+	// Get MsgId
+	msgId, err := m.IncrMsgIdGroup(groupId)
+	if err != nil {
+		return 0, err
+	}
+
+	tableName := fmt.Sprintf("%s%d", kIMMessageSendTableName, fromId%kIMMessageTableCount)
+	// 去重
+	if existMsgId := m.getMsgId(clientMsgId, tableName); existMsgId > 0 {
+		logger.Sugar.Info("msg already exist,msg_id=%s,from_id=%d,to_id=%d", clientMsgId, fromId, groupId)
+		return uint64(existMsgId), nil
+	}
+
+	// save to im_message_send_x
+	sql := fmt.Sprintf("insert into %s(msg_id,client_msg_id,from_id,to_id,group_id,msg_type,msg_content,"+
+		"msg_res_code,msg_feature,msg_status,created,updated) values(%d,'%s',%d,%d,%d,%d,'%s',%d,%d,%d,%d,%d)",
+		tableName, msgId, clientMsgId, fromId, groupId, 0, msgType, msgData, cim.CIMResCode_kCIM_RES_CODE_OK,
+		cim.CIMMsgFeature_kCIM_MSG_FEATURE_DEFAULT, cim.CIMMsgStatus_kCIM_MSG_STATUS_NONE, timeStamp, timeStamp)
+	_, err = dbMaster.Exec(sql)
+	if err != nil {
+		logger.Sugar.Errorf("exec failed,sql:%s,error:%s", sql, err.Error())
+		return 0, err
+	}
+
+	// save to im_message_recv_x
+	tableName = fmt.Sprintf("%s%d", kIMMessageRecvTableName, groupId%kIMMessageTableCount)
+	sql = fmt.Sprintf("insert into %s(msg_id,client_msg_id,from_id,to_id,group_id,msg_type,msg_content,"+
+		"msg_res_code,msg_feature,msg_status,created,updated) values(%d,'%s',%d,%d,%d,%d,'%s',%d,%d,%d,%d,%d)",
+		tableName, msgId, clientMsgId, fromId, groupId, 0, msgType, msgData, cim.CIMResCode_kCIM_RES_CODE_OK,
+		cim.CIMMsgFeature_kCIM_MSG_FEATURE_DEFAULT, cim.CIMMsgStatus_kCIM_MSG_STATUS_NONE, timeStamp, timeStamp)
+	_, err = dbMaster.Exec(sql)
+	if err != nil {
+		logger.Sugar.Errorf("exec failed,sql:%s,error:%s", sql, err.Error())
+		return 0, err
+	}
+
+	// 群未读计数+1，发送方已读消息计数+1
+	DefaultUnread.IncUnreadCount(groupId, fromId, cim.CIMSessionType_kCIM_SESSION_TYPE_GROUP)
+	return uint64(msgId), nil
 }

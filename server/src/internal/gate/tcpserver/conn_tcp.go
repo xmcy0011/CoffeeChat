@@ -348,7 +348,6 @@ func (tcp *TcpConn) onHandleMsgData(header *cim.ImHeader, buff []byte) {
 		return
 	}
 
-	// fix time
 	req.CreateTime = int32(time.Now().Unix())
 	logger.Sugar.Infof("onHandleMsgData from_id:%d,to_id:%d,"+
 		"session_type=%d,msg_id=%s,msg_type=%d,create_time=%d",
@@ -376,59 +375,72 @@ func (tcp *TcpConn) onHandleMsgData(header *cim.ImHeader, buff []byte) {
 
 	// send to peer
 	if req.SessionType == cim.CIMSessionType_kCIM_SESSION_TYPE_SINGLE {
-		user := DefaultUserManager.FindUser(rsp.ToSessionId)
-		if user != nil {
-			user.BroadcastMessage(req)
-		}
-
-		if !def.IsRobot(req.ToSessionId) {
-			return
-		}
-
-		// 机器人消息，转发到第三方机器人平台，获取回复
-		// 这里为了简化，牺牲性能，直接调用了
-		// http超时3秒，1个TCP连接，2个协程。请注意
-		logger.Sugar.Debugf("robot msg ,msgData:%s,from_id:%d,to_id:%d", string(req.MsgData), rsp.FromUserId, rsp.ToSessionId)
-		question, err := DefaultRobotClient.ResolveQuestion(req)
-		if err != nil {
-			return
-		}
-		go func() {
-			answer, err := DefaultRobotClient.GetAnswer(req.FromUserId, req.ToSessionId, question)
-			if err != nil {
-				logger.Sugar.Warnf("get robot answer error:%s,userId=%d", err.Error(), req.FromUserId)
-				if answer.Content.Content != "" {
-					answer.Content.Content = "机器人出错啦！"
-				}
-			}
-
-			//转发到logic存储
-			toUserId := req.FromUserId
-			req.FromUserId = req.ToSessionId
-			req.FromNickName = DefaultRobotClient.Name
-			req.ToSessionId = toUserId // change
-			req.MsgId = uuid.NewV4().String()
-			req.CreateTime = int32(time.Now().Unix())
-			req.MsgType = cim.CIMMsgType_kCIM_MSG_TYPE_ROBOT
-
-			data, _ := json.Marshal(answer)
-			req.MsgData = data
-
-			ctx, _ = context.WithTimeout(context.Background(), time.Second*kBusinessTimeOut)
-			_, err = conn.SendMsgData(ctx, req)
-			if err != nil {
-				// 上行消息丢失计数+1
-				upMissMsgCount.Inc()
-				logger.Sugar.Warnf("err:", err.Error())
-			} else {
-				// 广播机器人回复的消息
-				user := DefaultUserManager.FindUser(toUserId)
-				if user != nil {
-					user.BroadcastMessage(req)
-				}
-			}
-		}()
+		tcp._onHandleSingleMsgData(req, rsp)
+	} else if req.SessionType == cim.CIMSessionType_kCIM_SESSION_TYPE_GROUP {
+		tcp._onHandleGroupMsgData(req, rsp)
 	}
+}
+
+// 处理单聊消息返回
+func (tcp *TcpConn) _onHandleSingleMsgData(req *cim.CIMMsgData, rsp *cim.CIMMsgDataAck) {
+	user := DefaultUserManager.FindUser(rsp.ToSessionId)
+	if user != nil {
+		user.BroadcastMessage(req)
+	}
+
+	if !def.IsRobot(req.ToSessionId) {
+		return
+	}
+
+	// 机器人消息，转发到第三方机器人平台，获取回复
+	// 这里为了简化，牺牲性能，直接调用了
+	// http超时3秒，1个TCP连接，2个协程。请注意
+	logger.Sugar.Debugf("robot msg ,msgData:%s,from_id:%d,to_id:%d", string(req.MsgData), rsp.FromUserId, rsp.ToSessionId)
+	question, err := DefaultRobotClient.ResolveQuestion(req)
+	if err != nil {
+		return
+	}
+	go func() {
+		answer, err := DefaultRobotClient.GetAnswer(req.FromUserId, req.ToSessionId, question)
+		if err != nil {
+			logger.Sugar.Warnf("get robot answer error:%s,userId=%d", err.Error(), req.FromUserId)
+			if answer.Content.Content != "" {
+				answer.Content.Content = "机器人出错啦！"
+			}
+		}
+
+		toUserId := req.FromUserId
+		req.FromUserId = req.ToSessionId
+		req.FromNickName = DefaultRobotClient.Name
+		req.ToSessionId = toUserId // change
+		req.MsgId = uuid.NewV4().String()
+		req.CreateTime = int32(time.Now().Unix())
+		req.MsgType = cim.CIMMsgType_kCIM_MSG_TYPE_ROBOT
+
+		data, _ := json.Marshal(answer)
+		req.MsgData = data
+
+		//转发到logic存储
+		conn := GetMessageConn()
+		ctx, _ := context.WithTimeout(context.Background(), time.Second*kBusinessTimeOut)
+		_, err = conn.SendMsgData(ctx, req)
+		if err != nil {
+			// 上行消息丢失计数+1
+			upMissMsgCount.Inc()
+			logger.Sugar.Warnf("err:", err.Error())
+		} else {
+			// 广播机器人回复的消息
+			user := DefaultUserManager.FindUser(toUserId)
+			if user != nil {
+				user.BroadcastMessage(req)
+			}
+		}
+	}()
+}
+
+// 处理群聊消息返回
+func (tcp *TcpConn) _onHandleGroupMsgData(req *cim.CIMMsgData, rsp *cim.CIMMsgDataAck) {
+
 }
 
 // 消息收到确认

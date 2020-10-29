@@ -12,11 +12,25 @@ import UIKit
 class IMChatViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, IMConversationManagerDelegate {
     @IBOutlet var sessionTabView: UITableView!
     var list: [SessionModel] = []
+    var actionFloat: IMActionFloatView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         title = "消息"
+
+        // 在顶部右侧添加按钮（加群、扫一扫、加朋友等）
+        self.navigationItem.rightButtonAction(IMAssets.Chat_add.image) { () -> Void in
+            self.actionFloat.hide(!self.actionFloat.isHidden)
+        }
+        
+        //Init ActionFloatView
+        self.actionFloat = IMActionFloatView()
+        self.actionFloat.delegate = self
+        self.view.addSubview(self.actionFloat)
+        self.actionFloat.snp.makeConstraints { (make) -> Void in
+            make.edges.equalTo(UIEdgeInsets.init(top: 64, left: 0, bottom: 0, right: 0))
+        }
 
         // 注册自定义的Cell的实际类型
         sessionTabView.register(UINib(nibName: "IMChatViewCell", bundle: nil), forCellReuseIdentifier: "IMChatViewCell")
@@ -123,5 +137,22 @@ extension IMChatViewController {
         // 渲染一行
         cell!.setContent(sessionModel: list[indexPath.row])
         return cell!
+    }
+}
+
+// MARK: - @protocol ActionFloatViewDelegate
+extension IMChatViewController: ActionFloatViewDelegate {
+    func floatViewTapItemIndex(_ type: ActionFloatViewItemType) {
+        IMLog.info(item: "floatViewTapItemIndex:\(type)")
+        switch type {
+        case .groupChat:
+            break
+        case .addFriend:
+            break
+        case .scan:
+            break
+        case .payment:
+            break
+        }
     }
 }
