@@ -29,7 +29,7 @@ class IMChatViewController: UIViewController, UITableViewDelegate, UITableViewDa
         self.actionFloat.delegate = self
         self.view.addSubview(self.actionFloat)
         self.actionFloat.snp.makeConstraints { (make) -> Void in
-            make.edges.equalTo(UIEdgeInsets.init(top: 64, left: 0, bottom: 0, right: 0))
+            make.edges.equalTo(UIEdgeInsets.init(top: 85, left: 0, bottom: 0, right: 0))
         }
 
         // 注册自定义的Cell的实际类型

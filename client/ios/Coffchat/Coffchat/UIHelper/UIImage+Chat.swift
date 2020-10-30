@@ -18,6 +18,7 @@ extension UIImage {
         case Chat_add_scan = "chat_add_scan"
         case Chat_MessageRightTopBg = "chat_MessageRightTopBg"
         case Chat_add = "chat_add"
+        case Chat_icon_avatar = "icon_avatar"
         
         // 还可以这样写？
         var image: UIImage {
