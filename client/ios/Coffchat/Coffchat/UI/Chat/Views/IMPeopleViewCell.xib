@@ -19,38 +19,37 @@
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="tRC-hi-hCt">
                         <rect key="frame" x="40" y="8" width="48" height="48"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="48" id="3aW-yZ-dyg"/>
+                            <constraint firstAttribute="width" constant="48" id="dUD-Kl-KOr"/>
                         </constraints>
                     </imageView>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wjo-CO-ysn" customClass="BEMCheckBox">
                         <rect key="frame" x="8" y="20" width="24" height="24"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="24" id="KOD-YA-hKf"/>
+                        </constraints>
                         <connections>
                             <action selector="cbValueChanged:" destination="KGk-i7-Jjw" eventType="valueChanged" id="upW-Ja-WJc"/>
                         </connections>
                     </view>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Znq-qg-igZ">
                         <rect key="frame" x="96" y="22" width="216" height="21"/>
-                        <constraints>
-                            <constraint firstAttribute="width" constant="216" id="LeF-bU-LYR"/>
-                        </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="wjo-CO-ysn" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="20" id="8TO-vz-EWA"/>
-                    <constraint firstItem="wjo-CO-ysn" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="8" id="MUt-27-6B8"/>
-                    <constraint firstAttribute="bottom" secondItem="Znq-qg-igZ" secondAttribute="bottom" constant="22" id="WIQ-vH-oto"/>
-                    <constraint firstItem="Znq-qg-igZ" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="22" id="Y3D-p9-6Pm"/>
-                    <constraint firstItem="tRC-hi-hCt" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="8" id="ZWb-V8-LPK"/>
-                    <constraint firstAttribute="bottom" secondItem="tRC-hi-hCt" secondAttribute="bottom" constant="9" id="e0n-hM-xE4"/>
-                    <constraint firstItem="tRC-hi-hCt" firstAttribute="leading" secondItem="wjo-CO-ysn" secondAttribute="trailing" constant="8" id="fil-4e-Y7V"/>
-                    <constraint firstItem="Znq-qg-igZ" firstAttribute="leading" secondItem="tRC-hi-hCt" secondAttribute="trailing" constant="8" id="hPb-hX-wB1"/>
-                    <constraint firstAttribute="bottom" secondItem="wjo-CO-ysn" secondAttribute="bottom" constant="21" id="nlB-M8-wpD"/>
-                    <constraint firstItem="tRC-hi-hCt" firstAttribute="leading" secondItem="wjo-CO-ysn" secondAttribute="trailing" constant="8" id="tca-dl-T83"/>
-                    <constraint firstAttribute="trailing" secondItem="Znq-qg-igZ" secondAttribute="trailing" constant="8" id="xb8-kd-WYd"/>
+                    <constraint firstItem="tRC-hi-hCt" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="8" id="0Ml-0a-Lm4"/>
+                    <constraint firstAttribute="bottom" secondItem="tRC-hi-hCt" secondAttribute="bottom" constant="9" id="0s2-G5-7dF"/>
+                    <constraint firstItem="Znq-qg-igZ" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="22" id="1MP-FN-Q02"/>
+                    <constraint firstItem="Znq-qg-igZ" firstAttribute="leading" secondItem="tRC-hi-hCt" secondAttribute="trailing" constant="8" id="6sZ-gu-ZMl"/>
+                    <constraint firstItem="wjo-CO-ysn" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="20" id="G6f-DO-10v"/>
+                    <constraint firstItem="wjo-CO-ysn" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="8" id="bkQ-gg-zfX"/>
+                    <constraint firstAttribute="bottom" secondItem="Znq-qg-igZ" secondAttribute="bottom" constant="22" id="cd0-MY-BPE"/>
+                    <constraint firstItem="tRC-hi-hCt" firstAttribute="leading" secondItem="wjo-CO-ysn" secondAttribute="trailing" constant="8" id="nSQ-ek-G7A"/>
+                    <constraint firstAttribute="bottom" secondItem="wjo-CO-ysn" secondAttribute="bottom" constant="21" id="nxt-XJ-wGX"/>
+                    <constraint firstAttribute="trailing" secondItem="Znq-qg-igZ" secondAttribute="trailing" constant="8" id="zSA-lz-ld0"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>

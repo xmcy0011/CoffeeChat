@@ -84,6 +84,8 @@
 		F4FF36E7254BF04A00C11FB5 /* CIM.Friend.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FF36E6254BF04A00C11FB5 /* CIM.Friend.pb.swift */; };
 		F4FF36EA254BF8DC00C11FB5 /* IMFriendViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FF36E8254BF8DC00C11FB5 /* IMFriendViewCell.swift */; };
 		F4FF36EB254BF8DC00C11FB5 /* IMFriendViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4FF36E9254BF8DC00C11FB5 /* IMFriendViewCell.xib */; };
+		F4FF36F2254C14F100C11FB5 /* IMCreateGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FF36F0254C14F100C11FB5 /* IMCreateGroupViewController.swift */; };
+		F4FF36F3254C14F100C11FB5 /* IMCreateGroupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4FF36F1254C14F100C11FB5 /* IMCreateGroupViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -180,6 +182,8 @@
 		F4FF36E6254BF04A00C11FB5 /* CIM.Friend.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CIM.Friend.pb.swift; sourceTree = "<group>"; };
 		F4FF36E8254BF8DC00C11FB5 /* IMFriendViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMFriendViewCell.swift; sourceTree = "<group>"; };
 		F4FF36E9254BF8DC00C11FB5 /* IMFriendViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IMFriendViewCell.xib; sourceTree = "<group>"; };
+		F4FF36F0254C14F100C11FB5 /* IMCreateGroupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMCreateGroupViewController.swift; sourceTree = "<group>"; };
+		F4FF36F1254C14F100C11FB5 /* IMCreateGroupViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IMCreateGroupViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -462,6 +466,8 @@
 				F48D2EE5254AC44C00377886 /* IMActionFloatView.swift */,
 				F4FF36DE254BC29B00C11FB5 /* IMPeopleViewCell.swift */,
 				F4FF36DF254BC29B00C11FB5 /* IMPeopleViewCell.xib */,
+				F4FF36F0254C14F100C11FB5 /* IMCreateGroupViewController.swift */,
+				F4FF36F1254C14F100C11FB5 /* IMCreateGroupViewController.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -572,6 +578,7 @@
 				F47BACDA2445C3F800FD63D1 /* ImageTextTableViewCell.xib in Resources */,
 				F4FF36EB254BF8DC00C11FB5 /* IMFriendViewCell.xib in Resources */,
 				F41CB8AA242882FE007570BF /* Main.storyboard in Resources */,
+				F4FF36F3254C14F100C11FB5 /* IMCreateGroupViewController.xib in Resources */,
 				F4EBFABD242F396900AF26B2 /* IMChatContentViewController.xib in Resources */,
 				F4EBFAC6242F4CE600AF26B2 /* IMMessageTextCell.xib in Resources */,
 				F4C510B02429AA20000BCDEA /* IMSocialViewController.xib in Resources */,
@@ -676,6 +683,7 @@
 				F4C05A10241391E000D1E293 /* AppDelegate.swift in Sources */,
 				F4C05A12241391E000D1E293 /* SceneDelegate.swift in Sources */,
 				F41AE38B24174224009B0E0C /* LoginViewController.swift in Sources */,
+				F4FF36F2254C14F100C11FB5 /* IMCreateGroupViewController.swift in Sources */,
 				F40A2CDE2419F0820090C230 /* IMHeader.swift in Sources */,
 				F48654182426721400D39970 /* IMRecentSession.swift in Sources */,
 				F41CB8A0242866E4007570BF /* ViewController.swift in Sources */,

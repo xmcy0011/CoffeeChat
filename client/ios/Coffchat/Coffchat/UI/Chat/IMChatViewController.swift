@@ -146,6 +146,11 @@ extension IMChatViewController: ActionFloatViewDelegate {
         IMLog.info(item: "floatViewTapItemIndex:\(type)")
         switch type {
         case .groupChat:
+            let view = IMCreateGroupViewController()
+            // 隐藏UITabBarController下面的按钮（好奇怪的写法，怎么不是在self上呢？）
+            view.hidesBottomBarWhenPushed = true
+            // 跳转聊天页面
+            navigationController?.pushViewController(view, animated: true)
             break
         case .addFriend:
             break

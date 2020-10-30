@@ -12,17 +12,31 @@ import UIKit
 class PeopleUserModel {
     var check: Bool?
     var userInfo: CIM_Def_CIMUserInfo
+    var nameFirstCharacter: Character! // 昵称首字母
 
     init(user: CIM_Def_CIMUserInfo) {
         userInfo = user
+
+        // 汉字转成拼音
+        let str = NSMutableString(string: user.nickName) as CFMutableString
+        CFStringTransform(str, nil, kCFStringTransformToLatin, false)
+
+        // 拼音去掉拼音的音标
+        CFStringTransform(str, nil, kCFStringTransformStripDiacritics, false)
+
+        // 大写字母
+        var s: String = String(str)
+        s = s.capitalized // 大写首字母
+        nameFirstCharacter = s[s.startIndex]
     }
 }
 
+/// 创建群组中寻找成员的cell
 class IMPeopleViewCell: UITableViewCell {
     @IBOutlet var nickname: UILabel!
-    @IBOutlet weak var header: UIImageView!
-    @IBOutlet weak var cb: BEMCheckBox!
-    
+    @IBOutlet var header: UIImageView!
+    @IBOutlet var cb: BEMCheckBox!
+
     var userModel: PeopleUserModel?
 
     override func awakeFromNib() {
