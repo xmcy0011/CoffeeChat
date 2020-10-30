@@ -9,6 +9,7 @@ import "CIM.List.proto";
 import "CIM.Login.proto";
 import "CIM.Message.proto";
 import "CIM.Group.proto";
+import "CIM.Friend.proto";
 import "Grpc.Def.proto";
 
 // logic的grpc接口定义
@@ -35,6 +36,8 @@ service Logic {
     rpc CreateUser(CreateUserAccountInfoReq) returns(CreateUserAccountInfoRsp){}
     // 查询用户昵称
     rpc QueryUserNickName(QueryUserNickNameReq) returns(QueryUserNickNameRsp){}
+    // 查询随机推荐的系统已注册用户列表
+    rpc QuerySystemUserRandomList(CIM.Friend.CIMFriendQueryUserListReq) returns(CIM.Friend.CIMFriendQueryUserListRsp){}
 
     // 创建群
     rpc CreateGroup(CIM.Group.CIMGroupCreateReq) returns(CIM.Group.CIMGroupCreateRsp){}

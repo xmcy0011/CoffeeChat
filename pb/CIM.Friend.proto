@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package CIM.Friend;
+import "CIM.Def.proto";
+option java_package = "com.coffeechat.protobuf";
+option go_package = ".;cim";
+option optimize_for = LITE_RUNTIME;
+
+// 查询系统推荐的50个以内用户
+message CIMFriendQueryUserListReq {
+    // cmd id: 		0x601
+  uint64 user_id = 1;
+}
+
+message CIMFriendQueryUserListRsp {
+      // cmd id: 		0x602
+  uint64 user_id = 1;
+  repeated CIM.Def.CIMUserInfo user_info_list = 2;
+}

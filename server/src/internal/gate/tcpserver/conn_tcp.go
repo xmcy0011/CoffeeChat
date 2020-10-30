@@ -151,6 +151,8 @@ func (tcp *TcpConn) OnRead(header *cim.ImHeader, buff []byte) {
 		tcp.onHandleGroupInviteMemberReq(header, buff)
 	case uint16(cim.CIMCmdID_kCIM_CID_GROUP_KICK_OUT_MEMBER_REQ):
 		tcp.onHandleGroupKickOutMemberReq(header, buff)
+	case uint16(cim.CIMCmdID_kCIM_CID_FRIEND_QUERY_USER_LIST_REQ):
+		tcp.onHandleFriendQueryUserListReq(header, buff)
 	default:
 		logger.Sugar.Errorf("unknown command_id=%d", header.CommandId)
 		break

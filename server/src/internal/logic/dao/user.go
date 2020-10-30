@@ -1,6 +1,7 @@
 package dao
 
 import (
+	"coffeechat/api/cim"
 	"coffeechat/internal/logic/model"
 	"coffeechat/pkg/db"
 	"coffeechat/pkg/logger"
@@ -10,6 +11,7 @@ import (
 )
 
 const kUserTableName = "im_user"
+const kUserRandomListLimit = 50
 
 type User struct {
 }
@@ -120,4 +122,38 @@ func (u *User) Update(userId uint64, userNickName string) {
 	} else {
 		logger.Sugar.Debugf("update user_nick_name success userId=%d", userId)
 	}
+}
+
+// 查询系统用户列表，按照创建时间取最新的50个
+func (u *User) ListRandom() ([]*cim.CIMUserInfo, error) {
+	session := db.DefaultManager.GetDBSlave()
+	if session == nil {
+		logger.Sugar.Error("no db connect for slave")
+		return nil, unConnectError
+	}
+
+	sql := fmt.Sprintf("select user_id,user_nick_name from %s order by created desc limit %d",
+		kUserTableName, kUserRandomListLimit)
+	rows, err := session.Query(sql)
+	if err != nil {
+		logger.Sugar.Error(err.Error())
+		return nil, err
+	}
+
+	userList := make([]*cim.CIMUserInfo, 0)
+
+	for {
+		if !rows.Next() {
+			break
+		}
+		user := &cim.CIMUserInfo{}
+		err := rows.Scan(&user.UserId, &user.NickName)
+		if err != nil {
+			logger.Sugar.Info(err.Error())
+		} else {
+			userList = append(userList, user)
+		}
+	}
+
+	return userList, nil
 }

@@ -54,6 +54,9 @@ enum CIMCmdID {
   kCIM_CID_GROUP_KICK_OUT_MEMBER_REQ = 0x513; // 踢人
   kCIM_CID_GROUP_KICK_OUT_MEMBER_RSP = 0x514;
   kCIM_CID_GROUP_MEMBER_CHANGED_NOTIFY = 0x515; // 群成员变更通知
+
+  kCIM_CID_FRIEND_QUERY_USER_LIST_REQ = 0x601; // 查询用户列表（目前没有实现好友机制，所以便于测试，随机返回系统中注册的50个以内用户）
+  kCIM_CID_FRIEND_QUERY_USER_LIST_RSP = 0x602;
 }
 
 // 内部消息：服务器 <-> 服务器消息定义
@@ -246,8 +249,11 @@ enum CIMResCode {
 // 用户信息
 message CIMUserInfo {
   uint64 user_id = 1;
-  string nick_name = 2; // 用户昵称
+  string nick_name = 2;         // 用户昵称
+  string nick_name_spell = 3;  // 昵称拼音
   /*optional*/
+  string phone = 9;        // 手机号
+  string avatar_url = 10;  // 头像URL
   string attach_info = 11; // 自定义字段
 }
 

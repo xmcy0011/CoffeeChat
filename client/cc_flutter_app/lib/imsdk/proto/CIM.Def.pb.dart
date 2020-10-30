@@ -18,6 +18,9 @@ class CIMUserInfo extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('CIMUserInfo', package: const $pb.PackageName('CIM.Def'), createEmptyInstance: create)
     ..a<$fixnum.Int64>(1, 'userId', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
     ..aOS(2, 'nickName')
+    ..aOS(3, 'nickNameSpell')
+    ..aOS(9, 'phone')
+    ..aOS(10, 'avatarUrl')
     ..aOS(11, 'attachInfo')
     ..hasRequiredFields = false
   ;
@@ -55,12 +58,39 @@ class CIMUserInfo extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearNickName() => clearField(2);
 
+  @$pb.TagNumber(3)
+  $core.String get nickNameSpell => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set nickNameSpell($core.String v) { $_setString(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasNickNameSpell() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearNickNameSpell() => clearField(3);
+
+  @$pb.TagNumber(9)
+  $core.String get phone => $_getSZ(3);
+  @$pb.TagNumber(9)
+  set phone($core.String v) { $_setString(3, v); }
+  @$pb.TagNumber(9)
+  $core.bool hasPhone() => $_has(3);
+  @$pb.TagNumber(9)
+  void clearPhone() => clearField(9);
+
+  @$pb.TagNumber(10)
+  $core.String get avatarUrl => $_getSZ(4);
+  @$pb.TagNumber(10)
+  set avatarUrl($core.String v) { $_setString(4, v); }
+  @$pb.TagNumber(10)
+  $core.bool hasAvatarUrl() => $_has(4);
+  @$pb.TagNumber(10)
+  void clearAvatarUrl() => clearField(10);
+
   @$pb.TagNumber(11)
-  $core.String get attachInfo => $_getSZ(2);
+  $core.String get attachInfo => $_getSZ(5);
   @$pb.TagNumber(11)
-  set attachInfo($core.String v) { $_setString(2, v); }
+  set attachInfo($core.String v) { $_setString(5, v); }
   @$pb.TagNumber(11)
-  $core.bool hasAttachInfo() => $_has(2);
+  $core.bool hasAttachInfo() => $_has(5);
   @$pb.TagNumber(11)
   void clearAttachInfo() => clearField(11);
 }

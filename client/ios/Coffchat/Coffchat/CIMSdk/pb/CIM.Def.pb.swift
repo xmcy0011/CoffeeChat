@@ -114,6 +114,10 @@ enum CIM_Def_CIMCmdID: SwiftProtobuf.Enum {
 
   /// 群成员变更通知
   case kCimCidGroupMemberChangedNotify // = 1301
+
+  /// 查询用户列表（目前没有实现好友机制，所以便于测试，随机返回系统中注册的50个以内用户）
+  case kCimCidFriendQueryUserListReq // = 1537
+  case kCimCidFriendQueryUserListRsp // = 1538
   case UNRECOGNIZED(Int)
 
   init() {
@@ -162,6 +166,8 @@ enum CIM_Def_CIMCmdID: SwiftProtobuf.Enum {
     case 1299: self = .kCimCidGroupKickOutMemberReq
     case 1300: self = .kCimCidGroupKickOutMemberRsp
     case 1301: self = .kCimCidGroupMemberChangedNotify
+    case 1537: self = .kCimCidFriendQueryUserListReq
+    case 1538: self = .kCimCidFriendQueryUserListRsp
     default: self = .UNRECOGNIZED(rawValue)
     }
   }
@@ -208,6 +214,8 @@ enum CIM_Def_CIMCmdID: SwiftProtobuf.Enum {
     case .kCimCidGroupKickOutMemberReq: return 1299
     case .kCimCidGroupKickOutMemberRsp: return 1300
     case .kCimCidGroupMemberChangedNotify: return 1301
+    case .kCimCidFriendQueryUserListReq: return 1537
+    case .kCimCidFriendQueryUserListRsp: return 1538
     case .UNRECOGNIZED(let i): return i
     }
   }
@@ -259,6 +267,8 @@ extension CIM_Def_CIMCmdID: CaseIterable {
     .kCimCidGroupKickOutMemberReq,
     .kCimCidGroupKickOutMemberRsp,
     .kCimCidGroupMemberChangedNotify,
+    .kCimCidFriendQueryUserListReq,
+    .kCimCidFriendQueryUserListRsp,
   ]
 }
 
@@ -1036,7 +1046,16 @@ struct CIM_Def_CIMUserInfo {
   /// 用户昵称
   var nickName: String = String()
 
+  /// 昵称拼音
+  var nickNameSpell: String = String()
+
   ///optional
+  var phone: String = String()
+
+  /// 头像URL
+  var avatarURL: String = String()
+
+  /// 自定义字段
   var attachInfo: String = String()
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
@@ -1216,6 +1235,8 @@ extension CIM_Def_CIMCmdID: SwiftProtobuf._ProtoNameProviding {
     1299: .same(proto: "kCIM_CID_GROUP_KICK_OUT_MEMBER_REQ"),
     1300: .same(proto: "kCIM_CID_GROUP_KICK_OUT_MEMBER_RSP"),
     1301: .same(proto: "kCIM_CID_GROUP_MEMBER_CHANGED_NOTIFY"),
+    1537: .same(proto: "kCIM_CID_FRIEND_QUERY_USER_LIST_REQ"),
+    1538: .same(proto: "kCIM_CID_FRIEND_QUERY_USER_LIST_RSP"),
   ]
 }
 
@@ -1346,6 +1367,9 @@ extension CIM_Def_CIMUserInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "user_id"),
     2: .standard(proto: "nick_name"),
+    3: .standard(proto: "nick_name_spell"),
+    9: .same(proto: "phone"),
+    10: .standard(proto: "avatar_url"),
     11: .standard(proto: "attach_info"),
   ]
 
@@ -1354,6 +1378,9 @@ extension CIM_Def_CIMUserInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
       switch fieldNumber {
       case 1: try decoder.decodeSingularUInt64Field(value: &self.userID)
       case 2: try decoder.decodeSingularStringField(value: &self.nickName)
+      case 3: try decoder.decodeSingularStringField(value: &self.nickNameSpell)
+      case 9: try decoder.decodeSingularStringField(value: &self.phone)
+      case 10: try decoder.decodeSingularStringField(value: &self.avatarURL)
       case 11: try decoder.decodeSingularStringField(value: &self.attachInfo)
       default: break
       }
@@ -1367,6 +1394,15 @@ extension CIM_Def_CIMUserInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
     if !self.nickName.isEmpty {
       try visitor.visitSingularStringField(value: self.nickName, fieldNumber: 2)
     }
+    if !self.nickNameSpell.isEmpty {
+      try visitor.visitSingularStringField(value: self.nickNameSpell, fieldNumber: 3)
+    }
+    if !self.phone.isEmpty {
+      try visitor.visitSingularStringField(value: self.phone, fieldNumber: 9)
+    }
+    if !self.avatarURL.isEmpty {
+      try visitor.visitSingularStringField(value: self.avatarURL, fieldNumber: 10)
+    }
     if !self.attachInfo.isEmpty {
       try visitor.visitSingularStringField(value: self.attachInfo, fieldNumber: 11)
     }
@@ -1376,6 +1412,9 @@ extension CIM_Def_CIMUserInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
   static func ==(lhs: CIM_Def_CIMUserInfo, rhs: CIM_Def_CIMUserInfo) -> Bool {
     if lhs.userID != rhs.userID {return false}
     if lhs.nickName != rhs.nickName {return false}
+    if lhs.nickNameSpell != rhs.nickNameSpell {return false}
+    if lhs.phone != rhs.phone {return false}
+    if lhs.avatarURL != rhs.avatarURL {return false}
     if lhs.attachInfo != rhs.attachInfo {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
