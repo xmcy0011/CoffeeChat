@@ -61,7 +61,7 @@ func (s *LogicServer) QueryUserNickName(ctx context.Context, in *cim.QueryUserNi
 // 查询系统中已注册用户的列表（上限50）
 func (s *LogicServer) QuerySystemUserRandomList(ctx context.Context, in *cim.CIMFriendQueryUserListReq) (*cim.CIMFriendQueryUserListRsp, error) {
 	rsp := &cim.CIMFriendQueryUserListRsp{}
-	users, err := dao.DefaultUser.ListRandom()
+	users, err := dao.DefaultUser.ListRandom(in.UserId)
 	if err != nil {
 		logger.Sugar.Warnf("QuerySystemUserRandomList failed:%s,userId=%d", err.Error(), in.UserId)
 		return nil, err

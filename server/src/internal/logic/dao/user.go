@@ -125,15 +125,15 @@ func (u *User) Update(userId uint64, userNickName string) {
 }
 
 // 查询系统用户列表，按照创建时间取最新的50个
-func (u *User) ListRandom() ([]*cim.CIMUserInfo, error) {
+func (u *User) ListRandom(userId uint64) ([]*cim.CIMUserInfo, error) {
 	session := db.DefaultManager.GetDBSlave()
 	if session == nil {
 		logger.Sugar.Error("no db connect for slave")
 		return nil, unConnectError
 	}
 
-	sql := fmt.Sprintf("select user_id,user_nick_name from %s order by created desc limit %d",
-		kUserTableName, kUserRandomListLimit)
+	sql := fmt.Sprintf("select user_id,user_nick_name from %s where user_id!=%d order by created desc limit %d",
+		kUserTableName, userId, kUserRandomListLimit)
 	rows, err := session.Query(sql)
 	if err != nil {
 		logger.Sugar.Error(err.Error())
