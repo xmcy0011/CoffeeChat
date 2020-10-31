@@ -41,6 +41,8 @@ class IMPeopleViewCell: UITableViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
+
+        cb.onAnimationType = .fade
         // Initialization code
     }
 
@@ -58,6 +60,11 @@ class IMPeopleViewCell: UITableViewCell {
 
         // 头像
         // headImage.image = UIImage(named: "icon_avatar")
+    }
+
+    func on(on: Bool) {
+        cb.on = on
+        userModel?.check = on
     }
 
     @IBAction func cbValueChanged(_ sender: Any) {

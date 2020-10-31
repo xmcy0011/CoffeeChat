@@ -187,12 +187,16 @@ class IMChatManager: IMClientDelegateData {
 
 extension IMChatManager {
     // 处理数据
-    func onHandleData(_ header: IMHeader, _ data: Data) {
+    func onHandleData(_ header: IMHeader, _ data: Data) -> Bool{
         if header.commandId == CIM_Def_CIMCmdID.kCimCidMsgDataAck.rawValue {
             _onHandleMsgAck(data: data)
+            return false
         } else if header.commandId == CIM_Def_CIMCmdID.kCimCidMsgData.rawValue {
             _onHandleMsgData(data: data)
+            // msg broadcast to other modules
+            return false
         }
+        return false
     }
 
     // 消息发送结果

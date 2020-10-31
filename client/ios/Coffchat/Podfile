@@ -19,4 +19,5 @@ target 'Coffchat' do
   pod 'RxSwift', '~> 5'      # 一个组合异步和事件驱动编程的库
   pod 'RxCocoa', '~> 5'      # iOS响应式编程中的两个主流框架（RxSwift+RxCocoa）
   pod 'BEMCheckBox'          # 高雅的iOS复选框
+  pod 'Chrysan'              # 菊花组件
 end

@@ -36,7 +36,7 @@ class IMConversationManager: IMClientDelegateData {
 
     /// 所有的会话列表
     public var allRecentSessions: [String: IMRecentSession] = [:]
-    
+
     init() {
         delegateDic = [:]
         totalUnreadCount = 0
@@ -126,7 +126,7 @@ class IMConversationManager: IMClientDelegateData {
     func unregister(key: String) {
         delegateDic.removeValue(forKey: key)
     }
-    
+
     func unregisterAll() {
         delegateDic.removeAll()
     }
@@ -135,16 +135,21 @@ class IMConversationManager: IMClientDelegateData {
 // MARK: IMClientDelegateData
 
 extension IMConversationManager {
-    func onHandleData(_ header: IMHeader, _ data: Data) {
+    func onHandleData(_ header: IMHeader, _ data: Data) -> Bool {
         if Int(header.commandId) == CIM_Def_CIMCmdID.kCimCidListRecentContactSessionRsp.rawValue {
             _onHandleRecentSessonList(data: data)
+            return true
         } else if Int(header.commandId) == CIM_Def_CIMCmdID.kCimCidListMsgRsp.rawValue {
             _onHandleMsgList(data: data)
+            return true
         } else if Int(header.commandId) == CIM_Def_CIMCmdID.kCimCidMsgData.rawValue {
             _onHandleMsgData(data: data)
+            return false
         } else if Int(header.commandId) == CIM_Def_CIMCmdID.kCimCidMsgDataAck.rawValue {
             _onHandleMsgDataAck(data: data)
+            return false
         }
+        return false
     }
 
     // 会话列表响应
@@ -232,11 +237,11 @@ extension IMConversationManager {
             recentSession!.latestMsg = msg
             recentSession!.updatedTime = UInt32(NSDate().timeIntervalSince1970)
             // 不是自己发送的消息，才更新未读计数
-            if msg.fromUserId != IMManager.singleton.loginManager.userId{
+            if msg.fromUserId != IMManager.singleton.loginManager.userId {
                 recentSession!.unreadCnt += 1
                 totalUnreadCount += 1
             }
-            
+
             // 回调，更新UI界面
             for item in delegateDic {
                 item.value.didUpdateRecentSession(session: recentSession!, totalUnreadCount: Int32(totalUnreadCount))

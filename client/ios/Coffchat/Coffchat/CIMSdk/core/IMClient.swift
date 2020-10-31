@@ -30,7 +30,7 @@ protocol IMClientDelegateData {
     /// - Parameters:
     ///   - header: 协议头
     ///   - data: 数据体（裸数据）
-    func onHandleData(_ header: IMHeader, _ data: Data)
+    func onHandleData(_ header: IMHeader, _ data: Data) -> Bool
 }
 
 let kClientVersion = "0.0.1"
@@ -282,7 +282,9 @@ extension IMClient {
             
             // 回调 FIXME 非线程安全
             for item in delegateDicData {
-                item.value.onHandleData(header, bodyData)
+                if item.value.onHandleData(header, bodyData) {
+                    break
+                }
             }
             
             return Int(header.length)

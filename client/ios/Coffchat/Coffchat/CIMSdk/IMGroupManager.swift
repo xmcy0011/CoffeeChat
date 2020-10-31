@@ -164,24 +164,33 @@ class IMGroupManager: IMClientDelegateData {
 
 extension IMGroupManager {
     // 处理数据
-    func onHandleData(_ header: IMHeader, _ data: Data) {
+    func onHandleData(_ header: IMHeader, _ data: Data) -> Bool{
         if header.commandId == CIM_Def_CIMCmdID.kCimCidGroupCreateDefaultRsp.rawValue {
             _onHandleGroupCreateRsp(data: data)
+            return true
         } else if header.commandId == CIM_Def_CIMCmdID.kCimCidGroupDisbingdingRsp.rawValue {
             _onHandleGroupDisbindingRsp(data: data)
+            return true
         } else if header.commandId == CIM_Def_CIMCmdID.kCimCidGroupExitRsp.rawValue {
             _onHandleGroupExitRsp(data: data)
+            return true
         } else if header.commandId == CIM_Def_CIMCmdID.kCimCidGroupListRsp.rawValue {
             _onHandleGroupListRsp(data: data)
+            return true
         } else if header.commandId == CIM_Def_CIMCmdID.kCimCidGroupInfoRsp.rawValue {
             _onHandleGroupInfoRsp(data: data)
+            return true
         } else if header.commandId == CIM_Def_CIMCmdID.kCimCidGroupInviteMemberRsp.rawValue {
             _onHandleGroupMemberInviteRsp(data: data)
+            return true
         } else if header.commandId == CIM_Def_CIMCmdID.kCimCidGroupKickOutMemberRsp.rawValue {
             _onHandleGroupMemberKickoutRsp(data: data)
+            return true
         } else if header.commandId == CIM_Def_CIMCmdID.kCimCidGroupMemberChangedNotify.rawValue{
             _onHandleMemberChangedNotify(data: data)
+            return true
         }
+        return false
     }
     
     // MARK: handle

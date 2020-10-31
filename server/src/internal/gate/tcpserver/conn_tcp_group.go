@@ -18,7 +18,7 @@ func (tcp *TcpConn) onHandleCreateGroupReq(header *cim.ImHeader, buff []byte) {
 		return
 	}
 
-	logger.Sugar.Info("onHandleCreateGroup group_name=%s,member_id_list_len=%d", req.GroupName, len(req.MemberIdList))
+	logger.Sugar.Infof("onHandleCreateGroup group_name=%s,member_id_list_len=%d", req.GroupName, len(req.MemberIdList))
 
 	conn := GetMessageConn()
 	ctx, cancelFun := context.WithTimeout(context.Background(), time.Second*kBusinessTimeOut)
@@ -28,7 +28,7 @@ func (tcp *TcpConn) onHandleCreateGroupReq(header *cim.ImHeader, buff []byte) {
 	if err != nil {
 		logger.Sugar.Warnf("onHandleCreateGroup CreateGroup(gRPC) err:", err.Error(), "user_id:", req.UserId)
 	} else {
-		_, err = tcp.Send(header.SeqNum, uint16(cim.CIMCmdID_kCIM_CID_GROUP_CREATE_DEFAULT_REQ), rsp)
+		_, err = tcp.Send(header.SeqNum, uint16(cim.CIMCmdID_kCIM_CID_GROUP_CREATE_DEFAULT_RSP), rsp)
 		logger.Sugar.Infof("onHandleCreateGroup CreateGroup(gRPC) res,user_id:%d,result_code:%d,"+
 			"group_id=%d,group_name=%s,member_id_list_len=%d",
 			rsp.UserId, rsp.ResultCode, rsp.GroupInfo.GroupId, rsp.GroupInfo.GroupName, len(rsp.MemberIdList))

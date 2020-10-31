@@ -192,12 +192,15 @@ extension IMLoginManager {
 // MARK: IMClientDelegateData
 
 extension IMLoginManager {
-    func onHandleData(_ header: IMHeader, _ data: Data) {
+    func onHandleData(_ header: IMHeader, _ data: Data) -> Bool {
         if header.commandId == CIM_Def_CIMCmdID.kCimCidLoginHeartbeat.rawValue {
             IMLog.debug(item: "recv hearbeat")
+            return true
         } else if header.commandId == CIM_Def_CIMCmdID.kCimCidLoginAuthTokenRsp.rawValue {
             _onHandleAuthRes(header: header, data: data)
+            return true
         }
+        return false
     }
     
     // auth response

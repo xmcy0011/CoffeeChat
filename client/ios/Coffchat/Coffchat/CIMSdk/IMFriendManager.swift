@@ -33,10 +33,12 @@ class IMFriendManager {
 
 extension IMFriendManager: IMClientDelegateData {
     // 处理数据
-    func onHandleData(_ header: IMHeader, _ data: Data) {
+    func onHandleData(_ header: IMHeader, _ data: Data) -> Bool {
         if header.commandId == CIM_Def_CIMCmdID.kCimCidFriendQueryUserListRsp.rawValue {
             _onHandleQueryUserListRsp(data: data)
+            return true
         }
+        return false
     }
     
     func _onHandleQueryUserListRsp(data: Data) {

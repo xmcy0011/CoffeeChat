@@ -10,11 +10,15 @@ import (
 
 // 创建群
 func (s *LogicServer) CreateGroup(ctx context.Context, in *cim.CIMGroupCreateReq) (*cim.CIMGroupCreateRsp, error) {
-	logger.Sugar.Infof("CreateGroup userId=%d,groupName=%s", in.UserId, in.GroupName)
+	logger.Sugar.Infof("CreateGroup userId=%d,groupName=%s,memberIdListLen=%d", in.UserId, in.GroupName, len(in.MemberIdList))
 
 	rsp := &cim.CIMGroupCreateRsp{}
 	rsp.UserId = in.UserId
 	rsp.MemberIdList = in.MemberIdList
+
+	if in.GroupName == ""{
+		in.GroupName = "未命名群"
+	}
 
 	// create group
 	info, err := dao.DefaultGroup.Add(in.GroupName, in.UserId)
