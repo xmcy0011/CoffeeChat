@@ -78,7 +78,7 @@ func tcpConnRead(tcpConn *TcpConn) {
 
 			// 有效数据=len-HeaderLen，但是这里需要偏移HeaderLen刚好抵消
 			dataLen := header.Length
-			if dataLen > kBufferMaxLen || dataLen <= cim.IMHeaderLen {
+			if dataLen > kBufferMaxLen || dataLen < cim.IMHeaderLen {
 				logger.Sugar.Warnf("bad package,error:invalid len:%d", dataLen)
 				writeOffset = 0
 				break

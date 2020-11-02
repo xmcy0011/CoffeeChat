@@ -16,12 +16,12 @@ func (s *LogicServer) CreateGroup(ctx context.Context, in *cim.CIMGroupCreateReq
 	rsp.UserId = in.UserId
 	rsp.MemberIdList = in.MemberIdList
 
-	if in.GroupName == ""{
+	if in.GroupName == "" {
 		in.GroupName = "未命名群"
 	}
 
 	// create group
-	info, err := dao.DefaultGroup.Add(in.GroupName, in.UserId)
+	info, err := dao.DefaultGroup.Add(in.GroupName, in.UserId, len(rsp.MemberIdList))
 	if err != nil {
 		return nil, err
 	}

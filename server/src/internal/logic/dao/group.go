@@ -18,7 +18,7 @@ type Group struct {
 var DefaultGroup = &Group{}
 
 // 创建群
-func (g *Group) Add(groupName string, ownerId uint64) (*cim.CIMGroupInfo, error) {
+func (g *Group) Add(groupName string, ownerId uint64, userCount int) (*cim.CIMGroupInfo, error) {
 	session := db.DefaultManager.GetDbMaster()
 	if session == nil {
 		logger.Sugar.Error("no db connect for slave")
@@ -39,10 +39,12 @@ func (g *Group) Add(groupName string, ownerId uint64) (*cim.CIMGroupInfo, error)
 		MuteModel:     cim.CIMGroupMuteModel_kCIM_GROUP_MUTE_MODEL_DEFAULT,         // 不禁言
 	}
 
+	lastChatTime := time.Now().Unix()
 	sql := fmt.Sprintf("insert into %s(group_name,group_version,create_user_id,owner,announcement,intro,avatar,type,"+
-		"join_model,be_invite_model,mute_model,created,updated) values('%s',%d,%d,%d,'%s','%s','%s',%d,%d,%d,%d,%d,%d)",
+		"join_model,be_invite_model,mute_model,last_chat_time,user_cnt,created,updated) values('%s',%d,%d,%d,'%s','%s','%s',"+
+		"%d,%d,%d,%d,%d,%d,%d,%d)",
 		kGroupTableName, groupName, KGroupCurrentVersion, ownerId, ownerId, "", "", "",
-		info.GroupType, info.JoinModel, info.BeInviteModel, info.MuteModel, info.CreateTime, info.UpdateTime)
+		info.GroupType, info.JoinModel, info.BeInviteModel, info.MuteModel, lastChatTime, userCount, info.CreateTime, info.UpdateTime)
 	r, err := session.Exec(sql)
 	if err != nil {
 		logger.Sugar.Warnf(err.Error())
@@ -69,7 +71,7 @@ func (g *Group) Del(ownerId, groupId uint64) error {
 	}
 
 	// check ownerId and group
-	sql := fmt.Sprintf("select count(1) from %s where group_id=%d and owner=%d", kGroupTableName, groupId, ownerId)
+	sql := fmt.Sprintf("select count(1) from %s where group_id=%d and owner=%d and del_flag=0", kGroupTableName, groupId, ownerId)
 	r := session.QueryRow(sql)
 	count := 0
 	err := r.Scan(&count)
@@ -111,7 +113,7 @@ func (g *Group) GetOwnerId(groupId uint64) (uint64, error) {
 		return 0, unConnectError
 	}
 
-	sql := fmt.Sprintf("select owner from %s where group_id=%d", kGroupTableName, groupId)
+	sql := fmt.Sprintf("select owner from %s where group_id=%d and del_flag=0", kGroupTableName, groupId)
 	row := session.QueryRow(sql)
 
 	ownerId := uint64(0)

@@ -36,9 +36,13 @@ CREATE TABLE `im_group` (
   `join_model` tinyint(4) NOT NULL DEFAULT '0' COMMENT '入群模式 0：所有人可邀请别人加入，1：需要管理员验证，2：拒绝所有人 ',
   `be_invite_model` tinyint(4) NOT NULL DEFAULT '0' COMMENT '被邀请人同意方式 0：不需要同意，1：需要',
   `mute_model` tinyint(4) NOT NULL DEFAULT '0' COMMENT '禁言模式 0：不禁言，1：全体禁言',
+  `last_chat_time` int(11) NOT NULL COMMENT '最后聊天时间',
+  `user_cnt` int(11) NOT NULL COMMENT '群内成员数量',
   `created` int(11) NOT NULL COMMENT '创建时间戳',
   `updated` int(11) NOT NULL COMMENT '更新时间戳',
   `del_flag` tinyint(4) NOT NULL DEFAULT '0' COMMENT '删除 0：否，1：是',
+  KEY `ix_groupId_delFlag` (`group_id`,`del_flag`),
+  KEY `ix_groupId_owner_delFlag` (`group_id`,`owner`,`del_flag`),
   PRIMARY KEY (`group_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -49,6 +53,7 @@ CREATE TABLE `im_group_member` (
   `created` int(11) NOT NULL COMMENT '创建时间戳',
   `updated` int(11) NOT NULL COMMENT '更新时间戳',
   `del_flag` tinyint(4) NOT NULL DEFAULT '0' COMMENT '删除 0：否，1：是',
+  KEY `ix_groupId_userId` (`group_id`,`user_id`),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
