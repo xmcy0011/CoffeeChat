@@ -273,14 +273,14 @@ func (m *Message) getGroupMsgList(sessionId uint64, endMsgId uint64, limitCount 
 			"msg_res_code,msg_feature,msg_status,created,updated from %s"+
 			" force index(ix_fromId_toId_msgStatus_created)"+
 			" where group_id=%d"+
-			" order by msg_id desc,created limit %d",
+			" order by msg_id asc,created limit %d",
 			tableName, sessionId, limitCount)
 	} else {
 		sql = fmt.Sprintf("select msg_id,client_msg_id,from_id,to_id,group_id,msg_type,msg_content,"+
 			"msg_res_code,msg_feature,msg_status,created,updated from %s"+
 			" force index(ix_fromId_toId_msgStatus_created)"+
 			" where group_id=%d and msg_id<%d"+
-			" order by msg_id desc,created limit %d",
+			" order by msg_id asc,created limit %d",
 			tableName, sessionId, endMsgId, limitCount)
 	}
 
