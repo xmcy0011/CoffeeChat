@@ -64,29 +64,26 @@ func (s *LogicServer) CreateGroup(ctx context.Context, in *cim.CIMGroupCreateReq
 		GroupId:   strconv.FormatUint(info.GroupId, 10),
 		GroupName: info.GroupName,
 		Owner:     strconv.FormatUint(info.GroupOwnerId, 10),
+		OwnerNick: strconv.FormatUint(info.GroupOwnerId, 10),
 		Ids:       ids,
 		NickNames: ids,
 	}
-	buff, err := json.Marshal(notify)
+
+	msg, err := dao.DefaultMessage.CreateMsgSystemNotification(
+		cim.CIMMsgNotificationType_kCIM_MSG_NOTIFICATION_GROUP_CREATE,
+		notify, info.GroupId, cim.CIMSessionType_kCIM_SESSION_TYPE_GROUP)
 	if err != nil {
 		logger.Sugar.Warnf(err.Error())
 	} else {
-		msg, err := dao.DefaultMessage.CreateMsgSystemNotification(
-			cim.CIMMsgNotificationType_kCIM_MSG_NOTIFICATION_GROUP_CREATE,
-			string(buff), info.GroupId, cim.CIMSessionType_kCIM_SESSION_TYPE_GROUP)
+		_, err = dao.DefaultMessage.SaveMessage(info.GroupId, info.GroupId, msg.MsgId, msg.MsgType,
+			msg.SessionType, string(msg.MsgData), false)
 		if err != nil {
 			logger.Sugar.Warnf(err.Error())
 		} else {
-			_, err = dao.DefaultMessage.SaveMessage(info.GroupId, info.GroupId, msg.MsgId, msg.MsgType,
-				msg.SessionType, string(msg.MsgData), false)
-			if err != nil {
-				logger.Sugar.Warnf(err.Error())
-			} else {
-				// 记录群创建系统通知，交由gate广播给其他成员
-				buff, err := json.Marshal(msg)
-				if err == nil {
-					rsp.AttachNotificatinoMsg = buff
-				}
+			// 记录群创建系统通知，交由gate广播给其他成员
+			buff, err := json.Marshal(msg)
+			if err == nil {
+				rsp.AttachNotificatinoMsg = buff
 			}
 		}
 	}

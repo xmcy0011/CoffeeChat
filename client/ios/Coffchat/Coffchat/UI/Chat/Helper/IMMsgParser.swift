@@ -34,6 +34,67 @@ class IMMsgParser {
         return robotMsg
     }
     
+    /// 解析系统通知消息
+    /// - Parameters:
+    ///   - msgType: 消息类型
+    ///   - msgData: 消息内容
+    /// - Returns: 通知文本
+    class func resolveNotificationMsg(msgType: CIM_Def_CIMMsgType, msgData: String) -> String {
+        if msgType == .kCimMsgTypeNotifacation {
+            do {
+                let json = try JSON(data: msgData.data(using: .utf8)!)
+                let type = json["notificationType"].int
+                if type == CIM_Def_CIMMsgNotificationType.kCimMsgNotificationGroupCreate.rawValue {
+                    return _resolveNotifyCreateGroup(json: json)
+                } else {
+                    IMLog.error(item: "unknown type:\(String(describing: type))")
+                }
+            } catch {
+                IMLog.error(item: "parse json error:\(error),msgData:\(msgData)")
+            }
+        }
+        return "unknown"
+    }
+    
+    class func _resolveNotifyCreateGroup(json: JSON) -> String {
+        // {"groupId":"22","groupName":"测试群","owner":"1008","ownerNick":"1008",ids:["1001","1002"],nickNames:["1001","1002"]}
+        // "xxx"邀请[你和]"yyy、zzz"加入了群聊
+        var text = "unknown"
+        let ownerNick = json["data"]["ownerNick"].string
+        
+        if ownerNick == nil {
+            return text
+        }
+        
+        // 组装被邀请人
+        let jsonIds = json["data"]["ids"]
+        let jsonNames = json["data"]["nickNames"]
+        var isInviteMe = false
+        var ex = ""
+        for (index, subJSON): (String, JSON) in jsonIds {
+            let id = UInt64(subJSON.string!)
+            let indexInt = Int(index)
+            let name = jsonNames[indexInt!].string
+            
+            if name == nil {
+                continue
+            }
+            
+            if id == IMManager.singleton.userId {
+                isInviteMe = true
+            } else {
+                ex += "\(name!)、"
+            }
+        }
+        ex = String(ex.prefix(ex.count - 1))
+        
+        text = "\"\(ownerNick!)\"邀请\"\(String(describing: ex))\"加入了群聊"
+        if isInviteMe {
+            text = "\"\(ownerNick!)\"邀请你和\"\(String(describing: ex))\"加入了群聊"
+        }
+        return text
+    }
+    
     /// 会话更新时间
     /// "时分"；"昨天 时分"；上周 "星期几 时分"；其他，显示"年月日 时分"
     class func timeFormat(timestamp: UInt32) -> String {

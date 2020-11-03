@@ -53,6 +53,8 @@
 		F48D2EE6254AC44C00377886 /* IMActionFloatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48D2EE5254AC44C00377886 /* IMActionFloatView.swift */; };
 		F48D2EE8254AC51A00377886 /* UIImage+Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48D2EE7254AC51A00377886 /* UIImage+Chat.swift */; };
 		F48D2EEA254AF72600377886 /* UINavigationItem+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48D2EE9254AF72600377886 /* UINavigationItem+Extension.swift */; };
+		F48E118C25515A1500A2A300 /* IMMessageNotificationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48E118A25515A1500A2A300 /* IMMessageNotificationCell.swift */; };
+		F48E118D25515A1500A2A300 /* IMMessageNotificationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F48E118B25515A1500A2A300 /* IMMessageNotificationCell.xib */; };
 		F4B1EA83246C075000EED1FB /* IMMessageTimeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B1EA81246C075000EED1FB /* IMMessageTimeCell.swift */; };
 		F4B1EA84246C075000EED1FB /* IMMessageTimeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4B1EA82246C075000EED1FB /* IMMessageTimeCell.xib */; };
 		F4BC8F3D241F22A700ED38C9 /* IMHeaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BC8F3C241F22A700ED38C9 /* IMHeaderTests.swift */; };
@@ -146,6 +148,8 @@
 		F48D2EE5254AC44C00377886 /* IMActionFloatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMActionFloatView.swift; sourceTree = "<group>"; };
 		F48D2EE7254AC51A00377886 /* UIImage+Chat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Chat.swift"; sourceTree = "<group>"; };
 		F48D2EE9254AF72600377886 /* UINavigationItem+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationItem+Extension.swift"; sourceTree = "<group>"; };
+		F48E118A25515A1500A2A300 /* IMMessageNotificationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMMessageNotificationCell.swift; sourceTree = "<group>"; };
+		F48E118B25515A1500A2A300 /* IMMessageNotificationCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IMMessageNotificationCell.xib; sourceTree = "<group>"; };
 		F494202F2A92B14FDCFFABCD /* Pods_Coffchat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Coffchat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4B1EA81246C075000EED1FB /* IMMessageTimeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMMessageTimeCell.swift; sourceTree = "<group>"; };
 		F4B1EA82246C075000EED1FB /* IMMessageTimeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IMMessageTimeCell.xib; sourceTree = "<group>"; };
@@ -267,6 +271,8 @@
 				F4B1EA82246C075000EED1FB /* IMMessageTimeCell.xib */,
 				F4FD2EC0246D694500EE91B0 /* IMMessage+Extension.swift */,
 				F4D29BF82471464F00CE4ABC /* UIPaddingLabel.swift */,
+				F48E118A25515A1500A2A300 /* IMMessageNotificationCell.swift */,
+				F48E118B25515A1500A2A300 /* IMMessageNotificationCell.xib */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -586,6 +592,7 @@
 				F42C73EE242B295200B4F6CC /* IMChatViewCell.xib in Resources */,
 				F41CB8A7242881DC007570BF /* IMTabViewController.xib in Resources */,
 				F4B1EA84246C075000EED1FB /* IMMessageTimeCell.xib in Resources */,
+				F48E118D25515A1500A2A300 /* IMMessageNotificationCell.xib in Resources */,
 				F4C05A1C241391E100D1E293 /* Assets.xcassets in Resources */,
 				F4C510B42429AA2E000BCDEA /* IMMeViewController.xib in Resources */,
 				F41CB8A1242866E4007570BF /* ViewController.xib in Resources */,
@@ -706,6 +713,7 @@
 				F42F794A2427453800A50A0A /* IMLoginManager.swift in Sources */,
 				F4207771243459F20091DD86 /* IMUIResource.swift in Sources */,
 				F4FF36EA254BF8DC00C11FB5 /* IMFriendViewCell.swift in Sources */,
+				F48E118C25515A1500A2A300 /* IMMessageNotificationCell.swift in Sources */,
 				F4FF36E0254BC29B00C11FB5 /* IMPeopleViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -51,6 +51,7 @@ class IMChatContentViewController: UIViewController, UITableViewDataSource, UISc
         // 注册自定义Cell
         msgTabView.register(UINib(nibName: "IMMessageTextCell", bundle: nil), forCellReuseIdentifier: "IMMessageTextCell")
         msgTabView.register(UINib(nibName: "IMMessageTimeCell", bundle: nil), forCellReuseIdentifier: "IMMessageTimeCell")
+        msgTabView.register(UINib(nibName: "IMMessageNotificationCell", bundle: nil), forCellReuseIdentifier: "IMMessageNotificationCell")
         // 不显示分割线
         msgTabView.separatorStyle = .none
         msgTabView.backgroundColor = IMUIResource.chatBackground
@@ -250,15 +251,18 @@ extension IMChatContentViewController {
         return 1
     }
 
+    // 测试高度
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let msg = msgList[indexPath.row]
         var height = CGFloat(40)
         if msg.localMsgType! == .Server {
             var text = msg.msgData
-            if msg.msgType == .kCimMsgTypeRobot {
+            if msg.msgType == .kCimMsgTypeRobot { // 机器人
                 text = IMMsgParser.resolveRobotMsg(msgType: msg.msgType, msgData: msg.msgData)
+            } else if msg.msgType == .kCimMsgTypeNotifacation { // 系统通知
+                text = IMMsgParser.resolveNotificationMsg(msgType: msg.msgType, msgData: msg.msgData)
+                return IMMessageNotificationCell.getCellHeight(text: text)
             }
-
             // 动态计算文本高度
             height = IMMessageTextCell.getCellHeight(text: text)
         } else {
@@ -278,6 +282,10 @@ extension IMChatContentViewController {
             switch msg.msgType {
             case .kCimMsgTypeText, .kCimMsgTypeRobot:
                 let textCell: IMMessageTextCell = cim_dequeueReusableCell(aClass: IMMessageTextCell.self, tableView: tableView)
+                textCell.setContent(message: msg)
+                cell = textCell
+            case .kCimMsgTypeNotifacation:
+                let textCell: IMMessageNotificationCell = cim_dequeueReusableCell(aClass: IMMessageNotificationCell.self, tableView: tableView)
                 textCell.setContent(message: msg)
                 cell = textCell
             default:

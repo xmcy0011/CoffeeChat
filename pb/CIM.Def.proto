@@ -206,7 +206,7 @@ enum CIMMsgNotificationType {
   // 未知
   kCIM_MSG_NOTIFICATION_UNKNOWN = 0;
   // 创建群
-  // {"groupId":"22","groupName":"测试群","owner":"1008",ids:["1001","1002"],nickNames:["1001","1002"]}
+  // {"groupId":"22","groupName":"测试群","owner":"1008","ownerNick":"1008",ids:["1001","1002"],nickNames:["1001","1002"]}
   kCIM_MSG_NOTIFICATION_GROUP_CREATE = 1;
   // 群拉人（被拉）
   // {"groupId":"22","userId":“1008”,"ids":["1001", "1002"],nickNames:["1001","1002"]}

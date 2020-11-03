@@ -67,6 +67,8 @@ class IMChatViewCell: UITableViewCell {
         let msg = sessionModel.rectSession.latestMsg
         if msg.msgType == .kCimMsgTypeRobot {
             latestMsg.text = IMMsgParser.resolveRobotMsg(msgType: msg.msgType, msgData: msg.msgData)
+        } else if msg.msgType == .kCimMsgTypeNotifacation {
+            latestMsg.text = IMMsgParser.resolveNotificationMsg(msgType: msg.msgType, msgData: msg.msgData)
         } else {
             latestMsg.text = msg.msgData
         }

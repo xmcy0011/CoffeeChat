@@ -26,7 +26,7 @@ type Message struct {
 // 系统通知
 type CIMMsgNotification struct {
 	NotificationType int    `json:"notificationType"`
-	Data           string `json:"data"`
+	Data             interface{} `json:"data"`
 }
 
 // 创建群系统通知
@@ -34,6 +34,7 @@ type CIMMsgNotificationCreateGroup struct {
 	GroupId   string   `json:"groupId"`
 	GroupName string   `json:"groupName"`
 	Owner     string   `json:"owner"`
+	OwnerNick string   `json:"ownerNick"`
 	Ids       []string `json:"ids"`
 	NickNames []string `json:"nickNames"`
 }
@@ -473,12 +474,12 @@ func (m *Message) saveGroupMessage(fromId uint64, groupId uint64, clientMsgId st
 }
 
 // 创建消息
-func (m *Message) CreateMsgSystemNotification(notificationId cim.CIMMsgNotificationType, data string, to uint64,
+func (m *Message) CreateMsgSystemNotification(notificationId cim.CIMMsgNotificationType, data interface{}, to uint64,
 	sessionType cim.CIMSessionType) (*cim.CIMMsgData, error) {
 
 	content := CIMMsgNotification{
 		NotificationType: int(notificationId),
-		Data:           data,
+		Data:             data,
 	}
 
 	buff, err := json.Marshal(content)
