@@ -1,3 +1,17 @@
+0.创建群
+@startuml
+app1 -> gate: 1.create group:name+member_list
+gate -> logic: 2.grpc
+logic -> db: 3.insert group
+logic -> db: 4.add member
+logic -> db: 5.create all user session
+logic -> db: 6.insert group msg:xx邀请你加入群聊
+gate <- logic: 7.return
+app1 <- gate: 8.resp
+gate -> app2: 9.send groupTips:xx邀请你加入群聊
+gate -> app3: 10.send groupTips:xx邀请你加入群聊
+@enduml
+
 1.群消息
 @startuml
 app1 -> gate: 1.msg

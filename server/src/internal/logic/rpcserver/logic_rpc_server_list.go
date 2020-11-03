@@ -3,6 +3,7 @@ package rpcserver
 import (
 	"coffeechat/api/cim"
 	"coffeechat/internal/logic/dao"
+	"coffeechat/internal/logic/model"
 	"coffeechat/pkg/logger"
 	"context"
 	"errors"
@@ -42,26 +43,38 @@ func (s *LogicServer) RecentContactSession(ctx context.Context, in *cim.CIMRecen
 		}
 
 		// query latest msg
-		msgId, err := dao.DefaultMessage.GetMsgIdSingle(e.UserId, e.PeerId)
-		if err != nil {
-			logger.Sugar.Errorf("can't find msgId,userId:%d,peerId:%d,error:%s", e.UserId, e.PeerId, err.Error())
+		msgId := int64(0)
+		if info.SessionType == cim.CIMSessionType_kCIM_SESSION_TYPE_GROUP {
+			msgId, err = dao.DefaultMessage.GetMsgIdGroup(e.PeerId)
+			if err != nil {
+				logger.Sugar.Errorf("can't find groupMsgId,userId:%d,peerId:%d,error:%s", e.UserId, e.PeerId, err.Error())
+				continue
+			}
+		} else if info.SessionType == cim.CIMSessionType_kCIM_SESSION_TYPE_SINGLE {
+			msgId, err = dao.DefaultMessage.GetMsgIdSingle(e.UserId, e.PeerId)
+			if err != nil {
+				logger.Sugar.Errorf("can't find msgId,userId:%d,peerId:%d,error:%s", e.UserId, e.PeerId, err.Error())
+				continue
+			}
+		} else {
+			logger.Sugar.Errorf("invalid sessionType:%d,userId:%d,peerId:%d", info.SessionType, e.UserId, e.PeerId)
 			continue
 		}
 
 		// query msg detail
-		msgInfo, err := dao.DefaultMessage.GetMessage(uint64(msgId), e.UserId, e.PeerId)
-		if err != nil {
-			// 如果是单聊，还需找1遍
-			if e.SessionType == int(cim.CIMSessionType_kCIM_SESSION_TYPE_SINGLE) {
-				msgInfo, err = dao.DefaultMessage.GetMessage(uint64(msgId), e.PeerId, e.UserId)
-				if err != nil {
-					logger.Sugar.Errorf("query msg detail failed,userId:%d,peerId:%d,error:%s", e.UserId, e.PeerId, err.Error())
-					continue
-				}
-			} else {
-				logger.Sugar.Errorf("query msg detail failed,userId:%d,peerId:%d,error:%s", e.UserId, e.PeerId, err.Error())
-				continue
+		var msgInfo *model.MessageModel
+		if info.SessionType == cim.CIMSessionType_kCIM_SESSION_TYPE_SINGLE {
+			msgInfo, err = dao.DefaultMessage.GetMessageSingle(uint64(msgId), e.UserId, e.PeerId)
+			if err != nil {
+				// 如果是单聊，还需找1遍
+				msgInfo, err = dao.DefaultMessage.GetMessageSingle(uint64(msgId), e.PeerId, e.UserId)
 			}
+		} else {
+			msgInfo, err = dao.DefaultMessage.GetMessageGroup(uint64(msgId), e.PeerId)
+		}
+		if err != nil {
+			logger.Sugar.Warnf("query msg detail failed,userId:%d,peerId:%d,error:%s", e.UserId, e.PeerId, err.Error())
+			continue
 		}
 
 		// load unread count
@@ -113,19 +126,13 @@ func (s *LogicServer) RecentContactSession(ctx context.Context, in *cim.CIMRecen
 
 // 查询历史消息列表
 func (s *LogicServer) GetMsgList(ctx context.Context, in *cim.CIMGetMsgListReq) (*cim.CIMGetMsgListRsp, error) {
-	if in.SessionType != cim.CIMSessionType_kCIM_SESSION_TYPE_SINGLE {
-		logger.Sugar.Errorf("GetMsgList not support sessionType:%d,userId:%d,sessionId:%d",
-			in.SessionType, in.UserId, in.SessionId)
-		return nil, errors.New("not support")
-	}
-
 	if in.LimitCount >= kMaxGetMessageListLimitCount {
 		logger.Sugar.Errorf("GetMsgList limitCount:%d is invalid,userId:%d,sessionId:%d",
 			in.LimitCount, in.UserId, in.SessionId)
 		return nil, errors.New("limitCount is invalid")
 	}
 
-	msgList, err := dao.DefaultMessage.GetSingleMsgList(in.UserId, in.SessionId,
+	msgList, err := dao.DefaultMessage.GetMsgList(in.UserId, in.SessionId,
 		in.SessionType, in.EndMsgId, in.LimitCount)
 	if err != nil {
 		logger.Sugar.Error("GetMsgList error:", err.Error())

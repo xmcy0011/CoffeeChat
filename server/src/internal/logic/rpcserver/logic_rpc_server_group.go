@@ -5,7 +5,9 @@ import (
 	"coffeechat/internal/logic/dao"
 	"coffeechat/pkg/logger"
 	"context"
+	"encoding/json"
 	"errors"
+	"strconv"
 )
 
 // 创建群
@@ -36,13 +38,59 @@ func (s *LogicServer) CreateGroup(ctx context.Context, in *cim.CIMGroupCreateReq
 	}
 	rsp.MemberIdList = append(rsp.MemberIdList, rsp.UserId)
 
-	// add member
+	// add members
 	for _, v := range in.MemberIdList {
 		err := dao.DefaultGroupMember.Add(info.GroupId, v)
 		if err != nil {
 			logger.Sugar.Warn("CreateGroup add member err:", err.Error())
 		}
 	}
+
+	for _, v := range rsp.MemberIdList {
+		// create session
+		err = dao.DefaultSession.AddGroupSession(v, info.GroupId, cim.CIMSessionType_kCIM_SESSION_TYPE_GROUP,
+			cim.CIMSessionStatusType_kCIM_SESSION_STATUS_OK)
+		if err != nil {
+			logger.Sugar.Warnf(err.Error())
+		}
+	}
+
+	// send group msg notification
+	ids := make([]string, 0)
+	for _, v := range in.MemberIdList {
+		ids = append(ids, strconv.FormatUint(v, 10))
+	}
+	notify := dao.CIMMsgNotificationCreateGroup{
+		GroupId:   strconv.FormatUint(info.GroupId, 10),
+		GroupName: info.GroupName,
+		Owner:     strconv.FormatUint(info.GroupOwnerId, 10),
+		Ids:       ids,
+		NickNames: ids,
+	}
+	buff, err := json.Marshal(notify)
+	if err != nil {
+		logger.Sugar.Warnf(err.Error())
+	} else {
+		msg, err := dao.DefaultMessage.CreateMsgSystemNotification(
+			cim.CIMMsgNotificationType_kCIM_MSG_NOTIFICATION_GROUP_CREATE,
+			string(buff), info.GroupId, cim.CIMSessionType_kCIM_SESSION_TYPE_GROUP)
+		if err != nil {
+			logger.Sugar.Warnf(err.Error())
+		} else {
+			_, err = dao.DefaultMessage.SaveMessage(info.GroupId, info.GroupId, msg.MsgId, msg.MsgType,
+				msg.SessionType, string(msg.MsgData), false)
+			if err != nil {
+				logger.Sugar.Warnf(err.Error())
+			} else {
+				// 记录群创建系统通知，交由gate广播给其他成员
+				buff, err := json.Marshal(msg)
+				if err == nil {
+					rsp.AttachNotificatinoMsg = buff
+				}
+			}
+		}
+	}
+
 	return rsp, nil
 }
 

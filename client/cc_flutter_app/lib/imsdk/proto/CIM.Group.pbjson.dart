@@ -64,6 +64,7 @@ const CIMGroupCreateRsp$json = const {
     const {'1': 'result_code', '3': 2, '4': 1, '5': 13, '10': 'resultCode'},
     const {'1': 'group_info', '3': 3, '4': 1, '5': 11, '6': '.CIM.Group.CIMGroupInfo', '10': 'groupInfo'},
     const {'1': 'member_id_list', '3': 4, '4': 3, '5': 4, '10': 'memberIdList'},
+    const {'1': 'attach_notificatino_msg', '3': 10, '4': 1, '5': 12, '10': 'attachNotificatinoMsg'},
   ],
 };
 
@@ -81,6 +82,7 @@ const CIMGroupDisbandingRsp$json = const {
     const {'1': 'user_id', '3': 1, '4': 1, '5': 4, '10': 'userId'},
     const {'1': 'group_id', '3': 2, '4': 1, '5': 4, '10': 'groupId'},
     const {'1': 'result_code', '3': 3, '4': 1, '5': 13, '10': 'resultCode'},
+    const {'1': 'attach_notificatino_msg', '3': 10, '4': 1, '5': 12, '10': 'attachNotificatinoMsg'},
   ],
 };
 
@@ -98,6 +100,7 @@ const CIMGroupExitRsp$json = const {
     const {'1': 'user_id', '3': 1, '4': 1, '5': 4, '10': 'userId'},
     const {'1': 'group_id', '3': 2, '4': 1, '5': 4, '10': 'groupId'},
     const {'1': 'result_code', '3': 3, '4': 1, '5': 13, '10': 'resultCode'},
+    const {'1': 'attach_notificatino_msg', '3': 10, '4': 1, '5': 12, '10': 'attachNotificatinoMsg'},
   ],
 };
 
@@ -148,6 +151,7 @@ const CIMGroupInviteMemberRsp$json = const {
     const {'1': 'user_id', '3': 1, '4': 1, '5': 4, '10': 'userId'},
     const {'1': 'group_id', '3': 2, '4': 1, '5': 4, '10': 'groupId'},
     const {'1': 'result_code', '3': 3, '4': 1, '5': 13, '10': 'resultCode'},
+    const {'1': 'attach_notificatino_msg', '3': 10, '4': 1, '5': 12, '10': 'attachNotificatinoMsg'},
   ],
 };
 
@@ -166,6 +170,7 @@ const CIMGroupKickOutMemberRsp$json = const {
     const {'1': 'user_id', '3': 1, '4': 1, '5': 4, '10': 'userId'},
     const {'1': 'group_id', '3': 2, '4': 1, '5': 4, '10': 'groupId'},
     const {'1': 'result_code', '3': 3, '4': 1, '5': 13, '10': 'resultCode'},
+    const {'1': 'attach_notificatino_msg', '3': 10, '4': 1, '5': 12, '10': 'attachNotificatinoMsg'},
   ],
 };
 

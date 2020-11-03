@@ -65,6 +65,7 @@ class CIMGroupCreateRsp extends $pb.GeneratedMessage {
     ..a<$core.int>(2, 'resultCode', $pb.PbFieldType.OU3)
     ..aOM<CIMGroupInfo>(3, 'groupInfo', subBuilder: CIMGroupInfo.create)
     ..p<$fixnum.Int64>(4, 'memberIdList', $pb.PbFieldType.PU6)
+    ..a<$core.List<$core.int>>(10, 'attachNotificatinoMsg', $pb.PbFieldType.OY)
     ..hasRequiredFields = false
   ;
 
@@ -114,6 +115,15 @@ class CIMGroupCreateRsp extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(4)
   $core.List<$fixnum.Int64> get memberIdList => $_getList(3);
+
+  @$pb.TagNumber(10)
+  $core.List<$core.int> get attachNotificatinoMsg => $_getN(4);
+  @$pb.TagNumber(10)
+  set attachNotificatinoMsg($core.List<$core.int> v) { $_setBytes(4, v); }
+  @$pb.TagNumber(10)
+  $core.bool hasAttachNotificatinoMsg() => $_has(4);
+  @$pb.TagNumber(10)
+  void clearAttachNotificatinoMsg() => clearField(10);
 }
 
 class CIMGroupDisbandingReq extends $pb.GeneratedMessage {
@@ -162,6 +172,7 @@ class CIMGroupDisbandingRsp extends $pb.GeneratedMessage {
     ..a<$fixnum.Int64>(1, 'userId', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
     ..a<$fixnum.Int64>(2, 'groupId', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
     ..a<$core.int>(3, 'resultCode', $pb.PbFieldType.OU3)
+    ..a<$core.List<$core.int>>(10, 'attachNotificatinoMsg', $pb.PbFieldType.OY)
     ..hasRequiredFields = false
   ;
 
@@ -206,6 +217,15 @@ class CIMGroupDisbandingRsp extends $pb.GeneratedMessage {
   $core.bool hasResultCode() => $_has(2);
   @$pb.TagNumber(3)
   void clearResultCode() => clearField(3);
+
+  @$pb.TagNumber(10)
+  $core.List<$core.int> get attachNotificatinoMsg => $_getN(3);
+  @$pb.TagNumber(10)
+  set attachNotificatinoMsg($core.List<$core.int> v) { $_setBytes(3, v); }
+  @$pb.TagNumber(10)
+  $core.bool hasAttachNotificatinoMsg() => $_has(3);
+  @$pb.TagNumber(10)
+  void clearAttachNotificatinoMsg() => clearField(10);
 }
 
 class CIMGroupExitReq extends $pb.GeneratedMessage {
@@ -254,6 +274,7 @@ class CIMGroupExitRsp extends $pb.GeneratedMessage {
     ..a<$fixnum.Int64>(1, 'userId', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
     ..a<$fixnum.Int64>(2, 'groupId', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
     ..a<$core.int>(3, 'resultCode', $pb.PbFieldType.OU3)
+    ..a<$core.List<$core.int>>(10, 'attachNotificatinoMsg', $pb.PbFieldType.OY)
     ..hasRequiredFields = false
   ;
 
@@ -298,6 +319,15 @@ class CIMGroupExitRsp extends $pb.GeneratedMessage {
   $core.bool hasResultCode() => $_has(2);
   @$pb.TagNumber(3)
   void clearResultCode() => clearField(3);
+
+  @$pb.TagNumber(10)
+  $core.List<$core.int> get attachNotificatinoMsg => $_getN(3);
+  @$pb.TagNumber(10)
+  set attachNotificatinoMsg($core.List<$core.int> v) { $_setBytes(3, v); }
+  @$pb.TagNumber(10)
+  $core.bool hasAttachNotificatinoMsg() => $_has(3);
+  @$pb.TagNumber(10)
+  void clearAttachNotificatinoMsg() => clearField(10);
 }
 
 class CIMGroupListReq extends $pb.GeneratedMessage {
@@ -496,6 +526,7 @@ class CIMGroupInviteMemberRsp extends $pb.GeneratedMessage {
     ..a<$fixnum.Int64>(1, 'userId', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
     ..a<$fixnum.Int64>(2, 'groupId', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
     ..a<$core.int>(3, 'resultCode', $pb.PbFieldType.OU3)
+    ..a<$core.List<$core.int>>(10, 'attachNotificatinoMsg', $pb.PbFieldType.OY)
     ..hasRequiredFields = false
   ;
 
@@ -540,6 +571,15 @@ class CIMGroupInviteMemberRsp extends $pb.GeneratedMessage {
   $core.bool hasResultCode() => $_has(2);
   @$pb.TagNumber(3)
   void clearResultCode() => clearField(3);
+
+  @$pb.TagNumber(10)
+  $core.List<$core.int> get attachNotificatinoMsg => $_getN(3);
+  @$pb.TagNumber(10)
+  set attachNotificatinoMsg($core.List<$core.int> v) { $_setBytes(3, v); }
+  @$pb.TagNumber(10)
+  $core.bool hasAttachNotificatinoMsg() => $_has(3);
+  @$pb.TagNumber(10)
+  void clearAttachNotificatinoMsg() => clearField(10);
 }
 
 class CIMGroupKickOutMemberReq extends $pb.GeneratedMessage {
@@ -592,6 +632,7 @@ class CIMGroupKickOutMemberRsp extends $pb.GeneratedMessage {
     ..a<$fixnum.Int64>(1, 'userId', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
     ..a<$fixnum.Int64>(2, 'groupId', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
     ..a<$core.int>(3, 'resultCode', $pb.PbFieldType.OU3)
+    ..a<$core.List<$core.int>>(10, 'attachNotificatinoMsg', $pb.PbFieldType.OY)
     ..hasRequiredFields = false
   ;
 
@@ -636,6 +677,15 @@ class CIMGroupKickOutMemberRsp extends $pb.GeneratedMessage {
   $core.bool hasResultCode() => $_has(2);
   @$pb.TagNumber(3)
   void clearResultCode() => clearField(3);
+
+  @$pb.TagNumber(10)
+  $core.List<$core.int> get attachNotificatinoMsg => $_getN(3);
+  @$pb.TagNumber(10)
+  set attachNotificatinoMsg($core.List<$core.int> v) { $_setBytes(3, v); }
+  @$pb.TagNumber(10)
+  $core.bool hasAttachNotificatinoMsg() => $_has(3);
+  @$pb.TagNumber(10)
+  void clearAttachNotificatinoMsg() => clearField(10);
 }
 
 class CIMGroupMemberChangedNotify extends $pb.GeneratedMessage {

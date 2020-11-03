@@ -721,6 +721,87 @@ extension CIM_Def_CIMMsgStatus: CaseIterable {
 
 #endif  // swift(>=4.2)
 
+/// 通知类型
+enum CIM_Def_CIMMsgNotificationType: SwiftProtobuf.Enum {
+  typealias RawValue = Int
+
+  /// 未知
+  case kCimMsgNotificationUnknown // = 0
+
+  /// 创建群
+  /// {"groupId":"22","groupName":"测试群","owner":"1008",ids:["1001","1002"]}
+  case kCimMsgNotificationGroupCreate // = 1
+
+  /// 群拉人（被拉）
+  /// {"groupId":"22","userId":“1008”,"ids":["1001", "1002"]}
+  case kCimMsgNotificationGroupBeInvite // = 2
+
+  /// 群踢人
+  /// {"groupId":"22",“ownerUserId”:“1008”,"ids":["1001", "1002"]}
+  case kCimMsgNotificationGroupKick // = 3
+
+  /// 退出群
+  /// {"groupId" : "22","user_namecards":["namecard1", "namecard2"]}
+  case kCimMsgNotificationGroupLeave // = 4
+
+  /// 群信息更新
+  /// {"team_info":team_info,"user_namecards":["namecard1", "namecard2"]}
+  case kCimMsgNotificationGroupUpdate // = 5
+
+  /// 群解散
+  /// {"user_namecards":["namecard1", "namecard2"]}
+  case kCimMsgNotificationGroupDismiss // = 6
+  case UNRECOGNIZED(Int)
+
+  init() {
+    self = .kCimMsgNotificationUnknown
+  }
+
+  init?(rawValue: Int) {
+    switch rawValue {
+    case 0: self = .kCimMsgNotificationUnknown
+    case 1: self = .kCimMsgNotificationGroupCreate
+    case 2: self = .kCimMsgNotificationGroupBeInvite
+    case 3: self = .kCimMsgNotificationGroupKick
+    case 4: self = .kCimMsgNotificationGroupLeave
+    case 5: self = .kCimMsgNotificationGroupUpdate
+    case 6: self = .kCimMsgNotificationGroupDismiss
+    default: self = .UNRECOGNIZED(rawValue)
+    }
+  }
+
+  var rawValue: Int {
+    switch self {
+    case .kCimMsgNotificationUnknown: return 0
+    case .kCimMsgNotificationGroupCreate: return 1
+    case .kCimMsgNotificationGroupBeInvite: return 2
+    case .kCimMsgNotificationGroupKick: return 3
+    case .kCimMsgNotificationGroupLeave: return 4
+    case .kCimMsgNotificationGroupUpdate: return 5
+    case .kCimMsgNotificationGroupDismiss: return 6
+    case .UNRECOGNIZED(let i): return i
+    }
+  }
+
+}
+
+#if swift(>=4.2)
+
+extension CIM_Def_CIMMsgNotificationType: CaseIterable {
+  // The compiler won't synthesize support with the UNRECOGNIZED case.
+  static var allCases: [CIM_Def_CIMMsgNotificationType] = [
+    .kCimMsgNotificationUnknown,
+    .kCimMsgNotificationGroupCreate,
+    .kCimMsgNotificationGroupBeInvite,
+    .kCimMsgNotificationGroupKick,
+    .kCimMsgNotificationGroupLeave,
+    .kCimMsgNotificationGroupUpdate,
+    .kCimMsgNotificationGroupDismiss,
+  ]
+}
+
+#endif  // swift(>=4.2)
+
 /// 会话状态
 enum CIM_Def_CIMSessionStatusType: SwiftProtobuf.Enum {
   typealias RawValue = Int
@@ -1309,6 +1390,18 @@ extension CIM_Def_CIMMsgStatus: SwiftProtobuf._ProtoNameProviding {
     8: .same(proto: "kCIM_MSG_STATUS_SendCacel"),
     9: .same(proto: "kCIM_MSG_STATUS_REFUSED"),
     10: .same(proto: "kCIM_MSG_STATUS_FAILED"),
+  ]
+}
+
+extension CIM_Def_CIMMsgNotificationType: SwiftProtobuf._ProtoNameProviding {
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    0: .same(proto: "kCIM_MSG_NOTIFICATION_UNKNOWN"),
+    1: .same(proto: "kCIM_MSG_NOTIFICATION_GROUP_CREATE"),
+    2: .same(proto: "kCIM_MSG_NOTIFICATION_GROUP_BE_INVITE"),
+    3: .same(proto: "kCIM_MSG_NOTIFICATION_GROUP_KICK"),
+    4: .same(proto: "kCIM_MSG_NOTIFICATION_GROUP_LEAVE"),
+    5: .same(proto: "kCIM_MSG_NOTIFICATION_GROUP_UPDATE"),
+    6: .same(proto: "kCIM_MSG_NOTIFICATION_GROUP_DISMISS"),
   ]
 }
 

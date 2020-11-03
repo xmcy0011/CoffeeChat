@@ -254,6 +254,31 @@ class CIMMsgStatus extends $pb.ProtobufEnum {
   const CIMMsgStatus._($core.int v, $core.String n) : super(v, n);
 }
 
+class CIMMsgNotificationType extends $pb.ProtobufEnum {
+  static const CIMMsgNotificationType kCIM_MSG_NOTIFICATION_UNKNOWN = CIMMsgNotificationType._(0, 'kCIM_MSG_NOTIFICATION_UNKNOWN');
+  static const CIMMsgNotificationType kCIM_MSG_NOTIFICATION_GROUP_CREATE = CIMMsgNotificationType._(1, 'kCIM_MSG_NOTIFICATION_GROUP_CREATE');
+  static const CIMMsgNotificationType kCIM_MSG_NOTIFICATION_GROUP_BE_INVITE = CIMMsgNotificationType._(2, 'kCIM_MSG_NOTIFICATION_GROUP_BE_INVITE');
+  static const CIMMsgNotificationType kCIM_MSG_NOTIFICATION_GROUP_KICK = CIMMsgNotificationType._(3, 'kCIM_MSG_NOTIFICATION_GROUP_KICK');
+  static const CIMMsgNotificationType kCIM_MSG_NOTIFICATION_GROUP_LEAVE = CIMMsgNotificationType._(4, 'kCIM_MSG_NOTIFICATION_GROUP_LEAVE');
+  static const CIMMsgNotificationType kCIM_MSG_NOTIFICATION_GROUP_UPDATE = CIMMsgNotificationType._(5, 'kCIM_MSG_NOTIFICATION_GROUP_UPDATE');
+  static const CIMMsgNotificationType kCIM_MSG_NOTIFICATION_GROUP_DISMISS = CIMMsgNotificationType._(6, 'kCIM_MSG_NOTIFICATION_GROUP_DISMISS');
+
+  static const $core.List<CIMMsgNotificationType> values = <CIMMsgNotificationType> [
+    kCIM_MSG_NOTIFICATION_UNKNOWN,
+    kCIM_MSG_NOTIFICATION_GROUP_CREATE,
+    kCIM_MSG_NOTIFICATION_GROUP_BE_INVITE,
+    kCIM_MSG_NOTIFICATION_GROUP_KICK,
+    kCIM_MSG_NOTIFICATION_GROUP_LEAVE,
+    kCIM_MSG_NOTIFICATION_GROUP_UPDATE,
+    kCIM_MSG_NOTIFICATION_GROUP_DISMISS,
+  ];
+
+  static final $core.Map<$core.int, CIMMsgNotificationType> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static CIMMsgNotificationType valueOf($core.int value) => _byValue[value];
+
+  const CIMMsgNotificationType._($core.int v, $core.String n) : super(v, n);
+}
+
 class CIMSessionStatusType extends $pb.ProtobufEnum {
   static const CIMSessionStatusType kCIM_SESSION_STATUS_UNKNOWN = CIMSessionStatusType._(0, 'kCIM_SESSION_STATUS_UNKNOWN');
   static const CIMSessionStatusType kCIM_SESSION_STATUS_OK = CIMSessionStatusType._(1, 'kCIM_SESSION_STATUS_OK');

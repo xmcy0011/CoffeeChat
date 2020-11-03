@@ -131,6 +131,19 @@ const CIMMsgStatus$json = const {
   ],
 };
 
+const CIMMsgNotificationType$json = const {
+  '1': 'CIMMsgNotificationType',
+  '2': const [
+    const {'1': 'kCIM_MSG_NOTIFICATION_UNKNOWN', '2': 0},
+    const {'1': 'kCIM_MSG_NOTIFICATION_GROUP_CREATE', '2': 1},
+    const {'1': 'kCIM_MSG_NOTIFICATION_GROUP_BE_INVITE', '2': 2},
+    const {'1': 'kCIM_MSG_NOTIFICATION_GROUP_KICK', '2': 3},
+    const {'1': 'kCIM_MSG_NOTIFICATION_GROUP_LEAVE', '2': 4},
+    const {'1': 'kCIM_MSG_NOTIFICATION_GROUP_UPDATE', '2': 5},
+    const {'1': 'kCIM_MSG_NOTIFICATION_GROUP_DISMISS', '2': 6},
+  ],
+};
+
 const CIMSessionStatusType$json = const {
   '1': 'CIMSessionStatusType',
   '2': const [

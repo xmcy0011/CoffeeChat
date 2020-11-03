@@ -6,7 +6,6 @@ import (
 	"coffeechat/pkg/def"
 	"coffeechat/pkg/logger"
 	"github.com/satori/go.uuid"
-	"time"
 )
 
 func addRobotSession(s *dao.Session, userId uint64, robotId uint64, welcomeMsg string) {
@@ -19,7 +18,7 @@ func addRobotSession(s *dao.Session, userId uint64, robotId uint64, welcomeMsg s
 		} else {
 			// 显示欢迎语
 			u4 := uuid.NewV4()
-			_, err := dao.DefaultMessage.SaveMessage(robotId, userId, u4.String(), int32(time.Now().Unix()),
+			_, err := dao.DefaultMessage.SaveMessage(robotId, userId, u4.String(),
 				cim.CIMMsgType_kCIM_MSG_TYPE_TEXT, cim.CIMSessionType_kCIM_SESSION_TYPE_SINGLE, welcomeMsg, false)
 			if err != nil {
 				logger.Sugar.Warnf("add robot=%d welcome msg error:%s", robotId, err.Error())

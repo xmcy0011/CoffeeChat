@@ -24,6 +24,7 @@ message CIMGroupCreateRsp {
   uint32 result_code = 2;
   CIMGroupInfo group_info = 3;        // 群信息
   repeated uint64 member_id_list = 4; // 群成员列表
+  bytes attach_notificatino_msg = 10; // 群创建系统通知，需要广播
 }
 
 // 解散群请求
@@ -38,6 +39,7 @@ message CIMGroupDisbandingRsp {
   uint64 user_id = 1;
   uint64 group_id = 2;
   uint32 result_code = 3;
+  bytes attach_notificatino_msg = 10; // 群解散系统通知，需要广播
 }
 
 // 退出群
@@ -53,6 +55,7 @@ message CIMGroupExitRsp {
   uint64 user_id = 1;
   uint64 group_id = 2;
   uint32 result_code = 3;
+  bytes attach_notificatino_msg = 10; // 群成员退出群系统通知，需要广播
 }
 
 // 查询群列表请求
@@ -97,6 +100,7 @@ message CIMGroupInviteMemberRsp {
   uint64 user_id = 1;
   uint64 group_id = 2;
   uint32 result_code = 3;
+  bytes attach_notificatino_msg = 10; // 入群系统通知，需要广播
 }
 
 // 踢人请求
@@ -113,6 +117,7 @@ message CIMGroupKickOutMemberRsp {
   uint64 user_id = 1;
   uint64 group_id = 2;
   uint32 result_code = 3;
+  bytes attach_notificatino_msg = 10; // 踢人系统通知，需要广播
 }
 
 // 群成员变更通知

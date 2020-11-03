@@ -309,6 +309,9 @@ struct CIM_Group_CIMGroupCreateRsp {
   /// 群成员列表
   var memberIDList: [UInt64] = []
 
+  /// 群创建系统通知，需要广播
+  var attachNotificatinoMsg: Data = Data()
+
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   init() {}
@@ -344,6 +347,9 @@ struct CIM_Group_CIMGroupDisbandingRsp {
 
   var resultCode: UInt32 = 0
 
+  /// 群解散系统通知，需要广播
+  var attachNotificatinoMsg: Data = Data()
+
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   init() {}
@@ -377,6 +383,9 @@ struct CIM_Group_CIMGroupExitRsp {
   var groupID: UInt64 = 0
 
   var resultCode: UInt32 = 0
+
+  /// 群成员退出群系统通知，需要广播
+  var attachNotificatinoMsg: Data = Data()
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -479,6 +488,9 @@ struct CIM_Group_CIMGroupInviteMemberRsp {
 
   var resultCode: UInt32 = 0
 
+  /// 入群系统通知，需要广播
+  var attachNotificatinoMsg: Data = Data()
+
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   init() {}
@@ -515,6 +527,9 @@ struct CIM_Group_CIMGroupKickOutMemberRsp {
   var groupID: UInt64 = 0
 
   var resultCode: UInt32 = 0
+
+  /// 踢人系统通知，需要广播
+  var attachNotificatinoMsg: Data = Data()
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -706,6 +721,7 @@ extension CIM_Group_CIMGroupCreateRsp: SwiftProtobuf.Message, SwiftProtobuf._Mes
     2: .standard(proto: "result_code"),
     3: .standard(proto: "group_info"),
     4: .standard(proto: "member_id_list"),
+    10: .standard(proto: "attach_notificatino_msg"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -715,6 +731,7 @@ extension CIM_Group_CIMGroupCreateRsp: SwiftProtobuf.Message, SwiftProtobuf._Mes
       case 2: try decoder.decodeSingularUInt32Field(value: &self.resultCode)
       case 3: try decoder.decodeSingularMessageField(value: &self._groupInfo)
       case 4: try decoder.decodeRepeatedUInt64Field(value: &self.memberIDList)
+      case 10: try decoder.decodeSingularBytesField(value: &self.attachNotificatinoMsg)
       default: break
       }
     }
@@ -733,6 +750,9 @@ extension CIM_Group_CIMGroupCreateRsp: SwiftProtobuf.Message, SwiftProtobuf._Mes
     if !self.memberIDList.isEmpty {
       try visitor.visitPackedUInt64Field(value: self.memberIDList, fieldNumber: 4)
     }
+    if !self.attachNotificatinoMsg.isEmpty {
+      try visitor.visitSingularBytesField(value: self.attachNotificatinoMsg, fieldNumber: 10)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -741,6 +761,7 @@ extension CIM_Group_CIMGroupCreateRsp: SwiftProtobuf.Message, SwiftProtobuf._Mes
     if lhs.resultCode != rhs.resultCode {return false}
     if lhs._groupInfo != rhs._groupInfo {return false}
     if lhs.memberIDList != rhs.memberIDList {return false}
+    if lhs.attachNotificatinoMsg != rhs.attachNotificatinoMsg {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -787,6 +808,7 @@ extension CIM_Group_CIMGroupDisbandingRsp: SwiftProtobuf.Message, SwiftProtobuf.
     1: .standard(proto: "user_id"),
     2: .standard(proto: "group_id"),
     3: .standard(proto: "result_code"),
+    10: .standard(proto: "attach_notificatino_msg"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -795,6 +817,7 @@ extension CIM_Group_CIMGroupDisbandingRsp: SwiftProtobuf.Message, SwiftProtobuf.
       case 1: try decoder.decodeSingularUInt64Field(value: &self.userID)
       case 2: try decoder.decodeSingularUInt64Field(value: &self.groupID)
       case 3: try decoder.decodeSingularUInt32Field(value: &self.resultCode)
+      case 10: try decoder.decodeSingularBytesField(value: &self.attachNotificatinoMsg)
       default: break
       }
     }
@@ -810,6 +833,9 @@ extension CIM_Group_CIMGroupDisbandingRsp: SwiftProtobuf.Message, SwiftProtobuf.
     if self.resultCode != 0 {
       try visitor.visitSingularUInt32Field(value: self.resultCode, fieldNumber: 3)
     }
+    if !self.attachNotificatinoMsg.isEmpty {
+      try visitor.visitSingularBytesField(value: self.attachNotificatinoMsg, fieldNumber: 10)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -817,6 +843,7 @@ extension CIM_Group_CIMGroupDisbandingRsp: SwiftProtobuf.Message, SwiftProtobuf.
     if lhs.userID != rhs.userID {return false}
     if lhs.groupID != rhs.groupID {return false}
     if lhs.resultCode != rhs.resultCode {return false}
+    if lhs.attachNotificatinoMsg != rhs.attachNotificatinoMsg {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -863,6 +890,7 @@ extension CIM_Group_CIMGroupExitRsp: SwiftProtobuf.Message, SwiftProtobuf._Messa
     1: .standard(proto: "user_id"),
     2: .standard(proto: "group_id"),
     3: .standard(proto: "result_code"),
+    10: .standard(proto: "attach_notificatino_msg"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -871,6 +899,7 @@ extension CIM_Group_CIMGroupExitRsp: SwiftProtobuf.Message, SwiftProtobuf._Messa
       case 1: try decoder.decodeSingularUInt64Field(value: &self.userID)
       case 2: try decoder.decodeSingularUInt64Field(value: &self.groupID)
       case 3: try decoder.decodeSingularUInt32Field(value: &self.resultCode)
+      case 10: try decoder.decodeSingularBytesField(value: &self.attachNotificatinoMsg)
       default: break
       }
     }
@@ -886,6 +915,9 @@ extension CIM_Group_CIMGroupExitRsp: SwiftProtobuf.Message, SwiftProtobuf._Messa
     if self.resultCode != 0 {
       try visitor.visitSingularUInt32Field(value: self.resultCode, fieldNumber: 3)
     }
+    if !self.attachNotificatinoMsg.isEmpty {
+      try visitor.visitSingularBytesField(value: self.attachNotificatinoMsg, fieldNumber: 10)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -893,6 +925,7 @@ extension CIM_Group_CIMGroupExitRsp: SwiftProtobuf.Message, SwiftProtobuf._Messa
     if lhs.userID != rhs.userID {return false}
     if lhs.groupID != rhs.groupID {return false}
     if lhs.resultCode != rhs.resultCode {return false}
+    if lhs.attachNotificatinoMsg != rhs.attachNotificatinoMsg {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -1085,6 +1118,7 @@ extension CIM_Group_CIMGroupInviteMemberRsp: SwiftProtobuf.Message, SwiftProtobu
     1: .standard(proto: "user_id"),
     2: .standard(proto: "group_id"),
     3: .standard(proto: "result_code"),
+    10: .standard(proto: "attach_notificatino_msg"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -1093,6 +1127,7 @@ extension CIM_Group_CIMGroupInviteMemberRsp: SwiftProtobuf.Message, SwiftProtobu
       case 1: try decoder.decodeSingularUInt64Field(value: &self.userID)
       case 2: try decoder.decodeSingularUInt64Field(value: &self.groupID)
       case 3: try decoder.decodeSingularUInt32Field(value: &self.resultCode)
+      case 10: try decoder.decodeSingularBytesField(value: &self.attachNotificatinoMsg)
       default: break
       }
     }
@@ -1108,6 +1143,9 @@ extension CIM_Group_CIMGroupInviteMemberRsp: SwiftProtobuf.Message, SwiftProtobu
     if self.resultCode != 0 {
       try visitor.visitSingularUInt32Field(value: self.resultCode, fieldNumber: 3)
     }
+    if !self.attachNotificatinoMsg.isEmpty {
+      try visitor.visitSingularBytesField(value: self.attachNotificatinoMsg, fieldNumber: 10)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -1115,6 +1153,7 @@ extension CIM_Group_CIMGroupInviteMemberRsp: SwiftProtobuf.Message, SwiftProtobu
     if lhs.userID != rhs.userID {return false}
     if lhs.groupID != rhs.groupID {return false}
     if lhs.resultCode != rhs.resultCode {return false}
+    if lhs.attachNotificatinoMsg != rhs.attachNotificatinoMsg {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -1167,6 +1206,7 @@ extension CIM_Group_CIMGroupKickOutMemberRsp: SwiftProtobuf.Message, SwiftProtob
     1: .standard(proto: "user_id"),
     2: .standard(proto: "group_id"),
     3: .standard(proto: "result_code"),
+    10: .standard(proto: "attach_notificatino_msg"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -1175,6 +1215,7 @@ extension CIM_Group_CIMGroupKickOutMemberRsp: SwiftProtobuf.Message, SwiftProtob
       case 1: try decoder.decodeSingularUInt64Field(value: &self.userID)
       case 2: try decoder.decodeSingularUInt64Field(value: &self.groupID)
       case 3: try decoder.decodeSingularUInt32Field(value: &self.resultCode)
+      case 10: try decoder.decodeSingularBytesField(value: &self.attachNotificatinoMsg)
       default: break
       }
     }
@@ -1190,6 +1231,9 @@ extension CIM_Group_CIMGroupKickOutMemberRsp: SwiftProtobuf.Message, SwiftProtob
     if self.resultCode != 0 {
       try visitor.visitSingularUInt32Field(value: self.resultCode, fieldNumber: 3)
     }
+    if !self.attachNotificatinoMsg.isEmpty {
+      try visitor.visitSingularBytesField(value: self.attachNotificatinoMsg, fieldNumber: 10)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -1197,6 +1241,7 @@ extension CIM_Group_CIMGroupKickOutMemberRsp: SwiftProtobuf.Message, SwiftProtob
     if lhs.userID != rhs.userID {return false}
     if lhs.groupID != rhs.groupID {return false}
     if lhs.resultCode != rhs.resultCode {return false}
+    if lhs.attachNotificatinoMsg != rhs.attachNotificatinoMsg {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

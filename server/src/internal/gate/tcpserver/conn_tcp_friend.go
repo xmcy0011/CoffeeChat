@@ -23,7 +23,7 @@ func (tcp *TcpConn) onHandleFriendQueryUserListReq(header *cim.ImHeader, buff []
 
 	rsp, err := conn.QuerySystemUserRandomList(ctx, req)
 	if err != nil {
-		logger.Sugar.Warnf("onHandleFriendQueryUserListReq QuerySystemUserRandomList(gRPC) err:", err.Error(), "user_id:", req.UserId)
+		logger.Sugar.Warn("onHandleFriendQueryUserListReq QuerySystemUserRandomList(gRPC) err:", err.Error(), "user_id:", req.UserId)
 	} else {
 		_, err = tcp.Send(header.SeqNum, uint16(cim.CIMCmdID_kCIM_CID_FRIEND_QUERY_USER_LIST_RSP), rsp)
 		logger.Sugar.Infof("onHandleFriendQueryUserListReq QuerySystemUserRandomList(gRPC) res,user_id:%d,list_len:%d",

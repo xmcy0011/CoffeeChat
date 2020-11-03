@@ -1,11 +1,11 @@
 package dao
 
 import (
-	"github.com/BurntSushi/toml"
 	"coffeechat/api/cim"
 	"coffeechat/internal/logic/conf"
 	"coffeechat/pkg/db"
 	"coffeechat/pkg/logger"
+	"github.com/BurntSushi/toml"
 	"testing"
 	"time"
 )
@@ -38,7 +38,7 @@ func TestMessage_SaveMessage(t *testing.T) {
 		MsgType:     cim.CIMMsgType_kCIM_MSG_TYPE_TEXT,
 		//MsgData:     []byte("hello cim"),
 	}
-	msgId, err := DefaultMessage.SaveMessage(data.FromUserId, data.ToSessionId, data.MsgId, data.CreateTime,
+	msgId, err := DefaultMessage.SaveMessage(data.FromUserId, data.ToSessionId, data.MsgId,
 		data.MsgType, data.SessionType, "hello cim", false)
 	if err != nil {
 		t.Fatal(err.Error())

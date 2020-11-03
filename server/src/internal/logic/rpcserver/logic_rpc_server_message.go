@@ -24,7 +24,7 @@ func (s *LogicServer) SendMsgData(ctx context.Context, in *cim.CIMMsgData) (*cim
 	// 机器人消息，对方无需未读计数
 	isToRobot := def.IsRobot(in.ToSessionId) && in.MsgType == cim.CIMMsgType_kCIM_MSG_TYPE_ROBOT
 
-	serverMsgId, err := dao.DefaultMessage.SaveMessage(in.FromUserId, in.ToSessionId, in.MsgId, in.CreateTime, in.MsgType, in.SessionType, string(in.MsgData), isToRobot)
+	serverMsgId, err := dao.DefaultMessage.SaveMessage(in.FromUserId, in.ToSessionId, in.MsgId, in.MsgType, in.SessionType, string(in.MsgData), isToRobot)
 	if err != nil {
 		logger.Sugar.Error("save message failed:%s,fromId=%d,toId=%d,msgId=%s", err.Error(), in.FromUserId, in.ToSessionId, in.MsgId)
 		return nil, err

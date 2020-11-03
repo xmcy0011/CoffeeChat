@@ -4,6 +4,7 @@ import (
 	"coffeechat/api/cim"
 	"coffeechat/pkg/logger"
 	"context"
+	"encoding/json"
 	"github.com/golang/protobuf/proto"
 	"strconv"
 	"time"
@@ -32,6 +33,23 @@ func (tcp *TcpConn) onHandleCreateGroupReq(header *cim.ImHeader, buff []byte) {
 		logger.Sugar.Infof("onHandleCreateGroup CreateGroup(gRPC) res,user_id:%d,result_code:%d,"+
 			"group_id=%d,group_name=%s,member_id_list_len=%d",
 			rsp.UserId, rsp.ResultCode, rsp.GroupInfo.GroupId, rsp.GroupInfo.GroupName, len(rsp.MemberIdList))
+
+		// broadcast group notification msg
+		if rsp.AttachNotificatinoMsg != nil {
+			msg := cim.CIMMsgData{}
+			err := json.Unmarshal(rsp.AttachNotificatinoMsg, &msg)
+			if err != nil {
+				logger.Sugar.Warnf(err.Error())
+				return
+			}
+
+			for _, v := range rsp.MemberIdList {
+				u := DefaultUserManager.FindUser(v)
+				if u != nil {
+					u.Broadcast(uint16(cim.CIMCmdID_kCIM_CID_MSG_DATA), &msg)
+				}
+			}
+		}
 	}
 }
 

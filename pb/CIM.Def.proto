@@ -55,7 +55,8 @@ enum CIMCmdID {
   kCIM_CID_GROUP_KICK_OUT_MEMBER_RSP = 0x514;
   kCIM_CID_GROUP_MEMBER_CHANGED_NOTIFY = 0x515; // 群成员变更通知
 
-  kCIM_CID_FRIEND_QUERY_USER_LIST_REQ = 0x601; // 查询用户列表（目前没有实现好友机制，所以便于测试，随机返回系统中注册的50个以内用户）
+  kCIM_CID_FRIEND_QUERY_USER_LIST_REQ =
+      0x601; // 查询用户列表（目前没有实现好友机制，所以便于测试，随机返回系统中注册的50个以内用户）
   kCIM_CID_FRIEND_QUERY_USER_LIST_RSP = 0x602;
 }
 
@@ -161,6 +162,11 @@ enum CIMSessionType {
   "timeLen": 0,        # 通话时长（秒）
   "callType":1,        # 0:unknown,1:voice,2:video
 }
+系统通知：
+{
+  "notificationId":"" # 见CIMMsgNotificationId
+  "data":{}
+}
 */
 
 // 消息类型
@@ -193,6 +199,30 @@ enum CIMMsgStatus {
   kCIM_MSG_STATUS_SendCacel = 8; // 发送取消
   kCIM_MSG_STATUS_REFUSED = 9; // 被对方拒绝，比如被对方加入黑名单等等
   kCIM_MSG_STATUS_FAILED = 10; // 发送失败，客户端使用
+}
+
+// 通知类型
+enum CIMMsgNotificationType {
+  // 未知
+  kCIM_MSG_NOTIFICATION_UNKNOWN = 0;
+  // 创建群
+  // {"groupId":"22","groupName":"测试群","owner":"1008",ids:["1001","1002"],nickNames:["1001","1002"]}
+  kCIM_MSG_NOTIFICATION_GROUP_CREATE = 1;
+  // 群拉人（被拉）
+  // {"groupId":"22","userId":“1008”,"ids":["1001", "1002"],nickNames:["1001","1002"]}
+  kCIM_MSG_NOTIFICATION_GROUP_BE_INVITE = 2;
+  // 群踢人
+  // {"groupId":"22",“ownerUserId”:“1008”,"ids":["1001", "1002"],nickNames:["1001","1002"]}
+  kCIM_MSG_NOTIFICATION_GROUP_KICK = 3;
+  // 退出群
+  // {"groupId":"22","ids":["1001", "1002"],nickNames:["1001","1002"]}
+  kCIM_MSG_NOTIFICATION_GROUP_LEAVE = 4;
+  // 群信息更新
+  // {"team_info":team_info}
+  kCIM_MSG_NOTIFICATION_GROUP_UPDATE = 5;
+  // 群解散
+  // {"groupId":"22"}
+  kCIM_MSG_NOTIFICATION_GROUP_DISMISS = 6;
 }
 
 // 会话状态
@@ -249,8 +279,8 @@ enum CIMResCode {
 // 用户信息
 message CIMUserInfo {
   uint64 user_id = 1;
-  string nick_name = 2;         // 用户昵称
-  string nick_name_spell = 3;  // 昵称拼音
+  string nick_name = 2;       // 用户昵称
+  string nick_name_spell = 3; // 昵称拼音
   /*optional*/
   string phone = 9;        // 手机号
   string avatar_url = 10;  // 头像URL
