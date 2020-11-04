@@ -20,16 +20,16 @@ class IMChatViewController: UIViewController, UITableViewDelegate, UITableViewDa
         title = "消息"
 
         // 在顶部右侧添加按钮（加群、扫一扫、加朋友等）
-        self.navigationItem.rightButtonAction(IMAssets.Chat_add.image) { () -> Void in
+        navigationItem.rightButtonAction(IMAssets.Chat_add.image) { () -> Void in
             self.actionFloat.hide(!self.actionFloat.isHidden)
         }
-        
-        //Init ActionFloatView
-        self.actionFloat = IMActionFloatView()
-        self.actionFloat.delegate = self
-        self.view.addSubview(self.actionFloat)
-        self.actionFloat.snp.makeConstraints { (make) -> Void in
-            make.edges.equalTo(UIEdgeInsets.init(top: 85, left: 0, bottom: 0, right: 0))
+
+        // Init ActionFloatView
+        actionFloat = IMActionFloatView()
+        actionFloat.delegate = self
+        view.addSubview(actionFloat)
+        actionFloat.snp.makeConstraints { (make) -> Void in
+            make.edges.equalTo(UIEdgeInsets(top: 85, left: 0, bottom: 0, right: 0))
         }
 
         // 注册自定义的Cell的实际类型
@@ -76,6 +76,7 @@ extension IMChatViewController {
     func didUpdateRecentSession(session: IMRecentSession, totalUnreadCount: Int32) {
         IMLog.info(item: "didUpdateRecentSession sessionId:\(session.session.sessionId),total:\(totalUnreadCount),sessionUnread:\(session.unreadCnt)")
 
+        var isFind = false
         // 更新最后一条会话信息
         for i in 0..<list.count {
             if list[i].rectSession.session.sessionId == session.session.sessionId {
@@ -86,8 +87,16 @@ extension IMChatViewController {
                 DispatchQueue.main.async {
                     self.sessionTabView.reloadRows(at: [IndexPath(row: i, section: 0)], with: .none)
                 }
+                isFind = true
                 break
             }
+        }
+
+        // 新的会话，插入
+        if !isFind {
+            let model = SessionModel(recentSession: session)
+            list.insert(model, at: 0)
+            sessionTabView.reloadData()
         }
     }
 }
@@ -141,6 +150,7 @@ extension IMChatViewController {
 }
 
 // MARK: - @protocol ActionFloatViewDelegate
+
 extension IMChatViewController: ActionFloatViewDelegate {
     func floatViewTapItemIndex(_ type: ActionFloatViewItemType) {
         IMLog.info(item: "floatViewTapItemIndex:\(type)")

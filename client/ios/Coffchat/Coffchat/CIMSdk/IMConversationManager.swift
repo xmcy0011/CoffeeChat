@@ -186,7 +186,7 @@ extension IMConversationManager {
     internal func getAllRecentSessionsKey(sessionId: UInt64, sessionType: CIM_Def_CIMSessionType) -> String {
         var key = "single_\(sessionId)"
         if sessionType == .kCimSessionTypeGroup {
-            key = "single_\(sessionId)"
+            key = "group_\(sessionId)"
         } else {
             key = "\(sessionType)_\(sessionId)"
         }
@@ -231,23 +231,26 @@ extension IMConversationManager {
     ///   - msg: 最后一条消息
     internal func updateRecentSession(sessionId: UInt64, sessionType: CIM_Def_CIMSessionType, msg: IMMessage) {
         let key = getAllRecentSessionsKey(sessionId: sessionId, sessionType: msg.sessionType)
-        let recentSession = allRecentSessions[key]
-        if recentSession != nil {
-            // 更新最后一条消息
-            recentSession!.latestMsg = msg
-            recentSession!.updatedTime = UInt32(NSDate().timeIntervalSince1970)
-            // 不是自己发送的消息，才更新未读计数
-            if msg.fromUserId != IMManager.singleton.loginManager.userId {
-                recentSession!.unreadCnt += 1
-                totalUnreadCount += 1
-            }
+        var recentSession = allRecentSessions[key]
 
-            // 回调，更新UI界面
-            for item in delegateDic {
-                item.value.didUpdateRecentSession(session: recentSession!, totalUnreadCount: Int32(totalUnreadCount))
-            }
-        } else {
-            IMLog.warn(item: "not find session key,sessionId=\(sessionId),sessionType=\(sessionType)")
+        if recentSession == nil {
+            IMLog.info(item: "not find session key,create it,sessionId=\(sessionId),sessionType=\(sessionType)")
+            let info = IMSession(id: sessionId, type: sessionType)
+            recentSession = IMRecentSession(sessionInfo: info, latestMsg: msg, unreadCount: 0, updateTime: msg.createTime)
+            allRecentSessions[key] = recentSession
+        }
+        // 更新最后一条消息
+        recentSession!.latestMsg = msg
+        recentSession!.updatedTime = UInt32(NSDate().timeIntervalSince1970)
+        // 不是自己发送的消息，才更新未读计数
+        if msg.fromUserId != IMManager.singleton.loginManager.userId {
+            recentSession!.unreadCnt += 1
+            totalUnreadCount += 1
+        }
+
+        // 回调，更新UI界面
+        for item in delegateDic {
+            item.value.didUpdateRecentSession(session: recentSession!, totalUnreadCount: Int32(totalUnreadCount))
         }
     }
 
