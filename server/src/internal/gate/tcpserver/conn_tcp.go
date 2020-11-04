@@ -458,13 +458,21 @@ func (tcp *TcpConn) _onHandleGroupMsgData(msg *cim.CIMMsgData, rsp *cim.CIMMsgDa
 	if err != nil {
 		logger.Sugar.Warn("err:", err.Error())
 	} else {
+		count := 0
+
 		// 广播给所有在线的用户
 		for _, v := range rsp2.MemberIdList {
-			user := DefaultUserManager.FindUser(v)
-			if user != nil {
-				user.BroadcastMessage(msg)
+			if v != msg.FromUserId {
+				user := DefaultUserManager.FindUser(v)
+				if user != nil {
+					user.BroadcastMessage(msg)
+					count++
+				}
 			}
 		}
+
+		logger.Sugar.Infof("onHandleMsgData broadcast group msg,memberIdListLen:%d,onlineUserCount:%d,group_id:%d",
+			len(rsp2.MemberIdList), count, msg.ToSessionId)
 	}
 }
 

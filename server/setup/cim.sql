@@ -19,7 +19,7 @@ CREATE TABLE `im_session` (
   `created` int(11) NOT NULL COMMENT '创建时间戳',
   `updated` int(11) NOT NULL COMMENT '更新时间戳',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `index` (`user_id`,`peer_id`),
+  UNIQUE KEY `index` (`user_id`,`peer_id`,`session_type`),
   KEY `ix_userid_peerid_status` (`user_id`,`peer_id`,`session_status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

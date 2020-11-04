@@ -275,6 +275,6 @@ func onHandleMsgData(dataBuff []byte) {
 	}
 	_ = send(uint16(cim.CIMCmdID_kCIM_CID_MSG_DATA_ACK), ack)
 
-	logger.Sugar.Errorf("recv [%d]->[%d] [%d] %s", msg.FromUserId, msg.ToSessionId, msg.MsgType,
-		string(msg.MsgData))
+	logger.Sugar.Errorf("recv [%d]->[%d] [sessionType:%d] [msgType:%d] %s", msg.FromUserId, msg.ToSessionId,
+		msg.SessionType, msg.MsgType, string(msg.MsgData))
 }

@@ -344,7 +344,7 @@ func (m *Message) saveSingleMessage(fromId uint64, toId uint64, clientMsgId stri
 			_, _, err = DefaultSession.AddUserSession(fromId, toId, cim.CIMSessionType_kCIM_SESSION_TYPE_SINGLE,
 				cim.CIMSessionStatusType_kCIM_SESSION_STATUS_OK, false)
 			if err != nil {
-				logger.Sugar.Error("create session %d->%d,session_type:SESSION_TYPE_SINGLE,error:%s", fromId, toId, err.Error())
+				logger.Sugar.Errorf("create session %d->%d,session_type:SESSION_TYPE_SINGLE,error:%s", fromId, toId, err.Error())
 				return 0, err
 			}
 		} else {

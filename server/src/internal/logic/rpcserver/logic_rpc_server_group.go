@@ -162,7 +162,7 @@ func (s *LogicServer) QueryGroupList(ctx context.Context, in *cim.CIMGroupListRe
 func (s *LogicServer) QueryGroupMemberList(ctx context.Context, in *cim.CIMGroupMemberListReq) (*cim.CIMGroupMemberListRsp, error) {
 	logger.Sugar.Infof("QueryGroupMemberList user_id=%d", in.UserId)
 
-	ids, err := dao.DefaultGroupMember.ListMember(in.UserId)
+	ids, err := dao.DefaultGroupMember.ListMember(in.GroupId)
 	if err != nil {
 		return nil, err
 	}
