@@ -75,7 +75,7 @@ func (s *LogicServer) CreateGroup(ctx context.Context, in *cim.CIMGroupCreateReq
 	if err != nil {
 		logger.Sugar.Warnf(err.Error())
 	} else {
-		_, err = dao.DefaultMessage.SaveMessage(info.GroupId, info.GroupId, msg.MsgId, msg.MsgType,
+		_, err = dao.DefaultMessage.SaveMessage(info.GroupId, info.GroupId, msg.ClientMsgId, msg.MsgType,
 			msg.SessionType, string(msg.MsgData), false)
 		if err != nil {
 			logger.Sugar.Warnf(err.Error())
@@ -136,8 +136,8 @@ func (s *LogicServer) GroupExit(ctx context.Context, in *cim.CIMGroupExitReq) (*
 }
 
 // 查询群列表
-func (s *LogicServer) GroupList(ctx context.Context, in *cim.CIMGroupListReq) (*cim.CIMGroupListRsp, error) {
-	logger.Sugar.Infof("GroupList user_id=%d", in.UserId)
+func (s *LogicServer) QueryGroupList(ctx context.Context, in *cim.CIMGroupListReq) (*cim.CIMGroupListRsp, error) {
+	logger.Sugar.Infof("QueryGroupList user_id=%d", in.UserId)
 
 	ids, err := dao.DefaultGroupMember.ListGroup(in.UserId)
 	if err != nil {
@@ -155,6 +155,23 @@ func (s *LogicServer) GroupList(ctx context.Context, in *cim.CIMGroupListReq) (*
 		rsp.GroupVersionList = append(rsp.GroupVersionList, versionInfo)
 	}
 
+	return rsp, nil
+}
+
+// 查询群成员列表
+func (s *LogicServer) QueryGroupMemberList(ctx context.Context, in *cim.CIMGroupMemberListReq) (*cim.CIMGroupMemberListRsp, error) {
+	logger.Sugar.Infof("QueryGroupMemberList user_id=%d", in.UserId)
+
+	ids, err := dao.DefaultGroupMember.ListMember(in.UserId)
+	if err != nil {
+		return nil, err
+	}
+
+	rsp := &cim.CIMGroupMemberListRsp{
+		UserId:       in.UserId,
+		GroupId:      in.GroupId,
+		MemberIdList: ids,
+	}
 	return rsp, nil
 }
 

@@ -688,6 +688,92 @@ class CIMGroupKickOutMemberRsp extends $pb.GeneratedMessage {
   void clearAttachNotificatinoMsg() => clearField(10);
 }
 
+class CIMGroupMemberListReq extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('CIMGroupMemberListReq', package: const $pb.PackageName('CIM.Group'), createEmptyInstance: create)
+    ..a<$fixnum.Int64>(1, 'userId', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
+    ..a<$fixnum.Int64>(2, 'groupId', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
+    ..hasRequiredFields = false
+  ;
+
+  CIMGroupMemberListReq._() : super();
+  factory CIMGroupMemberListReq() => create();
+  factory CIMGroupMemberListReq.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory CIMGroupMemberListReq.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  CIMGroupMemberListReq clone() => CIMGroupMemberListReq()..mergeFromMessage(this);
+  CIMGroupMemberListReq copyWith(void Function(CIMGroupMemberListReq) updates) => super.copyWith((message) => updates(message as CIMGroupMemberListReq));
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static CIMGroupMemberListReq create() => CIMGroupMemberListReq._();
+  CIMGroupMemberListReq createEmptyInstance() => create();
+  static $pb.PbList<CIMGroupMemberListReq> createRepeated() => $pb.PbList<CIMGroupMemberListReq>();
+  @$core.pragma('dart2js:noInline')
+  static CIMGroupMemberListReq getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<CIMGroupMemberListReq>(create);
+  static CIMGroupMemberListReq _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $fixnum.Int64 get userId => $_getI64(0);
+  @$pb.TagNumber(1)
+  set userId($fixnum.Int64 v) { $_setInt64(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasUserId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearUserId() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $fixnum.Int64 get groupId => $_getI64(1);
+  @$pb.TagNumber(2)
+  set groupId($fixnum.Int64 v) { $_setInt64(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasGroupId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearGroupId() => clearField(2);
+}
+
+class CIMGroupMemberListRsp extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo('CIMGroupMemberListRsp', package: const $pb.PackageName('CIM.Group'), createEmptyInstance: create)
+    ..a<$fixnum.Int64>(1, 'userId', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
+    ..a<$fixnum.Int64>(2, 'groupId', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
+    ..p<$fixnum.Int64>(3, 'memberIdList', $pb.PbFieldType.PU6)
+    ..hasRequiredFields = false
+  ;
+
+  CIMGroupMemberListRsp._() : super();
+  factory CIMGroupMemberListRsp() => create();
+  factory CIMGroupMemberListRsp.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory CIMGroupMemberListRsp.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  CIMGroupMemberListRsp clone() => CIMGroupMemberListRsp()..mergeFromMessage(this);
+  CIMGroupMemberListRsp copyWith(void Function(CIMGroupMemberListRsp) updates) => super.copyWith((message) => updates(message as CIMGroupMemberListRsp));
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static CIMGroupMemberListRsp create() => CIMGroupMemberListRsp._();
+  CIMGroupMemberListRsp createEmptyInstance() => create();
+  static $pb.PbList<CIMGroupMemberListRsp> createRepeated() => $pb.PbList<CIMGroupMemberListRsp>();
+  @$core.pragma('dart2js:noInline')
+  static CIMGroupMemberListRsp getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<CIMGroupMemberListRsp>(create);
+  static CIMGroupMemberListRsp _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $fixnum.Int64 get userId => $_getI64(0);
+  @$pb.TagNumber(1)
+  set userId($fixnum.Int64 v) { $_setInt64(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasUserId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearUserId() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $fixnum.Int64 get groupId => $_getI64(1);
+  @$pb.TagNumber(2)
+  set groupId($fixnum.Int64 v) { $_setInt64(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasGroupId() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearGroupId() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.List<$fixnum.Int64> get memberIdList => $_getList(2);
+}
+
 class CIMGroupMemberChangedNotify extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('CIMGroupMemberChangedNotify', package: const $pb.PackageName('CIM.Group'), createEmptyInstance: create)
     ..a<$fixnum.Int64>(1, 'userId', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)

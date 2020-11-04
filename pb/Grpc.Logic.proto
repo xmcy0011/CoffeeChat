@@ -46,7 +46,9 @@ service Logic {
     // 退出群
     rpc GroupExit(CIM.Group.CIMGroupExitReq) returns(CIM.Group.CIMGroupExitRsp){}
     // 查询群列表
-    rpc GroupList(CIM.Group.CIMGroupListReq) returns(CIM.Group.CIMGroupListRsp){}
+    rpc QueryGroupList(CIM.Group.CIMGroupListReq) returns(CIM.Group.CIMGroupListRsp){}
+    // 查询群组成员列表
+    rpc QueryGroupMemberList(CIM.Group.CIMGroupMemberListReq)returns(CIM.Group.CIMGroupMemberListRsp){}
     // 查询群详情
     rpc QueryGroupInfo(CIM.Group.CIMGroupInfoReq) returns(CIM.Group.CIMGroupInfoRsp){}
     // 加人

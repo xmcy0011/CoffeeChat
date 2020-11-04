@@ -11,11 +11,12 @@ const CIMMsgData$json = const {
     const {'1': 'from_user_id', '3': 1, '4': 1, '5': 4, '10': 'fromUserId'},
     const {'1': 'from_nick_name', '3': 2, '4': 1, '5': 9, '10': 'fromNickName'},
     const {'1': 'to_session_id', '3': 3, '4': 1, '5': 4, '10': 'toSessionId'},
-    const {'1': 'msg_id', '3': 4, '4': 1, '5': 9, '10': 'msgId'},
-    const {'1': 'create_time', '3': 5, '4': 1, '5': 5, '10': 'createTime'},
-    const {'1': 'msg_type', '3': 6, '4': 1, '5': 14, '6': '.CIM.Def.CIMMsgType', '10': 'msgType'},
-    const {'1': 'session_type', '3': 7, '4': 1, '5': 14, '6': '.CIM.Def.CIMSessionType', '10': 'sessionType'},
-    const {'1': 'msg_data', '3': 8, '4': 1, '5': 12, '10': 'msgData'},
+    const {'1': 'client_msg_id', '3': 4, '4': 1, '5': 9, '10': 'clientMsgId'},
+    const {'1': 'server_msg_id', '3': 5, '4': 1, '5': 4, '10': 'serverMsgId'},
+    const {'1': 'create_time', '3': 6, '4': 1, '5': 5, '10': 'createTime'},
+    const {'1': 'msg_type', '3': 7, '4': 1, '5': 14, '6': '.CIM.Def.CIMMsgType', '10': 'msgType'},
+    const {'1': 'session_type', '3': 8, '4': 1, '5': 14, '6': '.CIM.Def.CIMSessionType', '10': 'sessionType'},
+    const {'1': 'msg_data', '3': 9, '4': 1, '5': 12, '10': 'msgData'},
   ],
 };
 
@@ -24,8 +25,8 @@ const CIMMsgDataAck$json = const {
   '2': const [
     const {'1': 'from_user_id', '3': 1, '4': 1, '5': 4, '10': 'fromUserId'},
     const {'1': 'to_session_id', '3': 2, '4': 1, '5': 4, '10': 'toSessionId'},
-    const {'1': 'msg_id', '3': 4, '4': 1, '5': 9, '10': 'msgId'},
-    const {'1': 'server_msg_id', '3': 3, '4': 1, '5': 4, '10': 'serverMsgId'},
+    const {'1': 'client_msg_id', '3': 3, '4': 1, '5': 9, '10': 'clientMsgId'},
+    const {'1': 'server_msg_id', '3': 4, '4': 1, '5': 4, '10': 'serverMsgId'},
     const {'1': 'res_code', '3': 5, '4': 1, '5': 14, '6': '.CIM.Def.CIMResCode', '10': 'resCode'},
     const {'1': 'session_type', '3': 6, '4': 1, '5': 14, '6': '.CIM.Def.CIMSessionType', '10': 'sessionType'},
     const {'1': 'create_time', '3': 7, '4': 1, '5': 5, '10': 'createTime'},

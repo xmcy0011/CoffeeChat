@@ -536,6 +536,40 @@ struct CIM_Group_CIMGroupKickOutMemberRsp {
   init() {}
 }
 
+/// 查询群成员列表
+struct CIM_Group_CIMGroupMemberListReq {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// cmd id: 		0x516
+  var userID: UInt64 = 0
+
+  var groupID: UInt64 = 0
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+}
+
+struct CIM_Group_CIMGroupMemberListRsp {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// cmd id: 		0x517
+  var userID: UInt64 = 0
+
+  var groupID: UInt64 = 0
+
+  /// 成员ID列表
+  var memberIDList: [UInt64] = []
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+}
+
 /// 群成员变更通知
 struct CIM_Group_CIMGroupMemberChangedNotify {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
@@ -1242,6 +1276,82 @@ extension CIM_Group_CIMGroupKickOutMemberRsp: SwiftProtobuf.Message, SwiftProtob
     if lhs.groupID != rhs.groupID {return false}
     if lhs.resultCode != rhs.resultCode {return false}
     if lhs.attachNotificatinoMsg != rhs.attachNotificatinoMsg {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension CIM_Group_CIMGroupMemberListReq: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".CIMGroupMemberListReq"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "user_id"),
+    2: .standard(proto: "group_id"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      switch fieldNumber {
+      case 1: try decoder.decodeSingularUInt64Field(value: &self.userID)
+      case 2: try decoder.decodeSingularUInt64Field(value: &self.groupID)
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if self.userID != 0 {
+      try visitor.visitSingularUInt64Field(value: self.userID, fieldNumber: 1)
+    }
+    if self.groupID != 0 {
+      try visitor.visitSingularUInt64Field(value: self.groupID, fieldNumber: 2)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: CIM_Group_CIMGroupMemberListReq, rhs: CIM_Group_CIMGroupMemberListReq) -> Bool {
+    if lhs.userID != rhs.userID {return false}
+    if lhs.groupID != rhs.groupID {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension CIM_Group_CIMGroupMemberListRsp: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".CIMGroupMemberListRsp"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "user_id"),
+    2: .standard(proto: "group_id"),
+    3: .standard(proto: "member_id_list"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      switch fieldNumber {
+      case 1: try decoder.decodeSingularUInt64Field(value: &self.userID)
+      case 2: try decoder.decodeSingularUInt64Field(value: &self.groupID)
+      case 3: try decoder.decodeRepeatedUInt64Field(value: &self.memberIDList)
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if self.userID != 0 {
+      try visitor.visitSingularUInt64Field(value: self.userID, fieldNumber: 1)
+    }
+    if self.groupID != 0 {
+      try visitor.visitSingularUInt64Field(value: self.groupID, fieldNumber: 2)
+    }
+    if !self.memberIDList.isEmpty {
+      try visitor.visitPackedUInt64Field(value: self.memberIDList, fieldNumber: 3)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: CIM_Group_CIMGroupMemberListRsp, rhs: CIM_Group_CIMGroupMemberListRsp) -> Bool {
+    if lhs.userID != rhs.userID {return false}
+    if lhs.groupID != rhs.groupID {return false}
+    if lhs.memberIDList != rhs.memberIDList {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

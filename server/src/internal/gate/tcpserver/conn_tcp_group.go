@@ -118,7 +118,7 @@ func (tcp *TcpConn) onHandleGroupListReq(header *cim.ImHeader, buff []byte) {
 	ctx, cancelFun := context.WithTimeout(context.Background(), time.Second*kBusinessTimeOut)
 	defer cancelFun()
 
-	rsp, err := conn.GroupList(ctx, req)
+	rsp, err := conn.QueryGroupList(ctx, req)
 	if err != nil {
 		logger.Sugar.Warnf("onHandleGroupListReq GroupList(gRPC) err:", err.Error(), "user_id:", req.UserId)
 	} else {

@@ -16,7 +16,7 @@ import (
 )
 
 const kLoginTimeOut = 15     // 登录超时时间(s)
-const kBusinessTimeOut = 5   // 常规业务超时时间(s)
+const kBusinessTimeOut = 3   // 常规业务超时时间(s)
 const kHeartBeatTimeOut = 60 // 心跳超时时间
 const kAckMsgTimeOut = 15    // 等待确认收到消息响应超时时间
 
@@ -346,14 +346,14 @@ func (tcp *TcpConn) onHandleMsgData(header *cim.ImHeader, buff []byte) {
 	if req.FromUserId == req.ToSessionId {
 		logger.Sugar.Warnf("onHandleMsgData from_id:%d is equals to_id:%d,"+
 			"session_type=%d,msg_id=%s,msg_type=%d",
-			req.FromUserId, req.ToSessionId, req.SessionType, req.MsgId, req.MsgType)
+			req.FromUserId, req.ToSessionId, req.SessionType, req.ClientMsgId, req.MsgType)
 		return
 	}
 
 	req.CreateTime = int32(time.Now().Unix())
 	logger.Sugar.Infof("onHandleMsgData from_id:%d,to_id:%d,"+
 		"session_type=%d,msg_id=%s,msg_type=%d,create_time=%d",
-		req.FromUserId, req.ToSessionId, req.SessionType, req.MsgId, req.MsgType, req.CreateTime)
+		req.FromUserId, req.ToSessionId, req.SessionType, req.ClientMsgId, req.MsgType, req.CreateTime)
 	upMsgTotalCount.Inc()
 
 	// 消息存储
@@ -365,7 +365,7 @@ func (tcp *TcpConn) onHandleMsgData(header *cim.ImHeader, buff []byte) {
 	if err != nil {
 		// 上行消息丢失计数+1
 		upMissMsgCount.Inc()
-		logger.Sugar.Warnf("err:", err.Error())
+		logger.Sugar.Warn("err:", err.Error())
 		return
 	} else {
 		_, err = tcp.Send(header.SeqNum, uint16(cim.CIMCmdID_kCIM_CID_MSG_DATA_ACK), rsp)
@@ -373,7 +373,10 @@ func (tcp *TcpConn) onHandleMsgData(header *cim.ImHeader, buff []byte) {
 
 	logger.Sugar.Infof("onHandleMsgData SendMsgData(gRPC) res,from_id:%d,to_id:%d,"+
 		"session_type=%d,msg_id=%s,server_msg_id=%d,create_time=%d,res_code=%d",
-		rsp.FromUserId, rsp.ToSessionId, rsp.SessionType, rsp.MsgId, rsp.ServerMsgId, rsp.CreateTime, rsp.ResCode)
+		rsp.FromUserId, rsp.ToSessionId, rsp.SessionType, rsp.ClientMsgId, rsp.ServerMsgId, rsp.CreateTime, rsp.ResCode)
+
+	// 更新消息的服务端消息序号
+	req.ServerMsgId = rsp.ServerMsgId
 
 	// send to peer
 	if req.SessionType == cim.CIMSessionType_kCIM_SESSION_TYPE_SINGLE {
@@ -415,7 +418,7 @@ func (tcp *TcpConn) _onHandleSingleMsgData(req *cim.CIMMsgData, rsp *cim.CIMMsgD
 		req.FromUserId = req.ToSessionId
 		req.FromNickName = DefaultRobotClient.Name
 		req.ToSessionId = toUserId // change
-		req.MsgId = uuid.NewV4().String()
+		req.ClientMsgId = uuid.NewV4().String()
 		req.CreateTime = int32(time.Now().Unix())
 		req.MsgType = cim.CIMMsgType_kCIM_MSG_TYPE_ROBOT
 
@@ -441,8 +444,28 @@ func (tcp *TcpConn) _onHandleSingleMsgData(req *cim.CIMMsgData, rsp *cim.CIMMsgD
 }
 
 // 处理群聊消息返回
-func (tcp *TcpConn) _onHandleGroupMsgData(req *cim.CIMMsgData, rsp *cim.CIMMsgDataAck) {
+func (tcp *TcpConn) _onHandleGroupMsgData(msg *cim.CIMMsgData, rsp *cim.CIMMsgDataAck) {
+	// FIXME: rpc阻塞了，会导致客户端消息被阻塞，消息发不出去。后续要优化
+	conn := GetMessageConn()
+	ctx, cancelFun := context.WithTimeout(context.Background(), time.Second*kBusinessTimeOut)
+	defer cancelFun()
 
+	in := &cim.CIMGroupMemberListReq{
+		UserId:  tcp.userId,
+		GroupId: rsp.ToSessionId,
+	}
+	rsp2, err := conn.QueryGroupMemberList(ctx, in)
+	if err != nil {
+		logger.Sugar.Warn("err:", err.Error())
+	} else {
+		// 广播给所有在线的用户
+		for _, v := range rsp2.MemberIdList {
+			user := DefaultUserManager.FindUser(v)
+			if user != nil {
+				user.BroadcastMessage(msg)
+			}
+		}
+	}
 }
 
 // 消息收到确认
@@ -456,7 +479,7 @@ func (tcp *TcpConn) onHandleMsgAck(header *cim.ImHeader, buff []byte) {
 
 	logger.Sugar.Infof("onHandleMsgAck from_id:%d,to_id:%d,"+
 		"session_type=%d,msg_id=%s,server_msg_id=%d,create_time=%d,res_code=%d",
-		req.FromUserId, req.ToSessionId, req.SessionType, req.MsgId, req.ServerMsgId, req.CreateTime, req.ResCode)
+		req.FromUserId, req.ToSessionId, req.SessionType, req.ClientMsgId, req.ServerMsgId, req.CreateTime, req.ResCode)
 
 	user := DefaultUserManager.FindUser(req.FromUserId)
 	if user != nil {

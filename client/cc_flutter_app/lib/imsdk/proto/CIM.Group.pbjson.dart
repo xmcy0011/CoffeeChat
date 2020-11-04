@@ -174,6 +174,23 @@ const CIMGroupKickOutMemberRsp$json = const {
   ],
 };
 
+const CIMGroupMemberListReq$json = const {
+  '1': 'CIMGroupMemberListReq',
+  '2': const [
+    const {'1': 'user_id', '3': 1, '4': 1, '5': 4, '10': 'userId'},
+    const {'1': 'group_id', '3': 2, '4': 1, '5': 4, '10': 'groupId'},
+  ],
+};
+
+const CIMGroupMemberListRsp$json = const {
+  '1': 'CIMGroupMemberListRsp',
+  '2': const [
+    const {'1': 'user_id', '3': 1, '4': 1, '5': 4, '10': 'userId'},
+    const {'1': 'group_id', '3': 2, '4': 1, '5': 4, '10': 'groupId'},
+    const {'1': 'member_id_list', '3': 3, '4': 3, '5': 4, '10': 'memberIdList'},
+  ],
+};
+
 const CIMGroupMemberChangedNotify$json = const {
   '1': 'CIMGroupMemberChangedNotify',
   '2': const [

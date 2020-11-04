@@ -1177,6 +1177,127 @@ func (x *CIMGroupKickOutMemberRsp) GetAttachNotificatinoMsg() []byte {
 	return nil
 }
 
+// 查询群成员列表
+type CIMGroupMemberListReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// cmd id: 		0x516
+	UserId  uint64 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	GroupId uint64 `protobuf:"varint,2,opt,name=group_id,json=groupId,proto3" json:"group_id,omitempty"`
+}
+
+func (x *CIMGroupMemberListReq) Reset() {
+	*x = CIMGroupMemberListReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_CIM_Group_proto_msgTypes[14]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *CIMGroupMemberListReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CIMGroupMemberListReq) ProtoMessage() {}
+
+func (x *CIMGroupMemberListReq) ProtoReflect() protoreflect.Message {
+	mi := &file_CIM_Group_proto_msgTypes[14]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CIMGroupMemberListReq.ProtoReflect.Descriptor instead.
+func (*CIMGroupMemberListReq) Descriptor() ([]byte, []int) {
+	return file_CIM_Group_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *CIMGroupMemberListReq) GetUserId() uint64 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
+}
+
+func (x *CIMGroupMemberListReq) GetGroupId() uint64 {
+	if x != nil {
+		return x.GroupId
+	}
+	return 0
+}
+
+type CIMGroupMemberListRsp struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// cmd id: 		0x517
+	UserId       uint64   `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	GroupId      uint64   `protobuf:"varint,2,opt,name=group_id,json=groupId,proto3" json:"group_id,omitempty"`
+	MemberIdList []uint64 `protobuf:"varint,3,rep,packed,name=member_id_list,json=memberIdList,proto3" json:"member_id_list,omitempty"` // 成员ID列表
+}
+
+func (x *CIMGroupMemberListRsp) Reset() {
+	*x = CIMGroupMemberListRsp{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_CIM_Group_proto_msgTypes[15]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *CIMGroupMemberListRsp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CIMGroupMemberListRsp) ProtoMessage() {}
+
+func (x *CIMGroupMemberListRsp) ProtoReflect() protoreflect.Message {
+	mi := &file_CIM_Group_proto_msgTypes[15]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CIMGroupMemberListRsp.ProtoReflect.Descriptor instead.
+func (*CIMGroupMemberListRsp) Descriptor() ([]byte, []int) {
+	return file_CIM_Group_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *CIMGroupMemberListRsp) GetUserId() uint64 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
+}
+
+func (x *CIMGroupMemberListRsp) GetGroupId() uint64 {
+	if x != nil {
+		return x.GroupId
+	}
+	return 0
+}
+
+func (x *CIMGroupMemberListRsp) GetMemberIdList() []uint64 {
+	if x != nil {
+		return x.MemberIdList
+	}
+	return nil
+}
+
 // 群成员变更通知
 type CIMGroupMemberChangedNotify struct {
 	state         protoimpl.MessageState
@@ -1192,7 +1313,7 @@ type CIMGroupMemberChangedNotify struct {
 func (x *CIMGroupMemberChangedNotify) Reset() {
 	*x = CIMGroupMemberChangedNotify{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_CIM_Group_proto_msgTypes[14]
+		mi := &file_CIM_Group_proto_msgTypes[16]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1205,7 +1326,7 @@ func (x *CIMGroupMemberChangedNotify) String() string {
 func (*CIMGroupMemberChangedNotify) ProtoMessage() {}
 
 func (x *CIMGroupMemberChangedNotify) ProtoReflect() protoreflect.Message {
-	mi := &file_CIM_Group_proto_msgTypes[14]
+	mi := &file_CIM_Group_proto_msgTypes[16]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1218,7 +1339,7 @@ func (x *CIMGroupMemberChangedNotify) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CIMGroupMemberChangedNotify.ProtoReflect.Descriptor instead.
 func (*CIMGroupMemberChangedNotify) Descriptor() ([]byte, []int) {
-	return file_CIM_Group_proto_rawDescGZIP(), []int{14}
+	return file_CIM_Group_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *CIMGroupMemberChangedNotify) GetUserId() uint64 {
@@ -1255,7 +1376,7 @@ type CIMGroupMemberChangedInfo struct {
 func (x *CIMGroupMemberChangedInfo) Reset() {
 	*x = CIMGroupMemberChangedInfo{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_CIM_Group_proto_msgTypes[15]
+		mi := &file_CIM_Group_proto_msgTypes[17]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1268,7 +1389,7 @@ func (x *CIMGroupMemberChangedInfo) String() string {
 func (*CIMGroupMemberChangedInfo) ProtoMessage() {}
 
 func (x *CIMGroupMemberChangedInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_CIM_Group_proto_msgTypes[15]
+	mi := &file_CIM_Group_proto_msgTypes[17]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1281,7 +1402,7 @@ func (x *CIMGroupMemberChangedInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CIMGroupMemberChangedInfo.ProtoReflect.Descriptor instead.
 func (*CIMGroupMemberChangedInfo) Descriptor() ([]byte, []int) {
-	return file_CIM_Group_proto_rawDescGZIP(), []int{15}
+	return file_CIM_Group_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *CIMGroupMemberChangedInfo) GetUserId() uint64 {
@@ -1321,7 +1442,7 @@ type CIMGroupInfo struct {
 func (x *CIMGroupInfo) Reset() {
 	*x = CIMGroupInfo{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_CIM_Group_proto_msgTypes[16]
+		mi := &file_CIM_Group_proto_msgTypes[18]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1334,7 +1455,7 @@ func (x *CIMGroupInfo) String() string {
 func (*CIMGroupInfo) ProtoMessage() {}
 
 func (x *CIMGroupInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_CIM_Group_proto_msgTypes[16]
+	mi := &file_CIM_Group_proto_msgTypes[18]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1347,7 +1468,7 @@ func (x *CIMGroupInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CIMGroupInfo.ProtoReflect.Descriptor instead.
 func (*CIMGroupInfo) Descriptor() ([]byte, []int) {
-	return file_CIM_Group_proto_rawDescGZIP(), []int{16}
+	return file_CIM_Group_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *CIMGroupInfo) GetGroupId() uint64 {
@@ -1447,7 +1568,7 @@ type CIMGroupVersionInfo struct {
 func (x *CIMGroupVersionInfo) Reset() {
 	*x = CIMGroupVersionInfo{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_CIM_Group_proto_msgTypes[17]
+		mi := &file_CIM_Group_proto_msgTypes[19]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1460,7 +1581,7 @@ func (x *CIMGroupVersionInfo) String() string {
 func (*CIMGroupVersionInfo) ProtoMessage() {}
 
 func (x *CIMGroupVersionInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_CIM_Group_proto_msgTypes[17]
+	mi := &file_CIM_Group_proto_msgTypes[19]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1473,7 +1594,7 @@ func (x *CIMGroupVersionInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CIMGroupVersionInfo.ProtoReflect.Descriptor instead.
 func (*CIMGroupVersionInfo) Descriptor() ([]byte, []int) {
-	return file_CIM_Group_proto_rawDescGZIP(), []int{17}
+	return file_CIM_Group_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *CIMGroupVersionInfo) GetGroupId() uint64 {
@@ -1608,7 +1729,19 @@ var file_CIM_Group_proto_rawDesc = []byte{
 	0x6c, 0x74, 0x43, 0x6f, 0x64, 0x65, 0x12, 0x36, 0x0a, 0x17, 0x61, 0x74, 0x74, 0x61, 0x63, 0x68,
 	0x5f, 0x6e, 0x6f, 0x74, 0x69, 0x66, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6e, 0x6f, 0x5f, 0x6d, 0x73,
 	0x67, 0x18, 0x0a, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x15, 0x61, 0x74, 0x74, 0x61, 0x63, 0x68, 0x4e,
-	0x6f, 0x74, 0x69, 0x66, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6e, 0x6f, 0x4d, 0x73, 0x67, 0x22, 0x9a,
+	0x6f, 0x74, 0x69, 0x66, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6e, 0x6f, 0x4d, 0x73, 0x67, 0x22, 0x4b,
+	0x0a, 0x15, 0x43, 0x49, 0x4d, 0x47, 0x72, 0x6f, 0x75, 0x70, 0x4d, 0x65, 0x6d, 0x62, 0x65, 0x72,
+	0x4c, 0x69, 0x73, 0x74, 0x52, 0x65, 0x71, 0x12, 0x17, 0x0a, 0x07, 0x75, 0x73, 0x65, 0x72, 0x5f,
+	0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64,
+	0x12, 0x19, 0x0a, 0x08, 0x67, 0x72, 0x6f, 0x75, 0x70, 0x5f, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01,
+	0x28, 0x04, 0x52, 0x07, 0x67, 0x72, 0x6f, 0x75, 0x70, 0x49, 0x64, 0x22, 0x71, 0x0a, 0x15, 0x43,
+	0x49, 0x4d, 0x47, 0x72, 0x6f, 0x75, 0x70, 0x4d, 0x65, 0x6d, 0x62, 0x65, 0x72, 0x4c, 0x69, 0x73,
+	0x74, 0x52, 0x73, 0x70, 0x12, 0x17, 0x0a, 0x07, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x12, 0x19, 0x0a,
+	0x08, 0x67, 0x72, 0x6f, 0x75, 0x70, 0x5f, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x04, 0x52,
+	0x07, 0x67, 0x72, 0x6f, 0x75, 0x70, 0x49, 0x64, 0x12, 0x24, 0x0a, 0x0e, 0x6d, 0x65, 0x6d, 0x62,
+	0x65, 0x72, 0x5f, 0x69, 0x64, 0x5f, 0x6c, 0x69, 0x73, 0x74, 0x18, 0x03, 0x20, 0x03, 0x28, 0x04,
+	0x52, 0x0c, 0x6d, 0x65, 0x6d, 0x62, 0x65, 0x72, 0x49, 0x64, 0x4c, 0x69, 0x73, 0x74, 0x22, 0x9a,
 	0x01, 0x0a, 0x1b, 0x43, 0x49, 0x4d, 0x47, 0x72, 0x6f, 0x75, 0x70, 0x4d, 0x65, 0x6d, 0x62, 0x65,
 	0x72, 0x43, 0x68, 0x61, 0x6e, 0x67, 0x65, 0x64, 0x4e, 0x6f, 0x74, 0x69, 0x66, 0x79, 0x12, 0x17,
 	0x0a, 0x07, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52,
@@ -1719,7 +1852,7 @@ func file_CIM_Group_proto_rawDescGZIP() []byte {
 }
 
 var file_CIM_Group_proto_enumTypes = make([]protoimpl.EnumInfo, 5)
-var file_CIM_Group_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
+var file_CIM_Group_proto_msgTypes = make([]protoimpl.MessageInfo, 20)
 var file_CIM_Group_proto_goTypes = []interface{}{
 	(CIMGroupMemberChangedType)(0),      // 0: CIM.Group.CIMGroupMemberChangedType
 	(CIMGroupType)(0),                   // 1: CIM.Group.CIMGroupType
@@ -1740,17 +1873,19 @@ var file_CIM_Group_proto_goTypes = []interface{}{
 	(*CIMGroupInviteMemberRsp)(nil),     // 16: CIM.Group.CIMGroupInviteMemberRsp
 	(*CIMGroupKickOutMemberReq)(nil),    // 17: CIM.Group.CIMGroupKickOutMemberReq
 	(*CIMGroupKickOutMemberRsp)(nil),    // 18: CIM.Group.CIMGroupKickOutMemberRsp
-	(*CIMGroupMemberChangedNotify)(nil), // 19: CIM.Group.CIMGroupMemberChangedNotify
-	(*CIMGroupMemberChangedInfo)(nil),   // 20: CIM.Group.CIMGroupMemberChangedInfo
-	(*CIMGroupInfo)(nil),                // 21: CIM.Group.CIMGroupInfo
-	(*CIMGroupVersionInfo)(nil),         // 22: CIM.Group.CIMGroupVersionInfo
+	(*CIMGroupMemberListReq)(nil),       // 19: CIM.Group.CIMGroupMemberListReq
+	(*CIMGroupMemberListRsp)(nil),       // 20: CIM.Group.CIMGroupMemberListRsp
+	(*CIMGroupMemberChangedNotify)(nil), // 21: CIM.Group.CIMGroupMemberChangedNotify
+	(*CIMGroupMemberChangedInfo)(nil),   // 22: CIM.Group.CIMGroupMemberChangedInfo
+	(*CIMGroupInfo)(nil),                // 23: CIM.Group.CIMGroupInfo
+	(*CIMGroupVersionInfo)(nil),         // 24: CIM.Group.CIMGroupVersionInfo
 }
 var file_CIM_Group_proto_depIdxs = []int32{
-	21, // 0: CIM.Group.CIMGroupCreateRsp.group_info:type_name -> CIM.Group.CIMGroupInfo
-	22, // 1: CIM.Group.CIMGroupListRsp.group_version_list:type_name -> CIM.Group.CIMGroupVersionInfo
-	22, // 2: CIM.Group.CIMGroupInfoReq.group_version_list:type_name -> CIM.Group.CIMGroupVersionInfo
-	21, // 3: CIM.Group.CIMGroupInfoRsp.group_info_list:type_name -> CIM.Group.CIMGroupInfo
-	20, // 4: CIM.Group.CIMGroupMemberChangedNotify.changed_list:type_name -> CIM.Group.CIMGroupMemberChangedInfo
+	23, // 0: CIM.Group.CIMGroupCreateRsp.group_info:type_name -> CIM.Group.CIMGroupInfo
+	24, // 1: CIM.Group.CIMGroupListRsp.group_version_list:type_name -> CIM.Group.CIMGroupVersionInfo
+	24, // 2: CIM.Group.CIMGroupInfoReq.group_version_list:type_name -> CIM.Group.CIMGroupVersionInfo
+	23, // 3: CIM.Group.CIMGroupInfoRsp.group_info_list:type_name -> CIM.Group.CIMGroupInfo
+	22, // 4: CIM.Group.CIMGroupMemberChangedNotify.changed_list:type_name -> CIM.Group.CIMGroupMemberChangedInfo
 	0,  // 5: CIM.Group.CIMGroupMemberChangedInfo.type:type_name -> CIM.Group.CIMGroupMemberChangedType
 	1,  // 6: CIM.Group.CIMGroupInfo.group_type:type_name -> CIM.Group.CIMGroupType
 	2,  // 7: CIM.Group.CIMGroupInfo.join_model:type_name -> CIM.Group.CIMGroupJoinModel
@@ -1938,7 +2073,7 @@ func file_CIM_Group_proto_init() {
 			}
 		}
 		file_CIM_Group_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CIMGroupMemberChangedNotify); i {
+			switch v := v.(*CIMGroupMemberListReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1950,7 +2085,7 @@ func file_CIM_Group_proto_init() {
 			}
 		}
 		file_CIM_Group_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CIMGroupMemberChangedInfo); i {
+			switch v := v.(*CIMGroupMemberListRsp); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1962,7 +2097,7 @@ func file_CIM_Group_proto_init() {
 			}
 		}
 		file_CIM_Group_proto_msgTypes[16].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CIMGroupInfo); i {
+			switch v := v.(*CIMGroupMemberChangedNotify); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1974,6 +2109,30 @@ func file_CIM_Group_proto_init() {
 			}
 		}
 		file_CIM_Group_proto_msgTypes[17].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*CIMGroupMemberChangedInfo); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_CIM_Group_proto_msgTypes[18].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*CIMGroupInfo); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_CIM_Group_proto_msgTypes[19].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*CIMGroupVersionInfo); i {
 			case 0:
 				return &v.state
@@ -1992,7 +2151,7 @@ func file_CIM_Group_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_CIM_Group_proto_rawDesc,
 			NumEnums:      5,
-			NumMessages:   18,
+			NumMessages:   20,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

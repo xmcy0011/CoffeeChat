@@ -36,7 +36,10 @@ struct CIM_Message_CIMMsgData {
   var toSessionID: UInt64 = 0
 
   /// 客户端消息ID，唯一（UUID）
-  var msgID: String = String()
+  var clientMsgID: String = String()
+
+  /// 服务端生成的消息ID，顺序（客户端发送时无需设置）
+  var serverMsgID: UInt64 = 0
 
   /// 消息创建时间戳(秒)
   var createTime: Int32 = 0
@@ -68,7 +71,7 @@ struct CIM_Message_CIMMsgDataAck {
   var toSessionID: UInt64 = 0
 
   /// 客户端消息ID，唯一（UUID）
-  var msgID: String = String()
+  var clientMsgID: String = String()
 
   /// 服务端生成的消息ID，顺序
   var serverMsgID: UInt64 = 0
@@ -218,11 +221,12 @@ extension CIM_Message_CIMMsgData: SwiftProtobuf.Message, SwiftProtobuf._MessageI
     1: .standard(proto: "from_user_id"),
     2: .standard(proto: "from_nick_name"),
     3: .standard(proto: "to_session_id"),
-    4: .standard(proto: "msg_id"),
-    5: .standard(proto: "create_time"),
-    6: .standard(proto: "msg_type"),
-    7: .standard(proto: "session_type"),
-    8: .standard(proto: "msg_data"),
+    4: .standard(proto: "client_msg_id"),
+    5: .standard(proto: "server_msg_id"),
+    6: .standard(proto: "create_time"),
+    7: .standard(proto: "msg_type"),
+    8: .standard(proto: "session_type"),
+    9: .standard(proto: "msg_data"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -231,11 +235,12 @@ extension CIM_Message_CIMMsgData: SwiftProtobuf.Message, SwiftProtobuf._MessageI
       case 1: try decoder.decodeSingularUInt64Field(value: &self.fromUserID)
       case 2: try decoder.decodeSingularStringField(value: &self.fromNickName)
       case 3: try decoder.decodeSingularUInt64Field(value: &self.toSessionID)
-      case 4: try decoder.decodeSingularStringField(value: &self.msgID)
-      case 5: try decoder.decodeSingularInt32Field(value: &self.createTime)
-      case 6: try decoder.decodeSingularEnumField(value: &self.msgType)
-      case 7: try decoder.decodeSingularEnumField(value: &self.sessionType)
-      case 8: try decoder.decodeSingularBytesField(value: &self.msgData)
+      case 4: try decoder.decodeSingularStringField(value: &self.clientMsgID)
+      case 5: try decoder.decodeSingularUInt64Field(value: &self.serverMsgID)
+      case 6: try decoder.decodeSingularInt32Field(value: &self.createTime)
+      case 7: try decoder.decodeSingularEnumField(value: &self.msgType)
+      case 8: try decoder.decodeSingularEnumField(value: &self.sessionType)
+      case 9: try decoder.decodeSingularBytesField(value: &self.msgData)
       default: break
       }
     }
@@ -251,20 +256,23 @@ extension CIM_Message_CIMMsgData: SwiftProtobuf.Message, SwiftProtobuf._MessageI
     if self.toSessionID != 0 {
       try visitor.visitSingularUInt64Field(value: self.toSessionID, fieldNumber: 3)
     }
-    if !self.msgID.isEmpty {
-      try visitor.visitSingularStringField(value: self.msgID, fieldNumber: 4)
+    if !self.clientMsgID.isEmpty {
+      try visitor.visitSingularStringField(value: self.clientMsgID, fieldNumber: 4)
+    }
+    if self.serverMsgID != 0 {
+      try visitor.visitSingularUInt64Field(value: self.serverMsgID, fieldNumber: 5)
     }
     if self.createTime != 0 {
-      try visitor.visitSingularInt32Field(value: self.createTime, fieldNumber: 5)
+      try visitor.visitSingularInt32Field(value: self.createTime, fieldNumber: 6)
     }
     if self.msgType != .kCimMsgTypeUnknown {
-      try visitor.visitSingularEnumField(value: self.msgType, fieldNumber: 6)
+      try visitor.visitSingularEnumField(value: self.msgType, fieldNumber: 7)
     }
     if self.sessionType != .kCimSessionTypeInvalid {
-      try visitor.visitSingularEnumField(value: self.sessionType, fieldNumber: 7)
+      try visitor.visitSingularEnumField(value: self.sessionType, fieldNumber: 8)
     }
     if !self.msgData.isEmpty {
-      try visitor.visitSingularBytesField(value: self.msgData, fieldNumber: 8)
+      try visitor.visitSingularBytesField(value: self.msgData, fieldNumber: 9)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -273,7 +281,8 @@ extension CIM_Message_CIMMsgData: SwiftProtobuf.Message, SwiftProtobuf._MessageI
     if lhs.fromUserID != rhs.fromUserID {return false}
     if lhs.fromNickName != rhs.fromNickName {return false}
     if lhs.toSessionID != rhs.toSessionID {return false}
-    if lhs.msgID != rhs.msgID {return false}
+    if lhs.clientMsgID != rhs.clientMsgID {return false}
+    if lhs.serverMsgID != rhs.serverMsgID {return false}
     if lhs.createTime != rhs.createTime {return false}
     if lhs.msgType != rhs.msgType {return false}
     if lhs.sessionType != rhs.sessionType {return false}
@@ -288,8 +297,8 @@ extension CIM_Message_CIMMsgDataAck: SwiftProtobuf.Message, SwiftProtobuf._Messa
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "from_user_id"),
     2: .standard(proto: "to_session_id"),
-    4: .standard(proto: "msg_id"),
-    3: .standard(proto: "server_msg_id"),
+    3: .standard(proto: "client_msg_id"),
+    4: .standard(proto: "server_msg_id"),
     5: .standard(proto: "res_code"),
     6: .standard(proto: "session_type"),
     7: .standard(proto: "create_time"),
@@ -300,8 +309,8 @@ extension CIM_Message_CIMMsgDataAck: SwiftProtobuf.Message, SwiftProtobuf._Messa
       switch fieldNumber {
       case 1: try decoder.decodeSingularUInt64Field(value: &self.fromUserID)
       case 2: try decoder.decodeSingularUInt64Field(value: &self.toSessionID)
-      case 3: try decoder.decodeSingularUInt64Field(value: &self.serverMsgID)
-      case 4: try decoder.decodeSingularStringField(value: &self.msgID)
+      case 3: try decoder.decodeSingularStringField(value: &self.clientMsgID)
+      case 4: try decoder.decodeSingularUInt64Field(value: &self.serverMsgID)
       case 5: try decoder.decodeSingularEnumField(value: &self.resCode)
       case 6: try decoder.decodeSingularEnumField(value: &self.sessionType)
       case 7: try decoder.decodeSingularInt32Field(value: &self.createTime)
@@ -317,11 +326,11 @@ extension CIM_Message_CIMMsgDataAck: SwiftProtobuf.Message, SwiftProtobuf._Messa
     if self.toSessionID != 0 {
       try visitor.visitSingularUInt64Field(value: self.toSessionID, fieldNumber: 2)
     }
-    if self.serverMsgID != 0 {
-      try visitor.visitSingularUInt64Field(value: self.serverMsgID, fieldNumber: 3)
+    if !self.clientMsgID.isEmpty {
+      try visitor.visitSingularStringField(value: self.clientMsgID, fieldNumber: 3)
     }
-    if !self.msgID.isEmpty {
-      try visitor.visitSingularStringField(value: self.msgID, fieldNumber: 4)
+    if self.serverMsgID != 0 {
+      try visitor.visitSingularUInt64Field(value: self.serverMsgID, fieldNumber: 4)
     }
     if self.resCode != .kCimResCodeUnknown {
       try visitor.visitSingularEnumField(value: self.resCode, fieldNumber: 5)
@@ -338,7 +347,7 @@ extension CIM_Message_CIMMsgDataAck: SwiftProtobuf.Message, SwiftProtobuf._Messa
   static func ==(lhs: CIM_Message_CIMMsgDataAck, rhs: CIM_Message_CIMMsgDataAck) -> Bool {
     if lhs.fromUserID != rhs.fromUserID {return false}
     if lhs.toSessionID != rhs.toSessionID {return false}
-    if lhs.msgID != rhs.msgID {return false}
+    if lhs.clientMsgID != rhs.clientMsgID {return false}
     if lhs.serverMsgID != rhs.serverMsgID {return false}
     if lhs.resCode != rhs.resCode {return false}
     if lhs.sessionType != rhs.sessionType {return false}

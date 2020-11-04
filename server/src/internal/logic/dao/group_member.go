@@ -170,3 +170,29 @@ func (g *GroupMember) ListGroup(memberId uint64) ([]uint64, error) {
 	}
 	return groupIdArr, nil
 }
+
+// 查询群成员列表
+func (g *GroupMember) ListMember(groupId uint64) ([]uint64, error) {
+	session := db.DefaultManager.GetDBSlave()
+	if session == nil {
+		logger.Sugar.Error("no db connect for slave")
+		return nil, unConnectError
+	}
+
+	sql := fmt.Sprintf("select user_id from %s where group_id=%d and del_flag=0", kGroupMemberTable, groupId)
+	rows, err := session.Query(sql)
+	if err != nil {
+		logger.Sugar.Warn(err.Error())
+		return nil, err
+	}
+
+	memberIdArr := make([]uint64, 0)
+	for rows.Next() {
+		id := uint64(0)
+		err := rows.Scan(&id)
+		if err == nil {
+			memberIdArr = append(memberIdArr, id)
+		}
+	}
+	return memberIdArr, nil
+}

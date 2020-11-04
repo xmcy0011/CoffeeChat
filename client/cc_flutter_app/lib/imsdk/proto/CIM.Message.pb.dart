@@ -19,11 +19,12 @@ class CIMMsgData extends $pb.GeneratedMessage {
     ..a<$fixnum.Int64>(1, 'fromUserId', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
     ..aOS(2, 'fromNickName')
     ..a<$fixnum.Int64>(3, 'toSessionId', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
-    ..aOS(4, 'msgId')
-    ..a<$core.int>(5, 'createTime', $pb.PbFieldType.O3)
-    ..e<$0.CIMMsgType>(6, 'msgType', $pb.PbFieldType.OE, defaultOrMaker: $0.CIMMsgType.kCIM_MSG_TYPE_UNKNOWN, valueOf: $0.CIMMsgType.valueOf, enumValues: $0.CIMMsgType.values)
-    ..e<$0.CIMSessionType>(7, 'sessionType', $pb.PbFieldType.OE, defaultOrMaker: $0.CIMSessionType.kCIM_SESSION_TYPE_Invalid, valueOf: $0.CIMSessionType.valueOf, enumValues: $0.CIMSessionType.values)
-    ..a<$core.List<$core.int>>(8, 'msgData', $pb.PbFieldType.OY)
+    ..aOS(4, 'clientMsgId')
+    ..a<$fixnum.Int64>(5, 'serverMsgId', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
+    ..a<$core.int>(6, 'createTime', $pb.PbFieldType.O3)
+    ..e<$0.CIMMsgType>(7, 'msgType', $pb.PbFieldType.OE, defaultOrMaker: $0.CIMMsgType.kCIM_MSG_TYPE_UNKNOWN, valueOf: $0.CIMMsgType.valueOf, enumValues: $0.CIMMsgType.values)
+    ..e<$0.CIMSessionType>(8, 'sessionType', $pb.PbFieldType.OE, defaultOrMaker: $0.CIMSessionType.kCIM_SESSION_TYPE_Invalid, valueOf: $0.CIMSessionType.valueOf, enumValues: $0.CIMSessionType.values)
+    ..a<$core.List<$core.int>>(9, 'msgData', $pb.PbFieldType.OY)
     ..hasRequiredFields = false
   ;
 
@@ -70,57 +71,66 @@ class CIMMsgData extends $pb.GeneratedMessage {
   void clearToSessionId() => clearField(3);
 
   @$pb.TagNumber(4)
-  $core.String get msgId => $_getSZ(3);
+  $core.String get clientMsgId => $_getSZ(3);
   @$pb.TagNumber(4)
-  set msgId($core.String v) { $_setString(3, v); }
+  set clientMsgId($core.String v) { $_setString(3, v); }
   @$pb.TagNumber(4)
-  $core.bool hasMsgId() => $_has(3);
+  $core.bool hasClientMsgId() => $_has(3);
   @$pb.TagNumber(4)
-  void clearMsgId() => clearField(4);
+  void clearClientMsgId() => clearField(4);
 
   @$pb.TagNumber(5)
-  $core.int get createTime => $_getIZ(4);
+  $fixnum.Int64 get serverMsgId => $_getI64(4);
   @$pb.TagNumber(5)
-  set createTime($core.int v) { $_setSignedInt32(4, v); }
+  set serverMsgId($fixnum.Int64 v) { $_setInt64(4, v); }
   @$pb.TagNumber(5)
-  $core.bool hasCreateTime() => $_has(4);
+  $core.bool hasServerMsgId() => $_has(4);
   @$pb.TagNumber(5)
-  void clearCreateTime() => clearField(5);
+  void clearServerMsgId() => clearField(5);
 
   @$pb.TagNumber(6)
-  $0.CIMMsgType get msgType => $_getN(5);
+  $core.int get createTime => $_getIZ(5);
   @$pb.TagNumber(6)
-  set msgType($0.CIMMsgType v) { setField(6, v); }
+  set createTime($core.int v) { $_setSignedInt32(5, v); }
   @$pb.TagNumber(6)
-  $core.bool hasMsgType() => $_has(5);
+  $core.bool hasCreateTime() => $_has(5);
   @$pb.TagNumber(6)
-  void clearMsgType() => clearField(6);
+  void clearCreateTime() => clearField(6);
 
   @$pb.TagNumber(7)
-  $0.CIMSessionType get sessionType => $_getN(6);
+  $0.CIMMsgType get msgType => $_getN(6);
   @$pb.TagNumber(7)
-  set sessionType($0.CIMSessionType v) { setField(7, v); }
+  set msgType($0.CIMMsgType v) { setField(7, v); }
   @$pb.TagNumber(7)
-  $core.bool hasSessionType() => $_has(6);
+  $core.bool hasMsgType() => $_has(6);
   @$pb.TagNumber(7)
-  void clearSessionType() => clearField(7);
+  void clearMsgType() => clearField(7);
 
   @$pb.TagNumber(8)
-  $core.List<$core.int> get msgData => $_getN(7);
+  $0.CIMSessionType get sessionType => $_getN(7);
   @$pb.TagNumber(8)
-  set msgData($core.List<$core.int> v) { $_setBytes(7, v); }
+  set sessionType($0.CIMSessionType v) { setField(8, v); }
   @$pb.TagNumber(8)
-  $core.bool hasMsgData() => $_has(7);
+  $core.bool hasSessionType() => $_has(7);
   @$pb.TagNumber(8)
-  void clearMsgData() => clearField(8);
+  void clearSessionType() => clearField(8);
+
+  @$pb.TagNumber(9)
+  $core.List<$core.int> get msgData => $_getN(8);
+  @$pb.TagNumber(9)
+  set msgData($core.List<$core.int> v) { $_setBytes(8, v); }
+  @$pb.TagNumber(9)
+  $core.bool hasMsgData() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearMsgData() => clearField(9);
 }
 
 class CIMMsgDataAck extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('CIMMsgDataAck', package: const $pb.PackageName('CIM.Message'), createEmptyInstance: create)
     ..a<$fixnum.Int64>(1, 'fromUserId', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
     ..a<$fixnum.Int64>(2, 'toSessionId', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
-    ..a<$fixnum.Int64>(3, 'serverMsgId', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
-    ..aOS(4, 'msgId')
+    ..aOS(3, 'clientMsgId')
+    ..a<$fixnum.Int64>(4, 'serverMsgId', $pb.PbFieldType.OU6, defaultOrMaker: $fixnum.Int64.ZERO)
     ..e<$0.CIMResCode>(5, 'resCode', $pb.PbFieldType.OE, defaultOrMaker: $0.CIMResCode.kCIM_RES_CODE_UNKNOWN, valueOf: $0.CIMResCode.valueOf, enumValues: $0.CIMResCode.values)
     ..e<$0.CIMSessionType>(6, 'sessionType', $pb.PbFieldType.OE, defaultOrMaker: $0.CIMSessionType.kCIM_SESSION_TYPE_Invalid, valueOf: $0.CIMSessionType.valueOf, enumValues: $0.CIMSessionType.values)
     ..a<$core.int>(7, 'createTime', $pb.PbFieldType.O3)
@@ -161,22 +171,22 @@ class CIMMsgDataAck extends $pb.GeneratedMessage {
   void clearToSessionId() => clearField(2);
 
   @$pb.TagNumber(3)
-  $fixnum.Int64 get serverMsgId => $_getI64(2);
+  $core.String get clientMsgId => $_getSZ(2);
   @$pb.TagNumber(3)
-  set serverMsgId($fixnum.Int64 v) { $_setInt64(2, v); }
+  set clientMsgId($core.String v) { $_setString(2, v); }
   @$pb.TagNumber(3)
-  $core.bool hasServerMsgId() => $_has(2);
+  $core.bool hasClientMsgId() => $_has(2);
   @$pb.TagNumber(3)
-  void clearServerMsgId() => clearField(3);
+  void clearClientMsgId() => clearField(3);
 
   @$pb.TagNumber(4)
-  $core.String get msgId => $_getSZ(3);
+  $fixnum.Int64 get serverMsgId => $_getI64(3);
   @$pb.TagNumber(4)
-  set msgId($core.String v) { $_setString(3, v); }
+  set serverMsgId($fixnum.Int64 v) { $_setInt64(3, v); }
   @$pb.TagNumber(4)
-  $core.bool hasMsgId() => $_has(3);
+  $core.bool hasServerMsgId() => $_has(3);
   @$pb.TagNumber(4)
-  void clearMsgId() => clearField(4);
+  void clearServerMsgId() => clearField(4);
 
   @$pb.TagNumber(5)
   $0.CIMResCode get resCode => $_getN(4);

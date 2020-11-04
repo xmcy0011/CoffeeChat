@@ -54,9 +54,11 @@ enum CIMCmdID {
   kCIM_CID_GROUP_KICK_OUT_MEMBER_REQ = 0x513; // 踢人
   kCIM_CID_GROUP_KICK_OUT_MEMBER_RSP = 0x514;
   kCIM_CID_GROUP_MEMBER_CHANGED_NOTIFY = 0x515; // 群成员变更通知
+  kCIM_CID_GROUP_LIST_MEMBER_REQ = 0x516; // 查询群成员列表
+  kCIM_CID_GROUP_LIST_MEMBER_RSP = 0x517;
 
-  kCIM_CID_FRIEND_QUERY_USER_LIST_REQ =
-      0x601; // 查询用户列表（目前没有实现好友机制，所以便于测试，随机返回系统中注册的50个以内用户）
+  // 查询用户列表（目前没有实现好友机制，所以便于测试，随机返回系统中注册的50个以内用户）
+  kCIM_CID_FRIEND_QUERY_USER_LIST_REQ = 0x601; 
   kCIM_CID_FRIEND_QUERY_USER_LIST_RSP = 0x602;
 }
 

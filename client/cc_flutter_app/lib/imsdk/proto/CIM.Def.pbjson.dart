@@ -48,6 +48,8 @@ const CIMCmdID$json = const {
     const {'1': 'kCIM_CID_GROUP_KICK_OUT_MEMBER_REQ', '2': 1299},
     const {'1': 'kCIM_CID_GROUP_KICK_OUT_MEMBER_RSP', '2': 1300},
     const {'1': 'kCIM_CID_GROUP_MEMBER_CHANGED_NOTIFY', '2': 1301},
+    const {'1': 'kCIM_CID_GROUP_LIST_MEMBER_REQ', '2': 1302},
+    const {'1': 'kCIM_CID_GROUP_LIST_MEMBER_RSP', '2': 1303},
     const {'1': 'kCIM_CID_FRIEND_QUERY_USER_LIST_REQ', '2': 1537},
     const {'1': 'kCIM_CID_FRIEND_QUERY_USER_LIST_RSP', '2': 1538},
   ],

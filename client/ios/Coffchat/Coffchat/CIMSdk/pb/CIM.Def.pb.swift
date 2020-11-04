@@ -115,6 +115,10 @@ enum CIM_Def_CIMCmdID: SwiftProtobuf.Enum {
   /// 群成员变更通知
   case kCimCidGroupMemberChangedNotify // = 1301
 
+  /// 查询群成员列表
+  case kCimCidGroupListMemberReq // = 1302
+  case kCimCidGroupListMemberRsp // = 1303
+
   /// 查询用户列表（目前没有实现好友机制，所以便于测试，随机返回系统中注册的50个以内用户）
   case kCimCidFriendQueryUserListReq // = 1537
   case kCimCidFriendQueryUserListRsp // = 1538
@@ -166,6 +170,8 @@ enum CIM_Def_CIMCmdID: SwiftProtobuf.Enum {
     case 1299: self = .kCimCidGroupKickOutMemberReq
     case 1300: self = .kCimCidGroupKickOutMemberRsp
     case 1301: self = .kCimCidGroupMemberChangedNotify
+    case 1302: self = .kCimCidGroupListMemberReq
+    case 1303: self = .kCimCidGroupListMemberRsp
     case 1537: self = .kCimCidFriendQueryUserListReq
     case 1538: self = .kCimCidFriendQueryUserListRsp
     default: self = .UNRECOGNIZED(rawValue)
@@ -214,6 +220,8 @@ enum CIM_Def_CIMCmdID: SwiftProtobuf.Enum {
     case .kCimCidGroupKickOutMemberReq: return 1299
     case .kCimCidGroupKickOutMemberRsp: return 1300
     case .kCimCidGroupMemberChangedNotify: return 1301
+    case .kCimCidGroupListMemberReq: return 1302
+    case .kCimCidGroupListMemberRsp: return 1303
     case .kCimCidFriendQueryUserListReq: return 1537
     case .kCimCidFriendQueryUserListRsp: return 1538
     case .UNRECOGNIZED(let i): return i
@@ -267,6 +275,8 @@ extension CIM_Def_CIMCmdID: CaseIterable {
     .kCimCidGroupKickOutMemberReq,
     .kCimCidGroupKickOutMemberRsp,
     .kCimCidGroupMemberChangedNotify,
+    .kCimCidGroupListMemberReq,
+    .kCimCidGroupListMemberRsp,
     .kCimCidFriendQueryUserListReq,
     .kCimCidFriendQueryUserListRsp,
   ]
@@ -729,27 +739,27 @@ enum CIM_Def_CIMMsgNotificationType: SwiftProtobuf.Enum {
   case kCimMsgNotificationUnknown // = 0
 
   /// 创建群
-  /// {"groupId":"22","groupName":"测试群","owner":"1008",ids:["1001","1002"]}
+  /// {"groupId":"22","groupName":"测试群","owner":"1008","ownerNick":"1008",ids:["1001","1002"],nickNames:["1001","1002"]}
   case kCimMsgNotificationGroupCreate // = 1
 
   /// 群拉人（被拉）
-  /// {"groupId":"22","userId":“1008”,"ids":["1001", "1002"]}
+  /// {"groupId":"22","userId":“1008”,"ids":["1001", "1002"],nickNames:["1001","1002"]}
   case kCimMsgNotificationGroupBeInvite // = 2
 
   /// 群踢人
-  /// {"groupId":"22",“ownerUserId”:“1008”,"ids":["1001", "1002"]}
+  /// {"groupId":"22",“ownerUserId”:“1008”,"ids":["1001", "1002"],nickNames:["1001","1002"]}
   case kCimMsgNotificationGroupKick // = 3
 
   /// 退出群
-  /// {"groupId" : "22","user_namecards":["namecard1", "namecard2"]}
+  /// {"groupId":"22","ids":["1001", "1002"],nickNames:["1001","1002"]}
   case kCimMsgNotificationGroupLeave // = 4
 
   /// 群信息更新
-  /// {"team_info":team_info,"user_namecards":["namecard1", "namecard2"]}
+  /// {"team_info":team_info}
   case kCimMsgNotificationGroupUpdate // = 5
 
   /// 群解散
-  /// {"user_namecards":["namecard1", "namecard2"]}
+  /// {"groupId":"22"}
   case kCimMsgNotificationGroupDismiss // = 6
   case UNRECOGNIZED(Int)
 
@@ -1316,6 +1326,8 @@ extension CIM_Def_CIMCmdID: SwiftProtobuf._ProtoNameProviding {
     1299: .same(proto: "kCIM_CID_GROUP_KICK_OUT_MEMBER_REQ"),
     1300: .same(proto: "kCIM_CID_GROUP_KICK_OUT_MEMBER_RSP"),
     1301: .same(proto: "kCIM_CID_GROUP_MEMBER_CHANGED_NOTIFY"),
+    1302: .same(proto: "kCIM_CID_GROUP_LIST_MEMBER_REQ"),
+    1303: .same(proto: "kCIM_CID_GROUP_LIST_MEMBER_RSP"),
     1537: .same(proto: "kCIM_CID_FRIEND_QUERY_USER_LIST_REQ"),
     1538: .same(proto: "kCIM_CID_FRIEND_QUERY_USER_LIST_RSP"),
   ]
