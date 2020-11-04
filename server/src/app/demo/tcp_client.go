@@ -22,9 +22,9 @@ var heartBeatTicker *time.Ticker
 var seq uint16 = 0
 var seqMutex sync.Mutex
 
-const KUserId = 1009
+const KUserId = 1992
 const KUserToken = "12345"
-const KNickName = "demo"
+const KNickName = "三生三世十里桃花"
 
 func main() {
 	logger.InitLogger("log/log.log", "debug")
@@ -207,13 +207,13 @@ func sendMessage(toId uint64, text string) {
 	data := &cim.CIMMsgData{
 		FromUserId:  KUserId,
 		ToSessionId: toId,
-		MsgId:       uuid.NewV4().String(),
+		ClientMsgId: uuid.NewV4().String(),
 		CreateTime:  int32(time.Now().Unix()),
 		MsgType:     cim.CIMMsgType_kCIM_MSG_TYPE_TEXT,
 		SessionType: cim.CIMSessionType_kCIM_SESSION_TYPE_SINGLE,
 		MsgData:     []byte(text),
 	}
-	logger.Sugar.Infof("msgId:{%s} sending ...", data.MsgId)
+	logger.Sugar.Infof("msgId:{%s} sending ...", data.ClientMsgId)
 	_ = send(uint16(cim.CIMCmdID_kCIM_CID_MSG_DATA), data)
 }
 
@@ -247,7 +247,7 @@ func onHandleMsgDataAck(dataBuff []byte) {
 		return
 	}
 
-	logger.Sugar.Errorf("send msgId:{%s} success", ack.MsgId)
+	logger.Sugar.Errorf("send msgId:{%s} success", ack.ClientMsgId)
 }
 
 func onHandleMsgData(dataBuff []byte) {
@@ -262,7 +262,7 @@ func onHandleMsgData(dataBuff []byte) {
 	ack := &cim.CIMMsgDataAck{
 		FromUserId: KUserId,
 		//ToSessionId: msg.FromUserId,
-		MsgId:       msg.MsgId,
+		ClientMsgId: msg.ClientMsgId,
 		ServerMsgId: 0,
 		ResCode:     cim.CIMResCode_kCIM_RES_CODE_OK,
 		SessionType: msg.SessionType,
@@ -275,5 +275,6 @@ func onHandleMsgData(dataBuff []byte) {
 	}
 	_ = send(uint16(cim.CIMCmdID_kCIM_CID_MSG_DATA_ACK), ack)
 
-	logger.Sugar.Errorf("recv [%d]:[%s]", msg.FromUserId, string(msg.MsgData))
+	logger.Sugar.Errorf("recv [%d]->[%d] [%d] %s", msg.FromUserId, msg.ToSessionId, msg.MsgType,
+		string(msg.MsgData))
 }

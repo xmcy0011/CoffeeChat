@@ -23,7 +23,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2 # package 包含了一些 Cupertino widget 用到的图标资源
-  protobuf: ^0.13.0     # protobuf dart 支持
+  protobuf: ^1.0.1     # protobuf dart 支持
   intl: ^0.15.7         # 提供了国际化和本地化的能力
   provider: ^2.0.0+1    # 提供了一个用来跨界面管理 state 的简单办法
   shrine_images: ^1.0.0 # 有一些需要用到的产品和商店的元素

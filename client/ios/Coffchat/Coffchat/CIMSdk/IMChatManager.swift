@@ -79,22 +79,22 @@ class IMChatManager: IMClientDelegateData {
         msg.fromUserID = IMManager.singleton.userId!
         msg.fromNickName = IMManager.singleton.userNick!
         msg.toSessionID = toSessionId
-        msg.msgID = getUUID()
+        msg.clientMsgID = getUUID()
         msg.createTime = Int32(NSDate().timeIntervalSince1970)
         msg.msgType = msgType
         msg.sessionType = sessionType
         msg.msgData = msgData
 
-        let msg2 = IMMessage(clientId: msg.msgID, sessionType: sessionType, fromId: msg.fromUserID, toId: toSessionId, time: UInt32(msg.createTime), msgType: msg.msgType, data: String(data: msg.msgData, encoding: .utf8)!)
+        let msg2 = IMMessage(clientId: msg.clientMsgID, sessionType: sessionType, fromId: msg.fromUserID, toId: toSessionId, time: UInt32(msg.createTime), msgType: msg.msgType, data: String(data: msg.msgData, encoding: .utf8)!)
 
         // 缓存，确认发送成功，超时则失败
         let ackInfo = IMAckInfo(data: msg2)
-        ackMsgDic[msg.msgID] = ackInfo
+        ackMsgDic[msg.clientMsgID] = ackInfo
 
         IMLog.info(item: "send msg,clientMsgId:\(msg2.clientMsgId),msgType:\(msg2.msgType),to:\(msg2.toSessionId)")
 
         // 更新会话最后一条消息
-        let message = IMMessage(clientId: msg.msgID, sessionType: msg.sessionType, fromId: msg.fromUserID, toId: msg.toSessionID, time: UInt32(msg.createTime), msgType: msg.msgType, data: String(data: msg.msgData, encoding: .utf8)!)
+        let message = IMMessage(clientId: msg.clientMsgID, sessionType: msg.sessionType, fromId: msg.fromUserID, toId: msg.toSessionID, time: UInt32(msg.createTime), msgType: msg.msgType, data: String(data: msg.msgData, encoding: .utf8)!)
         IMManager.singleton.conversationManager.updateRecentSession(sessionId: msg.toSessionID, sessionType: msg.sessionType, msg: message)
 
         _ = client.send(cmdId: .kCimCidMsgData, body: try! msg.serializedData())
@@ -208,10 +208,10 @@ extension IMChatManager {
             IMLog.error(item: "parse error:\(error)")
         }
 
-        IMLog.info(item: "recv msg ack,msgId:\(res.msgID),from:\(res.fromUserID),to\(res.toSessionID)")
+        IMLog.info(item: "recv msg ack,msgId:\(res.clientMsgID),from:\(res.fromUserID),to\(res.toSessionID)")
 
         // 回调结果，且标记从待响应队列中移除
-        let ack = ackMsgDic[res.msgID]
+        let ack = ackMsgDic[res.clientMsgID]
         if ack != nil {
             ack!.isDeal = true
             for item in delegateDic {
@@ -236,7 +236,7 @@ extension IMChatManager {
         req.fromUserID = IMManager.singleton.loginManager.userId!
         req.toSessionID = res.fromUserID
         req.serverMsgID = 0 // fixed me
-        req.msgID = res.msgID
+        req.clientMsgID = res.clientMsgID
         req.sessionType = res.sessionType
         _ = client.send(cmdId: .kCimCidMsgDataAck, body: try! req.serializedData())
         //IMLog.info(item: "send msg ack from:\(res.fromUserID),to:\(res.toSessionID)")
@@ -245,7 +245,7 @@ extension IMChatManager {
         let sessionId = IMChatManager.getSessionIdFromMsg(msg: res)
 
         // 回调
-        let msg = IMMessage(clientId: res.msgID, sessionType: res.sessionType, fromId: res.fromUserID, toId: sessionId, time: UInt32(res.createTime), msgType: res.msgType, data: String(data: res.msgData, encoding: .utf8)!)
+        let msg = IMMessage(clientId: res.clientMsgID, sessionType: res.sessionType, fromId: res.fromUserID, toId: sessionId, time: UInt32(res.createTime), msgType: res.msgType, data: String(data: res.msgData, encoding: .utf8)!)
         for item in delegateDic {
             item.value.onRecvMessage(msg: msg)
         }

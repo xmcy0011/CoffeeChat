@@ -1,8 +1,8 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
 export "FLUTTER_ROOT=/Users/xuyc/repo/flutter/flutter"
-export "FLUTTER_APPLICATION_PATH=/Users/xuyc/repo/go/src/github.com/CoffeeChat/client/cc_flutter_app"
-export "FLUTTER_TARGET=/Users/xuyc/repo/go/src/github.com/CoffeeChat/client/cc_flutter_app/lib/main.dart"
+export "FLUTTER_APPLICATION_PATH=/Users/xuyc/repo/github/CoffeeChat/client/cc_flutter_app"
+export "FLUTTER_TARGET=/Users/xuyc/repo/github/CoffeeChat/client/cc_flutter_app/lib/main.dart"
 export "FLUTTER_BUILD_DIR=build"
 export "SYMROOT=${SOURCE_ROOT}/../build/ios"
 export "FLUTTER_FRAMEWORK_DIR=/Users/xuyc/repo/flutter/flutter/bin/cache/artifacts/engine/ios"

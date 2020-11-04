@@ -9,6 +9,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	uuid "github.com/satori/go.uuid"
 	"sort"
 	"strconv"
 	"time"
@@ -25,7 +26,7 @@ type Message struct {
 
 // 系统通知
 type CIMMsgNotification struct {
-	NotificationType int    `json:"notificationType"`
+	NotificationType int         `json:"notificationType"`
 	Data             interface{} `json:"data"`
 }
 
@@ -494,7 +495,7 @@ func (m *Message) CreateMsgSystemNotification(notificationId cim.CIMMsgNotificat
 		ToSessionId: to,
 		SessionType: sessionType,
 		CreateTime:  int32(time.Now().Unix()),
-		MsgId:       "",
+		ClientMsgId: uuid.NewV4().String(),
 	}
 	return msg, nil
 }

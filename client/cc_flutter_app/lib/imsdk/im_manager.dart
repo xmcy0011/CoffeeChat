@@ -131,7 +131,7 @@ class IMManager extends IMessage {
         v.forEach((item) {
           if (item.sessionType == CIMSessionType.kCIM_SESSION_TYPE_SINGLE) {
             sessions["PEER_" + item.sessionId.toString()] = item;
-          } else if (item.sessionType == CIMSessionType.kCIM_SESSION_TYPE_SINGLE) {
+          } else if (item.sessionType == CIMSessionType.kCIM_SESSION_TYPE_GROUP) {
             sessions["GROUP_" + item.sessionId.toString()] = item;
           } else {
             LogUtil.error("IMManager", "unknow session type load to sessions map.");
@@ -299,7 +299,7 @@ class IMManager extends IMessage {
     if (sessions.containsKey(key)) {
       sessions[key].unreadCnt++;
       sessions[key].updatedTime = msg.createTime;
-      sessions[key].latestMsg.clientMsgId = msg.msgId;
+      sessions[key].latestMsg.clientMsgId = msg.clientMsgId;
       sessions[key].latestMsg.fromUserId = msg.fromUserId.toInt();
       sessions[key].latestMsg.createTime = msg.createTime;
       sessions[key].latestMsg.msgType = msg.msgType;
@@ -313,7 +313,7 @@ class IMManager extends IMessage {
     } else {
       if (msg.sessionType == CIMSessionType.kCIM_SESSION_TYPE_SINGLE) {
         IMMessage model = new IMMessage();
-        model.clientMsgId = msg.msgId;
+        model.clientMsgId = msg.clientMsgId;
         model.serverMsgId = 0;
         model.msgStatus = CIMMsgStatus.kCIM_MSG_STATUS_NONE;
         model.sessionType = msg.sessionType;

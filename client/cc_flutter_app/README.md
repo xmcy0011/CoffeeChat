@@ -88,5 +88,10 @@ im_http:18080/http，用户注册
 3. 把生成的目录IOS/Assets.xcassets/AppIcon.appiconset复制替换到ios/Runner/Assets.xcassets/AppIcon.appiconset
 4. 重新编译即可
 
+### pb报错
+
+1. 查找protobuf最新的可用版本。[https://github.com/dart-lang/protobuf](https://github.com/dart-lang/protobuf)
+2. 打开pubspec.yaml，更改protobuf插件的版本为最新的即可。
+
 ## 联系我
 email：xmcy0011@sina.com

@@ -220,7 +220,7 @@ extension IMConversationManager {
 
         // 转换一下sessionId，单聊用fromId，群聊直接使用toSessionId
         let sessionId = IMChatManager.getSessionIdFromMsg(msg: msg)
-        let message = IMMessage(clientId: msg.msgID, sessionType: msg.sessionType, fromId: msg.fromUserID, toId: sessionId, time: UInt32(msg.createTime), msgType: msg.msgType, data: String(data: msg.msgData, encoding: .utf8)!)
+        let message = IMMessage(clientId: msg.clientMsgID, sessionType: msg.sessionType, fromId: msg.fromUserID, toId: sessionId, time: UInt32(msg.createTime), msgType: msg.msgType, data: String(data: msg.msgData, encoding: .utf8)!)
         updateRecentSession(sessionId: sessionId, sessionType: msg.sessionType, msg: message)
     }
 

@@ -247,7 +247,7 @@ func (tcp *TcpConn) onHandleVOIPByeReq(header *cim.ImHeader, buff []byte) {
 		FromUserId:   tcp.userId,
 		FromNickName: tcp.nickName,
 		ToSessionId:  userId,
-		MsgId:        uuid.NewV4().String(),
+		ClientMsgId:        uuid.NewV4().String(),
 		CreateTime:   int32(time.Now().Unix()),
 		MsgType:      cim.CIMMsgType_kCIM_MSG_TYPE_AVCHAT,
 		SessionType:  cim.CIMSessionType_kCIM_SESSION_TYPE_SINGLE,

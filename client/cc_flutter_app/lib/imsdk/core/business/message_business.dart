@@ -55,7 +55,7 @@ class MessageBusiness extends IMessage {
 
     //var uuid = new Uuid();
     //msg.msgId = uuid.v5(Uuid.NAMESPACE_URL, "www.coffeechat.cn");
-    msg.msgId = msgId;
+    msg.clientMsgId = msgId;
     msg.createTime = DateTime.now().millisecondsSinceEpoch ~/ 1000;
     msg.msgType = msgType;
     msg.sessionType = sessionType;
@@ -71,11 +71,11 @@ class MessageBusiness extends IMessage {
     };
 
     // add
-    if (!ackMsgMap.containsKey(msg.msgId)) {
-      var request = new IMMsgRequest(msg.msgId, null, callback, DateTime.now());
-      ackMsgMap[msg.msgId] = request;
+    if (!ackMsgMap.containsKey(msg.clientMsgId)) {
+      var request = new IMMsgRequest(msg.clientMsgId, null, callback, DateTime.now());
+      ackMsgMap[msg.clientMsgId] = request;
     } else {
-      print("msgId=${msg.msgId} is find,resend msg");
+      print("clientMsgId=${msg.clientMsgId} is find,resend msg");
     }
 
     // 注意，CIM_CID_MSG_DATA对应的返回是kCIM_CID_MSG_DATA_ACK，且不能用序号
@@ -170,7 +170,7 @@ class MessageBusiness extends IMessage {
   void onHandleMsgData(IMHeader header, CIMMsgData msg) {
     // 回复ack
     var ack = new CIMMsgDataAck();
-    ack.msgId = msg.msgId;
+    ack.clientMsgId = msg.clientMsgId;
     if (ack.sessionType == CIMSessionType.kCIM_SESSION_TYPE_SINGLE) {
       ack.toSessionId = msg.fromUserId;
     } else {
@@ -190,12 +190,12 @@ class MessageBusiness extends IMessage {
 
   /// interface IMMessage
   void onHandleMsgDataAck(IMHeader header, CIMMsgDataAck ack) {
-    if (ackMsgMap.containsKey(ack.msgId)) {
-      print("_handleMsgDataAck msgId=${ack.msgId} send success");
-      ackMsgMap[ack.msgId].callback(ack);
-      ackMsgMap.remove(ack.msgId);
+    if (ackMsgMap.containsKey(ack.serverMsgId)) {
+      print("_handleMsgDataAck clientMsgId=${ack.clientMsgId},serverMsgId=${ack.serverMsgId} send success");
+      ackMsgMap[ack.clientMsgId].callback(ack);
+      ackMsgMap.remove(ack.clientMsgId);
     } else {
-      print("_handleMsgDataAck msgId=${ack.msgId} not find");
+      print("_handleMsgDataAck clientMsgId=${ack.clientMsgId} not find");
     }
   }
 

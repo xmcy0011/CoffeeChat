@@ -395,7 +395,7 @@ class IMClient {
   void _handleMsgData(IMHeader header, List<int> data) {
     var msg = CIMMsgData.fromBuffer(data);
     print("_handleMsgData fromId=${msg.fromUserId},toId=${msg.toSessionId},"
-        "msgType=${msg.msgType},msgId=${msg.msgId}"
+        "msgType=${msg.msgType},clientMsgId=${msg.clientMsgId},serverMsgId=${msg.serverMsgId}"
         "sessionType=${msg.sessionType}");
 
     // 优先激发，更新未读会话等
@@ -413,7 +413,8 @@ class IMClient {
 
   void _handleMsgDataAck(IMHeader header, List<int> data) {
     var ack = CIMMsgDataAck.fromBuffer(data);
-    print("_handleMsgDataAck userId=${ack.fromUserId},msgId=${ack.msgId},sessionId=${ack.toSessionId}");
+    print("_handleMsgDataAck userId=${ack.fromUserId},clientMsgId=${ack.clientMsgId},serverMsgId=${ack.serverMsgId},"
+        "sessionId=${ack.toSessionId}");
 
     msgService.forEach((k, v) {
       IMessage msg = v;

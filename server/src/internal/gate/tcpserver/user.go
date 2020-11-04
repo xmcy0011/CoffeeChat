@@ -61,7 +61,7 @@ func (u *User) BroadcastMessage(data *cim.CIMMsgData) {
 	if data.MsgType != cim.CIMMsgType_kCIM_MSG_TYPE_ROBOT {
 		// FIXED ME
 		// 按照每个客户端类型统计ack列表更好
-		u.ackMsgMap[data.MsgId] = data
+		u.ackMsgMap[data.ClientMsgId] = data
 	}
 
 	// update counter
@@ -93,14 +93,14 @@ func (u *User) OnCheckAckMessageTimerOut(tick int64) {
 		if math.Abs(float64(int32(tick)-u.ackMsgMap[i].CreateTime)) > kAckMsgTimeOut {
 			item := u.ackMsgMap[i]
 			logger.Sugar.Errorf("ack msg time out,from_id:%d,to_id:%d,"+
-				"session_type=%d,msg_id=%s,msg_type=%d,create_time=%d,tick=%d",
-				item.FromUserId, item.ToSessionId, item.SessionType, item.MsgId, item.MsgType, item.CreateTime, tick)
+				"session_type=%d,client_msg_id=%s,msg_type=%d,create_time=%d,tick=%d",
+				item.FromUserId, item.ToSessionId, item.SessionType, item.ClientMsgId, item.MsgType, item.CreateTime, tick)
 			delete(u.ackMsgMap, i)
 		}
 	}
 }
 
 func (u *User) AckMessage(data *cim.CIMMsgDataAck) {
-	delete(u.ackMsgMap, data.MsgId)
+	delete(u.ackMsgMap, data.ClientMsgId)
 	downMissMsgCount.Dec()
 }

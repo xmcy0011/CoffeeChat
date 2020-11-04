@@ -191,7 +191,7 @@ extension IMManager {
             IMLog.error(item: "parse _handleMsgData error")
         }
         if msg != nil {
-            print("_handleMsgData fromId=\(msg!.fromUserID),msgType=\(msg!.msgType),sessionType=\(msg!.sessionType),clientMsgId=\(msg!.msgID)")
+            print("_handleMsgData fromId=\(msg!.fromUserID),msgType=\(msg!.msgType),sessionType=\(msg!.sessionType),clientMsgId=\(msg!.clientMsgID)")
         }
     }
     
@@ -204,7 +204,7 @@ extension IMManager {
             IMLog.error(item: "parse _handleMsgDataAck error")
         }
         if ack != nil {
-            IMLog.info(item: "_handleMsgDataAck toId=\(ack!.toSessionID),resCode=\(ack!.resCode),clientMsgId=\(ack!.msgID),serverMsgId=\(ack!.serverMsgID)")
+            IMLog.info(item: "_handleMsgDataAck toId=\(ack!.toSessionID),resCode=\(ack!.resCode),clientMsgId=\(ack!.clientMsgID),serverMsgId=\(ack!.serverMsgID)")
         }
     }
     
