@@ -22,10 +22,13 @@ let kTextMarginLeft = 69 // 文本离屏幕左边的距离（头像宽度45 + �
 let kTextMarginRight = 69 // 文本离屏幕右边的距离（头像宽度45 + 头像右边剧16）
 let kTextPadding = 10 // 文本内边距
 
+let kLabelNickNameHeight = 21 // 昵称高度
+
 /// 显示一条文本消息
 class IMMessageTextCell: UITableViewCell {
     // 头像
     @IBOutlet var imageHead: UIImageView!
+    // 文本
     // 被CocoaTouch框架赋值的时候，改变文本默认样式
     // 没有内边距，需要自定义，比较难看，先这样
     @IBOutlet var labelMessage: UIPaddingLabel! { didSet {
@@ -39,6 +42,9 @@ class IMMessageTextCell: UITableViewCell {
         // 内边距
         labelMessage.textInsets = UIEdgeInsets(top: CGFloat(kTextPadding), left: CGFloat(kTextPadding), bottom: CGFloat(kTextPadding), right: CGFloat(kTextPadding))
         } }
+    // 昵称
+    @IBOutlet var labelNickName: UILabel!
+
     // 数据模型
     var model: LocalIMMessage?
 
@@ -52,8 +58,6 @@ class IMMessageTextCell: UITableViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-
-        // Initialization code
 
         // 背景色，通过UITabView和TabCell同时控制
         backgroundColor = IMUIResource.chatBackground
@@ -81,6 +85,13 @@ class IMMessageTextCell: UITableViewCell {
             labelMessage.text = message.msgData
         }
 
+        // 昵称
+        if message.sessionType == .kCimSessionTypeGroup {
+            labelNickName.text = message.fromUserNickName
+        } else {
+            labelNickName.isHidden = true
+        }
+
         // 标记需要重新刷新布局，但layoutSubviews不会立即调用
         setNeedsLayout()
         // self.setNeedsDisplay(self.bounds)
@@ -91,7 +102,7 @@ class IMMessageTextCell: UITableViewCell {
     /// - Parameters:
     ///   - text: 文本
     /// - Returns: 高度
-    class func getCellHeight(text: String) -> CGFloat {
+    class func getCellHeight(text: String, sessionType: CIM_Def_CIMSessionType) -> CGFloat {
         let textSize = getTextSize(text: text)
         if textSize.height > 90 {
             // IMLog.debug(item: "text height=\(textSize.height),width=\(textSize.width),text=\(text)")
@@ -100,6 +111,11 @@ class IMMessageTextCell: UITableViewCell {
         var cellHeight = textSize.height + // 文字高度
             CGFloat(kTextMarginTop * 2) + // 外边距
             CGFloat(kTextPadding * 2) // 内边距
+
+        // 群聊，显示昵称，增加昵称高度
+        if sessionType == CIM_Def_CIMSessionType.kCimSessionTypeGroup {
+            cellHeight += CGFloat(kLabelNickNameHeight)
+        }
 
         // 限制最小高度
         cellHeight = cellHeight < CGFloat(kMinCellHeight) ? CGFloat(kMinCellHeight) : cellHeight
@@ -144,6 +160,10 @@ class IMMessageTextCell: UITableViewCell {
         // 设置头像的x坐标
         imageHead.frame.origin.x = left
 
+        // 设置昵称的左边距 = 头像左边距 - 文本离头像的左边距
+        labelNickName.frame.origin.x = left - labelNickName.frame.size.width - CGFloat(kTextImageMarginLet)
+        labelNickName.textAlignment = .right
+        
         // 测量文本宽高
         let size = IMMessageTextCell.getTextSize(text: model!.msgData)
         // 文本左边距 = 屏幕宽度 - 文本宽度 - 左边距离（对方头像大小+固定16边距) - 文本离头像的宽度
@@ -151,9 +171,15 @@ class IMMessageTextCell: UITableViewCell {
         // 限制文本最小高度
         let h = size.height > CGFloat(kMinTextHeight) ? size.height : CGFloat(kMinTextHeight)
 
+        // 文本的y坐标
+        var y = CGFloat(kTextMarginTop)
+        if model?.sessionType == CIM_Def_CIMSessionType.kCimSessionTypeGroup {
+            y += CGFloat(kLabelNickNameHeight)
+        }
+
         // 这里吃了大亏，搞了很久。
         // 如果不生效，请检查是否设置了约束
-        labelMessage.frame = CGRect(x: leftLabel, y: CGFloat(kTextMarginTop), width: size.width, height: h)
+        labelMessage.frame = CGRect(x: leftLabel, y: y, width: size.width, height: h)
         labelMessage.backgroundColor = IMUIResource.chatTextMineColor
     }
 
@@ -170,10 +196,20 @@ class IMMessageTextCell: UITableViewCell {
         // 限制文本最小高度
         let h = size.height > CGFloat(kMinTextHeight) ? size.height : CGFloat(kMinTextHeight)
 
-        labelMessage.frame = CGRect(x: CGFloat(kTextMarginLeft), y: CGFloat(kTextMarginTop), width: w, height: h)
+        // 文本的y坐标
+        var y = CGFloat(kTextMarginTop)
+        if model?.sessionType == CIM_Def_CIMSessionType.kCimSessionTypeGroup {
+            y += CGFloat(kLabelNickNameHeight)
+        }
+
+        labelMessage.frame = CGRect(x: CGFloat(kTextMarginLeft), y: y, width: w, height: h)
         labelMessage.backgroundColor = IMUIResource.chatTextPeerColor
 
         // 头像默认即可，在xib里面有初始位置
         imageHead.frame.origin.x = CGFloat(kImageMarginLeft)
+        labelNickName.textAlignment = .left
+        
+        // 昵称的左边距 = 头像左边距 + 头像宽度 + 昵称左边距
+        labelNickName.frame.origin.x = CGFloat(kImageMarginLeft) + CGFloat(kImageWidth) + CGFloat(kTextImageMarginLet)
     }
 }

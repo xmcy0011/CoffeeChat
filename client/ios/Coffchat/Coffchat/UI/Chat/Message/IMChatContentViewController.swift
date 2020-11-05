@@ -264,7 +264,7 @@ extension IMChatContentViewController {
                 return IMMessageNotificationCell.getCellHeight(text: text)
             }
             // 动态计算文本高度
-            height = IMMessageTextCell.getCellHeight(text: text)
+            height = IMMessageTextCell.getCellHeight(text: text,sessionType: msg.sessionType)
         } else {
             if msg.localMsgType! == .LocalTime {
                 return IMMessageTimeCell.getCellHeight()

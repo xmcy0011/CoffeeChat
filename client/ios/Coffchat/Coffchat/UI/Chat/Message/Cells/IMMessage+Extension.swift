@@ -15,16 +15,19 @@ enum LocalMsgType {
 
 class LocalIMMessage: IMMessage {
     var localMsgType: LocalMsgType?
+    var fromUserNickName: String
 
     override init(clientId: String, sessionType: CIM_Def_CIMSessionType, fromId: UInt64, toId: UInt64, time: UInt32, msgType: CIM_Def_CIMMsgType, data: String) {
+        fromUserNickName = String(fromId)
+
         super.init(clientId: clientId, sessionType: sessionType, fromId: fromId, toId: toId, time: time, msgType: msgType, data: data)
-        
         localMsgType = .Server
     }
-    
+
     init(msg: IMMessage) {
+        fromUserNickName = String(msg.fromUserId)
+
         super.init(clientId: msg.clientMsgId, sessionType: msg.sessionType, fromId: msg.fromUserId, toId: msg.toSessionId, time: msg.createTime, msgType: msg.msgType, data: msg.msgData)
-        
         localMsgType = .Server
     }
 }
