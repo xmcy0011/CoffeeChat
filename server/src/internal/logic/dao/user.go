@@ -4,6 +4,7 @@ import (
 	"coffeechat/api/cim"
 	"coffeechat/internal/logic/model"
 	"coffeechat/pkg/db"
+	"coffeechat/pkg/def"
 	"coffeechat/pkg/logger"
 	"errors"
 	"fmt"
@@ -39,6 +40,45 @@ func (u *User) Get(userId uint64) *model.UserModel {
 		logger.Sugar.Error("no db connect for slave")
 	}
 	return nil
+}
+
+// 批量查询用户信息
+func (u *User) GetBatch(ids []uint64) ([]*model.UserModel, error) {
+	session := db.DefaultManager.GetDBSlave()
+	if session == nil {
+		return nil, def.DBSlaveUnConnectError
+	}
+
+	sql := fmt.Sprintf("select id,user_id,user_nick_name,user_attach,created,updated from "+
+		"%s where", kUserTableName)
+	for index, v := range ids {
+		if index+1 == len(ids) {
+			sql += fmt.Sprintf(" user_id = %d", v)
+		} else {
+			sql += fmt.Sprintf(" user_id = %d or", v)
+		}
+	}
+
+	rows, err := session.Query(sql)
+	if err != nil {
+		return nil, err
+	}
+
+	users := make([]*model.UserModel, 0)
+	for {
+		if !rows.Next() {
+			break
+		}
+		user := &model.UserModel{}
+		err := rows.Scan(&user.Id, &user.UserId, &user.UserNickName, &user.UserAttach, &user.Created, &user.Updated)
+		if err != nil {
+			logger.Sugar.Warn(err.Error())
+			continue
+		}
+		users = append(users, user)
+	}
+
+	return users, nil
 }
 
 // 验证用户id和口令

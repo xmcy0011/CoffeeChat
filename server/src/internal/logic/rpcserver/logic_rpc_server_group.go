@@ -7,8 +7,11 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"strconv"
 )
+
+const kGroupNameQueryMaxUserCount = 3
 
 // 创建群
 func (s *LogicServer) CreateGroup(ctx context.Context, in *cim.CIMGroupCreateReq) (*cim.CIMGroupCreateRsp, error) {
@@ -18,8 +21,35 @@ func (s *LogicServer) CreateGroup(ctx context.Context, in *cim.CIMGroupCreateReq
 	rsp.UserId = in.UserId
 	rsp.MemberIdList = in.MemberIdList
 
+	// create default group name
+	nickNames := make([]string, 0)
 	if in.GroupName == "" {
-		in.GroupName = "未命名群"
+		ids := make([]uint64, 0)
+		ids = append(ids, in.UserId)
+		for i, v := range in.MemberIdList {
+			if i < kGroupNameQueryMaxUserCount {
+				ids = append(ids, v)
+			} else {
+				break
+			}
+		}
+
+		users, err := dao.DefaultUser.GetBatch(ids)
+		if err != nil {
+			logger.Sugar.Warn(err.Error())
+			return nil, err
+		}
+		for i, v := range users {
+			if i == len(users)-1 {
+				in.GroupName += fmt.Sprintf("%s", v.UserNickName)
+			} else {
+				in.GroupName += fmt.Sprintf("%s,", v.UserNickName)
+			}
+			// 被邀请者昵称
+			if i > 0 {
+				nickNames = append(nickNames, v.UserNickName)
+			}
+		}
 	}
 
 	// create group
@@ -66,7 +96,7 @@ func (s *LogicServer) CreateGroup(ctx context.Context, in *cim.CIMGroupCreateReq
 		Owner:     strconv.FormatUint(info.GroupOwnerId, 10),
 		OwnerNick: strconv.FormatUint(info.GroupOwnerId, 10),
 		Ids:       ids,
-		NickNames: ids,
+		NickNames: nickNames,
 	}
 
 	msg, err := dao.DefaultMessage.CreateMsgSystemNotification(
