@@ -18,6 +18,11 @@ class SessionModel {
 
     init(recentSession: IMRecentSession) {
         rectSession = recentSession
-        nickName = String(rectSession.session.sessionId)
+
+        if recentSession.session.sessionType == .kCimSessionTypeGroup {
+            nickName = "群:" + String(rectSession.session.sessionId)
+        } else {
+            nickName = String(rectSession.session.sessionId)
+        }
     }
 }
