@@ -9,7 +9,7 @@
 import UIKit
 
 let kMemberCellHeight = 70 // 成员高度（包括头像+昵称）
-let kMemberCellWidth = 50 // 成员Cell宽度
+let kMemberCellWidth = 60 // 成员Cell宽度
 
 // 会话详情页面
 class IMConversationSettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UICollectionViewDataSource {
@@ -36,7 +36,7 @@ class IMConversationSettingsViewController: UIViewController, UITableViewDelegat
         let collectionLayout = UICollectionViewFlowLayout()
         collectionLayout.itemSize = CGSize(width: kMemberCellWidth, height: kMemberCellHeight) // 元素高宽
         let screenWidth = UIScreen.main.bounds.size.width
-        let rect = CGRect(x: 0, y: 0, width: screenWidth, height: CGFloat(kMemberCellHeight))
+        let rect = CGRect(x: 0, y: 0, width: screenWidth, height: CGFloat(kMemberCellHeight + 10))
         collectionView = UICollectionView(frame: rect, collectionViewLayout: collectionLayout)
         collectionView.dataSource = self
         collectionView.backgroundColor = .white
