@@ -48,6 +48,15 @@ class IMChatContentViewController: UIViewController, UITableViewDataSource, UISc
         msgTabView.dataSource = self
         title = session.nickName
 
+        // 会话详情按钮
+        navigationItem.rightButtonAction(IMAssets.Conversation_info.image) { () -> Void in
+            let view = IMConversationSettingsViewController(sessionInfo: self.session)
+            // 隐藏UITabBarController下面的按钮（好奇怪的写法，怎么不是在self上呢？）
+            view.hidesBottomBarWhenPushed = true
+            // 跳转群组详情页面
+            self.navigationController?.pushViewController(view, animated: true)
+        }
+
         // 注册自定义Cell
         msgTabView.register(UINib(nibName: "IMMessageTextCell", bundle: nil), forCellReuseIdentifier: "IMMessageTextCell")
         msgTabView.register(UINib(nibName: "IMMessageTimeCell", bundle: nil), forCellReuseIdentifier: "IMMessageTimeCell")
@@ -264,7 +273,7 @@ extension IMChatContentViewController {
                 return IMMessageNotificationCell.getCellHeight(text: text)
             }
             // 动态计算文本高度
-            height = IMMessageTextCell.getCellHeight(text: text,sessionType: msg.sessionType)
+            height = IMMessageTextCell.getCellHeight(text: text, sessionType: msg.sessionType)
         } else {
             if msg.localMsgType! == .LocalTime {
                 return IMMessageTimeCell.getCellHeight()

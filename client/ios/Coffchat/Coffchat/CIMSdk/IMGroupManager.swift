@@ -23,6 +23,7 @@ class IMGroupManager: IMClientDelegateData {
     fileprivate var exitGroupCallback: IMResultCallback<CIM_Group_CIMGroupExitRsp>?
     fileprivate var groupListCallback: IMResultCallback<CIM_Group_CIMGroupListRsp>?
     fileprivate var groupInfoCallback: IMResultCallback<CIM_Group_CIMGroupInfoRsp>?
+    fileprivate var groupMemberListCallback: IMResultCallback<CIM_Group_CIMGroupMemberListRsp>?
     fileprivate var inviteCallback: IMResultCallback<CIM_Group_CIMGroupInviteMemberRsp>?
     fileprivate var kickoutCallback: IMResultCallback<CIM_Group_CIMGroupKickOutMemberRsp>?
     
@@ -121,6 +122,23 @@ class IMGroupManager: IMClientDelegateData {
         client.sendRequest(cmdId: .kCimCidGroupInfoReq, body: try! req.serializedData(), timeout: timeout)
     }
     
+    /// 查询群成员列表
+    /// - Parameters:
+    ///   - groupVersionInfo: 群组信息
+    ///   - callback: 结果
+    ///   - timeout: 超时
+    func queryGroupMember(groupId: UInt64, callback: IMResultCallback<CIM_Group_CIMGroupMemberListRsp>?, timeout: IMResponseTimeoutCallback?) {
+        groupMemberListCallback = callback
+        
+        IMLog.info(item: "queryGroupMember groupId:\(groupId)")
+        
+        var req = CIM_Group_CIMGroupMemberListReq()
+        req.groupID = groupId
+        req.userID = IMManager.singleton.userId!
+        
+        client.sendRequest(cmdId: .kCimCidGroupListMemberReq, body: try! req.serializedData(), timeout: timeout)
+    }
+    
     /// 邀请加入群
     /// - Parameters:
     ///   - groupId: 群ID
@@ -164,7 +182,7 @@ class IMGroupManager: IMClientDelegateData {
 
 extension IMGroupManager {
     // 处理数据
-    func onHandleData(_ header: IMHeader, _ data: Data) -> Bool{
+    func onHandleData(_ header: IMHeader, _ data: Data) -> Bool {
         if header.commandId == CIM_Def_CIMCmdID.kCimCidGroupCreateDefaultRsp.rawValue {
             _onHandleGroupCreateRsp(data: data)
             return true
@@ -186,8 +204,11 @@ extension IMGroupManager {
         } else if header.commandId == CIM_Def_CIMCmdID.kCimCidGroupKickOutMemberRsp.rawValue {
             _onHandleGroupMemberKickoutRsp(data: data)
             return true
-        } else if header.commandId == CIM_Def_CIMCmdID.kCimCidGroupMemberChangedNotify.rawValue{
+        } else if header.commandId == CIM_Def_CIMCmdID.kCimCidGroupMemberChangedNotify.rawValue {
             _onHandleMemberChangedNotify(data: data)
+            return true
+        } else if header.commandId == CIM_Def_CIMCmdID.kCimCidGroupListMemberRsp.rawValue {
+            _onHandleMemberListRsp(data: data)
             return true
         }
         return false
@@ -307,7 +328,7 @@ extension IMGroupManager {
         }
     }
     
-    func _onHandleMemberChangedNotify(data:Data){
+    func _onHandleMemberChangedNotify(data: Data) {
         var res: CIM_Group_CIMGroupMemberChangedNotify?
         do {
             res = try CIM_Group_CIMGroupMemberChangedNotify(serializedData: data)
@@ -317,5 +338,21 @@ extension IMGroupManager {
         }
         
         IMLog.info(item: "_onHandleMemberChangedNotify groupId:\(res!.groupID),changeListLen:\(res!.changedList.count)")
+    }
+    
+    func _onHandleMemberListRsp(data: Data) {
+        var res: CIM_Group_CIMGroupMemberListRsp?
+        do {
+            res = try CIM_Group_CIMGroupMemberListRsp(serializedData: data)
+        } catch {
+            IMLog.warn(item: "parse pb error")
+            return
+        }
+        
+        IMLog.info(item: "_onHandleMemberListRsp res_code:\(res!.userID),groupId:\(res!.groupID),listLen:\(res!.memberIDList.count)")
+        
+        if groupMemberListCallback != nil {
+            groupMemberListCallback!(res!)
+        }
     }
 }
