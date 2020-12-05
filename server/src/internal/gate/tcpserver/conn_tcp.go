@@ -98,6 +98,8 @@ func (tcp *TcpConn) OnClose() {
 	}
 
 	tcp.isLogin = false
+
+	logger.Sugar.Info("connection be closed,address=", tcp.Conn.RemoteAddr().String())
 }
 
 //OnRead implements the CImConn OnRead method.

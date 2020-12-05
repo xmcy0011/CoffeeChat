@@ -159,11 +159,11 @@ extension IMLoginManager {
     
     func onDisconnect(_ err: Error?) {
         // 只通知1次
-        // if isLogin || loginStep == .Linking {
-        _onUpdateLoginStep(step: .LoseConnection)
-        // } else {
-        //    loginStep = .LoseConnection
-        // }
+        if isLogin || loginStep == .Linking {
+            _onUpdateLoginStep(step: .LoseConnection)
+        } else {
+            loginStep = .LoseConnection
+        }
         isLogin = false
     }
     
@@ -226,6 +226,7 @@ extension IMLoginManager {
                 }
             } else {
                 // 更新登录进度
+                client.disconnect()
                 _onUpdateLoginStep(step: .LoginFailed)
             }
             

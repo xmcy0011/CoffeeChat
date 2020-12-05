@@ -50,6 +50,7 @@ class IMConversationSettingsViewController: UIViewController, UITableViewDelegat
         settingTabView.estimatedRowHeight = 0
         settingTabView.estimatedSectionHeaderHeight = 0
         settingTabView.estimatedSectionFooterHeight = 0
+        // 头视图显示UICollectionView
         settingTabView.tableHeaderView = collectionView
 
         title = "会话详情"
