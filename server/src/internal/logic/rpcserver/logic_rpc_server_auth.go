@@ -68,10 +68,15 @@ func (s *LogicServer) AuthToken(ctx context.Context, in *cim.CIMAuthTokenReq) (*
 
 			// user info
 			user := dao.DefaultUser.Get(in.UserId)
-			rsp.UserInfo = &cim.CIMUserInfo{
-				UserId:     in.UserId,
-				NickName:   in.NickName,
-				AttachInfo: user.UserAttach,
+			if user == nil {
+				rsp.ResultCode = cim.CIMErrorCode_kCIM_ERR_INTERNAL_ERROR
+				rsp.ResultString = "服务器内部错误"
+			} else {
+				rsp.UserInfo = &cim.CIMUserInfo{
+					UserId:     in.UserId,
+					NickName:   in.NickName,
+					AttachInfo: user.UserAttach,
+				}
 			}
 		} else {
 			rsp.ResultCode = cim.CIMErrorCode_kCIM_ERR_LOGIN_INVALID_USER_TOKEN

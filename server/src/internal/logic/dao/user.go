@@ -34,7 +34,7 @@ func (u *User) Get(userId uint64) *model.UserModel {
 		if err == nil {
 			return userInfo
 		} else {
-			logger.Sugar.Info("no result for sql:", sql)
+			logger.Sugar.Info("no result for sql:", sql, "err:", err.Error())
 		}
 	} else {
 		logger.Sugar.Error("no db connect for slave")

@@ -4,6 +4,7 @@ import (
 	"coffeechat/api/cim"
 	"coffeechat/pkg/db"
 	"coffeechat/pkg/logger"
+	sql2 "database/sql"
 	"errors"
 	"fmt"
 	"time"
@@ -163,12 +164,22 @@ func (g *Group) Get(groupId uint64) (*cim.CIMGroupInfo, error) {
 	sql := fmt.Sprintf("select group_name,owner,announcement,intro,avatar,"+
 		"type,join_model,be_invite_model,mute_model,created,updated from %s where group_id=%d and del_flag=0", kGroupTableName, groupId)
 	row := session.QueryRow(sql)
-	err := row.Scan(&info.GroupName, &info.GroupOwnerId, &info.Announcement, &info.GroupIntro, &info.GroupAvatar,
+
+	var ant sql2.NullString
+	var intro sql2.NullString
+
+	err := row.Scan(&info.GroupName, &info.GroupOwnerId, &ant, &intro, &info.GroupAvatar,
 		&info.GroupType, &info.JoinModel, &info.BeInviteModel, &info.MuteModel, &info.CreateTime, &info.UpdateTime)
 	if err != nil {
 		return nil, err
 	}
 	info.GroupId = groupId
+	if ant.Valid {
+		info.Announcement = ant.String
+	}
+	if intro.Valid {
+		info.GroupIntro = intro.String
+	}
 
 	return info, nil
 }
