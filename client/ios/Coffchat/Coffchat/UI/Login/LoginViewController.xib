@@ -77,6 +77,14 @@
                         </stackView>
                     </subviews>
                 </stackView>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UzH-2V-oMR">
+                    <rect key="frame" x="30" y="60" width="20" height="20"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" backgroundImage="return"/>
+                    <connections>
+                        <action selector="onBackBtnDown:" destination="-1" eventType="touchDown" id="HVR-g9-Tk0"/>
+                    </connections>
+                </button>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
@@ -84,7 +92,10 @@
                 <constraint firstItem="4Qt-NP-6eh" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="gCy-Bf-7CV"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
-            <point key="canvasLocation" x="139" y="149"/>
+            <point key="canvasLocation" x="137.68115942028987" y="148.66071428571428"/>
         </view>
     </objects>
+    <resources>
+        <image name="return" width="128" height="128"/>
+    </resources>
 </document>

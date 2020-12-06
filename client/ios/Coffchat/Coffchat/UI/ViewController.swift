@@ -23,11 +23,7 @@ class ViewController: UIViewController {
         // 设置圆角
         self.loginBtn.layer.cornerRadius = 4
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        self.navigationController?.setNavigationBarHidden(true, animated: false)
-    }
-    
+        
     @IBAction func loginPress(_ sender: Any) {
         self.loginView.loginResultCallback = self.loginCallback
         

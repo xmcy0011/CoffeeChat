@@ -23,7 +23,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="453" height="980"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <subviews>
-                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="lanuch2" translatesAutoresizingMaskIntoConstraints="NO" id="Kp1-dC-X4u">
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="lanuch" translatesAutoresizingMaskIntoConstraints="NO" id="Kp1-dC-X4u">
                             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         </imageView>
@@ -64,6 +64,6 @@
         </view>
     </objects>
     <resources>
-        <image name="lanuch2" width="828" height="1792"/>
+        <image name="lanuch" width="828" height="1792"/>
     </resources>
 </document>

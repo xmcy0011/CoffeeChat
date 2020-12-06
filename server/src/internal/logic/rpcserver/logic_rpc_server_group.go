@@ -138,33 +138,6 @@ func (s *LogicServer) DisbandingGroup(ctx context.Context, in *cim.CIMGroupDisba
 	return info, nil
 }
 
-// 退出群
-func (s *LogicServer) GroupExit(ctx context.Context, in *cim.CIMGroupExitReq) (*cim.CIMGroupExitRsp, error) {
-	logger.Sugar.Infof("GroupExit user_id=%d,group_id=%d", in.UserId, in.GroupId)
-
-	id, err := dao.DefaultGroup.GetOwnerId(in.GroupId)
-	if err != nil {
-		return nil, err
-	}
-
-	if id == in.UserId {
-		// change group owner
-		// FIX ME
-		return nil, errors.New("can't support group owner exist")
-	}
-
-	err = dao.DefaultGroupMember.Del(in.GroupId, in.UserId)
-	if err != nil {
-		return nil, err
-	}
-	rsp := &cim.CIMGroupExitRsp{
-		UserId:     in.UserId,
-		GroupId:    in.GroupId,
-		ResultCode: uint32(cim.CIMErrorCode_kCIM_ERR_SUCCSSE),
-	}
-	return rsp, nil
-}
-
 // 查询群列表
 func (s *LogicServer) QueryGroupList(ctx context.Context, in *cim.CIMGroupListReq) (*cim.CIMGroupListRsp, error) {
 	logger.Sugar.Infof("QueryGroupList user_id=%d", in.UserId)
@@ -258,5 +231,32 @@ func (s *LogicServer) GroupKickOutMember(ctx context.Context, in *cim.CIMGroupKi
 		}
 	}
 
+	return rsp, nil
+}
+
+// 退出群
+func (s *LogicServer) GroupExit(ctx context.Context, in *cim.CIMGroupExitReq) (*cim.CIMGroupExitRsp, error) {
+	logger.Sugar.Infof("GroupExit user_id=%d,group_id=%d", in.UserId, in.GroupId)
+
+	id, err := dao.DefaultGroup.GetOwnerId(in.GroupId)
+	if err != nil {
+		return nil, err
+	}
+
+	if id == in.UserId {
+		// change group owner
+		// FIX ME
+		return nil, errors.New("can't support group owner exist")
+	}
+
+	err = dao.DefaultGroupMember.Del(in.GroupId, in.UserId)
+	if err != nil {
+		return nil, err
+	}
+	rsp := &cim.CIMGroupExitRsp{
+		UserId:     in.UserId,
+		GroupId:    in.GroupId,
+		ResultCode: uint32(cim.CIMErrorCode_kCIM_ERR_SUCCSSE),
+	}
 	return rsp, nil
 }

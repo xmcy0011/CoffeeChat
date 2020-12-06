@@ -7,6 +7,7 @@
 //
 
 import Alamofire
+import Chrysan
 import UIKit
 
 typealias LoginResult = (_ code: Int, _ desc: String) -> Void
@@ -17,12 +18,13 @@ class LoginViewController: UIViewController, IMLoginManagerDelegate, UITextField
     @IBOutlet var nick: UITextField!
     @IBOutlet var server: UITextField!
     @IBOutlet var btnLogin: UIButton!
+    @IBOutlet var backBtn: UIButton!
 
     var loginResultCallback: LoginResult?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         _ = IMManager.singleton.loginManager.register(key: "LoginViewController", delegate: self)
 
         id.delegate = self
@@ -38,12 +40,8 @@ class LoginViewController: UIViewController, IMLoginManagerDelegate, UITextField
 //            debugPrint(res)
 //        }
     }
-
-    override func viewWillAppear(_ animated: Bool) {
-        navigationController?.setNavigationBarHidden(false, animated: false)
-    }
     
-    override func viewWillDisappear(_ animated: Bool) {
+    deinit {
         _ = IMManager.singleton.loginManager.unregister(key: "LoginViewController")
     }
 
@@ -61,8 +59,14 @@ class LoginViewController: UIViewController, IMLoginManagerDelegate, UITextField
         server.resignFirstResponder()
     }
 
+    @IBAction func onBackBtnDown(_ sender: Any) {
+        navigationController?.popViewController(animated: true)
+    }
+
     @IBAction func onLoginBtnClick(_ sender: Any) {
         if check() {
+            // 菊花
+            chrysan.show(.running, message: nil, hideDelay: 3.0)
             let userId = UInt64(id.text!)
             if userId == nil {
                 return
@@ -70,6 +74,7 @@ class LoginViewController: UIViewController, IMLoginManagerDelegate, UITextField
             _ = IMManager.singleton.loginManager.login(userId: userId!, nick: nick.text!, userToken: token.text!, serverIp: server.text!, port: 8000) { rsp in
                 // 线程安全
                 DispatchQueue.main.async {
+                    self.chrysan.hide()
                     if rsp.resultCode != .kCimErrSuccsse {
                         let alert = UIAlertController(title: "提醒", message: "登录失败:\(rsp.resultString)", preferredStyle: .alert)
                         let ok = UIAlertAction(title: "提醒", style: .cancel, handler: nil)
@@ -126,6 +131,7 @@ class LoginViewController: UIViewController, IMLoginManagerDelegate, UITextField
                 alert.addAction(ok)
                 self.present(alert, animated: true, completion: nil)
                 self.btnLogin.setTitle("登录", for: .normal)
+                self.chrysan.hide()
             default:
                 self.btnLogin.setTitle("登录", for: .normal)
             }
