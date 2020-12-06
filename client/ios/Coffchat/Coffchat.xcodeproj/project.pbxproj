@@ -59,6 +59,7 @@
 		F48D2EEA254AF72600377886 /* UINavigationItem+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48D2EE9254AF72600377886 /* UINavigationItem+Extension.swift */; };
 		F48E118C25515A1500A2A300 /* IMMessageNotificationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48E118A25515A1500A2A300 /* IMMessageNotificationCell.swift */; };
 		F48E118D25515A1500A2A300 /* IMMessageNotificationCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F48E118B25515A1500A2A300 /* IMMessageNotificationCell.xib */; };
+		F49A5F41257CBC0400084043 /* UIButton+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49A5F40257CBC0400084043 /* UIButton+Extension.swift */; };
 		F4B1EA83246C075000EED1FB /* IMMessageTimeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B1EA81246C075000EED1FB /* IMMessageTimeCell.swift */; };
 		F4B1EA84246C075000EED1FB /* IMMessageTimeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4B1EA82246C075000EED1FB /* IMMessageTimeCell.xib */; };
 		F4BC8F3D241F22A700ED38C9 /* IMHeaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BC8F3C241F22A700ED38C9 /* IMHeaderTests.swift */; };
@@ -159,6 +160,7 @@
 		F48D2EE9254AF72600377886 /* UINavigationItem+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationItem+Extension.swift"; sourceTree = "<group>"; };
 		F48E118A25515A1500A2A300 /* IMMessageNotificationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMMessageNotificationCell.swift; sourceTree = "<group>"; };
 		F48E118B25515A1500A2A300 /* IMMessageNotificationCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IMMessageNotificationCell.xib; sourceTree = "<group>"; };
+		F49A5F40257CBC0400084043 /* UIButton+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+Extension.swift"; sourceTree = "<group>"; };
 		F4B1EA81246C075000EED1FB /* IMMessageTimeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMMessageTimeCell.swift; sourceTree = "<group>"; };
 		F4B1EA82246C075000EED1FB /* IMMessageTimeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IMMessageTimeCell.xib; sourceTree = "<group>"; };
 		F4BC8F32241F223100ED38C9 /* CoffchatTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoffchatTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -321,6 +323,7 @@
 				F46124E0243856A500298F24 /* UITableView+Chat.swift */,
 				F48D2EE7254AC51A00377886 /* UIImage+Chat.swift */,
 				F48D2EE9254AF72600377886 /* UINavigationItem+Extension.swift */,
+				F49A5F40257CBC0400084043 /* UIButton+Extension.swift */,
 			);
 			path = UIHelper;
 			sourceTree = "<group>";
@@ -698,6 +701,7 @@
 				F43D96432446F903004802AA /* IMSettingViewController.swift in Sources */,
 				F417B0262419D4F000E1AAC0 /* CIM.Login.pb.swift in Sources */,
 				F43CA151241FA2E90065373F /* IMRequest.swift in Sources */,
+				F49A5F41257CBC0400084043 /* UIButton+Extension.swift in Sources */,
 				F4C510AF2429AA20000BCDEA /* IMSocialViewController.swift in Sources */,
 				F43C7A9E2438C5FA006C3796 /* IMChatManager.swift in Sources */,
 				F46124DC24383A6700298F24 /* IMChatContentViewController+Keyboard.swift in Sources */,

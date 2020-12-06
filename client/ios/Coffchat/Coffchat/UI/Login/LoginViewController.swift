@@ -22,14 +22,14 @@ class LoginViewController: UIViewController, IMLoginManagerDelegate, UITextField
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         _ = IMManager.singleton.loginManager.register(key: "LoginViewController", delegate: self)
 
         id.delegate = self
         token.delegate = self
         nick.delegate = self
         server.delegate = self
-        
+
         hideKeyboardWhenTappedAround()
         // Do any additional setup after loading the view.
         // 使用Alamofire发送HTTP请求
@@ -39,6 +39,10 @@ class LoginViewController: UIViewController, IMLoginManagerDelegate, UITextField
 //        }
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.setNavigationBarHidden(false, animated: false)
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         _ = IMManager.singleton.loginManager.unregister(key: "LoginViewController")
     }
@@ -56,7 +60,7 @@ class LoginViewController: UIViewController, IMLoginManagerDelegate, UITextField
         nick.resignFirstResponder()
         server.resignFirstResponder()
     }
-    
+
     @IBAction func onLoginBtnClick(_ sender: Any) {
         if check() {
             let userId = UInt64(id.text!)
@@ -133,10 +137,10 @@ class LoginViewController: UIViewController, IMLoginManagerDelegate, UITextField
 
 // MARK: UITextFieldDelegate
 
-extension LoginViewController{
+extension LoginViewController {
     // 点击返回，隐藏键盘
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        self.view?.endEditing(false)
+        view?.endEditing(false)
         return true
     }
 }
