@@ -77,13 +77,12 @@ class IMLoginManager: IMClientDelegateStatus, IMClientDelegateData {
     /// 登录
     /// - Parameters:
     ///   - userId: 用户ID
-    ///   - nick: 用户昵称
     ///   - userToken: 用户口令
     ///   - serverIp: 服务器IP
     ///   - port: 服务器端口
     ///   - callback: 回调
-    func login(userId: UInt64, nick: String, userToken: String, serverIp: String, port: UInt16, callback: IMResultCallback<CIM_Login_CIMAuthTokenRsp>?) -> Bool {
-        IMLog.info(item: "auth userId=\(userId),nick=\(nick),userToken=\(userToken),serverIp=\(serverIp),port=\(port)")
+    func login(userId: UInt64, userToken: String, serverIp: String, port: UInt16, callback: IMResultCallback<CIM_Login_CIMAuthTokenRsp>?) -> Bool {
+        IMLog.info(item: "auth userId=\(userId),userToken=\(userToken),serverIp=\(serverIp),port=\(port)")
         
         if isLogin, self.userId != nil, userId != self.userId {
             client.disconnect()
@@ -98,7 +97,6 @@ class IMLoginManager: IMClientDelegateStatus, IMClientDelegateData {
         loginStep = IMLoginStep.Linking
         
         self.userId = userId
-        userNick = nick
         self.userToken = userToken
         authCallback = callback
         
@@ -170,7 +168,7 @@ extension IMLoginManager {
     func onConnected(_ host: String, port: UInt16) {
         _onUpdateLoginStep(step: .LinkOK)
         
-        if !isLogin, userId != nil, userNick != nil, userToken != nil {
+        if !isLogin, userId != nil, userToken != nil {
             // 更新登录进度
             _onUpdateLoginStep(step: .Logining)
             
@@ -178,7 +176,6 @@ extension IMLoginManager {
             var req = CIM_Login_CIMAuthTokenReq()
             req.clientType = CIM_Def_CIMClientType.kCimClientTypeIos
             req.userID = userId!
-            req.nickName = userNick!
             req.userToken = userToken!
             req.clientVersion = kClientVersion
             
@@ -209,12 +206,15 @@ extension IMLoginManager {
         do {
             res = try CIM_Login_CIMAuthTokenRsp(serializedData: data)
             
-            IMLog.info(item: "auth resultCode=\(res.resultCode),resultString=\(res.resultString)")
+            IMLog.info(item: "auth resultCode=\(res.resultCode),resultString=\(res.resultString),userId=\(res.userInfo.userID),nick=\(res.userInfo.nickName)")
             
             // 登录成功
             if res.resultCode == CIM_Def_CIMErrorCode.kCimErrSuccsse {
                 isLogin = true
                 loginTime = Int32(NSDate().timeIntervalSince1970)
+                
+                // 记录自己的昵称
+                userNick = res.userInfo.nickName
                 
                 // 更新登录进度
                 _onUpdateLoginStep(step: .LoginOK)
@@ -262,7 +262,7 @@ extension IMLoginManager {
                 if lastAuthTimeInterval > 8 {
                     lastAuthTimeInterval = 1
                 }
-                _ = login(userId: userId!, nick: userNick!, userToken: userToken!, serverIp: client.ip, port: client.port, callback: nil)
+                _ = login(userId: userId!, userToken: userToken!, serverIp: client.ip, port: client.port, callback: nil)
             }
         }
         

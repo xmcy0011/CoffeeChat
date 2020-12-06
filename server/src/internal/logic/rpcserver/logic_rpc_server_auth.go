@@ -64,7 +64,9 @@ func (s *LogicServer) AuthToken(ctx context.Context, in *cim.CIMAuthTokenReq) (*
 			rsp.ResultString = "success"
 
 			// update nick_name
-			dao.DefaultUser.Update(in.UserId, in.NickName)
+			//if in.NickName != ""{
+			//	dao.DefaultUser.Update(in.UserId, in.NickName)
+			//}
 
 			// user info
 			user := dao.DefaultUser.Get(in.UserId)

@@ -7,7 +7,6 @@
 //
 
 import Alamofire
-import Chrysan
 import UIKit
 
 typealias LoginResult = (_ code: Int, _ desc: String) -> Void
@@ -15,10 +14,9 @@ typealias LoginResult = (_ code: Int, _ desc: String) -> Void
 class LoginViewController: UIViewController, IMLoginManagerDelegate, UITextFieldDelegate {
     @IBOutlet var id: UITextField!
     @IBOutlet var token: UITextField!
-    @IBOutlet var nick: UITextField!
     @IBOutlet var server: UITextField!
     @IBOutlet var btnLogin: UIButton!
-    @IBOutlet var backBtn: UIButton!
+    @IBOutlet var backBtn: BEButton!
 
     var loginResultCallback: LoginResult?
 
@@ -29,8 +27,10 @@ class LoginViewController: UIViewController, IMLoginManagerDelegate, UITextField
 
         id.delegate = self
         token.delegate = self
-        nick.delegate = self
         server.delegate = self
+
+        backBtn.setEnlargeEdge(20)
+        btnLogin.layer.cornerRadius = 4
 
         hideKeyboardWhenTappedAround()
         // Do any additional setup after loading the view.
@@ -40,7 +40,7 @@ class LoginViewController: UIViewController, IMLoginManagerDelegate, UITextField
 //            debugPrint(res)
 //        }
     }
-    
+
     deinit {
         _ = IMManager.singleton.loginManager.unregister(key: "LoginViewController")
     }
@@ -55,7 +55,6 @@ class LoginViewController: UIViewController, IMLoginManagerDelegate, UITextField
     @objc func dismissKeyboard() {
         id.resignFirstResponder()
         token.resignFirstResponder()
-        nick.resignFirstResponder()
         server.resignFirstResponder()
     }
 
@@ -65,16 +64,13 @@ class LoginViewController: UIViewController, IMLoginManagerDelegate, UITextField
 
     @IBAction func onLoginBtnClick(_ sender: Any) {
         if check() {
-            // 菊花
-            chrysan.show(.running, message: nil, hideDelay: 3.0)
             let userId = UInt64(id.text!)
             if userId == nil {
                 return
             }
-            _ = IMManager.singleton.loginManager.login(userId: userId!, nick: nick.text!, userToken: token.text!, serverIp: server.text!, port: 8000) { rsp in
+            _ = IMManager.singleton.loginManager.login(userId: userId!, userToken: token.text!, serverIp: server.text!, port: 8000) { rsp in
                 // 线程安全
                 DispatchQueue.main.async {
-                    self.chrysan.hide()
                     if rsp.resultCode != .kCimErrSuccsse {
                         let alert = UIAlertController(title: "提醒", message: "登录失败:\(rsp.resultString)", preferredStyle: .alert)
                         let ok = UIAlertAction(title: "提醒", style: .cancel, handler: nil)
@@ -98,8 +94,6 @@ class LoginViewController: UIViewController, IMLoginManagerDelegate, UITextField
             text = "请输入ID"
         } else if token.text?.isEmpty ?? true {
             text = "请输入Token"
-        } else if nick.text?.isEmpty ?? true {
-            text = "请输入昵称"
         } else if server.text?.isEmpty ?? true {
             text = "请输入服务器IP"
         }
@@ -130,10 +124,9 @@ class LoginViewController: UIViewController, IMLoginManagerDelegate, UITextField
                 let ok = UIAlertAction(title: "提醒", style: .cancel, handler: nil)
                 alert.addAction(ok)
                 self.present(alert, animated: true, completion: nil)
-                self.btnLogin.setTitle("登录", for: .normal)
-                self.chrysan.hide()
+                self.btnLogin.setTitle("确定", for: .normal)
             default:
-                self.btnLogin.setTitle("登录", for: .normal)
+                self.btnLogin.setTitle("确定", for: .normal)
             }
         }
     }
