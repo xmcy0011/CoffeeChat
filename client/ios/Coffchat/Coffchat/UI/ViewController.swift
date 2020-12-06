@@ -10,29 +10,26 @@ import UIKit
 
 class ViewController: UIViewController {
     let loginView = LoginViewController()
+    @IBOutlet var loginBtn: UIButton!
+    @IBOutlet var registerBtn: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // self.navigationController?.setNavigationBarHidden(true, animated: false)
         // Do any additional setup after loading the view.
-        self.navigationItem.title = "欢迎主人回来"
-        // self.navigationController?.title = "欢迎主人回来"
+        // self.navigationItem.title = "欢迎主人回来"
+        // self.title = "欢迎主人回来"
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
+        // 设置圆角
+        self.loginBtn.layer.cornerRadius = 4
     }
     
-    override func viewWillAppear(_ animated: Bool) {}
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-         // Get the new view controller using segue.destination.
-         // Pass the selected object to the new view controller.
-     }
-     */
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
+    }
     
     @IBAction func loginPress(_ sender: Any) {
-        self.loginView.loginResultCallback = loginCallback
+        self.loginView.loginResultCallback = self.loginCallback
         
         // 界面跳转
         self.navigationController?.pushViewController(self.loginView, animated: true)
@@ -51,9 +48,9 @@ class ViewController: UIViewController {
             self.navigationController?.navigationBar.isHidden = true
             
             let home = IMTabViewController()
-            //self.navigationController?.popViewController(animated: false) // 移除登录界面
+            // self.navigationController?.popViewController(animated: false) // 移除登录界面
             self.navigationController?.pushViewController(home, animated: true) // 主界面
-            //self.navigationController?.popToViewController(loginView, animated: false) // 移除其他界面，直到该界面为止
+            // self.navigationController?.popToViewController(loginView, animated: false) // 移除其他界面，直到该界面为止
         }
     }
 }
