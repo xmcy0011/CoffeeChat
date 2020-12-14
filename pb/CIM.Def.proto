@@ -95,9 +95,9 @@ enum CIMClientType {
   kCIM_CLIENT_TYPE_ANDROID = 1; // 安卓
   kCIM_CLIENT_TYPE_IOS = 2;     // iOS
   kCIM_CLIENT_TYPE_WEB = 3;     // WebSocket
-                                // kCIM_CLIENT_TYPE_REST_API = 4; // RestAPI
-  // kCIM_CLIENT_TYPE_PC_WINDOWS = 5; // PC Windows
-  // kCIM_CLIENT_TYPE_MAC_OS = 5;     // MAC
+  kCIM_CLIENT_TYPE_REST_API = 4; // RestAPI
+  kCIM_CLIENT_TYPE_PC_WINDOWS = 5; // PC Windows
+  kCIM_CLIENT_TYPE_MAC_OS = 6;     // MAC
 }
 
 // 会话类型
