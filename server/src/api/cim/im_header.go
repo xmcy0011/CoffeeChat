@@ -2,8 +2,8 @@ package cim
 
 import (
 	"bytes"
-	"encoding/binary"
 	"coffeechat/pkg/logger"
+	"encoding/binary"
 	"github.com/golang/protobuf/proto"
 	"sync"
 )
@@ -11,7 +11,6 @@ import (
 const IMHeaderLen = 16
 const IMHeaderVersion = 1
 const UINT16_MAX = ^uint16(0)
-
 
 var mutex sync.Mutex
 
@@ -68,11 +67,12 @@ func IsPduAvailable(data []byte, len int) bool {
 	_ = binary.Read(buffer, binary.BigEndian, &packetLen)
 
 	if int(packetLen) > len {
+		logger.Sugar.Warn("pdu len is invalid ", packetLen)
 		return false
 	}
 
 	if packetLen == 0 {
-		logger.Sugar.Error("pdu len is 0")
+		logger.Sugar.Warn("pdu len is 0")
 		return false
 	}
 
