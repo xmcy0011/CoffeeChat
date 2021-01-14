@@ -4,7 +4,6 @@ go 1.12
 
 require (
 	github.com/BurntSushi/toml v0.3.1
-	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-ini/ini v1.57.0 // indirect
 	github.com/go-redis/redis v6.15.5+incompatible
@@ -18,9 +17,8 @@ require (
 	github.com/satori/go.uuid v1.2.0
 	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/stretchr/testify v1.6.1 // indirect
-	go.uber.org/atomic v1.4.0
-	go.uber.org/multierr v1.1.0 // indirect
-	go.uber.org/zap v1.10.0
+	go.uber.org/atomic v1.6.0
+	go.uber.org/zap v1.16.0
 	google.golang.org/appengine v1.6.6 // indirect
 	google.golang.org/grpc v1.30.0
 	google.golang.org/protobuf v1.23.0

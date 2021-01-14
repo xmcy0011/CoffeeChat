@@ -183,7 +183,7 @@ func (t *Session) UpdateUpdated(id uint64, updated int) error {
 		if err != nil {
 			logger.Sugar.Error("sql Exec error:", err.Error())
 		} else {
-			row, err := r.RowsAffected()
+			_, err := r.RowsAffected()
 			if err != nil {
 				return err
 			} else {

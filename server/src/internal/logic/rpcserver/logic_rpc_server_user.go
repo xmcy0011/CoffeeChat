@@ -5,38 +5,29 @@ import (
 	"coffeechat/internal/logic/dao"
 	"coffeechat/pkg/logger"
 	"context"
-	"errors"
-	"strings"
 )
 
 // 新增一个授权用户
 func (s *LogicServer) CreateUser(ctx context.Context, req *cim.CreateUserAccountInfoReq) (*cim.CreateUserAccountInfoRsp, error) {
-	if len(req.UserToken) < 5 || len(req.UserToken) > 16 {
-		return nil, errors.New("invalid user_token, 5 <= need <= 16")
-	}
-	if strings.TrimSpace(req.UserNickName) == "" {
-		return nil, errors.New("user_nick_name must be not empty")
-	}
-
 	rsp := &cim.CreateUserAccountInfoRsp{}
-	u := dao.DefaultUser.Get(req.UserId)
+	u := dao.DefaultUser.GetByUserName(req.UserName)
 	if u != nil {
 		rsp.ErrorCode = cim.CIMErrorCode_kCIM_ERROR_USER_ALREADY_EXIST
-		logger.Sugar.Warnf("CreateUser failed:user already exist,userId=%d,userToken=%s", req.UserId, req.UserToken)
+		logger.Sugar.Warnf("CreateUser failed:user already exist,userId=%d,userName=%s", u.UserId, req.UserName)
 		return rsp, nil
 	}
 
-	err := dao.DefaultUser.Add(req.UserId, req.UserNickName, req.UserToken)
+	userId, err := dao.DefaultUser.Add(req.UserName, req.UserNickName, req.UserPwd)
 	if err != nil {
 		return nil, err
 	}
 
 	// 1.create user
 	rsp.ErrorCode = cim.CIMErrorCode_kCIM_ERR_SUCCSSE
-	logger.Sugar.Infof("CreateUser userId=%d,userToken=%s", req.UserId, req.UserToken)
+	logger.Sugar.Infof("CreateUser userName=%s,userNickName=%s,userId=%d", req.UserName, req.UserNickName, userId)
 
 	// 2.create robot session
-	AddRobotSession(req.UserId)
+	AddRobotSession(uint64(userId))
 	return rsp, nil
 }
 

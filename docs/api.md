@@ -11,7 +11,8 @@ PS：1小时用户注册上限100个。
 
 ```json
 {
-  "userName": "CoffeeChat@2021",
+  "userName": "CoffeeChat",
+  "userNickName":"测试账号",
   "userPwd": "E10ADC3949BA59ABBE56E057F20F883E"
 }
 ```

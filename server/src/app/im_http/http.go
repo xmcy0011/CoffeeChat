@@ -18,7 +18,7 @@ var (
 
 func main() {
 	flag.Parse()
-	
+
 	logger.InitLoggerEx("log/log.log", "log/log.warn.log", "debug")
 	defer logger.Logger.Sync() // flushes buffer, if any
 	rand.Seed(time.Now().UnixNano())
