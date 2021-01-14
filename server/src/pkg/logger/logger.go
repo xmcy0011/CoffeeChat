@@ -122,7 +122,7 @@ func InitLoggerEx(infoLog, warnLog string, level string) {
 	// warn级别以上的一个文件，便于排查问题
 	coreWarn := zapcore.NewCore(
 		zapcore.NewConsoleEncoder(NewEncoderConfig()),
-		zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout), w2),
+		zapcore.NewMultiWriteSyncer( /*zapcore.AddSync(os.Stdout),*/ w2), // 因为info以及输出到stdout了，不再重复输出
 		zapcore.WarnLevel,
 	)
 	tee := zapcore.NewTee(coreInfo, coreWarn)
