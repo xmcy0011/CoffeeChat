@@ -187,9 +187,10 @@ func (t *Session) UpdateUpdated(id uint64, updated int) error {
 			if err != nil {
 				return err
 			} else {
-				if row != 1 {
-					logger.Sugar.Warnf("update success,but row num != 1(%d) for sql:%s", row, sql)
-				}
+				// if value not change, then affect row num = 0
+				//if row != 1 {
+				//	logger.Sugar.Warnf("update success,but row num != 1(%d) for sql:%s", row, sql)
+				//}
 				// success
 				return nil
 			}
