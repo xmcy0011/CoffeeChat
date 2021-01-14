@@ -18,13 +18,19 @@ message CIMAuthTokenReq {
   CIM.Def.CIMClientType client_type = 4;
   /*optional*/ string client_version = 5;
 }
-
 message CIMAuthTokenRsp {
   // cmd id:		0x0102
   uint32 server_time = 1;                         // 服务器时间
   CIM.Def.CIMErrorCode result_code = 2;           // 验证结果
   /*optional*/ string result_string = 3;          // 结果描述
   /*optional*/ CIM.Def.CIMUserInfo user_info = 4; // 用户信息
+}
+
+// 认证请求，支持用户名+密码模式，测试更方便
+message CIMAuthReq {
+  // cmd id:		0x0107 
+  string user_name = 1;
+  string user_pwd = 2;
 }
 
 // 登出

@@ -39,6 +39,9 @@ class IMChatViewController: UIViewController, UITableViewDelegate, UITableViewDa
         sessionTabView.dataSource = self
         sessionTabView.delegate = self
 
+        // 顶部菊花
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
+        
         // 注册委托
         IMManager.singleton.conversationManager.register(key: "IMChatViewController", delegate: self)
         // 查询会话列表
@@ -63,6 +66,10 @@ class IMChatViewController: UIViewController, UITableViewDelegate, UITableViewDa
         })
     }
 
+    deinit {
+        IMManager.singleton.conversationManager.unregister(key: "IMChatViewController")
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         sessionTabView.reloadData()
     }

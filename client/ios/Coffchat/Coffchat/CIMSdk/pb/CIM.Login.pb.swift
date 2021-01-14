@@ -77,6 +77,22 @@ struct CIM_Login_CIMAuthTokenRsp {
   fileprivate var _userInfo: CIM_Def_CIMUserInfo? = nil
 }
 
+/// 认证请求，支持用户名+密码模式，测试更方便
+struct CIM_Login_CIMAuthReq {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// cmd id:		0x0107 
+  var userName: String = String()
+
+  var userPwd: String = String()
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+}
+
 /// 登出
 struct CIM_Login_CIMLogoutReq {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
@@ -216,6 +232,41 @@ extension CIM_Login_CIMAuthTokenRsp: SwiftProtobuf.Message, SwiftProtobuf._Messa
     if lhs.resultCode != rhs.resultCode {return false}
     if lhs.resultString != rhs.resultString {return false}
     if lhs._userInfo != rhs._userInfo {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension CIM_Login_CIMAuthReq: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".CIMAuthReq"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "user_name"),
+    2: .standard(proto: "user_pwd"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      switch fieldNumber {
+      case 1: try decoder.decodeSingularStringField(value: &self.userName)
+      case 2: try decoder.decodeSingularStringField(value: &self.userPwd)
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.userName.isEmpty {
+      try visitor.visitSingularStringField(value: self.userName, fieldNumber: 1)
+    }
+    if !self.userPwd.isEmpty {
+      try visitor.visitSingularStringField(value: self.userPwd, fieldNumber: 2)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: CIM_Login_CIMAuthReq, rhs: CIM_Login_CIMAuthReq) -> Bool {
+    if lhs.userName != rhs.userName {return false}
+    if lhs.userPwd != rhs.userPwd {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

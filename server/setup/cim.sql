@@ -4,6 +4,9 @@ CREATE TABLE `im_user` (
   `user_nick_name` varchar(32) NOT NULL COMMENT '昵称',
   `user_token` varchar(64) NOT NULL COMMENT '口令',
   `user_attach` varchar(1024) NOT NULL COMMENT '附加信息（预留）',
+  `user_name` varchar(64) NOT NULL COMMENT '用户名',
+  `user_pwd_salt` varchar(64) NOT NULL COMMENT '随机盐值',
+  `user_pwd_hash` varchar(64) NOT NULL COMMENT '用户密码hash值',
   `created` int(11) NOT NULL,
   `updated` int(11) NOT NULL,
   PRIMARY KEY (`id`)

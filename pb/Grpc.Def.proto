@@ -15,9 +15,9 @@ message Hello {
 
 // 创建用户账户授权信息
 message CreateUserAccountInfoReq {
-    uint64 user_id = 1;          // 用户ID
-    string user_nick_name = 2;   // 用户昵称
-    string user_token = 3;       // 口令，最小6位
+    string user_name = 1;       // 用户名
+    string user_pwd = 2;        // 用户密码
+    string user_nick_name = 3;  // 用户昵称
 }
 
 message CreateUserAccountInfoRsp {

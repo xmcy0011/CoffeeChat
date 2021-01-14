@@ -35,6 +35,7 @@ protocol IMClientDelegateData {
 
 let kClientVersion = "0.0.1"
 let kHeartbeatTime = 20
+let kReqTimeout = 3
 let DefaultIMClient = IMClient()
 
 // IM连接
@@ -188,7 +189,7 @@ class IMClient: NSObject, GCDAsyncSocketDelegate {
             let req = (item?.value)!
             item = it.next()
             
-            if abs(nowTimestamp - req.createTimestamp) > kHeartbeatTime {
+            if abs(nowTimestamp - req.createTimestamp) > kReqTimeout {
                 IMLog.warn(item: "request timeout,seq=\(req.seq),cmdId=\(req.header.commandId),now=\(nowTimestamp),reqTime=\(req.createTimestamp) ")
                 // next已经改变，放心移除
                 requestDic.removeValue(forKey: req.seq)

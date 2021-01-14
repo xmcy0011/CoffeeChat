@@ -25,7 +25,7 @@ enum CIM_Def_CIMCmdID: SwiftProtobuf.Enum {
   typealias RawValue = Int
   case kCimCidUnknown // = 0
 
-  /// 认证请求
+  /// 认证请求，Token方式
   case kCimCidLoginAuthTokenReq // = 257
   case kCimCidLoginAuthTokenRsp // = 258
 
@@ -35,6 +35,10 @@ enum CIM_Def_CIMCmdID: SwiftProtobuf.Enum {
 
   /// 心跳，1分钟超时
   case kCimCidLoginHeartbeat // = 261
+
+  /// 认证请求，用户名+密码方式
+  case kCimCidLoginAuthReq // = 263
+  case kCimCidLoginAuthRsp // = 264
 
   /// 最近聊天会话列表请求
   case kCimCidListRecentContactSessionReq // = 513
@@ -136,6 +140,8 @@ enum CIM_Def_CIMCmdID: SwiftProtobuf.Enum {
     case 259: self = .kCimCidLoginAuthLogoutReq
     case 260: self = .kCimCidLoginAuthLogoutRsp
     case 261: self = .kCimCidLoginHeartbeat
+    case 263: self = .kCimCidLoginAuthReq
+    case 264: self = .kCimCidLoginAuthRsp
     case 513: self = .kCimCidListRecentContactSessionReq
     case 514: self = .kCimCidListRecentContactSessionRsp
     case 517: self = .kCimCidListMsgReq
@@ -186,6 +192,8 @@ enum CIM_Def_CIMCmdID: SwiftProtobuf.Enum {
     case .kCimCidLoginAuthLogoutReq: return 259
     case .kCimCidLoginAuthLogoutRsp: return 260
     case .kCimCidLoginHeartbeat: return 261
+    case .kCimCidLoginAuthReq: return 263
+    case .kCimCidLoginAuthRsp: return 264
     case .kCimCidListRecentContactSessionReq: return 513
     case .kCimCidListRecentContactSessionRsp: return 514
     case .kCimCidListMsgReq: return 517
@@ -241,6 +249,8 @@ extension CIM_Def_CIMCmdID: CaseIterable {
     .kCimCidLoginAuthLogoutReq,
     .kCimCidLoginAuthLogoutRsp,
     .kCimCidLoginHeartbeat,
+    .kCimCidLoginAuthReq,
+    .kCimCidLoginAuthRsp,
     .kCimCidListRecentContactSessionReq,
     .kCimCidListRecentContactSessionRsp,
     .kCimCidListMsgReq,
@@ -440,6 +450,15 @@ enum CIM_Def_CIMClientType: SwiftProtobuf.Enum {
 
   /// WebSocket
   case kCimClientTypeWeb // = 3
+
+  /// RestAPI
+  case kCimClientTypeRestApi // = 4
+
+  /// PC Windows
+  case kCimClientTypePcWindows // = 5
+
+  /// MAC
+  case kCimClientTypeMacOs // = 6
   case UNRECOGNIZED(Int)
 
   init() {
@@ -452,6 +471,9 @@ enum CIM_Def_CIMClientType: SwiftProtobuf.Enum {
     case 1: self = .kCimClientTypeAndroid
     case 2: self = .kCimClientTypeIos
     case 3: self = .kCimClientTypeWeb
+    case 4: self = .kCimClientTypeRestApi
+    case 5: self = .kCimClientTypePcWindows
+    case 6: self = .kCimClientTypeMacOs
     default: self = .UNRECOGNIZED(rawValue)
     }
   }
@@ -462,6 +484,9 @@ enum CIM_Def_CIMClientType: SwiftProtobuf.Enum {
     case .kCimClientTypeAndroid: return 1
     case .kCimClientTypeIos: return 2
     case .kCimClientTypeWeb: return 3
+    case .kCimClientTypeRestApi: return 4
+    case .kCimClientTypePcWindows: return 5
+    case .kCimClientTypeMacOs: return 6
     case .UNRECOGNIZED(let i): return i
     }
   }
@@ -477,6 +502,9 @@ extension CIM_Def_CIMClientType: CaseIterable {
     .kCimClientTypeAndroid,
     .kCimClientTypeIos,
     .kCimClientTypeWeb,
+    .kCimClientTypeRestApi,
+    .kCimClientTypePcWindows,
+    .kCimClientTypeMacOs,
   ]
 }
 
@@ -1292,6 +1320,8 @@ extension CIM_Def_CIMCmdID: SwiftProtobuf._ProtoNameProviding {
     259: .same(proto: "kCIM_CID_LOGIN_AUTH_LOGOUT_REQ"),
     260: .same(proto: "kCIM_CID_LOGIN_AUTH_LOGOUT_RSP"),
     261: .same(proto: "kCIM_CID_LOGIN_HEARTBEAT"),
+    263: .same(proto: "kCIM_CID_LOGIN_AUTH_REQ"),
+    264: .same(proto: "kCIM_CID_LOGIN_AUTH_RSP"),
     513: .same(proto: "kCIM_CID_LIST_RECENT_CONTACT_SESSION_REQ"),
     514: .same(proto: "kCIM_CID_LIST_RECENT_CONTACT_SESSION_RSP"),
     517: .same(proto: "kCIM_CID_LIST_MSG_REQ"),
@@ -1362,6 +1392,9 @@ extension CIM_Def_CIMClientType: SwiftProtobuf._ProtoNameProviding {
     1: .same(proto: "kCIM_CLIENT_TYPE_ANDROID"),
     2: .same(proto: "kCIM_CLIENT_TYPE_IOS"),
     3: .same(proto: "kCIM_CLIENT_TYPE_WEB"),
+    4: .same(proto: "kCIM_CLIENT_TYPE_REST_API"),
+    5: .same(proto: "kCIM_CLIENT_TYPE_PC_WINDOWS"),
+    6: .same(proto: "kCIM_CLIENT_TYPE_MAC_OS"),
   ]
 }
 

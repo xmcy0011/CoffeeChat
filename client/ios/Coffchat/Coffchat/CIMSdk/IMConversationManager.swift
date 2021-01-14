@@ -54,6 +54,8 @@ class IMConversationManager: IMClientDelegateData {
         req.userID = IMManager.singleton.loginManager.userId!
         req.latestUpdateTime = 0
 
+        IMLog.info(item: "queryAllRecentSessions userId=\(req.userID)")
+        
         queryAllRecentSessionsCallback = callback
 
         // 发送请求
