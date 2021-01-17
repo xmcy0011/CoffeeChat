@@ -49,6 +49,7 @@ protocol IMLoginManagerDelegate {
 
 class IMLoginManager: IMClientDelegateStatus, IMClientDelegateData {
     fileprivate var client: IMClient
+    fileprivate var _serverIp: String?
     fileprivate var timer: Timer? // 自动登录，心跳超时检测定时器
     fileprivate var timerTick: UInt64 = 0
     fileprivate var lastHeartBeat: Int32 = 0 // 上一次收到服务器心跳的时间戳
@@ -57,9 +58,11 @@ class IMLoginManager: IMClientDelegateStatus, IMClientDelegateData {
     fileprivate var lastAuthTime: Int32 = 0 // 上一次认证时间
     fileprivate var lastAuthTimeInterval: Int32 = 1 // 重连间隔，避免对服务端造成dos攻击
     
-    public var loginStep: IMLoginStep = IMLoginStep.Default // 当前连接状态
+    public var loginStep = IMLoginStep.Default // 当前连接状态
     public var isLogin: Bool = false // 是否已登陆
     public var loginTime: Int32 = 0 // 登录时间戳
+    
+    public var serverIp: String? { return _serverIp } // 服务器IP
     
     public var userId: UInt64?
     public var userToken: String?
@@ -96,6 +99,7 @@ class IMLoginManager: IMClientDelegateStatus, IMClientDelegateData {
         lastAuthTime = Int32(NSDate().timeIntervalSince1970) // 记住认证时间戳
         loginStep = IMLoginStep.Linking
         
+        self._serverIp = serverIp
         self.userId = userId
         self.userToken = userToken
         authCallback = callback

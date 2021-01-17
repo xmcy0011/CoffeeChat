@@ -10,6 +10,8 @@ import UIKit
 
 class ViewController: UIViewController {
     let loginView = LoginViewController()
+    let registerView = RegisterViewController()
+    
     @IBOutlet var loginBtn: UIButton!
     @IBOutlet var registerBtn: UIButton!
     
@@ -33,9 +35,16 @@ class ViewController: UIViewController {
         // self.present(loginView, animated: true, completion: nil)
     }
     
-    // 登录结果
+    @IBAction func registerPress(_ sender: Any) {
+        self.registerView.registerCall = self.registerCallback
+        // 跳转注册界面
+        self.navigationController?.pushViewController(self.registerView, animated: true)
+    }
+    
+    // 登录进度
     func onLogin(step: IMLoginStep) {}
     
+    // 登录成功回调
     func loginCallback(code: Int, desc: String) {
         // 如果登录成功，跳转到主页面
         if IMManager.singleton.loginManager.isLogin {
@@ -48,5 +57,10 @@ class ViewController: UIViewController {
             self.navigationController?.pushViewController(home, animated: true) // 主界面
             // self.navigationController?.popToViewController(loginView, animated: false) // 移除其他界面，直到该界面为止
         }
+    }
+    
+    // 注册成功回调
+    func registerCallback(code: Int, desc: String) {
+        self.loginPress(0)
     }
 }

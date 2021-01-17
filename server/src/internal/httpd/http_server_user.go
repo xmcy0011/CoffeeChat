@@ -18,6 +18,9 @@ const (
 	kMaxUserNameLen = 32
 	// 密码
 	kUserPwdLen = 32
+
+	// 超时,s
+	kGrpcTimeOut = 3
 )
 
 // 创建用户json
@@ -77,7 +80,7 @@ func userRegister(writer http.ResponseWriter, request *http.Request) {
 
 	logger.Sugar.Infof("%s create,userName=%s,userPwd=%s", kRegisterUserUrl, req.UserName, req.UserPwd)
 
-	ctx, _ := context.WithTimeout(context.Background(), time.Second)
+	ctx, _ := context.WithTimeout(context.Background(), time.Second*kGrpcTimeOut)
 	createRsp, err := con.CreateUser(ctx, &cim.CreateUserAccountInfoReq{
 		UserName:     strings.TrimSpace(req.UserName), // 去除前后空格
 		UserPwd:      strings.TrimSpace(req.UserPwd),
@@ -88,7 +91,7 @@ func userRegister(writer http.ResponseWriter, request *http.Request) {
 		writeError(kRegisterUserUrl, writer, -1, "server internal error")
 	} else {
 		if createRsp.ErrorCode == cim.CIMErrorCode_kCIM_ERR_SUCCSSE {
-			rsp := ResponseBase{ErrorCode: 0, ErrorMsg: "success"}
+			rsp := ResponseBase{ErrorCode: int(cim.CIMErrorCode_kCIM_ERR_SUCCSSE), ErrorMsg: "success"}
 			data, _ := json.Marshal(rsp)
 			_, _ = writer.Write(data)
 			logger.Sugar.Infof("%s create success,userName=%s,userPwd=%s", kRegisterUserUrl,

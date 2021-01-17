@@ -46,6 +46,7 @@ class IMManager {
     fileprivate var _conversationManager: IMConversationManager
     fileprivate var _groupManager: IMGroupManager
     fileprivate var _friendManager: IMFriendManager
+    fileprivate var _userManager: IMUserManager
     
     // dic
     fileprivate var requestDic: [UInt16: IMRequest]
@@ -76,6 +77,11 @@ class IMManager {
         return _friendManager
     }
     
+    // 用户管理
+    public var userManager: IMUserManager{
+        return _userManager
+    }
+    
     // 用户ID
     public var userId: UInt64? { return loginManager.userId }
     // 用户昵称
@@ -95,6 +101,7 @@ class IMManager {
         _chatManager = IMChatManager()
         _groupManager = IMGroupManager()
         _friendManager = IMFriendManager()
+        _userManager = IMUserManager()
     }
     
     // 2、主界面UI显示数据
