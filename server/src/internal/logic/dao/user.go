@@ -134,8 +134,9 @@ func (u *User) Validate2(userName, userPwd string) (bool, *model.UserModel) {
 	session := db.DefaultManager.GetDBSlave()
 	if session != nil {
 		// select pwdSalt and pwdHash
-		sql := "select id,user_pwd_salt,user_pwd_hash,user_nick_name,user_attach from ? where user_name=?"
-		row := session.QueryRow(sql, kUserTableName, userName)
+		sql := fmt.Sprintf("select id,user_pwd_salt,user_pwd_hash,user_nick_name,user_attach from %s where user_name=?", kUserTableName)
+		row := session.QueryRow(sql, userName)
+
 		user := &model.UserModel{}
 		err := row.Scan(&user.UserId, &user.UserPwdSalt, &user.UserPwdHash, &user.UserNickName, &user.UserAttach)
 		if err != nil {

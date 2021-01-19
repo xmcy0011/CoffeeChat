@@ -106,7 +106,8 @@ func (tcp *TcpConn) OnClose() {
 func (tcp *TcpConn) OnRead(header *cim.ImHeader, buff []byte) {
 	//logger.Sugar.Debug("recv data:", string(buff))
 
-	if !tcp.isLogin && header.CommandId != uint16(cim.CIMCmdID_kCIM_CID_LOGIN_AUTH_TOKEN_REQ) {
+	if !tcp.isLogin && header.CommandId != uint16(cim.CIMCmdID_kCIM_CID_LOGIN_AUTH_TOKEN_REQ) &&
+		header.CommandId != uint16(cim.CIMCmdID_kCIM_CID_LOGIN_AUTH_REQ) {
 		logger.Sugar.Error("need login,close connect,address=", tcp.Conn.RemoteAddr().String())
 		tcp.OnClose()
 		return
@@ -279,7 +280,7 @@ func (tcp *TcpConn) onHandleAuthReq(header *cim.ImHeader, buff []byte) {
 
 		_, err = tcp.Send(header.SeqNum, uint16(cim.CIMCmdID_kCIM_CID_LOGIN_AUTH_RSP), rsp)
 
-		logger.Sugar.Infof("onHandleAuthReq result_code=%d,result_string=%s,user_name=%d,client_version=%s,client_type=%d",
+		logger.Sugar.Infof("onHandleAuthReq result_code=%d,result_string=%s,user_name=%s,client_version=%s,client_type=%d",
 			rsp.ResultCode, rsp.ResultString, req.UserName, req.ClientVersion, req.ClientType)
 	}
 }

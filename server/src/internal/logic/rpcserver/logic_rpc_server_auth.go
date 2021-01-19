@@ -91,9 +91,6 @@ func (s *LogicServer) AuthToken(ctx context.Context, in *cim.CIMAuthTokenReq) (*
 
 // 验证用户名和密码
 func (s *LogicServer) Auth(ctx context.Context, in *cim.CIMAuthReq) (*cim.CIMAuthRsp, error) {
-	logger.Sugar.Infof("AuthToken userName=%d,userPwd=%s,clientType=%d,ClientVersion=%s",
-		in.UserName, in.UserPwd, in.ClientType, in.ClientVersion)
-
 	rsp := &cim.CIMAuthRsp{}
 	rsp.ServerTime = uint32(time.Now().Unix())
 
@@ -115,6 +112,9 @@ func (s *LogicServer) Auth(ctx context.Context, in *cim.CIMAuthReq) (*cim.CIMAut
 			rsp.ResultString = "非法的口令"
 		}
 	}
+
+	logger.Sugar.Infof("AuthToken userName=%s,userPwd=%s,clientType=%d,ClientVersion=%s,resultCode=%d,resultString=%s",
+		in.UserName, in.UserPwd, in.ClientType, in.ClientVersion, rsp.ResultCode, rsp.ResultString)
 
 	return rsp, nil
 }
