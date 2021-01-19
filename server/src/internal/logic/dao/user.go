@@ -129,6 +129,33 @@ func (u *User) Validate(userId uint64, userToken string) (bool, error) {
 	return false, unConnectError
 }
 
+// 验证用户名和密码
+func (u *User) Validate2(userName, userPwd string) (bool, *model.UserModel) {
+	session := db.DefaultManager.GetDBSlave()
+	if session != nil {
+		// select pwdSalt and pwdHash
+		sql := "select id,user_pwd_salt,user_pwd_hash,user_nick_name,user_attach from ? where user_name=?"
+		row := session.QueryRow(sql, kUserTableName, userName)
+		user := &model.UserModel{}
+		err := row.Scan(&user.UserId, &user.UserPwdSalt, &user.UserPwdHash, &user.UserNickName, &user.UserAttach)
+		if err != nil {
+			logger.Sugar.Error("Validate failed, user_name could not exist, error:", err.Error())
+			return false, nil
+		} else {
+			// calc pwdHash
+			inPwdHash := GetPwdHash(userPwd, user.UserPwdSalt)
+			if inPwdHash == user.UserPwdHash {
+				return true, user
+			}
+			// userName and pwd not math
+			return false, nil
+		}
+	} else {
+		logger.Sugar.Error("no db connect for slave")
+	}
+	return false, nil
+}
+
 //返回一个32位md5加密后的字符串
 func GetPwdHash(pwd, salt string) string {
 	// md5(md5(pwd)+salt)

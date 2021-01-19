@@ -88,9 +88,45 @@ struct CIM_Login_CIMAuthReq {
 
   var userPwd: String = String()
 
+  var clientType: CIM_Def_CIMClientType = .kCimClientTypeDefault
+
+  ///optional
+  var clientVersion: String = String()
+
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   init() {}
+}
+
+struct CIM_Login_CIMAuthRsp {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// cmd id:		0x0102
+  var serverTime: UInt32 = 0
+
+  /// 验证结果
+  var resultCode: CIM_Def_CIMErrorCode = .kCimErrUnknown
+
+  ///optional
+  var resultString: String = String()
+
+  ///optional
+  var userInfo: CIM_Def_CIMUserInfo {
+    get {return _userInfo ?? CIM_Def_CIMUserInfo()}
+    set {_userInfo = newValue}
+  }
+  /// Returns true if `userInfo` has been explicitly set.
+  var hasUserInfo: Bool {return self._userInfo != nil}
+  /// Clears the value of `userInfo`. Subsequent reads from it will return its default value.
+  mutating func clearUserInfo() {self._userInfo = nil}
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+
+  fileprivate var _userInfo: CIM_Def_CIMUserInfo? = nil
 }
 
 /// 登出
@@ -242,6 +278,8 @@ extension CIM_Login_CIMAuthReq: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "user_name"),
     2: .standard(proto: "user_pwd"),
+    3: .standard(proto: "client_type"),
+    4: .standard(proto: "client_version"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -249,6 +287,8 @@ extension CIM_Login_CIMAuthReq: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
       switch fieldNumber {
       case 1: try decoder.decodeSingularStringField(value: &self.userName)
       case 2: try decoder.decodeSingularStringField(value: &self.userPwd)
+      case 3: try decoder.decodeSingularEnumField(value: &self.clientType)
+      case 4: try decoder.decodeSingularStringField(value: &self.clientVersion)
       default: break
       }
     }
@@ -261,12 +301,67 @@ extension CIM_Login_CIMAuthReq: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
     if !self.userPwd.isEmpty {
       try visitor.visitSingularStringField(value: self.userPwd, fieldNumber: 2)
     }
+    if self.clientType != .kCimClientTypeDefault {
+      try visitor.visitSingularEnumField(value: self.clientType, fieldNumber: 3)
+    }
+    if !self.clientVersion.isEmpty {
+      try visitor.visitSingularStringField(value: self.clientVersion, fieldNumber: 4)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   static func ==(lhs: CIM_Login_CIMAuthReq, rhs: CIM_Login_CIMAuthReq) -> Bool {
     if lhs.userName != rhs.userName {return false}
     if lhs.userPwd != rhs.userPwd {return false}
+    if lhs.clientType != rhs.clientType {return false}
+    if lhs.clientVersion != rhs.clientVersion {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension CIM_Login_CIMAuthRsp: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".CIMAuthRsp"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .standard(proto: "server_time"),
+    2: .standard(proto: "result_code"),
+    3: .standard(proto: "result_string"),
+    4: .standard(proto: "user_info"),
+  ]
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      switch fieldNumber {
+      case 1: try decoder.decodeSingularUInt32Field(value: &self.serverTime)
+      case 2: try decoder.decodeSingularEnumField(value: &self.resultCode)
+      case 3: try decoder.decodeSingularStringField(value: &self.resultString)
+      case 4: try decoder.decodeSingularMessageField(value: &self._userInfo)
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if self.serverTime != 0 {
+      try visitor.visitSingularUInt32Field(value: self.serverTime, fieldNumber: 1)
+    }
+    if self.resultCode != .kCimErrUnknown {
+      try visitor.visitSingularEnumField(value: self.resultCode, fieldNumber: 2)
+    }
+    if !self.resultString.isEmpty {
+      try visitor.visitSingularStringField(value: self.resultString, fieldNumber: 3)
+    }
+    if let v = self._userInfo {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: CIM_Login_CIMAuthRsp, rhs: CIM_Login_CIMAuthRsp) -> Bool {
+    if lhs.serverTime != rhs.serverTime {return false}
+    if lhs.resultCode != rhs.resultCode {return false}
+    if lhs.resultString != rhs.resultString {return false}
+    if lhs._userInfo != rhs._userInfo {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
