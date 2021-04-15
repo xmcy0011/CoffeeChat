@@ -181,17 +181,17 @@ func (u *User) Add(userName, userNickName, userPwd string) (int64, error) {
 	}
 
 	// check exist
-	//sql := fmt.Sprintf("select count(1) from %s where id=%d", kUserTableName, userId)
-	//row := session.QueryRow(sql)
-	//
-	//count := int64(0)
-	//if err := row.Scan(&count); err != nil {
-	//	logger.Sugar.Warnf("QueryRow error:%d,userId=%d", userId)
-	//	return err
-	//} else if count > 0 {
-	//	logger.Sugar.Warnf("user already exist,userId=%d", userId)
-	//	return errors.New("user already exist")
-	//}
+	sql := fmt.Sprintf("select count(1) from %s where user_name='%s'", kUserTableName, userName)
+	row := session.QueryRow(sql)
+
+	count := int64(0)
+	if err := row.Scan(&count); err != nil {
+		logger.Sugar.Warnf("QueryRow error:%d,user_name=%d", userName)
+		return 0, err
+	} else if count > 0 {
+		logger.Sugar.Warnf("user already exist,user_name=%d", userName)
+		return 0, errors.New("user already exist")
+	}
 
 	// build 32 bytes salt
 	saltArr := make([]byte, 32)
@@ -207,7 +207,7 @@ func (u *User) Add(userName, userNickName, userPwd string) (int64, error) {
 	logger.Sugar.Infof("userName:%s,userPwdSalt:%s,userPwdHash:%s", userName, salt, pwdHash)
 
 	// insert
-	sql := fmt.Sprintf("insert into %s(user_name,user_pwd_salt,user_pwd_hash,user_nick_name,"+
+	sql = fmt.Sprintf("insert into %s(user_name,user_pwd_salt,user_pwd_hash,user_nick_name,"+
 		"user_token,user_attach,created,updated) values('%s','%s','%s','%s','','',%d,%d)",
 		kUserTableName, userName, salt, pwdHash, userNickName, time.Now().Unix(), time.Now().Unix())
 	r, err := session.Exec(sql)
