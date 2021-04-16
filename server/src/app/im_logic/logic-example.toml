@@ -33,7 +33,7 @@ MaxConnCnt=16
 Name="cim"
 #Ip="127.0.0.1"
 Ip="106.14.172.35"
-Port=6379
+Port=16379
 KeyPrefix="cim|"        # redis中key的统一前缀
 Password="m6J8izc!OC!u$pYB"   # redis的密码，不允许为空
 
