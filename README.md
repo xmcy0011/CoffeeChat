@@ -144,44 +144,57 @@ flutter pub get
 
 #### server(以 mac 环境为例)
 
-golang 的包管理工具使用的 dep，相关依赖都已经提交到 github，所以可以直接 build。
+~~golang 的包管理工具使用的 dep，相关依赖都已经提交到 github，所以可以直接 build。~~
+> 2020.04.20 更新：使用go mod包管理工具代替dep。
 
-1. golang 环境
+1. 安装golang（推荐**go1.13**以上，安装方法请以 [官网](https://golang.google.cn/dl/) 为准）
 
 ```bash
-brew isntall golang # 安装go
-vim ~/.bash_profile # 加入如下配置
+$ brew isntall golang # 安装go
+$ vim ~/.bash_profile # 设置go环境变量
 
-export GOROOT=/usr/local/Cellar/go/1.12.5/libexec
-export GOPATH="/Users/xmcy0011/repo/go" # 使用go mod后，代码不能存放到gopath下，请注意。
+export GOROOT=/usr/local/Cellar/go/1.16.3/libexec
+# 自go1.13默认启用go mod后，GOPATH可以不在配置
+#export GOPATH="/Users/xmcy0011/repo/go" # 使用go mod后，代码不能存放到gopath下，请注意。
 export GOBIN=$GOROOT/bin
-export PATH=$PATH:$GOBIN:$GOPATH/bin
+export PATH=$PATH:$GOBIN:$GOPATH/bin 
 
-source ~/.bash_profile # 生效
-go env                 # 确认goroot和gopath正确
+$ source ~/.bash_profile # 生效
+$ go env                 # 确认goroot和gopath正确
 
-unset GOPROXY          # go mod有些包拉不下来，可以配置GOPROXY。但是，对go get无效😭
-go env -w GOPROXY=https://goproxy.cn,direct
-
-# git clone 
-cd /Users/xmcy0011/repo #注意不是gopath路径！
-mkdir github
-cd github
-git clone https://github.com/xmcy0011/CoffeeChat.git
+$ unset GOPROXY          # go mod有些包拉不下来，可以配置GOPROXY。但是，对go get无效😭
+$ go env -w GOPROXY=https://goproxy.cn,direct
 ```
 
-2. gate 网关服务编译
-
+2. git clone
 ```bash
-cd server/src/app/gate
-go build
+$ cd /Users/xmcy0011/repo #注意不是gopath路径！
+$ mkdir github
+$ cd github
+$ git clone https://github.com/xmcy0011/CoffeeChat.git
 ```
 
-3. logic 逻辑服务编译
-
+3. build & run
+- 手工方式
 ```bash
-cd server/src/app/logic
-go build
+# gate 网关服务编译
+$ cd server/src/app/im_gate
+$ go build -v
+$ ./im_gate -conf=./gate-example.toml
+
+# logic 逻辑服务编译
+$ cd server/src/app/im_logic
+$ go build -v
+$ ./im_logic -conf=./logic-example.toml
+```
+- 使用脚本
+```bash
+$ cd server/src
+$ chmod 777 build.sh
+# 编译并打包
+$ ./build.sh version 2021-04-20
+# 解压，通过./restart.sh ./stop.sh等脚本启动和停止服务
+$ tar -zxvf coffeechat.2021-04-20.tar.gz
 ```
 
 ### Run
