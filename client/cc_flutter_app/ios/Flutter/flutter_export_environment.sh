@@ -1,11 +1,11 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
-export "FLUTTER_ROOT=/Users/xuyc/repo/flutter/flutter"
-export "FLUTTER_APPLICATION_PATH=/Users/xuyc/repo/github/CoffeeChat/client/cc_flutter_app"
-export "FLUTTER_TARGET=/Users/xuyc/repo/github/CoffeeChat/client/cc_flutter_app/lib/main.dart"
+export "FLUTTER_ROOT=/Users/xmcy0011/repo/flutter/flutter"
+export "FLUTTER_APPLICATION_PATH=/Users/xmcy0011/repo/github/CoffeeChat/client/cc_flutter_app"
+export "FLUTTER_TARGET=/Users/xmcy0011/repo/github/CoffeeChat/client/cc_flutter_app/lib/main.dart"
 export "FLUTTER_BUILD_DIR=build"
 export "SYMROOT=${SOURCE_ROOT}/../build/ios"
-export "FLUTTER_FRAMEWORK_DIR=/Users/xuyc/repo/flutter/flutter/bin/cache/artifacts/engine/ios"
+export "FLUTTER_FRAMEWORK_DIR=/Users/xmcy0011/repo/flutter/flutter/bin/cache/artifacts/engine/ios"
 export "FLUTTER_BUILD_NAME=1.0.0"
 export "FLUTTER_BUILD_NUMBER=1"
 export "TRACK_WIDGET_CREATION=true"

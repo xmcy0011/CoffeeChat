@@ -153,7 +153,7 @@ brew isntall golang # 安装go
 vim ~/.bash_profile # 加入如下配置
 
 export GOROOT=/usr/local/Cellar/go/1.12.5/libexec
-export GOPATH="/Users/xuyc/repo/go" # 使用go mod后，代码不能存放到gopath下，请注意。
+export GOPATH="/Users/xmcy0011/repo/go" # 使用go mod后，代码不能存放到gopath下，请注意。
 export GOBIN=$GOROOT/bin
 export PATH=$PATH:$GOBIN:$GOPATH/bin
 
@@ -164,7 +164,7 @@ unset GOPROXY          # go mod有些包拉不下来，可以配置GOPROXY。但
 go env -w GOPROXY=https://goproxy.cn,direct
 
 # git clone 
-cd /Users/xuyc/repo #注意不是gopath路径！
+cd /Users/xmcy0011/repo #注意不是gopath路径！
 mkdir github
 cd github
 git clone https://github.com/xmcy0011/CoffeeChat.git

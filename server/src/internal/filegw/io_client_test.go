@@ -40,7 +40,7 @@ func UploadTest() {
 
 	// 上传一个zip文件。
 	objectName := "头像.jpg"
-	filePath := "/Users/xuyc/头像.jpg"
+	filePath := "/Users/xmcy0011/头像.jpg"
 	contentType := "application/jpeg"
 
 	// 使用FPutObject上传一个zip文件。

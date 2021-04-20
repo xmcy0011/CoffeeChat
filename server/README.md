@@ -53,7 +53,7 @@ $ brew list golang    # 安装位置
 $ vim ~/.bash_profile # 加入如下配置
 
 export GOROOT=/usr/local/Cellar/go/1.12.5/libexec
-export GOPATH="/Users/xuyc/repo/go" # 注意，这里很关键，是你存放代码的路径
+export GOPATH="/Users/xmcy0011/repo/go" # 注意，这里很关键，是你存放代码的路径
 export GOBIN=$GOROOT/bin
 export PATH=$PATH:$GOBIN:$GOPATH/bin
 
@@ -108,7 +108,7 @@ $ git clone https://github.com/xmcy0011/CoffeeChat.git
 ```bash
 # 完整路径
 # linux: /home/CoffeeChat/server/src
-# mac: /Users/xuyc/repo/github/CoffeeChat/server/src
+# mac: /Users/xmcy0011/repo/github/CoffeeChat/server/src
 
 $ cd CoffeeChat/server/src 
 $ chmod 777 build.sh
@@ -155,7 +155,7 @@ $ ls # 生成 coffeechat.2020.04.14.tar.gz
    
    # 创建表，参考完整路径如下：
    # linux: /home/CoffeeChat/server/setup
-   # mac: /Users/xuyc/repo/github/CoffeeChat/server/setup
+   # mac: /Users/xmcy0011/repo/github/CoffeeChat/server/setup
    $ source /home/CoffeeChat/server/setup/cim.sql
    
    # 目前send、recv、session和user用到了，群聊的未实现。

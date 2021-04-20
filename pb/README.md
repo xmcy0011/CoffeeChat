@@ -22,7 +22,7 @@ libprotoc 3.13.0
 $ env http_proxy=http://127.0.0.1:60339 https_proxy=http://127.0.0.1:60339 go get -v -u github.com/golang/protobuf/proto
 # 再安装插件（依赖上面的包）
 $ env http_proxy=http://127.0.0.1:60339 https_proxy=http://127.0.0.1:60339 go get -v -u github.com/golang/protobuf/protoc-gen-go
-$ cd $GOPATH/src    # /Users/xuyc/go/src
+$ cd $GOPATH/src    # /Users/xmcy0011/go/src
 $ cd github.com/golang/protobuf/protoc-gen-go/ 
 $ ls
 descriptor    generator     grpc          main.go       plugin

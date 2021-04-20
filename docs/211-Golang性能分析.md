@@ -75,7 +75,7 @@ func main(){
 按住Ctrl+C(linux/mac)后，在同目录下应该生成了cpu.prof的文件。
 
 ```bash
-meki-mac-pro:im_gate xuyc$ ls
+meki-mac-pro:im_gate xmcy0011$ ls
 cpu.prof          gate.go           log
 gate-example.toml im_gate           server.pid
 ```
@@ -89,7 +89,7 @@ go tool pprof im_gate cpu.prof # im_gate 是程序名字
 
 然后输入**top**命令（**help**命令查看更多功能），查看前CPU占用率TOP10，如下：
 ```bash
-meki-mac-pro:im_gate xuyc$ go tool pprof im_gate cpu.prof
+meki-mac-pro:im_gate xmcy0011$ go tool pprof im_gate cpu.prof
 File: im_gate
 Type: cpu
 Time: Jan 11, 2020 at 6:58pm (CST)
@@ -120,7 +120,7 @@ brew install graphviz # mac 安装 graphviz
 (pprof)
 (pprof) png  # 这里 在pprof命令行中输入的web命令
 (pprof) exit
-meki-mac-pro:im_gate xuyc$ ls
+meki-mac-pro:im_gate xmcy0011$ ls
 cpu.prof          gate.go           log               server.pid
 gate-example.toml im_gate           profile001.png
 ```
