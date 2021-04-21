@@ -1,9 +1,22 @@
 # install
 
+## 初始化
+
+1. 安装依赖
 ~~dep ensure -update~~
 ```bash
 go mod tidy
 ```
+
+## 开发环境
+
+**IDE强烈推荐跨平台的goland编辑器**
+1. 从官网下载：https://www.jetbrains.com/go/
+2. 安装，然后选择试用，自己搜索ide-eval-resetter-2.1.9补丁永久试用
+3. 打开工程，选择/home/xmcy0011/repo/github/CoffeeChat/server/src
+4. 打开app/im_gate/gate.go，此时报红，点击设置GOROOT
+5. 在goland中设置go mod，settings->Go->Go Modules->打勾 Enable Go modules integration（地址可以使用https://goproxy.cn,direct）
+6. 点击apply，对有些包报红的，鼠标悬停重新安装依赖。
 
 ## mysql
 
