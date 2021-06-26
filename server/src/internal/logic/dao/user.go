@@ -129,6 +129,34 @@ func (u *User) Validate(userId uint64, userToken string) (bool, error) {
 	return false, unConnectError
 }
 
+// 验证用户名和密码
+func (u *User) Validate2(userName, userPwd string) (bool, *model.UserModel) {
+	session := db.DefaultManager.GetDBSlave()
+	if session != nil {
+		// select pwdSalt and pwdHash
+		sql := fmt.Sprintf("select id,user_pwd_salt,user_pwd_hash,user_nick_name,user_attach from %s where user_name=?", kUserTableName)
+		row := session.QueryRow(sql, userName)
+
+		user := &model.UserModel{}
+		err := row.Scan(&user.UserId, &user.UserPwdSalt, &user.UserPwdHash, &user.UserNickName, &user.UserAttach)
+		if err != nil {
+			logger.Sugar.Error("Validate failed, user_name could not exist, error:", err.Error())
+			return false, nil
+		} else {
+			// calc pwdHash
+			inPwdHash := GetPwdHash(userPwd, user.UserPwdSalt)
+			if inPwdHash == user.UserPwdHash {
+				return true, user
+			}
+			// userName and pwd not math
+			return false, nil
+		}
+	} else {
+		logger.Sugar.Error("no db connect for slave")
+	}
+	return false, nil
+}
+
 //返回一个32位md5加密后的字符串
 func GetPwdHash(pwd, salt string) string {
 	// md5(md5(pwd)+salt)
@@ -153,17 +181,17 @@ func (u *User) Add(userName, userNickName, userPwd string) (int64, error) {
 	}
 
 	// check exist
-	//sql := fmt.Sprintf("select count(1) from %s where id=%d", kUserTableName, userId)
-	//row := session.QueryRow(sql)
-	//
-	//count := int64(0)
-	//if err := row.Scan(&count); err != nil {
-	//	logger.Sugar.Warnf("QueryRow error:%d,userId=%d", userId)
-	//	return err
-	//} else if count > 0 {
-	//	logger.Sugar.Warnf("user already exist,userId=%d", userId)
-	//	return errors.New("user already exist")
-	//}
+	sql := fmt.Sprintf("select count(1) from %s where user_name='%s'", kUserTableName, userName)
+	row := session.QueryRow(sql)
+
+	count := int64(0)
+	if err := row.Scan(&count); err != nil {
+		logger.Sugar.Warnf("QueryRow error:%d,user_name=%d", userName)
+		return 0, err
+	} else if count > 0 {
+		logger.Sugar.Warnf("user already exist,user_name=%d", userName)
+		return 0, errors.New("user already exist")
+	}
 
 	// build 32 bytes salt
 	saltArr := make([]byte, 32)
@@ -179,7 +207,7 @@ func (u *User) Add(userName, userNickName, userPwd string) (int64, error) {
 	logger.Sugar.Infof("userName:%s,userPwdSalt:%s,userPwdHash:%s", userName, salt, pwdHash)
 
 	// insert
-	sql := fmt.Sprintf("insert into %s(user_name,user_pwd_salt,user_pwd_hash,user_nick_name,"+
+	sql = fmt.Sprintf("insert into %s(user_name,user_pwd_salt,user_pwd_hash,user_nick_name,"+
 		"user_token,user_attach,created,updated) values('%s','%s','%s','%s','','',%d,%d)",
 		kUserTableName, userName, salt, pwdHash, userNickName, time.Now().Unix(), time.Now().Unix())
 	r, err := session.Exec(sql)

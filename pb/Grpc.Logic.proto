@@ -21,6 +21,8 @@ service Logic {
     rpc Ping(CIM.Login.CIMHeartBeat) returns(CIM.Login.CIMHeartBeat) {}
     // 验证token
     rpc AuthToken(CIM.Login.CIMAuthTokenReq) returns(CIM.Login.CIMAuthTokenRsp) {}
+    // 验证用户名和密码
+    rpc Auth(CIM.Login.CIMAuthReq) returns(CIM.Login.CIMAuthRsp) {}
 
     // 查询会话列表
     rpc RecentContactSession(CIM.List.CIMRecentContactSessionReq) returns(CIM.List.CIMRecentContactSessionRsp) {}

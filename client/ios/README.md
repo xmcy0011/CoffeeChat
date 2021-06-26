@@ -1,5 +1,31 @@
 # swift版
 
+## build
+
+depends
+```bash
+pod 'Alamofire', '~> 5.2'     # http
+pod 'CocoaAsyncSocket', '~> 7.6.3'        # socket
+pod 'SwiftProtobuf', '~> 1.0' # protobuf
+pod 'SnapKit', '~> 5.0.0'  # 自动布局第三方库
+pod 'SwiftyJSON', '~> 4.0' # json解析库
+pod 'Dollar', '9.0.0'      # 操作数组的神器，比如将数组划分成若干个子集
+pod 'RxSwift', '~> 5'      # 一个组合异步和事件驱动编程的库
+pod 'RxCocoa', '~> 5'      # iOS响应式编程中的两个主流框架（RxSwift+RxCocoa）
+pod 'BEMCheckBox'          # 高雅的iOS复选框
+pod 'Chrysan'              # 菊花组件
+pod 'CryptoSwift'          # hash(md5,sha256),crc32 , 1.3.8
+```
+
+1. install XCode, >= 12.3
+2. install CocoaPods, >= 1.9.1
+3. install depends
+```bash
+$ cd client/ios/Coffchat
+$ pod install
+```
+4. run
+
 ## 运行
 
 公网：106.14.172.35  

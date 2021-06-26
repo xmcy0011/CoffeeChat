@@ -106,7 +106,8 @@ func (tcp *TcpConn) OnClose() {
 func (tcp *TcpConn) OnRead(header *cim.ImHeader, buff []byte) {
 	//logger.Sugar.Debug("recv data:", string(buff))
 
-	if !tcp.isLogin && header.CommandId != uint16(cim.CIMCmdID_kCIM_CID_LOGIN_AUTH_TOKEN_REQ) {
+	if !tcp.isLogin && header.CommandId != uint16(cim.CIMCmdID_kCIM_CID_LOGIN_AUTH_TOKEN_REQ) &&
+		header.CommandId != uint16(cim.CIMCmdID_kCIM_CID_LOGIN_AUTH_REQ) {
 		logger.Sugar.Error("need login,close connect,address=", tcp.Conn.RemoteAddr().String())
 		tcp.OnClose()
 		return
@@ -117,8 +118,10 @@ func (tcp *TcpConn) OnRead(header *cim.ImHeader, buff []byte) {
 		//logger.Sugar.Info("heartbeat", header.CommandId)
 		tcp.lastHeartBeatTime = time.Now().Unix()
 		_, _ = tcp.Send(0, uint16(cim.CIMCmdID_kCIM_CID_LOGIN_HEARTBEAT), &cim.CIMHeartBeat{})
-	case uint16(cim.CIMCmdID_kCIM_CID_LOGIN_AUTH_TOKEN_REQ):
+	case uint16(cim.CIMCmdID_kCIM_CID_LOGIN_AUTH_REQ):
 		tcp.onHandleAuthReq(header, buff)
+	case uint16(cim.CIMCmdID_kCIM_CID_LOGIN_AUTH_TOKEN_REQ):
+		tcp.onHandleAuthTokenReq(header, buff)
 	case uint16(cim.CIMCmdID_kCIM_CID_LIST_RECENT_CONTACT_SESSION_REQ):
 		tcp.onHandleRecentContactSessionReq(header, buff)
 	case uint16(cim.CIMCmdID_kCIM_CID_LIST_MSG_REQ):
@@ -232,6 +235,61 @@ func (tcp *TcpConn) onHandleAuthReq(header *cim.ImHeader, buff []byte) {
 	if tcp.isLogin {
 		logger.Sugar.Errorf("duplication login,address:%s,user_id=%d", tcp.Conn.RemoteAddr().String(), tcp.userId)
 	} else {
+		req := &cim.CIMAuthReq{}
+		err := proto.Unmarshal(buff, req)
+		if err != nil {
+			logger.Sugar.Warn(err.Error())
+			return
+		}
+
+		// call logic gRPC to validate
+		conn := GetLoginConn()
+		ctx, cancelFun := context.WithTimeout(context.Background(), time.Second*kBusinessTimeOut)
+		defer cancelFun()
+		rsp, err := conn.Auth(ctx, req)
+
+		if err != nil {
+			logger.Sugar.Warnf("err:%s", err.Error())
+			rsp = &cim.CIMAuthRsp{
+				ResultCode:   cim.CIMErrorCode_kCIM_ERR_INTERNAL_ERROR,
+				ResultString: "服务器内部错误",
+			}
+		} else {
+			if rsp.ResultCode == cim.CIMErrorCode_kCIM_ERR_SUCCSSE {
+				tcp.isLogin = true
+				tcp.userId = rsp.UserInfo.UserId
+				tcp.nickName = rsp.UserInfo.NickName
+				tcp.clientType = req.ClientType
+				tcp.clientVersion = req.ClientVersion
+				tcp.loginTime = time.Now().Unix()
+				tcp.lastHeartBeatTime = tcp.loginTime
+
+				// save to UserManager
+				userInfo := DefaultUserManager.FindUser(tcp.userId)
+				if userInfo == nil {
+					userInfo = NewUser()
+					userInfo.UserId = tcp.userId
+					userInfo.NickName = tcp.nickName
+					userInfo.ClientType = tcp.clientType
+					DefaultUserManager.AddUser(userInfo.UserId, userInfo)
+				}
+				// save to user.connList
+				tcp.connUserListElement = userInfo.AddConn(tcp)
+			}
+		}
+
+		_, err = tcp.Send(header.SeqNum, uint16(cim.CIMCmdID_kCIM_CID_LOGIN_AUTH_RSP), rsp)
+
+		logger.Sugar.Infof("onHandleAuthReq result_code=%d,result_string=%s,user_name=%s,client_version=%s,client_type=%d",
+			rsp.ResultCode, rsp.ResultString, req.UserName, req.ClientVersion, req.ClientType)
+	}
+}
+
+// 认证授权（废弃）
+func (tcp *TcpConn) onHandleAuthTokenReq(header *cim.ImHeader, buff []byte) {
+	if tcp.isLogin {
+		logger.Sugar.Errorf("duplication login,address:%s,user_id=%d", tcp.Conn.RemoteAddr().String(), tcp.userId)
+	} else {
 		req := &cim.CIMAuthTokenReq{}
 		err := proto.Unmarshal(buff, req)
 		if err != nil {
@@ -277,7 +335,7 @@ func (tcp *TcpConn) onHandleAuthReq(header *cim.ImHeader, buff []byte) {
 
 		_, err = tcp.Send(header.SeqNum, uint16(cim.CIMCmdID_kCIM_CID_LOGIN_AUTH_TOKEN_RSP), rsp)
 
-		logger.Sugar.Infof("onHandleAuthReq result_code=%d,result_string=%s,user_id=%d,client_version=%s,client_type=%d",
+		logger.Sugar.Infof("onHandleAuthTokenReq result_code=%d,result_string=%s,user_id=%d,client_version=%s,client_type=%d",
 			rsp.ResultCode, rsp.ResultString, req.UserId, req.ClientVersion, req.ClientType)
 	}
 }

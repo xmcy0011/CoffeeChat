@@ -25,7 +25,7 @@ func TestGroup_Add(t *testing.T) {
 		t.Fatal(err.Error())
 	}
 
-	info, err := DefaultGroup.Add(kTestGroupName, kTestOwnerId)
+	info, err := DefaultGroup.Add(kTestGroupName, kTestOwnerId, 2)
 	if err != nil {
 		t.Fatal(err.Error())
 	}

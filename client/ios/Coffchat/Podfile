@@ -20,4 +20,5 @@ target 'Coffchat' do
   pod 'RxCocoa', '~> 5'      # iOS响应式编程中的两个主流框架（RxSwift+RxCocoa）
   pod 'BEMCheckBox'          # 高雅的iOS复选框
   pod 'Chrysan'              # 菊花组件
+  pod 'CryptoSwift'          # hash(md5,sha256),crc32 , 1.3.8
 end
