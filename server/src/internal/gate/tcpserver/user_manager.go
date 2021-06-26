@@ -35,5 +35,7 @@ func (u *UserManager) AddUser(userId uint64, user *User) {
 
 // 移除一个用户
 func (u *UserManager) RemoveUser(userId uint64) {
+	mutex.Lock()
 	delete(u.users, userId)
+	mutex.Unlock()
 }
