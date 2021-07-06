@@ -1,0 +1,596 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		F492AD50268468CD00041CA7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F492AD4F268468CD00041CA7 /* AppDelegate.swift */; };
+		F492AD52268468CD00041CA7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F492AD51268468CD00041CA7 /* ViewController.swift */; };
+		F492AD55268468CD00041CA7 /* coffeechat.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F492AD53268468CD00041CA7 /* coffeechat.xcdatamodeld */; };
+		F492AD57268468D000041CA7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F492AD56268468D000041CA7 /* Assets.xcassets */; };
+		F492AD5A268468D000041CA7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F492AD58268468D000041CA7 /* Main.storyboard */; };
+		F492AD66268468D000041CA7 /* coffeechatTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F492AD65268468D000041CA7 /* coffeechatTests.swift */; };
+		F492AD71268468D000041CA7 /* coffeechatUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F492AD70268468D000041CA7 /* coffeechatUITests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F492AD62268468D000041CA7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F492AD44268468CD00041CA7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F492AD4B268468CD00041CA7;
+			remoteInfo = coffeechat;
+		};
+		F492AD6D268468D000041CA7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F492AD44268468CD00041CA7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F492AD4B268468CD00041CA7;
+			remoteInfo = coffeechat;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		F492AD4C268468CD00041CA7 /* coffeechat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = coffeechat.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F492AD4F268468CD00041CA7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		F492AD51268468CD00041CA7 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		F492AD54268468CD00041CA7 /* coffeechat.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = coffeechat.xcdatamodel; sourceTree = "<group>"; };
+		F492AD56268468D000041CA7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F492AD59268468D000041CA7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		F492AD5B268468D000041CA7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F492AD5C268468D000041CA7 /* coffeechat.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = coffeechat.entitlements; sourceTree = "<group>"; };
+		F492AD61268468D000041CA7 /* coffeechatTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = coffeechatTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F492AD65268468D000041CA7 /* coffeechatTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = coffeechatTests.swift; sourceTree = "<group>"; };
+		F492AD67268468D000041CA7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F492AD6C268468D000041CA7 /* coffeechatUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = coffeechatUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F492AD70268468D000041CA7 /* coffeechatUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = coffeechatUITests.swift; sourceTree = "<group>"; };
+		F492AD72268468D000041CA7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F492AD49268468CD00041CA7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F492AD5E268468D000041CA7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F492AD69268468D000041CA7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		F492AD43268468CD00041CA7 = {
+			isa = PBXGroup;
+			children = (
+				F492AD4E268468CD00041CA7 /* coffeechat */,
+				F492AD64268468D000041CA7 /* coffeechatTests */,
+				F492AD6F268468D000041CA7 /* coffeechatUITests */,
+				F492AD4D268468CD00041CA7 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F492AD4D268468CD00041CA7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F492AD4C268468CD00041CA7 /* coffeechat.app */,
+				F492AD61268468D000041CA7 /* coffeechatTests.xctest */,
+				F492AD6C268468D000041CA7 /* coffeechatUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F492AD4E268468CD00041CA7 /* coffeechat */ = {
+			isa = PBXGroup;
+			children = (
+				F492AD4F268468CD00041CA7 /* AppDelegate.swift */,
+				F492AD51268468CD00041CA7 /* ViewController.swift */,
+				F492AD56268468D000041CA7 /* Assets.xcassets */,
+				F492AD58268468D000041CA7 /* Main.storyboard */,
+				F492AD5B268468D000041CA7 /* Info.plist */,
+				F492AD5C268468D000041CA7 /* coffeechat.entitlements */,
+				F492AD53268468CD00041CA7 /* coffeechat.xcdatamodeld */,
+			);
+			path = coffeechat;
+			sourceTree = "<group>";
+		};
+		F492AD64268468D000041CA7 /* coffeechatTests */ = {
+			isa = PBXGroup;
+			children = (
+				F492AD65268468D000041CA7 /* coffeechatTests.swift */,
+				F492AD67268468D000041CA7 /* Info.plist */,
+			);
+			path = coffeechatTests;
+			sourceTree = "<group>";
+		};
+		F492AD6F268468D000041CA7 /* coffeechatUITests */ = {
+			isa = PBXGroup;
+			children = (
+				F492AD70268468D000041CA7 /* coffeechatUITests.swift */,
+				F492AD72268468D000041CA7 /* Info.plist */,
+			);
+			path = coffeechatUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F492AD4B268468CD00041CA7 /* coffeechat */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F492AD75268468D000041CA7 /* Build configuration list for PBXNativeTarget "coffeechat" */;
+			buildPhases = (
+				F492AD48268468CD00041CA7 /* Sources */,
+				F492AD49268468CD00041CA7 /* Frameworks */,
+				F492AD4A268468CD00041CA7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = coffeechat;
+			productName = coffeechat;
+			productReference = F492AD4C268468CD00041CA7 /* coffeechat.app */;
+			productType = "com.apple.product-type.application";
+		};
+		F492AD60268468D000041CA7 /* coffeechatTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F492AD78268468D000041CA7 /* Build configuration list for PBXNativeTarget "coffeechatTests" */;
+			buildPhases = (
+				F492AD5D268468D000041CA7 /* Sources */,
+				F492AD5E268468D000041CA7 /* Frameworks */,
+				F492AD5F268468D000041CA7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F492AD63268468D000041CA7 /* PBXTargetDependency */,
+			);
+			name = coffeechatTests;
+			productName = coffeechatTests;
+			productReference = F492AD61268468D000041CA7 /* coffeechatTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		F492AD6B268468D000041CA7 /* coffeechatUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F492AD7B268468D000041CA7 /* Build configuration list for PBXNativeTarget "coffeechatUITests" */;
+			buildPhases = (
+				F492AD68268468D000041CA7 /* Sources */,
+				F492AD69268468D000041CA7 /* Frameworks */,
+				F492AD6A268468D000041CA7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F492AD6E268468D000041CA7 /* PBXTargetDependency */,
+			);
+			name = coffeechatUITests;
+			productName = coffeechatUITests;
+			productReference = F492AD6C268468D000041CA7 /* coffeechatUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F492AD44268468CD00041CA7 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1230;
+				LastUpgradeCheck = 1230;
+				TargetAttributes = {
+					F492AD4B268468CD00041CA7 = {
+						CreatedOnToolsVersion = 12.3;
+					};
+					F492AD60268468D000041CA7 = {
+						CreatedOnToolsVersion = 12.3;
+						TestTargetID = F492AD4B268468CD00041CA7;
+					};
+					F492AD6B268468D000041CA7 = {
+						CreatedOnToolsVersion = 12.3;
+						TestTargetID = F492AD4B268468CD00041CA7;
+					};
+				};
+			};
+			buildConfigurationList = F492AD47268468CD00041CA7 /* Build configuration list for PBXProject "coffeechat" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = F492AD43268468CD00041CA7;
+			productRefGroup = F492AD4D268468CD00041CA7 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F492AD4B268468CD00041CA7 /* coffeechat */,
+				F492AD60268468D000041CA7 /* coffeechatTests */,
+				F492AD6B268468D000041CA7 /* coffeechatUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F492AD4A268468CD00041CA7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F492AD57268468D000041CA7 /* Assets.xcassets in Resources */,
+				F492AD5A268468D000041CA7 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F492AD5F268468D000041CA7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F492AD6A268468D000041CA7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F492AD48268468CD00041CA7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F492AD55268468CD00041CA7 /* coffeechat.xcdatamodeld in Sources */,
+				F492AD52268468CD00041CA7 /* ViewController.swift in Sources */,
+				F492AD50268468CD00041CA7 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F492AD5D268468D000041CA7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F492AD66268468D000041CA7 /* coffeechatTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F492AD68268468D000041CA7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F492AD71268468D000041CA7 /* coffeechatUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F492AD63268468D000041CA7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F492AD4B268468CD00041CA7 /* coffeechat */;
+			targetProxy = F492AD62268468D000041CA7 /* PBXContainerItemProxy */;
+		};
+		F492AD6E268468D000041CA7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F492AD4B268468CD00041CA7 /* coffeechat */;
+			targetProxy = F492AD6D268468D000041CA7 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		F492AD58268468D000041CA7 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F492AD59268468D000041CA7 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		F492AD73268468D000041CA7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 11.1;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		F492AD74268468D000041CA7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 11.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		F492AD76268468D000041CA7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = coffeechat/coffeechat.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = coffeechat/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.xuyc.coffeechat;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		F492AD77268468D000041CA7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = coffeechat/coffeechat.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = coffeechat/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.xuyc.coffeechat;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		F492AD79268468D000041CA7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = coffeechatTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.xuyc.coffeechatTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/coffeechat.app/Contents/MacOS/coffeechat";
+			};
+			name = Debug;
+		};
+		F492AD7A268468D000041CA7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = coffeechatTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.xuyc.coffeechatTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/coffeechat.app/Contents/MacOS/coffeechat";
+			};
+			name = Release;
+		};
+		F492AD7C268468D000041CA7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = coffeechatUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.xuyc.coffeechatUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = coffeechat;
+			};
+			name = Debug;
+		};
+		F492AD7D268468D000041CA7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = coffeechatUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.xuyc.coffeechatUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = coffeechat;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F492AD47268468CD00041CA7 /* Build configuration list for PBXProject "coffeechat" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F492AD73268468D000041CA7 /* Debug */,
+				F492AD74268468D000041CA7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F492AD75268468D000041CA7 /* Build configuration list for PBXNativeTarget "coffeechat" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F492AD76268468D000041CA7 /* Debug */,
+				F492AD77268468D000041CA7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F492AD78268468D000041CA7 /* Build configuration list for PBXNativeTarget "coffeechatTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F492AD79268468D000041CA7 /* Debug */,
+				F492AD7A268468D000041CA7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F492AD7B268468D000041CA7 /* Build configuration list for PBXNativeTarget "coffeechatUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F492AD7C268468D000041CA7 /* Debug */,
+				F492AD7D268468D000041CA7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		F492AD53268468CD00041CA7 /* coffeechat.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				F492AD54268468CD00041CA7 /* coffeechat.xcdatamodel */,
+			);
+			currentVersion = F492AD54268468CD00041CA7 /* coffeechat.xcdatamodel */;
+			path = coffeechat.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = F492AD44268468CD00041CA7 /* Project object */;
+}
