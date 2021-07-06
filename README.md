@@ -5,7 +5,8 @@ opensource im with server(go) and client(flutter+swift)
 ## Preview
 
 ### flutter
-![screenshot](./images/flutter/screenshot.png)  
+
+see [CoffeeChat-Flutter](https://github.com/xmcy0011/CoffeeChat-Flutter)
 
 ### swift
 ![screenshot](./images/swift/screenshot.png)  
