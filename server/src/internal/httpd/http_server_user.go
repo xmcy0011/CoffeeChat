@@ -44,37 +44,37 @@ type UserNickNameRsp struct {
 // user/register
 func userRegister(writer http.ResponseWriter, request *http.Request) {
 	if err := checkPostHeader(request); err != nil {
-		writeError(kRegisterUserUrl, writer, -1, err.Error())
+		writeError(kRegisterUserUrl, writer, int(cim.CIMErrorCode_kCIM_ERROR_USER_INVALID_PARAMETER), err.Error())
 		return
 	}
 	data, err := ioutil.ReadAll(request.Body)
 	if err != nil {
-		writeError(kRegisterUserUrl, writer, -1, "bad request")
+		writeError(kRegisterUserUrl, writer, int(cim.CIMErrorCode_kCIM_ERROR_USER_INVALID_PARAMETER), "bad request")
 		return
 	}
 
 	req := RequestCreateUser{}
 	err = json.Unmarshal(data, &req)
 	if err != nil {
-		writeError(kRegisterUserUrl, writer, -1, "invalid parameters")
+		writeError(kRegisterUserUrl, writer, int(cim.CIMErrorCode_kCIM_ERROR_USER_INVALID_PARAMETER), "invalid parameters")
 		return
 	}
 	if len(req.UserName) < kMinUserNameLen || len(req.UserName) > kMaxUserNameLen {
-		writeError(kRegisterUserUrl, writer, -1, "invalid userName")
+		writeError(kRegisterUserUrl, writer, int(cim.CIMErrorCode_kCIM_ERROR_USER_INVALID_PARAMETER), "invalid userName")
 		return
 	}
 	if len(req.UserPwd) != kUserPwdLen { // 32位md5
-		writeError(kRegisterUserUrl, writer, -1, "invalid userPwd")
+		writeError(kRegisterUserUrl, writer, int(cim.CIMErrorCode_kCIM_ERROR_USER_INVALID_PARAMETER), "invalid userPwd")
 		return
 	}
 	if strings.TrimSpace(req.UserNickName) == "" {
-		writeError(kRegisterUserUrl, writer, -1, "invalid userNickName")
+		writeError(kRegisterUserUrl, writer, int(cim.CIMErrorCode_kCIM_ERROR_USER_INVALID_PARAMETER), "invalid userNickName")
 		return
 	}
 
 	con := GetConn()
 	if con == nil {
-		writeError(kRegisterUserUrl, writer, -1, "server internal error")
+		writeError(kRegisterUserUrl, writer, int(cim.CIMErrorCode_kCIM_ERR_INTERNAL_ERROR), "server internal error")
 		return
 	}
 
@@ -88,7 +88,7 @@ func userRegister(writer http.ResponseWriter, request *http.Request) {
 	})
 	if err != nil {
 		logger.Sugar.Warnf("logic server error:%s", err.Error())
-		writeError(kRegisterUserUrl, writer, -1, "server internal error")
+		writeError(kRegisterUserUrl, writer, int(cim.CIMErrorCode_kCIM_ERR_INTERNAL_ERROR), "server internal error")
 	} else {
 		if createRsp.ErrorCode == cim.CIMErrorCode_kCIM_ERR_SUCCSSE {
 			rsp := ResponseBase{ErrorCode: int(cim.CIMErrorCode_kCIM_ERR_SUCCSSE), ErrorMsg: "success"}
