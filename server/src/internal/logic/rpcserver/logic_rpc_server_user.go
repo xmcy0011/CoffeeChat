@@ -23,7 +23,7 @@ func (s *LogicServer) CreateUser(ctx context.Context, req *cim.CreateUserAccount
 	}
 
 	// 1.create user
-	rsp.ErrorCode = cim.CIMErrorCode_kCIM_ERR_SUCCSSE
+	rsp.ErrorCode = cim.CIMErrorCode_kCIM_ERR_SUCCESS
 	logger.Sugar.Infof("CreateUser userName=%s,userNickName=%s,userId=%d", req.UserName, req.UserNickName, userId)
 
 	// 2.create robot session
@@ -42,7 +42,7 @@ func (s *LogicServer) QueryUserNickName(ctx context.Context, in *cim.QueryUserNi
 	}
 
 	// success
-	rsp.ErrorCode = cim.CIMErrorCode_kCIM_ERR_SUCCSSE
+	rsp.ErrorCode = cim.CIMErrorCode_kCIM_ERR_SUCCESS
 	rsp.NickName = u.UserNickName
 	logger.Sugar.Infof("QueryUserNickName userId=%d,nickName=%s", in.UserId, rsp.NickName)
 

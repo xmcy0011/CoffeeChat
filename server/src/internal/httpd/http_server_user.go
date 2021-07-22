@@ -90,8 +90,8 @@ func userRegister(writer http.ResponseWriter, request *http.Request) {
 		logger.Sugar.Warnf("logic server error:%s", err.Error())
 		writeError(kRegisterUserUrl, writer, int(cim.CIMErrorCode_kCIM_ERR_INTERNAL_ERROR), "server internal error")
 	} else {
-		if createRsp.ErrorCode == cim.CIMErrorCode_kCIM_ERR_SUCCSSE {
-			rsp := ResponseBase{ErrorCode: int(cim.CIMErrorCode_kCIM_ERR_SUCCSSE), ErrorMsg: "success"}
+		if createRsp.ErrorCode == cim.CIMErrorCode_kCIM_ERR_SUCCESS {
+			rsp := ResponseBase{ErrorCode: int(cim.CIMErrorCode_kCIM_ERR_SUCCESS), ErrorMsg: "success"}
 			data, _ := json.Marshal(rsp)
 			_, _ = writer.Write(data)
 			logger.Sugar.Infof("%s create success,userName=%s,userPwd=%s", kRegisterUserUrl,
@@ -144,7 +144,7 @@ func userNickNameQuery(writer http.ResponseWriter, request *http.Request) {
 		logger.Sugar.Warnf("logic server error:%s", err.Error())
 		writeError(kQueryNickNameUserUrl, writer, -1, "server internal error")
 	} else {
-		if queryRsp.ErrorCode == cim.CIMErrorCode_kCIM_ERR_SUCCSSE {
+		if queryRsp.ErrorCode == cim.CIMErrorCode_kCIM_ERR_SUCCESS {
 			rsp := UserNickNameRsp{NickName: ""}
 			rsp.ErrorMsg = "success"
 			rsp.ErrorCode = 0

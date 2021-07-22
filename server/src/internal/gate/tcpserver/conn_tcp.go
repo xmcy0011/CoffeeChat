@@ -255,7 +255,7 @@ func (tcp *TcpConn) onHandleAuthReq(header *cim.ImHeader, buff []byte) {
 				ResultString: "服务器内部错误",
 			}
 		} else {
-			if rsp.ResultCode == cim.CIMErrorCode_kCIM_ERR_SUCCSSE {
+			if rsp.ResultCode == cim.CIMErrorCode_kCIM_ERR_SUCCESS {
 				tcp.isLogin = true
 				tcp.userId = rsp.UserInfo.UserId
 				tcp.nickName = rsp.UserInfo.NickName
@@ -310,7 +310,7 @@ func (tcp *TcpConn) onHandleAuthTokenReq(header *cim.ImHeader, buff []byte) {
 				ResultString: "服务器内部错误",
 			}
 		} else {
-			if rsp.ResultCode == cim.CIMErrorCode_kCIM_ERR_SUCCSSE {
+			if rsp.ResultCode == cim.CIMErrorCode_kCIM_ERR_SUCCESS {
 				tcp.isLogin = true
 				tcp.userId = req.UserId
 				tcp.nickName = req.NickName

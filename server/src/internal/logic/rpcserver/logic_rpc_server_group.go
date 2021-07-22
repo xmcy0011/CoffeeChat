@@ -58,7 +58,7 @@ func (s *LogicServer) CreateGroup(ctx context.Context, in *cim.CIMGroupCreateReq
 		return nil, err
 	}
 
-	rsp.ResultCode = uint32(cim.CIMErrorCode_kCIM_ERR_SUCCSSE)
+	rsp.ResultCode = uint32(cim.CIMErrorCode_kCIM_ERR_SUCCESS)
 	rsp.GroupInfo = info
 
 	// add member myself
@@ -133,7 +133,7 @@ func (s *LogicServer) DisbandingGroup(ctx context.Context, in *cim.CIMGroupDisba
 	info := &cim.CIMGroupDisbandingRsp{
 		UserId:     in.UserId,
 		GroupId:    in.GroupId,
-		ResultCode: uint32(cim.CIMErrorCode_kCIM_ERR_SUCCSSE),
+		ResultCode: uint32(cim.CIMErrorCode_kCIM_ERR_SUCCESS),
 	}
 	return info, nil
 }
@@ -183,7 +183,7 @@ func (s *LogicServer) QueryGroupInfo(ctx context.Context, in *cim.CIMGroupInfoRe
 	logger.Sugar.Infof("QueryGroupInfo user_id=%d,group_version_list_len=%d", in.UserId, len(in.GroupVersionList))
 
 	rsp := &cim.CIMGroupInfoRsp{}
-	rsp.ResultCode = uint32(cim.CIMErrorCode_kCIM_ERR_SUCCSSE)
+	rsp.ResultCode = uint32(cim.CIMErrorCode_kCIM_ERR_SUCCESS)
 	rsp.UserId = in.UserId
 
 	for _, v := range in.GroupVersionList {
@@ -202,7 +202,7 @@ func (s *LogicServer) GroupInviteMember(ctx context.Context, in *cim.CIMGroupInv
 	rsp := &cim.CIMGroupInviteMemberRsp{
 		UserId:     in.UserId,
 		GroupId:    in.GroupId,
-		ResultCode: uint32(cim.CIMErrorCode_kCIM_ERR_SUCCSSE),
+		ResultCode: uint32(cim.CIMErrorCode_kCIM_ERR_SUCCESS),
 	}
 	for _, v := range in.MemberIdList {
 		err := dao.DefaultGroupMember.Add(in.GroupId, v)
@@ -221,7 +221,7 @@ func (s *LogicServer) GroupKickOutMember(ctx context.Context, in *cim.CIMGroupKi
 	rsp := &cim.CIMGroupKickOutMemberRsp{
 		UserId:     in.UserId,
 		GroupId:    in.GroupId,
-		ResultCode: uint32(cim.CIMErrorCode_kCIM_ERR_SUCCSSE),
+		ResultCode: uint32(cim.CIMErrorCode_kCIM_ERR_SUCCESS),
 	}
 
 	for _, v := range in.MemberIdList {
@@ -256,7 +256,7 @@ func (s *LogicServer) GroupExit(ctx context.Context, in *cim.CIMGroupExitReq) (*
 	rsp := &cim.CIMGroupExitRsp{
 		UserId:     in.UserId,
 		GroupId:    in.GroupId,
-		ResultCode: uint32(cim.CIMErrorCode_kCIM_ERR_SUCCSSE),
+		ResultCode: uint32(cim.CIMErrorCode_kCIM_ERR_SUCCESS),
 	}
 	return rsp, nil
 }

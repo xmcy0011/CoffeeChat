@@ -76,7 +76,7 @@ enum CIMErrorCode {
   kCIM_ERR_UNKNOWN = 0; // 未知错误
 
   // 通用错误码
-  kCIM_ERR_SUCCSSE = 200;        // 成功
+  kCIM_ERR_SUCCESS = 200;        // 成功
   kCIM_ERR_INTERNAL_ERROR = 201; // 服务器内部错误
 
   // 账号错误码

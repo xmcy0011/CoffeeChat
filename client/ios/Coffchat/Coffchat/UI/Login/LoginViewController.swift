@@ -71,7 +71,7 @@ class LoginViewController: UIViewController, IMLoginManagerDelegate, UITextField
             _ = IMManager.singleton.loginManager.login(userId: userId!, userToken: token.text!, serverIp: server.text!, port: 8000) { rsp in
                 // 线程安全
                 DispatchQueue.main.async {
-                    if rsp.resultCode != .kCimErrSuccsse {
+                    if rsp.resultCode != .kCimErrSuccess {
                         let alert = UIAlertController(title: "提醒", message: "登录失败:\(rsp.resultString)", preferredStyle: .alert)
                         let ok = UIAlertAction(title: "提醒", style: .cancel, handler: nil)
                         alert.addAction(ok)

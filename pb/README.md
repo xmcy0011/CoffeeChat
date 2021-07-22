@@ -2,6 +2,8 @@
 
 ## install
 
+> 注意：CoffeeChat-Desktop 项目依赖的protobuf库版本要和这里的protoc版本一致，否则会导致编译错误，需要使用 CoffeeChat-Desktop 依赖的protoc 重新生成对应的pb文件。
+
 ### mac
 
 1. protobuf3
@@ -9,11 +11,11 @@
 $ brew install protobuf      # 安装protobuf
 $ brew info protobuf         # 查看版本
 $ vim ~/.bash_profile        # 加入protobuf的路径，上面info看到路径后面加/bin即可
-export PATH=$PATH:/usr/local/Cellar/protobuf/3.13.0/bin
+export PATH=$PATH:/usr/local/Cellar/protobuf/3.14.0/bin
 
 $ source ~/.bash_profile     # 编译
 $ protoc --version           # protoc的版本
-libprotoc 3.13.0
+libprotoc 3.14.0
 ```
 
 2. [go插件（编译protoc-gen-go）](https://www.jianshu.com/p/2bfc4edca326)

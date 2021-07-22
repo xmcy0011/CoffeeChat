@@ -350,7 +350,7 @@ enum CIM_Def_CIMErrorCode: SwiftProtobuf.Enum {
   case kCimErrUnknown // = 0
 
   /// 通用错误码
-  case kCimErrSuccsse // = 200
+  case kCimErrSuccess // = 200
 
   /// 服务器内部错误
   case kCimErrInternalError // = 201
@@ -384,7 +384,7 @@ enum CIM_Def_CIMErrorCode: SwiftProtobuf.Enum {
   init?(rawValue: Int) {
     switch rawValue {
     case 0: self = .kCimErrUnknown
-    case 200: self = .kCimErrSuccsse
+    case 200: self = .kCimErrSuccess
     case 201: self = .kCimErrInternalError
     case 2000: self = .kCimErrLoginDbValidateFailed
     case 2001: self = .kCimErrLoginVersionTooOld
@@ -400,7 +400,7 @@ enum CIM_Def_CIMErrorCode: SwiftProtobuf.Enum {
   var rawValue: Int {
     switch self {
     case .kCimErrUnknown: return 0
-    case .kCimErrSuccsse: return 200
+    case .kCimErrSuccess: return 200
     case .kCimErrInternalError: return 201
     case .kCimErrLoginDbValidateFailed: return 2000
     case .kCimErrLoginVersionTooOld: return 2001
@@ -421,7 +421,7 @@ extension CIM_Def_CIMErrorCode: CaseIterable {
   // The compiler won't synthesize support with the UNRECOGNIZED case.
   static var allCases: [CIM_Def_CIMErrorCode] = [
     .kCimErrUnknown,
-    .kCimErrSuccsse,
+    .kCimErrSuccess,
     .kCimErrInternalError,
     .kCimErrLoginDbValidateFailed,
     .kCimErrLoginVersionTooOld,
@@ -1374,7 +1374,7 @@ extension CIM_Def_CIMIntenralCmdID: SwiftProtobuf._ProtoNameProviding {
 extension CIM_Def_CIMErrorCode: SwiftProtobuf._ProtoNameProviding {
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     0: .same(proto: "kCIM_ERR_UNKNOWN"),
-    200: .same(proto: "kCIM_ERR_SUCCSSE"),
+    200: .same(proto: "kCIM_ERR_SUCCESS"),
     201: .same(proto: "kCIM_ERR_INTERNAL_ERROR"),
     2000: .same(proto: "kCIM_ERR_LOGIN_DB_VALIDATE_FAILED"),
     2001: .same(proto: "kCIM_ERR_LOGIN_VERSION_TOO_OLD"),

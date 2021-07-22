@@ -60,7 +60,7 @@ func (s *LogicServer) AuthToken(ctx context.Context, in *cim.CIMAuthTokenReq) (*
 		rsp.ResultString = "用户不存在或者密码错误"
 	} else {
 		if exist {
-			rsp.ResultCode = cim.CIMErrorCode_kCIM_ERR_SUCCSSE
+			rsp.ResultCode = cim.CIMErrorCode_kCIM_ERR_SUCCESS
 			rsp.ResultString = "success"
 
 			// update nick_name
@@ -100,7 +100,7 @@ func (s *LogicServer) Auth(ctx context.Context, in *cim.CIMAuthReq) (*cim.CIMAut
 		rsp.ResultString = "用户不存在或者密码错误"
 	} else {
 		if exist {
-			rsp.ResultCode = cim.CIMErrorCode_kCIM_ERR_SUCCSSE
+			rsp.ResultCode = cim.CIMErrorCode_kCIM_ERR_SUCCESS
 			rsp.ResultString = "success"
 			rsp.UserInfo = &cim.CIMUserInfo{
 				UserId:     u.UserId,

@@ -207,7 +207,7 @@ func (tcp *TcpConn) onHandleVOIPByeReq(header *cim.ImHeader, buff []byte) {
 
 	// rsp
 	var rsp = &cim.CIMVoipByeRsp{}
-	rsp.ErrorCode = cim.CIMErrorCode_kCIM_ERR_SUCCSSE
+	rsp.ErrorCode = cim.CIMErrorCode_kCIM_ERR_SUCCESS
 	_, _ = tcp.Send(header.SeqNum, uint16(cim.CIMCmdID_kCIM_CID_VOIP_BYE_RSP), rsp)
 
 	// check

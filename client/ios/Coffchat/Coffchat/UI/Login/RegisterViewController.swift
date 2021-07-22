@@ -39,7 +39,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
             IMLog.info(item: "code=\(result.errorCode),msg=\(result.errorMsg)")
 
             DispatchQueue.main.async {
-                if result.errorCode == CIM_Def_CIMErrorCode.kCimErrSuccsse.rawValue {
+                if result.errorCode == CIM_Def_CIMErrorCode.kCimErrSuccess.rawValue {
                     let alert = UIAlertController(title: "提醒", message: "注册成功，点击跳转登录界面", preferredStyle: .alert)
                     let ok = UIAlertAction(title: "确定", style: .cancel, handler: { _ in
                         // pop myself, then go to login

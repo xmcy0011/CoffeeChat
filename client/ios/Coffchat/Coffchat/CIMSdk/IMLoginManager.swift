@@ -213,7 +213,7 @@ extension IMLoginManager {
             IMLog.info(item: "auth resultCode=\(res.resultCode),resultString=\(res.resultString),userId=\(res.userInfo.userID),nick=\(res.userInfo.nickName)")
             
             // 登录成功
-            if res.resultCode == CIM_Def_CIMErrorCode.kCimErrSuccsse {
+            if res.resultCode == CIM_Def_CIMErrorCode.kCimErrSuccess {
                 isLogin = true
                 loginTime = Int32(NSDate().timeIntervalSince1970)
                 

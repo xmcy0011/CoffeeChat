@@ -51,7 +51,7 @@ func TestLogicServer_CreateGroup(t *testing.T) {
 		return
 	}
 
-	if rsp.ResultCode != uint32(cim.CIMErrorCode_kCIM_ERR_SUCCSSE) || len(rsp.MemberIdList) <= 0 {
+	if rsp.ResultCode != uint32(cim.CIMErrorCode_kCIM_ERR_SUCCESS) || len(rsp.MemberIdList) <= 0 {
 		t.Fail()
 	} else {
 		t.Logf("test success,memberIdList=%v", rsp.MemberIdList)
@@ -68,7 +68,7 @@ func TestLogicServer_CreateGroup(t *testing.T) {
 		MemberIdList: ids,
 	})
 
-	if rsp.ResultCode != uint32(cim.CIMErrorCode_kCIM_ERR_SUCCSSE) || len(rsp.MemberIdList) <= 0 {
+	if rsp.ResultCode != uint32(cim.CIMErrorCode_kCIM_ERR_SUCCESS) || len(rsp.MemberIdList) <= 0 {
 		t.Fail()
 	} else {
 		t.Logf("test success,memberIdList=%v", rsp.MemberIdList)

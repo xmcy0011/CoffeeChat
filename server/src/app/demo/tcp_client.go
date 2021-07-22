@@ -128,7 +128,7 @@ func login() error {
 		return err
 	}
 
-	if res.ResultCode != cim.CIMErrorCode_kCIM_ERR_SUCCSSE {
+	if res.ResultCode != cim.CIMErrorCode_kCIM_ERR_SUCCESS {
 		return errors.New("auth err:" + res.ResultString)
 	}
 
