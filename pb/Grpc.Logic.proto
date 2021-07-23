@@ -40,6 +40,8 @@ service Logic {
     rpc QueryUserNickName(QueryUserNickNameReq) returns(QueryUserNickNameRsp){}
     // 查询随机推荐的系统已注册用户列表
     rpc QuerySystemUserRandomList(CIM.Friend.CIMFriendQueryUserListReq) returns(CIM.Friend.CIMFriendQueryUserListRsp){}
+    // 生成随机昵称
+    rpc GenerateNickName(GenerateNickNameReq) returns(GenerateNickNameRsp){}
 
     // 创建群
     rpc CreateGroup(CIM.Group.CIMGroupCreateReq) returns(CIM.Group.CIMGroupCreateRsp){}

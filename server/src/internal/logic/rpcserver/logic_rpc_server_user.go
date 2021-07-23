@@ -5,7 +5,10 @@ import (
 	"coffeechat/internal/logic/dao"
 	"coffeechat/pkg/logger"
 	"context"
+	"math/rand"
 )
+
+const kGenerateVersion = "v1"
 
 // 新增一个授权用户
 func (s *LogicServer) CreateUser(ctx context.Context, req *cim.CreateUserAccountInfoReq) (*cim.CreateUserAccountInfoRsp, error) {
@@ -62,5 +65,61 @@ func (s *LogicServer) QuerySystemUserRandomList(ctx context.Context, in *cim.CIM
 	rsp.UserInfoList = users
 	logger.Sugar.Infof("QuerySystemUserRandomList userId=%d,userListLen=%d", in.UserId, len(rsp.UserInfoList))
 
+	return rsp, nil
+}
+
+// 随机生成1个昵称
+func (s *LogicServer) GenerateNickName(ctx context.Context, in *cim.GenerateNickNameReq) (*cim.GenerateNickNameRsp, error) {
+	// 名
+	firstCount := dao.DefaultNickGenerate.FirstNameCountV1.Load().(int)
+	// 姓
+	lastCount := dao.DefaultNickGenerate.LastNameCountV1.Load().(int)
+
+	if firstCount == 0 || lastCount == 0 {
+		err, count := dao.DefaultNickGenerate.QueryLastNameCount(kGenerateVersion)
+		if err != nil {
+			logger.Sugar.Warn(err.Error())
+			return nil, err
+		} else {
+			dao.DefaultNickGenerate.LastNameCountV1.Store(count)
+			lastCount = count
+		}
+
+		err, count = dao.DefaultNickGenerate.QueryFirstNameCount(kGenerateVersion)
+		if err != nil {
+			logger.Sugar.Warn(err.Error())
+			return nil, err
+		} else {
+			dao.DefaultNickGenerate.FirstNameCountV1.Store(count)
+			firstCount = count
+		}
+
+		logger.Sugar.Infof("load %d lastName, %d firstName",
+			dao.DefaultNickGenerate.LastNameCountV1.Load(),
+			dao.DefaultNickGenerate.FirstNameCountV1.Load())
+	}
+
+	// FIXME: 算法不严谨，依赖数据库自增ID，请注意
+	lastId := rand.Int() % lastCount // 先姓氏，再姓名，直接ID偏移
+	firstId := lastCount + (rand.Int() % firstCount)
+
+	err, info1 := dao.DefaultNickGenerate.Get(firstId)
+	if err != nil {
+		logger.Sugar.Warn(err.Error())
+		return nil, err
+	}
+
+	err, info2 := dao.DefaultNickGenerate.Get(lastId)
+	if err != nil {
+		logger.Sugar.Warn(err.Error())
+		return nil, err
+	}
+
+	rsp := &cim.GenerateNickNameRsp{}
+	rsp.FirstName = info1.GenValue
+	rsp.LastName = info2.GenValue
+	rsp.Version = kGenerateVersion
+
+	logger.Sugar.Infof("GenerateNickName firstName=%s,lastName=%s", rsp.FirstName, rsp.LastName)
 	return rsp, nil
 }

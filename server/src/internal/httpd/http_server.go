@@ -11,6 +11,7 @@ import (
 const (
 	kRegisterUserUrl      = "/user/register"
 	kQueryNickNameUserUrl = "/user/nickname/query"
+	kGenerateNickNameUrl  = "/user/nickname/generate"
 )
 
 type Config struct {
@@ -57,6 +58,7 @@ func StartHttpServer(config Config) {
 	// Content-Type:application/json; charset=utf-8
 	http.HandleFunc(kRegisterUserUrl, userRegister)
 	http.HandleFunc(kQueryNickNameUserUrl, userNickNameQuery)
+	http.HandleFunc(kGenerateNickNameUrl, userGenerateNickName)
 
 	// 启动Http监听端口
 	// PS：为了安全起见，一般线上需要改成HTTPS， 证书可以使用阿里云等免费的SSL证书

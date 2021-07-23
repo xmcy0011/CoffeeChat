@@ -327,6 +327,117 @@ func (x *QueryUserNickNameRsp) GetNickName() string {
 	return ""
 }
 
+// 昵称随机生成
+type GenerateNickNameReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Version string `protobuf:"bytes,1,opt,name=version,proto3" json:"version,omitempty"` // 版本：目前只支持V1
+}
+
+func (x *GenerateNickNameReq) Reset() {
+	*x = GenerateNickNameReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_Grpc_Def_proto_msgTypes[6]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GenerateNickNameReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GenerateNickNameReq) ProtoMessage() {}
+
+func (x *GenerateNickNameReq) ProtoReflect() protoreflect.Message {
+	mi := &file_Grpc_Def_proto_msgTypes[6]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GenerateNickNameReq.ProtoReflect.Descriptor instead.
+func (*GenerateNickNameReq) Descriptor() ([]byte, []int) {
+	return file_Grpc_Def_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *GenerateNickNameReq) GetVersion() string {
+	if x != nil {
+		return x.Version
+	}
+	return ""
+}
+
+type GenerateNickNameRsp struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Version   string `protobuf:"bytes,1,opt,name=version,proto3" json:"version,omitempty"`                      // 版本
+	LastName  string `protobuf:"bytes,2,opt,name=last_name,json=lastName,proto3" json:"last_name,omitempty"`    // 姓氏
+	FirstName string `protobuf:"bytes,3,opt,name=first_name,json=firstName,proto3" json:"first_name,omitempty"` // 名字
+}
+
+func (x *GenerateNickNameRsp) Reset() {
+	*x = GenerateNickNameRsp{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_Grpc_Def_proto_msgTypes[7]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GenerateNickNameRsp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GenerateNickNameRsp) ProtoMessage() {}
+
+func (x *GenerateNickNameRsp) ProtoReflect() protoreflect.Message {
+	mi := &file_Grpc_Def_proto_msgTypes[7]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GenerateNickNameRsp.ProtoReflect.Descriptor instead.
+func (*GenerateNickNameRsp) Descriptor() ([]byte, []int) {
+	return file_Grpc_Def_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *GenerateNickNameRsp) GetVersion() string {
+	if x != nil {
+		return x.Version
+	}
+	return ""
+}
+
+func (x *GenerateNickNameRsp) GetLastName() string {
+	if x != nil {
+		return x.LastName
+	}
+	return ""
+}
+
+func (x *GenerateNickNameRsp) GetFirstName() string {
+	if x != nil {
+		return x.FirstName
+	}
+	return ""
+}
+
 var File_Grpc_Def_proto protoreflect.FileDescriptor
 
 var file_Grpc_Def_proto_rawDesc = []byte{
@@ -358,8 +469,18 @@ var file_Grpc_Def_proto_rawDesc = []byte{
 	0x65, 0x66, 0x2e, 0x43, 0x49, 0x4d, 0x45, 0x72, 0x72, 0x6f, 0x72, 0x43, 0x6f, 0x64, 0x65, 0x52,
 	0x09, 0x65, 0x72, 0x72, 0x6f, 0x72, 0x43, 0x6f, 0x64, 0x65, 0x12, 0x1b, 0x0a, 0x09, 0x6e, 0x69,
 	0x63, 0x6b, 0x5f, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x6e,
-	0x69, 0x63, 0x6b, 0x4e, 0x61, 0x6d, 0x65, 0x42, 0x09, 0x48, 0x03, 0x5a, 0x05, 0x2e, 0x3b, 0x63,
-	0x69, 0x6d, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x69, 0x63, 0x6b, 0x4e, 0x61, 0x6d, 0x65, 0x22, 0x2f, 0x0a, 0x13, 0x47, 0x65, 0x6e, 0x65, 0x72,
+	0x61, 0x74, 0x65, 0x4e, 0x69, 0x63, 0x6b, 0x4e, 0x61, 0x6d, 0x65, 0x52, 0x65, 0x71, 0x12, 0x18,
+	0x0a, 0x07, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x07, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x22, 0x6b, 0x0a, 0x13, 0x47, 0x65, 0x6e, 0x65,
+	0x72, 0x61, 0x74, 0x65, 0x4e, 0x69, 0x63, 0x6b, 0x4e, 0x61, 0x6d, 0x65, 0x52, 0x73, 0x70, 0x12,
+	0x18, 0x0a, 0x07, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x07, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x12, 0x1b, 0x0a, 0x09, 0x6c, 0x61, 0x73,
+	0x74, 0x5f, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x6c, 0x61,
+	0x73, 0x74, 0x4e, 0x61, 0x6d, 0x65, 0x12, 0x1d, 0x0a, 0x0a, 0x66, 0x69, 0x72, 0x73, 0x74, 0x5f,
+	0x6e, 0x61, 0x6d, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x66, 0x69, 0x72, 0x73,
+	0x74, 0x4e, 0x61, 0x6d, 0x65, 0x42, 0x09, 0x48, 0x03, 0x5a, 0x05, 0x2e, 0x3b, 0x63, 0x69, 0x6d,
+	0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -374,7 +495,7 @@ func file_Grpc_Def_proto_rawDescGZIP() []byte {
 	return file_Grpc_Def_proto_rawDescData
 }
 
-var file_Grpc_Def_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_Grpc_Def_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_Grpc_Def_proto_goTypes = []interface{}{
 	(*Empty)(nil),                    // 0: CIM.Grpc.Empty
 	(*Hello)(nil),                    // 1: CIM.Grpc.Hello
@@ -382,11 +503,13 @@ var file_Grpc_Def_proto_goTypes = []interface{}{
 	(*CreateUserAccountInfoRsp)(nil), // 3: CIM.Grpc.CreateUserAccountInfoRsp
 	(*QueryUserNickNameReq)(nil),     // 4: CIM.Grpc.QueryUserNickNameReq
 	(*QueryUserNickNameRsp)(nil),     // 5: CIM.Grpc.QueryUserNickNameRsp
-	(CIMErrorCode)(0),                // 6: CIM.Def.CIMErrorCode
+	(*GenerateNickNameReq)(nil),      // 6: CIM.Grpc.GenerateNickNameReq
+	(*GenerateNickNameRsp)(nil),      // 7: CIM.Grpc.GenerateNickNameRsp
+	(CIMErrorCode)(0),                // 8: CIM.Def.CIMErrorCode
 }
 var file_Grpc_Def_proto_depIdxs = []int32{
-	6, // 0: CIM.Grpc.CreateUserAccountInfoRsp.error_code:type_name -> CIM.Def.CIMErrorCode
-	6, // 1: CIM.Grpc.QueryUserNickNameRsp.error_code:type_name -> CIM.Def.CIMErrorCode
+	8, // 0: CIM.Grpc.CreateUserAccountInfoRsp.error_code:type_name -> CIM.Def.CIMErrorCode
+	8, // 1: CIM.Grpc.QueryUserNickNameRsp.error_code:type_name -> CIM.Def.CIMErrorCode
 	2, // [2:2] is the sub-list for method output_type
 	2, // [2:2] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name
@@ -473,6 +596,30 @@ func file_Grpc_Def_proto_init() {
 				return nil
 			}
 		}
+		file_Grpc_Def_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GenerateNickNameReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_Grpc_Def_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GenerateNickNameRsp); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -480,7 +627,7 @@ func file_Grpc_Def_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_Grpc_Def_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

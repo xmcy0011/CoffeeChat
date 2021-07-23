@@ -45,10 +45,10 @@ func TestLogicServer_CreateUser(t *testing.T) {
 	defer cancel()
 
 	res, err := clientConn.CreateUser(ctx, &cim.CreateUserAccountInfoReq{
-		UserId:       1001,
+		UserName:       "1001",
 		UserNickName: "小姐姐真美腻",
 		//UserNickName: "  ", //test empty
-		UserToken: "123456",
+		UserPwd: "123456",
 	})
 
 	if err != nil {

@@ -33,3 +33,14 @@ message QueryUserNickNameRsp {
     CIM.Def.CIMErrorCode error_code = 1;         // 结果
     string nick_name = 2; // 昵称
 }
+
+// 昵称随机生成
+message GenerateNickNameReq{
+    string version = 1; // 版本：目前只支持V1
+}
+
+message GenerateNickNameRsp{
+    string version = 1; // 版本
+    string last_name = 2; // 姓氏
+    string first_name = 3; // 名字
+}

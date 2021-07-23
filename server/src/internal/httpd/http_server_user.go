@@ -40,6 +40,12 @@ type UserNickNameRsp struct {
 	NickName string `json:"nick_name"`
 }
 
+// 用户昵称随机生成
+type GenerateNickRsp struct {
+	ResponseBase
+	NickName string `json:"nick_name"`
+}
+
 // 注册用户
 // user/register
 func userRegister(writer http.ResponseWriter, request *http.Request) {
@@ -166,5 +172,43 @@ func userNickNameQuery(writer http.ResponseWriter, request *http.Request) {
 			_, _ = writer.Write(data)
 			logger.Sugar.Infof("%s create failed:%s,user_id=%d", kQueryNickNameUserUrl, rsp.ErrorMsg, req.UserId)
 		}
+	}
+}
+
+func userGenerateNickName(writer http.ResponseWriter, request *http.Request) {
+	v := request.URL.Query()
+	version := v.Get("version")
+	if version == "" {
+		writeError(kGenerateNickNameUrl, writer, -1, "invalid parameters")
+		return
+	}
+
+	if version == "1" {
+		version = "V1"
+	} else {
+		writeError(kGenerateNickNameUrl, writer, -1, "invalid version")
+		return
+	}
+
+	// rpc
+	ctx, _ := context.WithTimeout(context.Background(), time.Second*3)
+	conn := GetConn()
+	req := &cim.GenerateNickNameReq{
+		Version: version,
+	}
+
+	rsp, err := conn.GenerateNickName(ctx, req)
+	if err != nil {
+		logger.Sugar.Warnf("logic server error:%s", err.Error())
+		writeError(kQueryNickNameUserUrl, writer, -1, "server internal error")
+	} else {
+		httpRsp := GenerateNickRsp{}
+		httpRsp.ErrorMsg = "success"
+		httpRsp.ErrorCode = int(cim.CIMErrorCode_kCIM_ERR_SUCCESS)
+		httpRsp.NickName = rsp.LastName + rsp.FirstName
+
+		data, _ := json.Marshal(httpRsp)
+		_, _ = writer.Write(data)
+		logger.Sugar.Infof("%s generate success,rand nick=%s", kQueryNickNameUserUrl, httpRsp.NickName)
 	}
 }

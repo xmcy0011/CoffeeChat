@@ -11,6 +11,15 @@ CREATE TABLE `im_user` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+/* 2021-07-23 随机昵称生成表 */
+CREATE TABLE `im_nick_generate` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `gen_key` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '类别，lastname_v1：姓氏，classical_v1：古典名字',
+  `gen_value` varchar(12) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '值',
+  `flag` tinyint(1) DEFAULT '1' COMMENT '启用标志 1：是 0：否',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE `im_session` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL COMMENT '用户id',
