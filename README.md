@@ -52,6 +52,9 @@ see [CoffeeChat-Flutter](https://github.com/xmcy0011/CoffeeChat-Flutter)
 - [ ] docker
 - [ ] 阿里云OSS对象存储接入（40GB存储一年7块，每月100GB下行带宽一年200）
 - [ ] antispam
+- [ ] rpm安装包
+- [ ] docker镜像安装
+- [ ] 服务端初始化web界面，简化安装（参考wordpress）
 
 ## 客户端特有
 
