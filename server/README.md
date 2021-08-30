@@ -7,6 +7,8 @@
         - [git clone](#git-clone)
         - [build](#build)
     - [安装](#安装)
+        - [etcd](#etcd)
+        - [kafka](#kafka)
         - [mysql](#mysql)
             - [支持 emoji 设置【可选】](#支持-emoji-设置可选)
         - [redis](#redis)
@@ -119,6 +121,17 @@ $ ls # 生成 coffeechat.2020.04.14.tar.gz
 
 
 ## 安装
+
+### etcd
+
+see: [v3.5-quickstart](https://etcd.io/docs/v3.5/quickstart/)
+
+```bash
+$ chmod 777 /run/install_etcd.sh
+$ /run/install_etcd.sh
+```
+
+### kafka
 
 ### mysql
 
