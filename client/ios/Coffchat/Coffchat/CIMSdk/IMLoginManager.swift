@@ -64,12 +64,14 @@ class IMLoginManager: IMClientDelegateStatus, IMClientDelegateData {
     
     public var serverIp: String? { return _serverIp } // 服务器IP
     
-    public var userId: UInt64?
-    public var userToken: String?
+    public var userName: String?
+    public var userPwd: String?
+    
+    public var userId: UInt64?     // 从服务端获取的
     public var userNick: String?
     
     fileprivate var delegates: [String: IMLoginManagerDelegate] = [:] // 委托字典
-    fileprivate var authCallback: IMResultCallback<CIM_Login_CIMAuthTokenRsp>? // 认证结果回调
+    fileprivate var authCallback: IMResultCallback<CIM_Login_CIMAuthRsp>? // 认证结果回调
     
     init() {
         client = DefaultIMClient
@@ -79,15 +81,15 @@ class IMLoginManager: IMClientDelegateStatus, IMClientDelegateData {
     
     /// 登录
     /// - Parameters:
-    ///   - userId: 用户ID
-    ///   - userToken: 用户口令
+    ///   - userName: 用户ID
+    ///   - userPwd: 用户口令
     ///   - serverIp: 服务器IP
     ///   - port: 服务器端口
     ///   - callback: 回调
-    func login(userId: UInt64, userToken: String, serverIp: String, port: UInt16, callback: IMResultCallback<CIM_Login_CIMAuthTokenRsp>?) -> Bool {
-        IMLog.info(item: "auth userId=\(userId),userToken=\(userToken),serverIp=\(serverIp),port=\(port)")
+    func login(userName: String, userPwd: String, serverIp: String, port: UInt16, callback: IMResultCallback<CIM_Login_CIMAuthRsp>?) -> Bool {
+        IMLog.info(item: "auth userName=\(userName),userPwd=\(userPwd),serverIp=\(serverIp),port=\(port)")
         
-        if isLogin, self.userId != nil, userId != self.userId {
+        if isLogin, self.userName != nil, userName != self.userName {
             client.disconnect()
             if timer != nil {
                 timer!.invalidate() // 销毁timer
@@ -100,8 +102,8 @@ class IMLoginManager: IMClientDelegateStatus, IMClientDelegateData {
         loginStep = IMLoginStep.Linking
         
         self._serverIp = serverIp
-        self.userId = userId
-        self.userToken = userToken
+        self.userName = userName
+        self.userPwd = userPwd.md5()
         authCallback = callback
         
         // 更新登录进度
@@ -172,20 +174,20 @@ extension IMLoginManager {
     func onConnected(_ host: String, port: UInt16) {
         _onUpdateLoginStep(step: .LinkOK)
         
-        if !isLogin, userId != nil, userToken != nil {
+        if !isLogin, userName != nil, userPwd != nil {
             // 更新登录进度
             _onUpdateLoginStep(step: .Logining)
             
             // 登录请求
-            var req = CIM_Login_CIMAuthTokenReq()
+            var req = CIM_Login_CIMAuthReq()
             req.clientType = CIM_Def_CIMClientType.kCimClientTypeIos
-            req.userID = userId!
-            req.userToken = userToken!
+            req.userName = userName!
+            req.userPwd = userPwd!
             req.clientVersion = kClientVersion
             
             let body = try! req.serializedData()
             // sned to server
-            _ = client.send(cmdId: CIM_Def_CIMCmdID.kCimCidLoginAuthTokenReq, body: body)
+            _ = client.send(cmdId: CIM_Def_CIMCmdID.kCimCidLoginAuthReq, body: body)
         }
     }
 }
@@ -197,7 +199,7 @@ extension IMLoginManager {
         if header.commandId == CIM_Def_CIMCmdID.kCimCidLoginHeartbeat.rawValue {
             IMLog.debug(item: "recv hearbeat")
             return true
-        } else if header.commandId == CIM_Def_CIMCmdID.kCimCidLoginAuthTokenRsp.rawValue {
+        } else if header.commandId == CIM_Def_CIMCmdID.kCimCidLoginAuthRsp.rawValue {
             _onHandleAuthRes(header: header, data: data)
             return true
         }
@@ -206,9 +208,9 @@ extension IMLoginManager {
     
     // auth response
     func _onHandleAuthRes(header: IMHeader, data: Data) {
-        var res = CIM_Login_CIMAuthTokenRsp()
+        var res = CIM_Login_CIMAuthRsp()
         do {
-            res = try CIM_Login_CIMAuthTokenRsp(serializedData: data)
+            res = try CIM_Login_CIMAuthRsp(serializedData: data)
             
             IMLog.info(item: "auth resultCode=\(res.resultCode),resultString=\(res.resultString),userId=\(res.userInfo.userID),nick=\(res.userInfo.nickName)")
             
@@ -219,6 +221,7 @@ extension IMLoginManager {
                 
                 // 记录自己的昵称
                 userNick = res.userInfo.nickName
+                userId = res.userInfo.userID
                 
                 // 更新登录进度
                 _onUpdateLoginStep(step: .LoginOK)
@@ -266,7 +269,7 @@ extension IMLoginManager {
                 if lastAuthTimeInterval > 8 {
                     lastAuthTimeInterval = 1
                 }
-                _ = login(userId: userId!, userToken: userToken!, serverIp: client.ip, port: client.port, callback: nil)
+                _ = login(userName: userName!, userPwd: userPwd!, serverIp: client.ip, port: client.port, callback: nil)
             }
         }
         

@@ -64,11 +64,7 @@ class LoginViewController: UIViewController, IMLoginManagerDelegate, UITextField
 
     @IBAction func onLoginBtnClick(_ sender: Any) {
         if check() {
-            let userId = UInt64(id.text!)
-            if userId == nil {
-                return
-            }
-            _ = IMManager.singleton.loginManager.login(userId: userId!, userToken: token.text!, serverIp: server.text!, port: 8000) { rsp in
+            _ = IMManager.singleton.loginManager.login(userName: id.text!, userPwd: token.text!, serverIp: server.text!, port: 8000) { rsp in
                 // 线程安全
                 DispatchQueue.main.async {
                     if rsp.resultCode != .kCimErrSuccsse {

@@ -24,9 +24,13 @@ struct HttpResult {
 
 class IMUserManager {
     // let kHost: String = "10.0.107.244:18080"
-    let kHost: String = "192.168.1.3:18080"
+    var host: String = "127.0.0.1:18080"
     let kUrlRegisterUser: String = "user/register"
 
+    func setHttpHost(addr: String) {
+        self.host = addr + ":18080"
+    }
+    
     func registerUser(userName: String, userPwd: String, userNickName: String, cb: IMResultCallback<HttpResult>?) {
         // md5
         let pwdMd5 = userPwd.md5()
@@ -35,7 +39,7 @@ class IMUserManager {
             "Content-Type": "application/json; charset=utf-8",
         ]
 
-        AF.request("http://" + kHost + "/" + kUrlRegisterUser,
+        AF.request("http://" + self.host + "/" + kUrlRegisterUser,
                    method: .post,
                    parameters: req,
                    encoder: JSONParameterEncoder.default,
