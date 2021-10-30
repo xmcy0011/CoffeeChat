@@ -2,6 +2,24 @@
 
 opensource im with server(go) and client(flutter+swift)
 
+## News
+
+有网友在Issues询问后续更新一事，这里回复一下：
+> 今年事情比较多，所以进展十分缓慢，会不会放弃这个项目我也不能肯定，主要是作者精力有限，请大家原谅。发起这个项目的初衷，是为了更深入的学习IM服务端开发，如果有更好的开源go语言实现的im项目，我可能会考虑作为Contributor参与其中。从目前来看，OpenIM可能性很大。
+
+最后，放出最近的一些动态以感谢大家的关心。
+
+最新动态：
+- 至今: 生命不息，探索不止💪💪
+- 2021/08: 作者最近在考虑跳槽，故精力主要放在研究[OpenIM](https://github.com/OpenIMSDK/Open-IM-Server)，学习Kafka，微服务，收件箱，Etcd，Docker，K8S等使用，提升技术深度。
+- 2021/03 - 07: 开发QT客户端和C++跨平台SDK，受限于精力进展缓慢。
+- 2021/02: 使用sketch设计win+mac客户端界面。
+
+总结：
+- `2021`: 主要精力在探索百万级的架构，C++跨平台SDK，QT，Go微服务，Docker，Etcd等等，coffeechat几乎没有更新
+- `2020`: 这一年coffeechat不断完善，作者主要在学习ios开发，实现简单ios app
+- `2019/08`: coffeechat诞生，学习flutter，实现简单flutter客户端，后续因为flutter聊天界面下拉感觉效果不理想放弃
+
 ## Preview
 
 ### flutter
@@ -148,7 +166,6 @@ flutter pub get
 
 #### server(以 mac 环境为例)
 
-~~golang 的包管理工具使用的 dep，相关依赖都已经提交到 github，所以可以直接 build。~~
 > 2020.04.20 更新：使用go mod包管理工具代替dep。
 
 1. 安装golang（推荐**go1.13**以上，安装方法请以 [官网](https://golang.google.cn/dl/) 为准）
@@ -206,12 +223,6 @@ $ tar -zxvf coffeechat.2021-04-20.tar.gz
 1. client see [here](https://github.com/xmcy0011/CoffeeChat/blob/master/client/cc_flutter_app/README.md)
 2. server see [here](https://github.com/xmcy0011/CoffeeChat/blob/master/server/src/README.md)
 
-### Environment
-
-### Configuration
-
-### Dependencies
-
 ### Document
 
 1. [产品介绍](https://github.com/xmcy0011/CoffeeChat/blob/master/docs/01-%E4%BA%A7%E5%93%81%E4%BB%8B%E7%BB%8D.md)
@@ -220,10 +231,6 @@ $ tar -zxvf coffeechat.2021-04-20.tar.gz
 4. [IM 消息 ID 生成原理和常见技术难点](https://github.com/xmcy0011/CoffeeChat/blob/master/docs/04_IM%e5%b8%b8%e8%a7%81%e6%8a%80%e6%9c%af%e9%9a%be%e7%82%b9.md)
 5. [进度计划](https://github.com/xmcy0011/CoffeeChat/blob/master/docs/05-%E8%BF%9B%E5%BA%A6%E8%AE%A1%E5%88%92.md)
 6. [MQ在IM中的实践和选型](https://github.com/xmcy0011/CoffeeChat/blob/master/docs/06_MQ%e5%9c%a8IM%e4%b8%ad%e7%9a%84%e5%ae%9e%e8%b7%b5.md)
-
-## Examples
-
-## Benchmark
 
 ## Contact
 

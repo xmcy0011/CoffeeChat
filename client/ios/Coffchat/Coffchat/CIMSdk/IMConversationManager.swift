@@ -103,7 +103,11 @@ class IMConversationManager: IMClientDelegateData {
                 let key = self.getAllRecentSessionsKey(sessionId: sessionId, sessionType: sessionType)
                 let value = self.allRecentSessions[key]
                 if value != nil {
-                    self.totalUnreadCount = self.totalUnreadCount - value!.unreadCnt
+                    if self.totalUnreadCount > value!.unreadCnt{
+                        self.totalUnreadCount = self.totalUnreadCount - value!.unreadCnt
+                    }else{
+                        self.totalUnreadCount = 0
+                    }
                     value?.unreadCnt = 0
                     item.value.didUpdateRecentSession(session: value!, totalUnreadCount: Int32(self.totalUnreadCount))
                 } else {

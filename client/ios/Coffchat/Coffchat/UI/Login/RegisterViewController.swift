@@ -15,7 +15,8 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet var tfUserName: UITextField!
     @IBOutlet var tfNickName: UITextField!
     @IBOutlet var backBtn: BEButton!
-
+    @IBOutlet weak var tfServerIp: UITextField!
+    
     var registerCall: RegisterResult?
 
     override func viewDidLoad() {
@@ -32,7 +33,10 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         if !check() {
             return
         }
-
+        
+        // http服务地址
+        IMManager.singleton.userManager.setHttpHost(addr: tfServerIp.text!)
+        
         // 注册用户
         IMManager.singleton.userManager.registerUser(userName: tfUserName.text!, userPwd: tfUserPwd.text!, userNickName: tfNickName.text!) { result in
 
