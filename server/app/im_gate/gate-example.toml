@@ -1,0 +1,29 @@
+ListenIp="0.0.0.0"    # 任意，如果绑定2个网卡，理论上可以支持65535*2的连接
+ListenPort=8000
+ListenPortWebSocket=8001
+
+# 监听Logic的grpc调用配置
+ListenIpGrpc="127.0.0.1"
+ListenPortGrpc=7900
+
+# 思知机器人
+OwnThinkRobotUrl="https://api.ownthink.com/bot"
+OwnThinkRobotAppId="42ad915bb184f2bd5eee7df8e7efd102"   # 替换成自己的思知机器人AppID
+
+# 微信机器人
+WeChatRobotUrl="https://openai.weixin.qq.com/openapi/nlp/casual_chat"
+WeChatRobotToken="DDDyMjCXqZbjDLKFPSQnOon8WmVkWI"                       # 替换成自己创建的微信机器人的TOKEN
+WeChatRobotEncodingAESKey="vpIfV7aof4QP40EreXNAVygwy4Bx534JldY1inOETBY" # 替换
+
+# 双机冗余，也可部署一个节点
+# 第一个节点：处理登录、列表、历史消息查询等业务
+# 第二个节点：处理消息收发业务
+[[Logic]]
+Ip="127.0.0.1"
+Port=10600
+MaxConnCnt=4                # 2的整数倍
+
+[[Logic]]
+Ip="127.0.0.1"
+Port=10600
+MaxConnCnt=4                # 2的整数倍

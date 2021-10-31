@@ -1,0 +1,13 @@
+ListenIp="0.0.0.0"    # 任意，如果绑定2个网卡，理论上可以支持65535*2的连接
+ListenPort=8500
+# key的长度必须是16、24或者32字节，分别用于选择AES-128, AES-192, or AES-256
+UrlAesKey="12345678abcdefgh"
+
+# minio server
+[MinIo]
+Ip="106.14.172.35"
+Port=9000
+AccessKeyID="minioadmin"
+SecretAccessKey="minioadmin"
+UseSSL=false
+Location="us-east-1"
