@@ -1,0 +1,48 @@
+#
+# docker compose 服务编排
+#
+
+version: '3.4'
+
+services:
+  im_http: # http 服务
+    container_name: im_http
+    build: # 指定从dockerfile编译
+      context: .
+      dockerfile: app/im_http/Dockerfile
+    volumes: # 数据卷绑定
+      - ./log:/log
+  im_gate: # 网关服务
+    container_name: im_gate
+    build:
+      context: .
+      dockerfile: app/im_gate/Dockerfile
+    volumes:
+      - ./log:/log
+  im_logic: # 逻辑服务
+    container_name: im_logic
+    build:
+      context: .
+      dockerfile: app/im_logic/Dockerfile
+    volumes:
+      - ./log:/log
+  mysql:
+    image: 'mysql:5.7'
+    restart: always
+    container_name: cim_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: coffeechat
+      MYSQL_USER: cim
+      MYSQL_PASSWORD: ldMe$q2Xl9GKyUxj
+    volumes:
+      - cimdata:/var/lib/mysql
+      # docker-entrypoint-initdb.d：这个目录下的脚本，只在容器第一次运行时被执行。
+      - ./setup/mysql/init/:/docker-entrypoint-initdb.d/
+    ports:
+      - "13306:13306"
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+# 声明使用的数据卷，不使用宿主机目录，可以自行更改
+volumes:
+  cimdata: # 数据卷的名字
+    driver: local
