@@ -18,7 +18,7 @@ CREATE TABLE `im_nick_generate` (
   `gen_value` varchar(12) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '值',
   `flag` tinyint(1) DEFAULT '1' COMMENT '启用标志 1：是 0：否',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `im_session` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
