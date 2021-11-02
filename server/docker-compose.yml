@@ -5,6 +5,31 @@
 version: '3.4'
 
 services:
+  mysql:
+    image: 'mysql:5.7'
+    restart: always
+    container_name: cim_mysql
+    environment:
+      LANG: C.UTF-8
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: coffeechat
+      MYSQL_USER: cim
+      MYSQL_PASSWORD: ldMe$q2Xl9GKyUxj
+    volumes:
+      - cim_mysql_data:/var/lib/mysql
+      # docker-entrypoint-initdb.d：这个目录下的脚本，只在容器第一次运行时被执行。
+      - ./setup/mysql/init/:/docker-entrypoint-initdb.d/
+    ports:
+      - "13306:3306"
+    command: [ '--default-authentication-plugin=mysql_native_password', '--character-set-server=utf8mb4',
+               '--collation-server=utf8mb4_unicode_ci' ]
+  redis:
+    build: ./setup/redis
+    container_name: cim_redis
+    volumes:
+      - cim_redis:/data  # 持久化数据，其他如密码等，在redis.conf里已配置
+    ports:
+      - "16379:6379"     # 端口改掉，预防攻击
   im_http: # http 服务
     container_name: im_http
     build: # 指定从dockerfile编译
@@ -26,25 +51,8 @@ services:
       dockerfile: app/im_logic/Dockerfile
     volumes:
       - ./log:/log
-  mysql:
-    image: 'mysql:5.7'
-    restart: always
-    container_name: cim_mysql
-    environment:
-      LANG: C.UTF-8
-      MYSQL_ROOT_PASSWORD: 123456
-      MYSQL_DATABASE: coffeechat
-      MYSQL_USER: cim
-      MYSQL_PASSWORD: ldMe$q2Xl9GKyUxj
-    volumes:
-      - cim_mysql_data:/var/lib/mysql
-      # docker-entrypoint-initdb.d：这个目录下的脚本，只在容器第一次运行时被执行。
-      - ./setup/mysql/init/:/docker-entrypoint-initdb.d/
-    ports:
-      - "13306:3306"
-    command: [ '--default-authentication-plugin=mysql_native_password', '--character-set-server=utf8mb4',
-               '--collation-server=utf8mb4_unicode_ci' ]
-# 声明使用的数据卷，不使用宿主机目录，可以自行更改
-volumes:
-  cim_mysql_data: # 数据卷的名字
+volumes: # 声明使用的数据卷，不使用宿主机目录，可以自行更改
+  cim_mysql_data: # mysql数据卷
+    driver: local
+  cim_redis:      # redis数据卷
     driver: local

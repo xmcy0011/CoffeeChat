@@ -241,7 +241,10 @@ $ SHOW VARIABLES WHERE Variable_name LIKE 'character_set_%' OR Variable_name LIK
 ```bash
 $ yum install redis   # 安装
 $ vim /etc/redis.conf # 设置密码
+bind 0.0.0.0
+port 16379
 requirepass coffeechat
+daemonize yes
 $ systemctl enable redis  # 开机启动
 $ systemctl restart redis # 启动服务
 ```
