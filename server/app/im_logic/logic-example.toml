@@ -4,8 +4,8 @@ ListenPort=10600
 # 主库，读写，优先写
 [[Db]]
 ServerName="Master"
-#Host="127.0.0.1"
-Host="106.14.172.35"
+Host="127.0.0.1"
+#Host="106.14.172.35"
 Port=13306
 DbName="coffeechat"
 UserName="cim"
@@ -16,8 +16,8 @@ MaxConnCnt=16
 # 可以和主库保持一致，这样则意味着不使用主从模式，此时，建议把maxconncnt调小一倍
 [[Db]]
 ServerName="Slave"
-#Host="127.0.0.1"
-Host="106.14.172.35"
+Host="127.0.0.1"
+#Host="106.14.172.35"
 Port=13306
 DbName="coffeechat"
 UserName="cim"
@@ -31,8 +31,8 @@ MaxConnCnt=16
 
 [Redis]
 Name="cim"
-#Ip="127.0.0.1"
-Ip="106.14.172.35"
+Ip="127.0.0.1"
+#Ip="106.14.172.35"
 Port=16379
 KeyPrefix="cim|"        # redis中key的统一前缀
 Password="coffeechat"   # redis的密码，不允许为空

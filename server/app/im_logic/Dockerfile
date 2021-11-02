@@ -35,5 +35,5 @@ RUN go env -w GOPROXY=https://goproxy.io && \
 FROM alpine
 # 指定日志存储卷，当前工作目录下的Log文件
 VOLUME [ "log" ]
-COPY --from=build /go/src/coffeechat/app/im_logic .
-CMD ["./im_logic"]
+COPY --from=build /go/src/coffeechat/app/im_logic /usr
+CMD [ "/usr/im_logic", "--conf=/usr/logic-example.toml" ]

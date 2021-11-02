@@ -36,21 +36,28 @@ services:
       context: .
       dockerfile: app/im_http/Dockerfile
     volumes: # 数据卷绑定
-      - ./log:/log
+      - ./log/http:/log
+    depends_on:
+      - im_logic
   im_gate: # 网关服务
     container_name: im_gate
     build:
       context: .
       dockerfile: app/im_gate/Dockerfile
     volumes:
-      - ./log:/log
+      - ./log/gate:/log
+    depends_on:
+      - im_logic
   im_logic: # 逻辑服务
     container_name: im_logic
     build:
       context: .
       dockerfile: app/im_logic/Dockerfile
     volumes:
-      - ./log:/log
+      - ./log/logic:/log
+    depends_on:
+      - redis
+      - mysql
 volumes: # 声明使用的数据卷，不使用宿主机目录，可以自行更改
   cim_mysql_data: # mysql数据卷
     driver: local
