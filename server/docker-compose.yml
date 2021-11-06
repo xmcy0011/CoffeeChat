@@ -67,13 +67,19 @@ services:
       dockerfile: app/im_logic/Dockerfile
     volumes:
       - ./log/logic:/log
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
     networks:
       - local
     #  local:
     #    - ipv4_address: 172.16.0.100
     depends_on:
-      - redis
       - mysql
+      - redis
 volumes: # 声明使用的数据卷，不使用宿主机目录，可以自行更改
   cim_mysql_data: # mysql数据卷
     driver: local
