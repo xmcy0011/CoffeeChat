@@ -35,5 +35,6 @@ RUN go env -w GOPROXY=https://goproxy.io && \
 FROM alpine
 # 指定日志存储卷，当前工作目录下的Log文件
 VOLUME [ "log" ]
+EXPOSE 8000
 COPY --from=build /go/src/coffeechat/app/im_gate /usr
-CMD [ "/usr/im_gate", "--conf=/usr/gate-example.toml" ]
+CMD [ "/usr/im_gate", "--conf=/usr/gate-docker.toml" ]

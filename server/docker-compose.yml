@@ -10,7 +10,7 @@ services:
     restart: always
     container_name: cim_mysql
     environment:
-      LANG: C.UTF-8
+      LANG: C.UTF-8 # 解决客户端连接中文乱码问题
       MYSQL_ROOT_PASSWORD: 123456
       MYSQL_DATABASE: coffeechat
       MYSQL_USER: cim
@@ -19,8 +19,10 @@ services:
       - cim_mysql_data:/var/lib/mysql
       # docker-entrypoint-initdb.d：这个目录下的脚本，只在容器第一次运行时被执行。
       - ./setup/mysql/init/:/docker-entrypoint-initdb.d/
+    networks:
+      - local
     ports:
-      - "13306:3306"
+      - "3306:3306"
     command: [ '--default-authentication-plugin=mysql_native_password', '--character-set-server=utf8mb4',
                '--collation-server=utf8mb4_unicode_ci' ]
   redis:
@@ -28,8 +30,10 @@ services:
     container_name: cim_redis
     volumes:
       - cim_redis:/data  # 持久化数据，其他如密码等，在redis.conf里已配置
+    networks:
+      - local
     ports:
-      - "16379:6379"     # 端口改掉，预防攻击
+      - "6379:6379"     # 端口改掉，预防攻击
   im_http: # http 服务
     container_name: im_http
     build: # 指定从dockerfile编译
@@ -37,6 +41,10 @@ services:
       dockerfile: app/im_http/Dockerfile
     volumes: # 数据卷绑定
       - ./log/http:/log
+    networks:
+      - local
+    ports:
+      - "18080:18080"
     depends_on:
       - im_logic
   im_gate: # 网关服务
@@ -46,6 +54,10 @@ services:
       dockerfile: app/im_gate/Dockerfile
     volumes:
       - ./log/gate:/log
+    networks:
+      - local
+    ports:
+      - "8000:8000"
     depends_on:
       - im_logic
   im_logic: # 逻辑服务
@@ -55,11 +67,25 @@ services:
       dockerfile: app/im_logic/Dockerfile
     volumes:
       - ./log/logic:/log
+    networks:
+      - local
+    #  local:
+    #    - ipv4_address: 172.16.0.100
     depends_on:
       - redis
       - mysql
 volumes: # 声明使用的数据卷，不使用宿主机目录，可以自行更改
   cim_mysql_data: # mysql数据卷
     driver: local
-  cim_redis:      # redis数据卷
+  cim_redis: # redis数据卷
     driver: local
+# 为了简单，使用默认侨接网络 + DNS连接内部服务器方式
+# # 根据https://docs.docker.com/compose/networking/，docker compose默认创建了网络，但是创建自己的侨接网络更安全
+# #，另外一个Host主机网络只支持Linux，虽然性能更高
+networks:
+  local:
+    driver: bridge # 侨接网络
+    ipam: # what's ipam? , see: https://docs.docker.com/compose/compose-file/compose-file-v3/#network
+      config:
+        - subnet: 172.16.0.0/24
+          gateway: 172.16.0.1

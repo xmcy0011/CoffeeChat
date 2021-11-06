@@ -122,7 +122,7 @@ func ping(conn cim.LogicClient) error {
 	return err
 }
 
-// 获取随机一个可用的业务连接 0-1
+// GetConn 获取随机一个可用的业务连接 0-1
 func GetConn() cim.LogicClient {
 	return logicClientMap[rand.Int()%serversCount].instance
 }

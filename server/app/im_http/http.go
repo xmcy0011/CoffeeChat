@@ -4,9 +4,13 @@ import (
 	"coffeechat/internal/httpd"
 	"coffeechat/pkg/helper"
 	"coffeechat/pkg/logger"
+	"errors"
 	"flag"
+	"fmt"
 	"github.com/BurntSushi/toml"
 	"math/rand"
+	"net"
+	"strings"
 	"time"
 )
 
@@ -30,6 +34,23 @@ func main() {
 		if err != nil {
 			logger.Sugar.Error(err)
 			return
+		}
+	}
+
+	// docker bridge模式下，通过本地DNS访问内部服务
+	for i, value := range config.Logic {
+		if strings.Index(value.Ip, ".") == -1 {
+			addrs, err := net.LookupHost(value.Ip)
+			if err != nil {
+				logger.Sugar.Error(err)
+				return
+			} else {
+				if len(addrs) != 1 {
+					logger.Sugar.Warn(errors.New(fmt.Sprintf("LookupHost return %d ip,dns:%s", len(addrs), value.Ip)))
+				}
+				config.Logic[i].Ip = addrs[0]
+				logger.Sugar.Infof("LookupHost success, ip: %s, dns: %s", addrs[0], value.Ip)
+			}
 		}
 	}
 
