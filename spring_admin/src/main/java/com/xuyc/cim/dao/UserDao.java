@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 
 /**
- * @author xuyc
+ * @author xmcy0011@sina.com
  */
 public class UserDao {
 

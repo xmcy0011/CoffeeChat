@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * 部门访问
  *
- * @author xuyc
+ * @author xmcy0011@sina.com
  */
 public class DepartmentDao {
 

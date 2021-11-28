@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 /**
  * 员工
  *
- * @author xuyc
+ * @author xmcy0011@sina.com
  */
 @Data
 @AllArgsConstructor
