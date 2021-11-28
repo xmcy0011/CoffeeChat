@@ -30,4 +30,14 @@ public class LoginController {
     model.addAttribute("msg", "用户名或密码错误！");
     return "index";
   }
+
+  @RequestMapping("/logout")
+  public String logout(HttpSession session) {
+    Object u = session.getAttribute("loginUser");
+    if (u != null) {
+      System.out.println(u + "已登出");
+      session.setAttribute("loginUser", null);
+    }
+    return "index";
+  }
 }

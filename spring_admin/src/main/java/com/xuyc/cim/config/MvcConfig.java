@@ -28,7 +28,7 @@ public class MvcConfig implements WebMvcConfigurer {
         // 登录页、默认、login Controller、静态资源都不拦截
         .excludePathPatterns(
             "/index.html", "/",
-            "/login",
+            "/login", "/logout",
             "/static/**",
             "/assets/**");
   }

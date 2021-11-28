@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html class="app-ui">
+<html class="app-ui" xmlns:th="http://www.thymeleaf.org">
 
     <head>
         <!-- Meta -->
@@ -350,7 +350,9 @@
                                                 <a href="base_pages_profile.html"><span class="badge badge-success pull-right">3</span> Blog</a>
                                             </li>
                                             <li>
-                                                <a href="frontend_login_signup.html">Logout</a>
+                                                <form th:action="@{/logout}" method="post">
+                                                    <button type="submit" class="btn">Log Out</button>
+                                                </form>
                                             </li>
                                         </ul>
                                     </li>
