@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xuyc.cim.dao.AdminMapper">
+  <select id="selectAll" resultType="Admin">
+    select id,user_name,user_pwd_salt,user_pwd_hash,user_nick_name,
+    user_token,user_attach,created,updated from im_admin
+  </select>
+</mapper>

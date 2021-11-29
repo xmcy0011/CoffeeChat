@@ -31,6 +31,18 @@
       <scope>test</scope>
     </dependency>
 
+    <!-- MyBatis整合SpringBoot包 和 mysql驱动-->
+    <dependency>
+      <groupId>org.mybatis.spring.boot</groupId>
+      <artifactId>mybatis-spring-boot-starter</artifactId>
+      <version>2.1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>8.0.27</version>
+    </dependency>
+
     <!-- thymeleaf模板引擎 -->
     <dependency>
       <groupId>org.springframework.boot</groupId>

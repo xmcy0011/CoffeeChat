@@ -1,0 +1,29 @@
+# 关闭首页默认图标
+# spring.mvc.favicon.enabled=false
+
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/coffeechat?useUnicode=true&characterEncoding=utf-8
+    username: cim
+    password: ldMe$q2Xl9GKyUxj
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # 连接池使用springboot自带的hikari
+    type: com.zaxxer.hikari.HikariDataSource
+    # hikari连接池配置
+    hikari:
+      connection-timeout: 30000 # 30秒连接超时
+      idle-timeout: 600000      # 10min空闲断开连接
+      maximum-pool-size: 50     # 最大连接池
+      minimum-idle: 3           # 最小空闲连接
+
+mybatis:
+  # 包别名
+  type-aliases-package: com.xuyc.cim.pojo
+  # mapper文件路径
+  mapper-locations: classpath:mybatis/mapper/*.xml
+  # 数据库字段user_name到java userName的映射
+  configuration:
+    map-underscore-to-camel-case: true
