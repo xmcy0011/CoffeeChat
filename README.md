@@ -45,17 +45,17 @@ see [CoffeeChat-Flutter](https://github.com/xmcy0011/CoffeeChat-Flutter) 暂不�
 
 - [x] flutter 客户端
 - [x] 单聊
-- [x] 多媒体消息：文本
+- [x] 消息格式
+    - [x] 文本
+    - [ ] 表情
+    - [ ] 图片
 - [x] 会话列表
 - [x] 消息存储
 - [x] 历史消息
 - [x] 漫游消息（用户切换到任何设备都可以读取到最近的历史消息）
 - [ ] 离线消息（用户离线重新上线后收到最近 30 天的未读消息）
-- [ ] 多媒体消息：表情
-- [ ] 多媒体消息：图片
 - [x] 未读消息计数
 - [ ] 消息推送(APNS)
-
 - [ ] 群聊
 - [ ] 群最高人数：200
 - [ ] 群管理：群主、加人、踢人
@@ -64,17 +64,10 @@ see [CoffeeChat-Flutter](https://github.com/xmcy0011/CoffeeChat-Flutter) 暂不�
 
 ### 服务端特有
 
-- [ ] 负载均衡
-- [ ] 双机容灾
-- [ ] 性能压测 Benchmark
-- [ ] 业务监控
-- [ ] Redis 集群
-- [ ] docker
-- [ ] 阿里云OSS对象存储接入（40GB存储一年7块，每月100GB下行带宽一年200）
-- [ ] antispam
-- [ ] rpm安装包
-- [ ] docker镜像安装
-- [ ] 服务端初始化web界面，简化安装（参考wordpress）
+- [ ] consul注册中心
+- [ ] 分布式配置（nacos、etcd...）
+- [x] dockerfile & docker compose
+- [ ] admin后台和web界面，简化安装（参考wordpress）
 
 ## 客户端特有
 
@@ -105,20 +98,6 @@ see [CoffeeChat-Flutter](https://github.com/xmcy0011/CoffeeChat-Flutter) 暂不�
 - [ ] electron 跨平台桌面客户端
 - [x] flutter 跨平台移动端
 - [ ] swift/iOS 客户端+SDK
-- [ ] kotlin/Android 客户端+SDK
-- [ ] vue/Web 客户端+SDK
-
-### 客服功能
-
-- [ ] 客服会话
-- [ ] 欢迎语
-- [ ] 自动分配在线客服
-- [ ] 客服正在输入提醒
-- [ ] 回头客
-
-### 智能问答功能
-
-- [ ] AnyQ 百度开源 FAQ 问答系统接入
 
 ### 聊天机器人功能
 
