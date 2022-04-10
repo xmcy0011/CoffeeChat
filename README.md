@@ -129,12 +129,6 @@ see [CoffeeChat-Flutter](https://github.com/xmcy0011/CoffeeChat-Flutter) 暂不�
 
 ## Architecture
 
-总体架构:  
-![总体架构](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/architecture.png)
-
-逻辑架构:  
-![逻辑架构](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/architecture2.png)
-
 模块架构:  
 ![模块架构](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/structure-v2.png)
 
@@ -170,6 +164,9 @@ $ docker-compose.yml up -d
 4. [IM 消息 ID 生成原理和常见技术难点](https://github.com/xmcy0011/CoffeeChat/blob/master/docs/04_IM%e5%b8%b8%e8%a7%81%e6%8a%80%e6%9c%af%e9%9a%be%e7%82%b9.md)
 5. [进度计划](https://github.com/xmcy0011/CoffeeChat/blob/master/docs/05-%E8%BF%9B%E5%BA%A6%E8%AE%A1%E5%88%92.md)
 6. [MQ在IM中的实践和选型](https://github.com/xmcy0011/CoffeeChat/blob/master/docs/06_MQ%e5%9c%a8IM%e4%b8%ad%e7%9a%84%e5%ae%9e%e8%b7%b5.md)
+
+更多文章请移步：
+- [CoffeeChat-GitBook](https://xmcy0011.github.io/CoffeeChat-GitBook/)
 
 ### Thinks
 
