@@ -5,17 +5,19 @@ opensource im with server(go) and client(flutter+swift)
 ## News
 
 有网友在Issues询问后续更新一事，这里回复一下：
-> 今年事情比较多，所以进展十分缓慢，会不会放弃这个项目我也不能肯定，主要是作者精力有限，请大家原谅。发起这个项目的初衷，是为了更深入的学习IM服务端开发，如果有更好的开源go语言实现的im项目，我可能会考虑作为Contributor参与其中。从目前来看，OpenIM可能性很大。
+> 今年事情比较多，所以进展十分缓慢，会不会放弃这个项目我也不能肯定，主要是作者精力有限，请大家原谅。发起这个项目的初衷，是为了更深入的学习IM服务端开发，如果有更好的开源go语言实现的im项目，我可能会考虑作为Contributor参与其中。
 
 最后，放出最近的一些动态以感谢大家的关心。
 
 最新动态：
 - 至今: 生命不息，探索不止💪💪
+- 2022/04/10：制定Monthly Release计划，每个月至少要保证一次Release
 - 2021/08: 作者最近在考虑跳槽，故精力主要放在研究[OpenIM](https://github.com/OpenIMSDK/Open-IM-Server)，学习Kafka，微服务，收件箱，Etcd，Docker，K8S等使用，提升技术深度。
 - 2021/03 - 07: 开发QT客户端和C++跨平台SDK，受限于精力进展缓慢。
 - 2021/02: 使用sketch设计win+mac客户端界面。
 
 总结：
+- `2022`: 再出发
 - `2021`: 主要精力在探索百万级的架构，C++跨平台SDK，QT，Go微服务，Docker，Etcd等等，coffeechat几乎没有更新
 - `2020`: 这一年coffeechat不断完善，作者主要在学习ios开发，实现简单ios app
 - `2019/08`: coffeechat诞生，学习flutter，实现简单flutter客户端，后续因为flutter聊天界面下拉感觉效果不理想放弃
@@ -143,82 +145,9 @@ See More [architecture](https://github.com/xmcy0011/CoffeeChat/blob/master/docs/
 
 ## Quick Start
 
-### Build
+### Build && Run
 
 > PS：请切换到**master**分支，编译和运行！
-
-#### client
-
-目前仅支持 Flutter 客户端，在 ios11 模拟器下测试通过。仅测试了登录登出、单聊、发文本、未读消息计数等功能。
-
-1. Flutter 安装，请参考 [官网](https://flutter.cn/docs/get-started/install)
-2. 下载 IntelliJ IDEA Ultimate，[链接](https://www.jetbrains.com/idea/)
-3. 使用 idea 打开 cc_flutter_app
-4. 打开终端，初始化项目，命令如下
-
-```bash
-cd client/cc_flutter_app
-flutter pub get
-```
-
-5. 点击 Open IOS Simulator，等待模拟器启动
-6. 点击 Run 图标
-
-#### server(以 mac 环境为例)
-
-> 2020.04.20 更新：使用go mod包管理工具代替dep。
-
-1. 安装golang（推荐**go1.13**以上，安装方法请以 [官网](https://golang.google.cn/dl/) 为准）
-
-```bash
-$ brew isntall golang # 安装go
-$ vim ~/.bash_profile # 设置go环境变量
-
-export GOROOT=/usr/local/Cellar/go/1.16.3/libexec
-# 自go1.13默认启用go mod后，GOPATH可以不在配置
-#export GOPATH="/Users/xmcy0011/repo/go" # 使用go mod后，代码不能存放到gopath下，请注意。
-export GOBIN=$GOROOT/bin
-export PATH=$PATH:$GOBIN:$GOPATH/bin 
-
-$ source ~/.bash_profile # 生效
-$ go env                 # 确认goroot和gopath正确
-
-$ unset GOPROXY          # go mod有些包拉不下来，可以配置GOPROXY。但是，对go get无效😭
-$ go env -w GOPROXY=https://goproxy.cn,direct
-```
-
-2. git clone
-```bash
-$ cd /Users/xmcy0011/repo #注意不是gopath路径！
-$ mkdir github
-$ cd github
-$ git clone https://github.com/xmcy0011/CoffeeChat.git
-```
-
-3. build & run
-- 手工方式
-```bash
-# gate 网关服务编译
-$ cd server/src/app/im_gate
-$ go build -v
-$ ./im_gate -conf=./gate-example.toml
-
-# logic 逻辑服务编译
-$ cd server/src/app/im_logic
-$ go build -v
-$ ./im_logic -conf=./logic-example.toml
-```
-- 使用脚本
-```bash
-$ cd server/src
-$ chmod 777 build.sh
-# 编译并打包
-$ ./build.sh version 2021-04-20
-# 解压，通过./restart.sh ./stop.sh等脚本启动和停止服务
-$ tar -zxvf coffeechat.2021-04-20.tar.gz
-```
-
-### Run
 
 1. client see [here](https://github.com/xmcy0011/CoffeeChat/blob/master/client/cc_flutter_app/README.md)
 2. server see [here](https://github.com/xmcy0011/CoffeeChat/blob/master/server/src/README.md)
@@ -231,6 +160,16 @@ $ tar -zxvf coffeechat.2021-04-20.tar.gz
 4. [IM 消息 ID 生成原理和常见技术难点](https://github.com/xmcy0011/CoffeeChat/blob/master/docs/04_IM%e5%b8%b8%e8%a7%81%e6%8a%80%e6%9c%af%e9%9a%be%e7%82%b9.md)
 5. [进度计划](https://github.com/xmcy0011/CoffeeChat/blob/master/docs/05-%E8%BF%9B%E5%BA%A6%E8%AE%A1%E5%88%92.md)
 6. [MQ在IM中的实践和选型](https://github.com/xmcy0011/CoffeeChat/blob/master/docs/06_MQ%e5%9c%a8IM%e4%b8%ad%e7%9a%84%e5%ae%9e%e8%b7%b5.md)
+
+### Thinks
+
+- [mattermost](https://github.com/mattermost/mattermost-server)：主要学习其go工程实践方面的一些技巧，目前还处在研究阶段。
+- [Open-IM-Server](https://github.com/OpenIMSDK/Open-IM-Server)：通过分析它的架构和代码，理解了收件箱机制和im 微服务(go)的划分实践。
+- [goim](https://github.com/Terry-Mao/goim)：学习到百万级架构下kafka是如何应用在聊天室场景的。
+- [Terry-Ye/im](https://github.com/Terry-Ye/im)：结合goim，理解了所谓的job含义，看懂了goim的架构。
+- [gim](https://github.com/alberliu/gim)：一个简单的写扩散项目，可以更深入理解写扩散的架构和原理。
+
+更多开源im，请移步：[史上最全开源IM盘点](https://blog.csdn.net/xmcy001122/article/details/110679978)
 
 ## Contact
 
