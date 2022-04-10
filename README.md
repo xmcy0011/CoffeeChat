@@ -26,7 +26,7 @@ opensource im with server(go) and client(flutter+swift)
 
 ### flutter
 
-see [CoffeeChat-Flutter](https://github.com/xmcy0011/CoffeeChat-Flutter)
+see [CoffeeChat-Flutter](https://github.com/xmcy0011/CoffeeChat-Flutter) 暂不维护，仅供参考。
 
 ### swift
 ![screenshot](./images/swift/screenshot.png)  
