@@ -149,8 +149,17 @@ See More [architecture](https://github.com/xmcy0011/CoffeeChat/blob/master/docs/
 
 > PS：请切换到**master**分支，编译和运行！
 
-1. client see [here](https://github.com/xmcy0011/CoffeeChat/blob/master/client/cc_flutter_app/README.md)
-2. server see [here](https://github.com/xmcy0011/CoffeeChat/blob/master/server/src/README.md)
+一键编译启动Server（要求安装docker desktop >= 4.0.1）:
+```bash
+$ git clone https://github.com/xmcy0011/CoffeeChat.git
+$ cd CoffeeChat/server
+# 从代码编译docker镜像，安装mysql,redis等依赖，并自动初始化mysql数据
+$ docker-compose.yml up -d
+```
+
+更多细节，请移步：
+- [client](https://github.com/xmcy0011/CoffeeChat/blob/master/client/cc_flutter_app/README.md)
+- [server](https://github.com/xmcy0011/CoffeeChat/blob/master/server/src/README.md)
 
 ### Document
 

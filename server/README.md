@@ -1,6 +1,7 @@
 <!-- TOC -->
 
 - [CoffeeChat - Server](#coffeechat---server)
+    - [Quick Start](#quick-start)
     - [编译](#编译)
         - [安装go](#安装go)
         - [go mod配置](#go-mod配置)
@@ -20,6 +21,28 @@
 <!-- /TOC -->
 
 # CoffeeChat - Server
+
+## Quick Start
+
+require: 
+- docker desktop >= 4.0.1
+- docker engine >= 20
+
+使用docker compose（单机容器编排）可以一键启动Server，免去编译环境安装、程序编译、数据库初始化和环境等各种繁琐配置：
+
+```bash
+$ git clone https://github.com/xmcy0011/CoffeeChat.git
+$ cd CoffeeChat/server
+
+# 启动容器集群，所有服务的docke 镜像都是从代码编译而来，
+# 改完代码，需要把compose容器删除，重新执行即可看到效果。
+$ docker-compose.yml up -d
+```
+
+此时，在docker desktop中可以查看所有的日志：
+![docker-desktop-log](../images/docker-desktop-log.jpg)
+
+当然，您也可以手动编译，具体步骤请参考下列章节。
 
 ## 编译
 
