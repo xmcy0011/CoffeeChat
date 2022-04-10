@@ -183,11 +183,11 @@ $ docker-compose.yml up -d
 
 ## Contact
 
-email：xmcy0011@sina.com
-微信交流：xuyc1992（请备注：im）
+email：xmcy0011@sina.com  
+微信交流：xuyc1992（请备注：im）  
 
-喜欢的话，关注下公众号吧😊
-《Go和分布式IM》👈👈
+喜欢的话，关注下公众号吧😊  
+《Go和分布式IM》👈👈  
 ![qrcode](./images/qrcode.png)
 
 ## LICENSE
