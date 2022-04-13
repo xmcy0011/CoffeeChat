@@ -91,7 +91,3 @@ volumes: # 声明使用的数据卷，不使用宿主机目录，可以自行更
 networks:
   local:
     driver: bridge # 侨接网络
-    ipam: # what's ipam? , see: https://docs.docker.com/compose/compose-file/compose-file-v3/#network
-      config:
-        - subnet: 172.16.0.0/24
-          gateway: 172.16.0.1
