@@ -121,19 +121,29 @@ See More [architecture](https://github.com/xmcy0011/CoffeeChat/blob/master/docs/
 > PS：请切换到**master**分支，编译和运行！
 
 1. 启动Server（要求安装docker desktop >= 4.0.1）:
+
 ```bash
 $ git clone https://github.com/xmcy0011/CoffeeChat.git
 $ cd CoffeeChat/server
 # 从代码编译docker镜像，安装mysql,redis等依赖，并自动初始化mysql数据
-$ docker-compose.yml up -d
+$ docker-compose up -d
 ```
-2. 编译客户端。推荐iOS客户端（模拟器选择iphone 11），请移步：[client](https://github.com/xmcy0011/CoffeeChat/blob/master/client/cc_flutter_app/README.md)
-3. iOS模拟器和app启动后，点击“注册”，更改服务器IP地址为本机IP（不需要输入端口），注册成功后，登录即可。
-4. 内置了2个机器人（思知和微信）和3个好友，可以测试聊天功能。
+
+1. 编译客户端。推荐iOS客户端（模拟器选择iphone 11），请移步：[client](https://github.com/xmcy0011/CoffeeChat/blob/master/client/cc_flutter_app/README.md)
+1. iOS模拟器和app启动后，点击“注册”，更改服务器IP地址为本机IP（不需要输入端口），注册成功后，登录即可。
+1. 内置了2个机器人（思知和微信）和3个好友，可以测试聊天功能。
 
 更多细节，请移步：
+
 - [client](https://github.com/xmcy0011/CoffeeChat/blob/master/client/cc_flutter_app/README.md)
 - [server](https://github.com/xmcy0011/CoffeeChat/blob/master/server/src/README.md)
+
+停止：
+
+```bash
+$ cd CoffeeChat/server
+$ docker-compose down -v
+```
 
 ### Document
 
@@ -145,6 +155,7 @@ $ docker-compose.yml up -d
 6. [MQ在IM中的实践和选型](https://github.com/xmcy0011/CoffeeChat/blob/master/docs/06_MQ%e5%9c%a8IM%e4%b8%ad%e7%9a%84%e5%ae%9e%e8%b7%b5.md)
 
 更多文章请移步：
+
 - [CoffeeChat-GitBook](https://xmcy0011.github.io/CoffeeChat-GitBook/)
 
 ### Thinks

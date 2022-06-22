@@ -3,11 +3,11 @@ ListenPort=18080
 
 # 双机冗余，也可部署一个节点，随机数均衡法
 [[Logic]]
-Ip="im_logic"
+Ip="cim_logic"
 #Ip="127.0.0.1"
 Port=10600
 
 [[Logic]]
-Ip="im_logic"
+Ip="cim_logic"
 #Ip="127.0.0.1"
 Port=10600
