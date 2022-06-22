@@ -5,7 +5,27 @@
 version: '3.4'
 
 services:
+  mongo:
+    image: mongo
+    container_name: cim_mongo
+    restart: always
+    ports:
+      - '27017:27017'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: mongopass
+#  mongo-express:
+#    image: mongo-express
+#    container_name: cim_mongo-express
+#    restart: always
+#    ports:
+#      - '27018:27018'
+#    environment:
+#      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+#      ME_CONFIG_MONGODB_ADMINPASSWORD: mongopass
+#      ME_CONFIG_MONGODB_URL: mongodb://root:mongopass@mongo:27017/
   mysql:
+    #image: 'arm64v8/mysql:8.0.28-oracle' # mac m1
     image: 'mysql:5.7'
     restart: always
     container_name: cim_mysql
