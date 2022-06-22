@@ -26,6 +26,7 @@ services:
 #      ME_CONFIG_MONGODB_URL: mongodb://root:mongopass@mongo:27017/
   mysql:
     #image: 'arm64v8/mysql:8.0.28-oracle' # mac m1
+    image: 'mysql:5.7'
     restart: always
     container_name: cim_mysql
     environment:
