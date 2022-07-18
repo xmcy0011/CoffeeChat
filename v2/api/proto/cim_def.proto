@@ -1,0 +1,341 @@
+syntax = "proto3";
+
+package cim;
+option java_package = "com.coffeechat.protobuf";
+option go_package = "cim/pb";
+option optimize_for = LITE_RUNTIME;
+
+// 外部消息：客户端 <-> 服务器消息定义
+enum CIMCmdID {
+  kCIM_CID_UNKNOWN = 0x00;
+
+  kCIM_CID_LOGIN_AUTH_TOKEN_REQ = 0x0101; // 认证请求，Token方式
+  kCIM_CID_LOGIN_AUTH_TOKEN_RSP = 0x0102;
+  kCIM_CID_LOGIN_AUTH_LOGOUT_REQ = 0x0103; // 登出
+  kCIM_CID_LOGIN_AUTH_LOGOUT_RSP = 0x0104;
+  kCIM_CID_LOGIN_HEARTBEAT = 0x0105; // 心跳，1分钟超时
+  kCIM_CID_LOGIN_AUTH_REQ = 0x0107; // 认证请求，用户名+密码方式
+  kCIM_CID_LOGIN_AUTH_RSP = 0x0108;
+
+  kCIM_CID_LIST_RECENT_CONTACT_SESSION_REQ = 0x0201; // 最近聊天会话列表请求
+  kCIM_CID_LIST_RECENT_CONTACT_SESSION_RSP = 0x0202;
+  // kCIM_CID_LIST_UNREAD_CNT_REQ = 0x0203; // 未读消息计数列表请求
+  // kCIM_CID_LIST_UNREAD_CNT_RSP = 0x0204;
+  kCIM_CID_LIST_MSG_REQ = 0x0205; // 历史离线聊天消息请求
+  kCIM_CID_LIST_MSG_RSP = 0x0206;
+
+  kCIM_CID_MSG_DATA = 0x0301;                  // 发送消息
+  kCIM_CID_MSG_DATA_ACK = 0x0302;              // 消息收到回复
+  kCIM_CID_MSG_READ_ACK = 0x0303;              // 消息已读回复（我方）
+  kCIM_CID_MSG_READ_NOTIFY = 0x0304;           // 已读消息通知（对方）
+  kCIM_CID_MSG_GET_LATEST_MSG_ID_REQ = 0x0305; // 某个会话最新的消息ID请求
+  kCIM_CID_MSG_GET_LATEST_MSG_ID_RSP = 0x0306;
+  kCIM_CID_MSG_GET_BY_MSG_ID_REQ = 0x0307; // 批量查询消息详情请求(20条内)
+  kCIM_CID_MSG_GET_BY_MSG_ID_RSP = 0x0308;
+
+  kCIM_CID_VOIP_INVITE_REQ = 0x0401;       // 1.invite
+  kCIM_CID_VOIP_INVITE_REPLY = 0x0402;     // 2.100 Tring/180 Ringing/200 OK
+  kCIM_CID_VOIP_INVITE_REPLY_ACK = 0x0403; // 3.200 Ok的Ack
+  kCIM_CID_VOIP_HEARTBEAT = 0x0404;        // 4.heartbeat，30秒超时
+  kCIM_CID_VOIP_BYE_REQ = 0x0405;          // 5.Bye
+  kCIM_CID_VOIP_BYE_RSP = 0x0406;          //
+  kCIM_CID_VOIP_BYE_NOTIFY = 0x0407;       // 6.Bye notify
+
+  kCIM_CID_GROUP_CREATE_DEFAULT_REQ = 0x501; // 创建默认群（类似微信的群）
+  kCIM_CID_GROUP_CREATE_DEFAULT_RSP = 0x502;
+  kCIM_CID_GROUP_DISBINGDING_REQ = 0x503; // 解散群
+  kCIM_CID_GROUP_DISBINGDING_RSP = 0x504;
+  kCIM_CID_GROUP_EXIT_REQ = 0x505; // 退出群
+  kCIM_CID_GROUP_EXIT_RSP = 0x506;
+  kCIM_CID_GROUP_LIST_REQ = 0x507; // 查询群列表
+  kCIM_CID_GROUP_LIST_RSP = 0x508;
+  kCIM_CID_GROUP_INFO_REQ = 0x509; // 查询群信息
+  kCIM_CID_GROUP_INFO_RSP = 0x510;
+  kCIM_CID_GROUP_INVITE_MEMBER_REQ = 0x511; // 邀请人入群
+  kCIM_CID_GROUP_INVITE_MEMBER_RSP = 0x512;
+  kCIM_CID_GROUP_KICK_OUT_MEMBER_REQ = 0x513; // 踢人
+  kCIM_CID_GROUP_KICK_OUT_MEMBER_RSP = 0x514;
+  kCIM_CID_GROUP_MEMBER_CHANGED_NOTIFY = 0x515; // 群成员变更通知
+  kCIM_CID_GROUP_LIST_MEMBER_REQ = 0x516; // 查询群成员列表
+  kCIM_CID_GROUP_LIST_MEMBER_RSP = 0x517;
+
+  // 查询用户列表（目前没有实现好友机制，所以便于测试，随机返回系统中注册的50个以内用户）
+  kCIM_CID_FRIEND_QUERY_USER_LIST_REQ = 0x601; 
+  kCIM_CID_FRIEND_QUERY_USER_LIST_RSP = 0x602;
+}
+
+// 内部消息：服务器 <-> 服务器消息定义
+enum CIMIntenralCmdID {
+  kCIM_SID_UNKNOWN = 0x00; // 验证口令请求
+
+  kCIM_SID_DB_VALIDATE_REQ = 0x0701; // 验证口令请求
+  kCIM_SID_DB_VALIDATE_RSP = 0x0702; //
+}
+
+enum CIMErrorCode {
+  kCIM_ERR_UNKNOWN = 0; // 未知错误
+
+  // 通用错误码
+  kCIM_ERR_SUCCESS = 200;        // 成功
+  kCIM_ERR_INTERNAL_ERROR = 201; // 服务器内部错误
+
+  // 账号错误码
+  kCIM_ERR_LOGIN_DB_VALIDATE_FAILED = 2000;  // 失败
+  kCIM_ERR_LOGIN_VERSION_TOO_OLD = 2001;     // 客户端版本太旧
+  kCIM_ERR_LOGIN_INVALID_USER_TOKEN = 2002;  // 非法的口令
+  kCIM_ERR_LOGIN_INVALID_USER_OR_PWD = 2003; // 用户不存在或者密码错误
+
+  // HTTP API 错码
+  kCIM_ERROR_USER_ALREADY_EXIST = 9000;     // 用户已存在
+  kCIM_ERROR_USER_INVALID_PARAMETER = 9001; // 非法的用户信息
+  kCIM_ERROR_USER_NOT_EXIST = 9002;         // 用户不存在
+}
+
+// 客户端类型
+enum CIMClientType {
+  kCIM_CLIENT_TYPE_DEFAULT = 0; // unset
+  kCIM_CLIENT_TYPE_ANDROID = 1; // 安卓
+  kCIM_CLIENT_TYPE_IOS = 2;     // iOS
+  kCIM_CLIENT_TYPE_WEB = 3;     // WebSocket
+  kCIM_CLIENT_TYPE_REST_API = 4; // RestAPI
+  kCIM_CLIENT_TYPE_PC_WINDOWS = 5; // PC Windows
+  kCIM_CLIENT_TYPE_MAC_OS = 6;     // MAC
+}
+
+// 会话类型
+enum CIMSessionType {
+  kCIM_SESSION_TYPE_Invalid = 0; // 无效会话
+  kCIM_SESSION_TYPE_SINGLE = 1;  // 单聊
+  kCIM_SESSION_TYPE_GROUP = 2;   // 群聊
+  // kCIM_SESSION_TYPE_CHAT_ROOM = 3; // 聊天室
+  // kCIM_SESSION_TYPE_CONSULT = 4; // 客服
+}
+
+/* 消息类型补充说明
+文件：
+{
+  "md5":"e10adc3949ba59abbe56e057f20f883e",         # md5,32位
+  "size":"1024123",                                 # 文件大小,B
+  "url":"http://file.qiniu.com/15923014023.pdf",    # 下载地址
+  "displayName":"test.pdf",                         # 文件显示名称
+  "fileExtension":"pdf",                            # 文件扩展名
+  "icoThumbUrl":"http://file.qiniu.com/1124.png"    # 类型图标url（便于维护）
+}
+语音：
+{
+  "md5":"e10adc3949ba59abbe56e057f20f883e",         # md5,32位
+  "size":"1024123",                                 # 文件大小,B
+  "url":"http://file.qiniu.com/15923014023.mp3",    # 下载地址
+  "displayName":"test.mp3",                         # 文件显示名称
+  "fileExtension":"pdf",                            # 文件扩展名
+  "duration":"120"                                  # 时长，秒
+}
+视频：
+{
+  "md5":"e10adc3949ba59abbe56e057f20f883e",         # md5,32位
+  "size":"1024123",                                 # 文件大小,B
+  "url":"http://file.qiniu.com/15923014023.mp4",    # 下载地址
+  "displayName":"test.mp4",                         # 文件显示名称
+  "fileExtension":"mp4",                            # 文件扩展名
+  "duration":"15",                                  # 视频时长，秒
+  "width":"1080",                                   # 视频画面宽度
+  "height":"1920",                                  # 视频画面高度
+  "thumbUrl":"http://file.qiniu.com/1124.png"       # 视频封面图片url
+}
+位置：
+{
+  "latitude":"31.301844",                         # 纬度
+  "longitude":"121.513257",                       # 经度
+  "coordinate":"GCJ02",                           # 坐标系
+  "address":"上海市黄浦区福州路465号世纪出版大厦",     # 地址
+  "poi":"上海书城(福州路店)"                        # 兴趣点
+}
+机器人-上行：直接发送消息即可，如果是文本则直接使用，其他图片、视频等，会转换成[图片]、[视频]等字符
+机器人-下行：
+{
+  "body":"机器人你好",  # 原始文本数据，在UI中展现
+  "content":{
+    # 机器人回答，文本消息，需要配合参数content "content":"你也好"
+    "type":"text",
+  }
+}
+音视频通话：
+{
+  "hangupUserId":1992,
+  "hangupReason":1,    # 参考CIMVoipByeReason
+  "timeLen": 0,        # 通话时长（秒）
+  "callType":1,        # 0:unknown,1:voice,2:video
+}
+系统通知：
+{
+  "notificationId":"" # 见CIMMsgNotificationId
+  "data":{}
+}
+*/
+
+// 消息类型
+enum CIMMsgType {
+  kCIM_MSG_TYPE_UNKNOWN = 0; // 未知类型消息，本地使用，发送时请勿使用
+  kCIM_MSG_TYPE_TEXT = 1;         // 文本
+  kCIM_MSG_TYPE_FILE = 2;         // 文件
+  kCIM_MSG_TYPE_IMAGE = 3;        // 图片
+  kCIM_MSG_TYPE_AUDIO = 4;        // 声音
+  kCIM_MSG_TYPE_VIDEO = 5;        // 视频
+  kCIM_MSG_TYPE_LOCATION = 6;     // 位置
+  kCIM_MSG_TYPE_ROBOT = 7;        // 图灵机器人消息
+  kCIM_MSG_TYPE_TIPS = 8;         // 提醒类型
+  kCIM_MSG_TYPE_NOTIFACATION = 9; // 系统通知（包括入群出群通知等）
+  kCIM_MSG_TYPE_AVCHAT = 10;      // 由音视频通话产生的消息
+
+  // kCIM_MSG_TYPE_CUSTOM = 100; // 自定义
+}
+
+// 消息状态
+enum CIMMsgStatus {
+  kCIM_MSG_STATUS_NONE = 0;    // 默认，不能当查询条件，意义太多
+  kCIM_MSG_STATUS_UNREAD = 1;  // 收到消息，未读
+  kCIM_MSG_STATUS_READ = 2;    // 收到消息，已读
+  kCIM_MSG_STATUS_DELETED = 3; // 已删
+  kCIM_MSG_STATUS_SENDING = 4; // 发送中
+  kCIM_MSG_STATUS_SENT = 5;    // 已发送
+  kCIM_MSG_STATUS_RECEIPT = 6; // 对方已读发送的内容
+  kCIM_MSG_STATUS_DRAFT = 7;   // 草稿
+  kCIM_MSG_STATUS_SendCacel = 8; // 发送取消
+  kCIM_MSG_STATUS_REFUSED = 9; // 被对方拒绝，比如被对方加入黑名单等等
+  kCIM_MSG_STATUS_FAILED = 10; // 发送失败，客户端使用
+}
+
+// 通知类型
+enum CIMMsgNotificationType {
+  // 未知
+  kCIM_MSG_NOTIFICATION_UNKNOWN = 0;
+  // 创建群
+  // {"groupId":"22","groupName":"测试群","owner":"1008","ownerNick":"1008",ids:["1001","1002"],nickNames:["1001","1002"]}
+  kCIM_MSG_NOTIFICATION_GROUP_CREATE = 1;
+  // 群拉人（被拉）
+  // {"groupId":"22","userId":“1008”,"ids":["1001", "1002"],nickNames:["1001","1002"]}
+  kCIM_MSG_NOTIFICATION_GROUP_BE_INVITE = 2;
+  // 群踢人
+  // {"groupId":"22",“ownerUserId”:“1008”,"ids":["1001", "1002"],nickNames:["1001","1002"]}
+  kCIM_MSG_NOTIFICATION_GROUP_KICK = 3;
+  // 退出群
+  // {"groupId":"22","ids":["1001", "1002"],nickNames:["1001","1002"]}
+  kCIM_MSG_NOTIFICATION_GROUP_LEAVE = 4;
+  // 群信息更新
+  // {"team_info":team_info}
+  kCIM_MSG_NOTIFICATION_GROUP_UPDATE = 5;
+  // 群解散
+  // {"groupId":"22"}
+  kCIM_MSG_NOTIFICATION_GROUP_DISMISS = 6;
+}
+
+// 会话状态
+enum CIMSessionStatusType {
+  kCIM_SESSION_STATUS_UNKNOWN = 0; // 未知
+  kCIM_SESSION_STATUS_OK = 1;
+  kCIM_SESSION_STATUS_DELETE = 2;
+}
+
+// 消息属性
+enum CIMMsgFeature {
+  kCIM_MSG_FEATURE_DEFAULT = 0; // 默认
+  // kCIM_MSG_FEATURE_LEAVE_MSG = 1;      // 离线消息(和漫游消息有何区别)
+  kCIM_MSG_FEATURE_ROAM_MSG = 2; // 漫游消息，多端同步接收，永久存储(或1年)
+  // kCIM_MSG_FEATURE_SYNS_MSG = 3;       // 同步消息
+  // kCIM_MSG_FEATURE_CUSTOMIZED_MSG = 4; // 透传消息
+}
+
+// Voip邀请类型
+enum CIMVoipInviteType {
+  kCIM_VOIP_INVITE_TYPE_UNKNOWN = 0;    // default
+  kCIM_VOIP_INVITE_TYPE_VOICE_CALL = 1; // 语音通话
+  kCIM_VOIP_INVITE_TYPE_VIDEO_CALL = 2; // 视频通话，包含语音但可以静音
+}
+
+// Voip邀请状态
+enum CIMInviteRspCode {
+  kCIM_VOIP_INVITE_CODE_UNKNOWN = 0;   // 0 unknown
+  kCIM_VOIP_INVITE_CODE_TRYING = 100;  // 100 tring
+  kCIM_VOIP_INVITE_CODE_RINGING = 180; // 180 ringing
+  KCIM_VOIP_INVITE_CODE_OK = 200;      // 200 ok
+}
+
+// Voip挂断原因
+enum CIMVoipByeReason {
+  kCIM_VOIP_BYE_REASON_UNKNOWN = 0;              // default
+  kCIM_VOIP_BYE_REASON_CANCEL = 1;               // 我方取消
+  kCIM_VOIP_BYE_REASON_REJECT = 2;               // 对方拒绝
+  kCIM_VOIP_BYE_REASON_END = 3;                  // 通话结束
+  kCIM_VOIP_BYE_REASON_BUSY = 4;                 // 对方正忙
+  kCIM_VOIP_BYE_REASON_ONLINE_CLIENT_REJECT = 5; // 其他端拒绝通话
+  // kCIM_VOIP_BYE_REASON_OK = 6;                   // 一切OK
+}
+
+// 消息错误码
+enum CIMResCode {
+  kCIM_RES_CODE_UNKNOWN = 0; // unknown
+  kCIM_RES_CODE_OK = 1;      // 一切正常
+  // kCIM_RES_CODE_ERROR = 1;           // 错误
+  // kCIM_RES_CODE_Group_NOT_EXIST = 2; // 群不存在
+  // kCIM_RES_CODE_IN_BLACK = 3;        // 被接收方加入黑名单
+}
+
+// 用户信息
+message CIMUserInfo {
+  uint64 user_id = 1;
+  string nick_name = 2;       // 用户昵称
+  string nick_name_spell = 3; // 昵称拼音
+  /*optional*/
+  string phone = 9;        // 手机号
+  string avatar_url = 10;  // 头像URL
+  string attach_info = 11; // 自定义字段
+}
+
+// 会话信息
+message CIMContactSessionInfo {
+  uint64 session_id = 1;                   // 会话id
+  CIMSessionType session_type = 2;         // 会话类型
+  CIMSessionStatusType session_status = 3; // 会话修改命令，预留
+  uint32 unread_cnt = 4;                   // 该会话未读消息数量
+  uint32 updated_time = 5;                 // 更新时间
+  string msg_id = 6;                       // 最新一条消息的id（UUID）
+  uint64 server_msg_id = 7; // 最新一条消息服务端的id（顺序递增）
+  uint32 msg_time_stamp = 8;    // 最新一条消息时间戳（毫秒）
+  bytes msg_data = 9;           // 最新一条消息的内容
+  CIMMsgType msg_type = 10;     // 最新一条消息的类型
+  uint64 msg_from_user_id = 11; // 最新一条消息的发送者
+  CIMMsgStatus msg_status = 12; // 最新一条消息的状态（预留）
+  /*optional*/
+  string msg_attach = 13; // 最新一条消息的附件（预留）
+  /*optional*/
+  string extend_data = 14; // 本地扩展字段（限制4096）
+  /*optional*/
+  bool is_robot_session = 15; // 是否为机器人会话
+}
+
+// 消息信息
+message CIMMsgInfo {
+  string client_msg_id = 1; // 客户端消息ID（UUID）
+  uint64 server_msg_id = 2; // 服务端消息ID
+
+  CIMResCode msg_res_code = 3;     // 消息错误码
+  CIMMsgFeature msg_feature = 4;   // 消息属性
+  CIMSessionType session_type = 5; // 会话类型
+  uint64 from_user_id = 6;         // 来源会话ID
+  uint64 to_session_id = 7;        // 目标会话ID
+  uint32 create_time = 8;          // 消息创建时间戳（毫秒）
+
+  CIMMsgType msg_type = 9;      // 消息类型
+  CIMMsgStatus msg_status = 10; // 消息状态（预留）
+  bytes msg_data = 11;          // 消息内容
+  /*optional*/
+  string attach = 12;                    // 消息附件（预留）
+  CIMClientType sender_client_type = 13; // 发送者客户端类型
+}
+
+// VOIP频道信息
+message CIMChannelInfo {
+  string channel_name = 1;  // 频道名称
+  string channel_token = 2; // 频道授权令牌
+  uint64 creator_id = 3;    // 频道创建者
+}
