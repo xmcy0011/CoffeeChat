@@ -126,7 +126,7 @@ gate-example.toml im_gate           profile001.png
 ```
 
 效果如下：
-![profile](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/profile/profile001.png)
+![profile](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/docs/images/profile/profile001.png)
 
 一目了然找到了CPU空转的地方：
 > github.com/CoffeeChat/server/src/internal/gate/tcpserver.init.0.func1

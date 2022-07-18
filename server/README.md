@@ -40,7 +40,7 @@ $ docker-compose.yml up -d
 ```
 
 此时，在docker desktop中可以查看所有的日志：
-![docker-desktop-log](../images/docker-desktop-log.jpg)
+![docker-desktop-log](../docs/images/docker-desktop-log.jpg)
 
 当然，您也可以手动编译，具体步骤请参考下列章节。
 

@@ -29,7 +29,7 @@ opensource im with server(go) and client(flutter+swift)
 see [CoffeeChat-Flutter](https://github.com/xmcy0011/CoffeeChat-Flutter) 暂不维护，仅供参考。
 
 ### swift
-![screenshot](./images/swift/screenshot.png)  
+![screenshot](./docs/images/swift/screenshot.png)  
 
 ## Features
 
@@ -109,10 +109,10 @@ see [CoffeeChat-Flutter](https://github.com/xmcy0011/CoffeeChat-Flutter) 暂不�
 ## Architecture
 
 模块架构:  
-![模块架构](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/structure-v2.png)
+![模块架构](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/docs/images/structure-v2.png)
 
 单聊模块交互图:
-![单聊](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/images/seq-c2c.png)
+![单聊](https://raw.githubusercontent.com/xmcy0011/CoffeeChat/master/docs/images/seq-c2c.png)
 
 See More [architecture](https://github.com/xmcy0011/CoffeeChat/blob/master/docs/02-%E6%9E%B6%E6%9E%84%E5%92%8C%E5%8D%8F%E8%AE%AE%E8%AE%BE%E8%AE%A1.md)
 
@@ -168,6 +168,20 @@ $ docker-compose down -v
 
 更多开源im，请移步：[史上最全开源IM盘点](https://blog.csdn.net/xmcy001122/article/details/110679978)
 
+## Client
+
+支持的客户端有：
+
+- 开发中
+  - [iOS](https://github.com/xmcy0011/CoffeeChat-iOS)：基于swift5实现，目前主要维护的客户端，推荐使用。
+
+- 暂停中
+  - [Flutter](https://github.com/xmcy0011/CoffeeChat-Flutter)：基于flutter2和dart实现，目前已不再维护，仅供学习。
+  - [Windows](https://github.com/xmcy0011/CoffeeChat-Win)：基于c++和网易duilib实现，目前只实现了登录功能。
+  - [Mac](https://github.com/xmcy0011/CoffeeChat-Desktop)：基于c++和Qt6实现，目前只实现了登录功能。
+
+请点击对应的链接查看详情。
+
 ## Contact
 
 email：xmcy0011@sina.com  
@@ -175,7 +189,7 @@ email：xmcy0011@sina.com
 
 喜欢的话，关注下公众号吧😊  
 《Go和分布式IM》👈👈  
-![qrcode](./images/qrcode.png)
+![qrcode](./docs/images/qrcode.png)
 
 ## LICENSE
 
