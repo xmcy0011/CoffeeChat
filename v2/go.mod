@@ -1,4 +1,4 @@
-module github.com/xmcy0011/CoffeeChat
+module CoffeeChat
 
 go 1.17
 

@@ -1,0 +1,119 @@
+syntax = "proto3";
+
+package coffeechat;
+option go_package = "api/chat;chat";
+option java_package = "com.coffeechat.protobuf";
+
+import "google/api/annotations.proto";
+import "api/chat/message.proto";
+import "api/chat/contants.proto";
+import "api/chat/error_reason.proto";
+
+service Chat {
+  // 查询会话列表
+  rpc RecentContactSession(CIMRecentContactSessionReq) returns(CIMRecentContactSessionRsp) {
+    option (google.api.http) = {
+      get: "/chat/sessions"
+    };
+  }
+
+  // 查询历史消息列表
+  rpc GetMsgList(CIMGetMsgListReq) returns(CIMGetMsgListRsp) {
+    option (google.api.http) = {
+      get: "/chat/messages"
+    };
+  }
+
+  // 发消息
+  rpc Send(CIMMsgData) returns(CIMMsgDataAck) {
+    option (google.api.http) = {
+      post: "/chat/send"
+      body: "*"
+    };
+  }
+
+  // 已读消息回执
+  rpc MsgReadAck(CIMMsgDataReadReq) returns(CIMMsgDataReadRsp) {
+    option (google.api.http) = {
+      post: "/chat/readMsg"
+      body: "*"
+    };
+  }
+}
+
+// 消息已读回复请求（我方）
+message CIMMsgDataReadReq{
+    uint64 user_id = 1; // 消息发送方
+    uint64 session_id = 2;
+    uint64 msg_id = 3; // 服务器消息ID，在该ID之前的所有消息被标记为已读
+    CIMSessionType session_type = 4;
+}
+
+// 消息已读回复响应
+message CIMMsgDataReadRsp{}
+
+// 最近聊天会话列表请求
+message CIMRecentContactSessionReq {
+  uint64 user_id = 1;
+  uint32 latest_update_time = 2; // 最后更新时间
+}
+
+message CIMRecentContactSessionRsp {
+  uint64 user_id = 1;
+  uint32 unread_counts = 2; // 总未读数量
+  repeated CIMContactSessionInfo contact_session_list = 3; // 会话列表
+}
+
+// 历史离线聊天消息请求
+message CIMGetMsgListReq {
+  // cmd id:		0x0205
+  uint64 user_id = 1;
+  CIMSessionType session_type = 2;
+  uint64 session_id = 3;
+  //   uint64 from_time_stamp = 4; // 起始时间点，单位：毫秒
+  //   uint64 end_time_stamp = 5;  // 结束时间点，单位：毫秒
+  uint64 end_msg_id = 4; // 结束服务器消息id(不包含在查询结果中)
+  uint32 limit_count = 6; // 本次查询消息的条数上线(最多100条)
+  // repeated CIM.Def.CIMMessageType msg_type_list = 7; // 查询指定的消息类型
+  // optional bool is_exclusion_type_ = 8; // 是否排除指定的消息类型
+}
+
+//对于群而言，如果消息数目返回的数值小于请求的cnt,则表示群的消息能拉取的到头了，更早的消息没有权限拉取。
+//如果limit_count 和 msg_list.count 不一致，说明服务器消息有缺失，需要
+//客户端做一个缺失标记，避免下次再次拉取。
+message CIMGetMsgListRsp {
+  // cmd id:		0x0206
+  uint64 user_id = 1;
+  CIMSessionType session_type = 2;
+  uint64 session_id = 3;
+  uint64 end_msg_id = 4; // 结束服务器消息id(不包含在查询结果中)
+  //   uint64 from_time_stamp = 4;     // 起始时间点，单位：毫秒
+  //   uint64 end_time_stamp = 5;      // 结束时间点，单位：毫秒
+  repeated CIMMsgInfo msg_list = 6; // 消息列表
+}
+
+// 发送消息
+message CIMMsgData {
+  // cmd id:		0x0301
+  uint64 from_user_id = 1;    // 消息发送方
+  string from_nick_name = 2;  // 消息发送方昵称
+  uint64 to_session_id = 3;   // 消息接受方，单聊用户ID，群聊群ID
+  string client_msg_id = 4;   // 客户端消息ID，唯一（UUID）
+  uint64 server_msg_id = 5;   // 服务端生成的消息ID，顺序（客户端发送时无需设置）
+  int32 create_time = 6;      // 消息创建时间戳(秒)
+  CIMMsgType msg_type = 7;         // 消息类型
+  CIMSessionType session_type = 8; // 会话类型
+  bytes msg_data = 9;                      // 消息内容
+}
+
+// 消息收到回复
+message CIMMsgDataAck {
+  // cmd id:		0x0302
+  uint64 from_user_id = 1;  // 消息发送方
+  uint64 to_session_id = 2; // 消息接受方，单聊用户ID，群聊群ID
+  string client_msg_id = 3; // 客户端消息ID，唯一（UUID）
+  uint64 server_msg_id = 4; // 服务端生成的消息ID，顺序
+  CIMResCode res_code = 5;         // 错误码
+  CIMSessionType session_type = 6; // 会话类型
+  /*optional*/ int32 create_time = 7;      // 创建时间戳(毫秒)
+}
