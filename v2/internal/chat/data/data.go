@@ -1,13 +1,12 @@
 package data
 
 import (
+	"CoffeeChat/internal/chat/conf"
 	"github.com/go-kratos/kratos/v2/log"
-	"github.com/google/wire"
-	"github.com/xmcy0011/CoffeeChat/internal/chat/conf"
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, NewGreeterRepo)
+//var ProviderSet = wire.NewSet(NewData)
 
 // Data .
 type Data struct {

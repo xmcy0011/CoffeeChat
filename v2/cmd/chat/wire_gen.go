@@ -7,30 +7,21 @@
 package main
 
 import (
+	"CoffeeChat/internal/chat/conf"
+	"CoffeeChat/internal/chat/server"
+	"CoffeeChat/internal/chat/service"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
-	"github.com/xmcy0011/CoffeeChat/internal/chat/biz"
-	"github.com/xmcy0011/CoffeeChat/internal/chat/conf"
-	"github.com/xmcy0011/CoffeeChat/internal/chat/data"
-	"github.com/xmcy0011/CoffeeChat/internal/chat/server"
-	"github.com/xmcy0011/CoffeeChat/internal/chat/service"
 )
 
 // Injectors from wire.go:
 
 // wireApp init kratos application.
-func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*kratos.App, func(), error) {
-	dataData, cleanup, err := data.NewData(confData, logger)
-	if err != nil {
-		return nil, nil, err
-	}
-	greeterRepo := data.NewGreeterRepo(dataData, logger)
-	greeterUsecase := biz.NewGreeterUsecase(greeterRepo, logger)
-	greeterService := service.NewGreeterService(greeterUsecase)
-	grpcServer := server.NewGRPCServer(confServer, greeterService, logger)
-	httpServer := server.NewHTTPServer(confServer, greeterService, logger)
+func wireApp(confServer *conf.Server, data *conf.Data, logger log.Logger) (*kratos.App, func(), error) {
+	chatService := service.NewChatService(logger)
+	grpcServer := server.NewGRPCServer(confServer, chatService, logger)
+	httpServer := server.NewHTTPServer(confServer, chatService, logger)
 	app := newApp(logger, grpcServer, httpServer)
 	return app, func() {
-		cleanup()
 	}, nil
 }

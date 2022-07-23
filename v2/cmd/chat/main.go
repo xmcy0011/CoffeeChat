@@ -1,8 +1,8 @@
 package main
 
 import (
+	"CoffeeChat/internal/chat/conf"
 	"flag"
-	"github.com/xmcy0011/CoffeeChat/internal/chat/conf"
 	"os"
 
 	"github.com/go-kratos/kratos/v2"
