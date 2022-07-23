@@ -36,6 +36,7 @@ services:
       - "6379:6379"     # 端口改掉，预防攻击
   consul:
     image: bitnami/consul:latest
+    container_name: cim_consul
     volumes:
       - cim_consul:/bitnami
     networks:
@@ -47,6 +48,35 @@ services:
       - '8500:8500'
       - '8600:8600'
       - '8600:8600/udp'
+  zookeeper:
+    image: docker.io/bitnami/zookeeper:3.7
+    container_name: cim_zookeeper
+    ports:
+      - "2181:2181"
+    networks:
+      - local
+    volumes:
+      - "cim_zookeeper:/bitnami"
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+  kafka:
+    image: docker.io/bitnami/kafka:3
+    container_name: cim_kafka
+    ports:
+      - "9092:9092"
+    networks:
+      - local
+    volumes:
+      - "cim_kafka:/bitnami"
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://127.0.0.1:9092
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=false
+    depends_on:
+      - zookeeper
   im_http: # http 服务
     container_name: im_http
     build: # 指定从dockerfile编译
@@ -99,6 +129,10 @@ volumes: # 声明使用的数据卷，不使用宿主机目录，可以自行更
   cim_redis: # redis数据卷
     driver: local
   cim_consul:
+    driver: local
+  cim_zookeeper:
+    driver: local
+  cim_kafka:
     driver: local
 # 为了简单，使用默认侨接网络 + DNS连接内部服务器方式
 # # 根据https://docs.docker.com/compose/networking/，docker compose默认创建了网络，但是创建自己的侨接网络更安全

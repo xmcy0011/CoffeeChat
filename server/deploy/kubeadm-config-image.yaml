@@ -1,0 +1,3 @@
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: ClusterConfiguration
+imageRepository: registry.aliyuncs.com/google_containers  # 默认为k8s.gcr.io，但是网络不通，所以要替换为阿里云镜像

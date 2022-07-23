@@ -4,6 +4,7 @@ import (
 	"coffeechat/pkg/logger"
 	"context"
 	"github.com/Shopify/sarama"
+	"log"
 )
 
 type MsgConsumerGroup struct {
@@ -48,7 +49,13 @@ func NewMsgConsumerGroup(addr []string, groupId string, offset int64) *MsgConsum
 	//consumerConfig.Consumer.Offsets.AutoCommit.Interval = time.Second * 1 // 测试3秒自动提交
 	consumerConfig.Consumer.Offsets.Initial = offset
 
-	cGroup, err := sarama.NewConsumerGroup(addr, groupId, consumerConfig)
+	// 拿到原始client，可以获取集群的一些信息
+	newClient, err := sarama.NewClient(addr, consumerConfig)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	cGroup, err := sarama.NewConsumerGroupFromClient(groupId, newClient)
 	if err != nil {
 		panic(err)
 	}

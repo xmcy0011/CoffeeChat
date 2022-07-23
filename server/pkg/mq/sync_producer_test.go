@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	kafkaAddr       = []string{"10.0.76.117:9092"}
+	kafkaAddr       = []string{"127.0.0.1:9092"}
 	consumerGroupId = "wechat_work"
 	topic           = "test"
 )
@@ -19,11 +19,15 @@ type ConsumerGroup struct {
 }
 
 // Setup is run at the beginning of a new session, before ConsumeClaim.
-func (c *ConsumerGroup) Setup(sarama.ConsumerGroupSession) error { return nil }
+func (c *ConsumerGroup) Setup(sarama.ConsumerGroupSession) error {
+	return nil
+}
 
 // Cleanup is run at the end of a session, once all ConsumeClaim goroutines have exited
 // but before the offsets are committed for the very last time.
-func (c *ConsumerGroup) Cleanup(sarama.ConsumerGroupSession) error { return nil }
+func (c *ConsumerGroup) Cleanup(sarama.ConsumerGroupSession) error {
+	return nil
+}
 
 // ConsumeClaim must start a consumer loop of ConsumerGroupClaim's Messages().
 // Once the Messages() channel is closed, the Handler must finish its processing
@@ -32,6 +36,9 @@ func (c *ConsumerGroup) ConsumeClaim(session sarama.ConsumerGroupSession, claim 
 	for msg := range claim.Messages() {
 		log.Printf("recv msg:%s, key:%s, partition:%d, offset:%d, time:%d ",
 			string(msg.Value), string(msg.Key), msg.Partition, msg.Offset, msg.Timestamp.Unix())
+
+		lag := claim.HighWaterMarkOffset() - msg.Offset
+		log.Println("lag:", lag)
 
 		session.MarkMessage(msg, "consumed")
 	}
