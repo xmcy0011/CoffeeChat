@@ -1,0 +1,135 @@
+#
+# docker compose 服务编排
+#
+
+version: '3.4'
+
+services:
+  mongo:
+    image: mongo
+    container_name: cim_mongo
+    restart: always
+    ports:
+      - '27017:27017'
+    networks:
+      - CoffeeChat
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: mongopass
+  mysql:
+#    image: 'arm64v8/mysql:8.0.28-oracle' # mac m1
+    image: 'mysql:5.7'
+    restart: always
+    container_name: cim_mysql
+    environment:
+      LANG: C.UTF-8 # 解决客户端连接中文乱码问题
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: coffeechat
+      MYSQL_USER: cim
+      MYSQL_PASSWORD: coffeechat2022
+    volumes:
+      - cim_mysql_data:/var/lib/mysql
+      # docker-entrypoint-initdb.d：这个目录下的脚本，只在容器第一次运行时被执行。
+      - ./deploy/setup/mysql/init/:/docker-entrypoint-initdb.d/
+    networks:
+      - CoffeeChat
+    ports:
+      - "3306:3306"
+    command: [ '--default-authentication-plugin=mysql_native_password', '--character-set-server=utf8mb4',
+               '--collation-server=utf8mb4_unicode_ci' ]
+  redis:
+    build: setup/redis
+    container_name: cim_redis
+    volumes:
+      - cim_redis:/data  # 持久化数据，其他如密码等，在redis.conf里已配置
+    networks:
+      - CoffeeChat
+    ports:
+      - "6379:6379"     # 端口改掉，预防攻击
+  consul:
+    image: bitnami/consul:latest
+    container_name: cim_consul
+    volumes:
+      - cim_consul:/bitnami
+    networks:
+      - CoffeeChat
+    ports:
+      - '8300:8300'
+      - '8301:8301'
+      - '8301:8301/udp'
+      - '8500:8500'
+      - '8600:8600'
+      - '8600:8600/udp'
+  cim_http: # http 服务
+    container_name: cim_http
+    build: # 指定从dockerfile编译
+      context: .
+      dockerfile: ./app/im_http/Dockerfile
+    volumes: # 数据卷绑定
+      - ./log/http:/log
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    networks:
+      - CoffeeChat
+    ports:
+      - "18080:18080"
+    depends_on:
+      - cim_logic
+  cim_gate: # 网关服务
+    container_name: cim_gate
+    build:
+      context: .
+      dockerfile: ./app/im_gate/Dockerfile
+    volumes:
+      - ./log/gate:/log
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    networks:
+      - CoffeeChat
+    ports:
+      - "8000:8000"
+    depends_on:
+      - cim_logic
+  cim_logic: # 逻辑服务
+    container_name: cim_logic
+    build:
+      context: .
+      dockerfile: ./app/im_logic/Dockerfile
+    volumes:
+      - ./log/logic:/log
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    networks:
+      - CoffeeChat
+    depends_on:
+      - mysql
+      - redis
+volumes: # 声明使用的数据卷，不使用宿主机目录，可以自行更改
+  cim_mysql_data: # mysql数据卷
+    driver: local
+  cim_redis: # redis数据卷
+    driver: local
+  cim_consul:
+    driver: local
+# 为了简单，使用默认侨接网络 + DNS连接内部服务器方式
+# 根据https://docs.docker.com/compose/networking/，docker compose默认创建了网络，但是创建自己的侨接网络更安全
+# 另外一个Host主机网络只支持Linux，虽然性能更高
+networks:
+  CoffeeChat:
+    driver: bridge # 侨接网络，此时需要使用host访问（service下面的服务名）
+    ipam:          # see: https://docs.docker.com/compose/compose-file/compose-file-v3/#network
+      config:
+        - subnet: 172.16.0.0/24
+          gateway: 172.16.0.1
