@@ -1,10 +1,2 @@
 .idea/
-client/websocket_kefu
-server.pid
-daemon
-log.log
-client/ios/Coffchat/Coffchat.xcodeproj/xcuserdata
-client/ios/Coffchat/Pods
-Podfile.lock
-client/ios/Coffchat/Coffchat.xcworkspace/xcuserdata
 .vs/

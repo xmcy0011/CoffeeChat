@@ -9,6 +9,7 @@ import "api/chat/message.proto";
 import "api/chat/contants.proto";
 import "api/chat/error_reason.proto";
 
+// 消息服务
 service Chat {
   // 查询会话列表
   rpc RecentContactSession(CIMRecentContactSessionReq) returns(CIMRecentContactSessionRsp) {

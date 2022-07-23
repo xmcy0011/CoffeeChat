@@ -27,7 +27,6 @@ Thumbs.db
 # project
 *.cert
 *.key
-*.log
 bin/
 
 # Develop tools
