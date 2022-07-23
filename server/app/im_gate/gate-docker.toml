@@ -20,12 +20,12 @@ WeChatRobotEncodingAESKey="vpIfV7aof4QP40EreXNAVygwy4Bx534JldY1inOETBY" # 替换
 # 第二个节点：处理消息收发业务
 [[Logic]]
 #Ip="172.16.0.1"
-Ip="im_logic"
+Ip="cim_logic"
 Port=10600
 MaxConnCnt=4                # 2的整数倍
 
 [[Logic]]
 #Ip="172.16.0.1"
-Ip="im_logic"
+Ip="cim_logic"
 Port=10600
 MaxConnCnt=4                # 2的整数倍

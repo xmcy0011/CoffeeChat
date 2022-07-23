@@ -4,22 +4,22 @@ ListenPort=10600
 # 主库，读写，优先写
 [[Db]]
 ServerName="Master"
-Host="mysql"
+Host="cim_mysql"
 Port=3306
 DbName="coffeechat"
 UserName="cim"
-Password="ldMe$q2Xl9GKyUxj"
+Password="coffeechat2022"
 MaxConnCnt=16
 
 # 从库，只读
 # 可以和主库保持一致，这样则意味着不使用主从模式，此时，建议把maxconncnt调小一倍
 [[Db]]
 ServerName="Slave"
-Host="mysql"
+Host="cim_mysql"
 Port=3306
 DbName="coffeechat"
 UserName="cim"
-Password="ldMe$q2Xl9GKyUxj"
+Password="coffeechat2022"
 MaxConnCnt=16
 
 #[Kafka]
@@ -29,7 +29,7 @@ MaxConnCnt=16
 
 [Redis]
 Name="cim"
-Ip="redis"
+Ip="cim_redis"
 Port=6379
 KeyPrefix="cim|"        # redis中key的统一前缀
 Password="coffeechat"   # redis的密码，不允许为空

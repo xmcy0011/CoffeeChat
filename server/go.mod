@@ -2,13 +2,16 @@ module coffeechat
 
 go 1.12
 
+replace github.com/Shopify/sarama => github.com/Shopify/sarama v1.29.0
+
 require (
 	github.com/BurntSushi/toml v0.3.1
 	github.com/Shopify/sarama v1.32.0
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
 	github.com/go-ini/ini v1.57.0 // indirect
 	github.com/go-redis/redis v6.15.5+incompatible
 	github.com/go-sql-driver/mysql v1.4.1
+	github.com/golang-jwt/jwt v3.2.0+incompatible
 	github.com/golang/protobuf v1.4.2
 	github.com/minio/minio-go v6.0.14+incompatible
 	github.com/mitchellh/go-homedir v1.1.0 // indirect

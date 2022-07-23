@@ -51,7 +51,7 @@
 # 方案分析
 ## goim
 ![goim架构图-原版](https://github.com/xmcy0011/goim/blob/master/docs/arch.png)    
-![goim架构图](../images/architecture-goim.png)  
+![goim架构图](./images/architecture-goim.png)  
 goim是bilibili技术总监毛剑的开源聊天室项目，号称支持100万用户在线，在仔细的梳理了goim的业务流程（在聊天室发一条消息）后绘制出了上面的架构图(图2)。    
 黄线代表一条聊天室消息经过的链路。comet是接入层，负责管理维护客户端的TCP/WebSocket连接等。logic是业务逻辑，比如登录、发消息等。job负责从Kafka消费消息，然后广播到所有comet上。discovery是bilibili开源的类似Zookeeper的服务注册与发现模块，这样comet、logic等都可以很方便的动态扩容。  
 
@@ -62,7 +62,7 @@ goim是bilibili技术总监毛剑的开源聊天室项目，号称支持100万�
 
 ## 最终设计
 
-![coffeechat模块架构](../images/structure-v2.png)  
+![coffeechat模块架构](./images/structure-v2.png)  
 
 ~~如果仅仅在Router部分使用MQ，个人觉得代价有点大（用户量不大，性能不是瓶颈的场景下）。更希望能在Gate和Logic之间使用MQ，来提高系统吞吐量、业务解耦合、流量削峰等，提升系统稳定性。所以，初步架构如上图。~~
 

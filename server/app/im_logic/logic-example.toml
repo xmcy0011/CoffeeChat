@@ -9,7 +9,7 @@ Host="127.0.0.1"
 Port=3306
 DbName="coffeechat"
 UserName="cim"
-Password="ldMe$q2Xl9GKyUxj"
+Password="coffeechat2022"
 MaxConnCnt=16
 
 # 从库，只读
@@ -21,7 +21,7 @@ Host="127.0.0.1"
 Port=3306
 DbName="coffeechat"
 UserName="cim"
-Password="ldMe$q2Xl9GKyUxj"
+Password="coffeechat2022"
 MaxConnCnt=16
 
 #[Kafka]

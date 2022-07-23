@@ -2,7 +2,7 @@
 # This dockerfile uses go build, then use the ubuntu run
 # Version: 0.1
 # Author: xmcy0011@sina.com
-# Desc: 注意，编译镜像的上下文必须在src下（../../），否则会失败
+# Desc: 注意，编译镜像的上下文必须在server下（../../），否则会失败
 #       example: docker build -t im_gate -f . ../../
 
 ##
