@@ -2,14 +2,14 @@ package main
 
 import (
 	"CoffeeChat/internal/chat/conf"
+	"CoffeeChat/pkg/log"
 	"flag"
 	"os"
 
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/config"
 	"github.com/go-kratos/kratos/v2/config/file"
-	"github.com/go-kratos/kratos/v2/log"
-	"github.com/go-kratos/kratos/v2/middleware/tracing"
+	kratoslog "github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
 )
@@ -30,7 +30,7 @@ func init() {
 	flag.StringVar(&flagconf, "conf", "../../configs/chat-config.yaml", "config path, eg: -conf config.yaml")
 }
 
-func newApp(logger log.Logger, gs *grpc.Server, hs *http.Server) *kratos.App {
+func newApp(logger kratoslog.Logger, gs *grpc.Server, hs *http.Server) *kratos.App {
 	return kratos.New(
 		kratos.ID(id),
 		kratos.Name(Name),
@@ -47,22 +47,16 @@ func newApp(logger log.Logger, gs *grpc.Server, hs *http.Server) *kratos.App {
 func main() {
 	flag.Parse()
 
-	l := log.With(log.NewStdLogger(os.Stdout),
-		"ts", log.DefaultTimestamp,
-		"caller", log.DefaultCaller,
-		"service.id", id,
-		"service.name", Name,
-		"service.version", Version,
-		"trace.id", tracing.TraceID(),
-		"span.id", tracing.SpanID(),
-	)
+	logger := log.MustNewLogger(id, Name, Version, true, 2)
+	log.SetDefaultLogger(logger)
+	kratoslog.SetLogger(logger)
+
 	c := config.New(
 		config.WithSource(
 			file.NewSource(flagconf),
 		),
 	)
 	defer c.Close()
-
 	if err := c.Load(); err != nil {
 		panic(err)
 	}
@@ -72,11 +66,13 @@ func main() {
 		panic(err)
 	}
 
-	app, cleanup, err := wireApp(bc.Server, bc.Data, l)
+	app, cleanup, err := wireApp(bc.Server, bc.Data, logger)
 	if err != nil {
 		panic(err)
 	}
 	defer cleanup()
+
+	log.Info("server run...")
 
 	// start and wait for stop signal
 	if err := app.Run(); err != nil {

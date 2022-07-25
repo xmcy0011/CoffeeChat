@@ -1,20 +1,16 @@
 package service
 
 import (
-	"context"
-	"github.com/go-kratos/kratos/v2/log"
-
 	pb "CoffeeChat/api/chat"
+	"context"
 )
 
 type ChatService struct {
 	pb.UnimplementedChatServer
-
-	l log.Logger
 }
 
-func NewChatService(logger log.Logger) *ChatService {
-	return &ChatService{l: logger}
+func NewChatService() *ChatService {
+	return &ChatService{}
 }
 
 func (s *ChatService) RecentContactSession(ctx context.Context, req *pb.CIMRecentContactSessionReq) (*pb.CIMRecentContactSessionRsp, error) {

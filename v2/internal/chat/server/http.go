@@ -27,6 +27,9 @@ func NewHTTPServer(c *conf.Server, chatService *service.ChatService, logger log.
 	if c.Http.Timeout != nil {
 		opts = append(opts, http.Timeout(c.Http.Timeout.AsDuration()))
 	}
+
+	logger.Log(log.LevelInfo, "msg", "hello")
+
 	srv := http.NewServer(opts...)
 	chat.RegisterChatHTTPServer(srv, chatService)
 	return srv
