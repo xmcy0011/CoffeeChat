@@ -47,9 +47,10 @@ func newApp(logger kratoslog.Logger, gs *grpc.Server, hs *http.Server) *kratos.A
 func main() {
 	flag.Parse()
 
+	// `logger` must call logger.Log(log.LevelInfo, ...), otherwise call log.L.Info(...)
 	logger := log.MustNewLogger(id, Name, Version, true, 2)
-	log.SetDefaultLogger(logger)
 	kratoslog.SetLogger(logger)
+	log.SetGlobalLogger(log.MustNewLogger(id, Name, Version, true, 0))
 
 	c := config.New(
 		config.WithSource(
@@ -71,8 +72,6 @@ func main() {
 		panic(err)
 	}
 	defer cleanup()
-
-	log.Info("server run...")
 
 	// start and wait for stop signal
 	if err := app.Run(); err != nil {

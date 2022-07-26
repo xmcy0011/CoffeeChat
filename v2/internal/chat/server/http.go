@@ -28,8 +28,6 @@ func NewHTTPServer(c *conf.Server, chatService *service.ChatService, logger log.
 		opts = append(opts, http.Timeout(c.Http.Timeout.AsDuration()))
 	}
 
-	logger.Log(log.LevelInfo, "msg", "hello")
-
 	srv := http.NewServer(opts...)
 	chat.RegisterChatHTTPServer(srv, chatService)
 	return srv
