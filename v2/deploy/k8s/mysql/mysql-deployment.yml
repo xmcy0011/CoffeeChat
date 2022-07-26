@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+spec:
+  selector:
+    app: mysql
+  type: NodePort
+  ports:
+  - port: 3306
+    nodePort: 30306
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+spec:
+  # pod数量
+  replicas: 1 
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: mysql:5.7
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            memory: "500Mi"
+            cpu: "500m"
+        # 这些环境变量5.7下都没生效？
+        # env:
+        # - name: MYSQL_ROOT_PASSWORD
+        #   value: "123456"
+        # - name: MYSQL_ROOT_HOST
+        #   value: '%'
+        # - name: LANG
+        #   value: C.UTF-8 # 解决客户端连接中文乱码问题
+        # - name: MYSQL_DATABASE
+        #   value: coffeechat
+        # - name: MYSQL_USER
+        #   value: cim
+        # - name: MYSQL_PASSWORD
+        #   value: coffeechat2022
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: mysql-pv-claim
