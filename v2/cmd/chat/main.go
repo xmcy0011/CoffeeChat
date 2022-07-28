@@ -4,6 +4,7 @@ import (
 	"CoffeeChat/internal/chat/conf"
 	"CoffeeChat/pkg/log"
 	"flag"
+	kratoslog "github.com/go-kratos/kratos/v2/log"
 	"os"
 
 	"github.com/go-kratos/kratos/v2"
@@ -46,9 +47,7 @@ func newApp(logger *log.Logger, gs *grpc.Server, hs *http.Server) *kratos.App {
 func main() {
 	flag.Parse()
 
-	// `logger` must call logger.Log(log.LevelInfo, ...), otherwise call log.L.Info(...)
-	//kLog := log.MustNewLogger(id, Name, Version, true, 2)
-	//kratoslog.SetLogger(kLog)
+	kratoslog.SetLogger(log.MustNewLogger(id, Name, Version, true, 2))
 	logger := log.MustNewLogger(id, Name, Version, true, 0)
 	log.SetGlobalLogger(logger)
 
