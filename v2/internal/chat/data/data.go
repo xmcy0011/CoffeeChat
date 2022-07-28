@@ -2,21 +2,29 @@ package data
 
 import (
 	"CoffeeChat/internal/chat/conf"
-	"github.com/go-kratos/kratos/v2/log"
+	"CoffeeChat/internal/chat/data/ent"
+	"CoffeeChat/pkg/log"
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/google/wire"
 )
 
 // ProviderSet is data providers.
-//var ProviderSet = wire.NewSet(NewData)
+var ProviderSet = wire.NewSet(NewData)
 
-// Data .
+// Data ent wrapper
 type Data struct {
-	// TODO wrapped database client
+	*ent.Client
 }
 
-// NewData .
-func NewData(c *conf.Data, logger log.Logger) (*Data, func(), error) {
+// NewData New ent.Client
+func NewData(c *conf.Data, logger *log.Logger) (*Data, func(), error) {
 	cleanup := func() {
-		log.NewHelper(logger).Info("closing the data resources")
+		logger.Info("closing the data resources")
 	}
-	return &Data{}, cleanup, nil
+	client, err := ent.Open(c.Database.Driver, c.Database.Source)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return &Data{Client: client}, cleanup, nil
 }

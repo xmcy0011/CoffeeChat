@@ -4,14 +4,14 @@ import (
 	"CoffeeChat/api/chat"
 	"CoffeeChat/internal/chat/conf"
 	"CoffeeChat/internal/chat/service"
-	"github.com/go-kratos/kratos/v2/log"
+	"CoffeeChat/pkg/log"
 	"github.com/go-kratos/kratos/v2/middleware/logging"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/transport/http"
 )
 
 // NewHTTPServer new a HTTP server.
-func NewHTTPServer(c *conf.Server, chatService *service.ChatService, logger log.Logger) *http.Server {
+func NewHTTPServer(c *conf.Server, chatService *service.ChatService, logger *log.Logger) *http.Server {
 	var opts = []http.ServerOption{
 		http.Middleware(
 			recovery.Recovery(),

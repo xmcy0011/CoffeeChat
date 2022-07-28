@@ -9,7 +9,6 @@ import (
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/config"
 	"github.com/go-kratos/kratos/v2/config/file"
-	kratoslog "github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
 )
@@ -30,7 +29,7 @@ func init() {
 	flag.StringVar(&flagconf, "conf", "../../configs/chat-config.yaml", "config path, eg: -conf config.yaml")
 }
 
-func newApp(logger kratoslog.Logger, gs *grpc.Server, hs *http.Server) *kratos.App {
+func newApp(logger *log.Logger, gs *grpc.Server, hs *http.Server) *kratos.App {
 	return kratos.New(
 		kratos.ID(id),
 		kratos.Name(Name),
@@ -48,9 +47,10 @@ func main() {
 	flag.Parse()
 
 	// `logger` must call logger.Log(log.LevelInfo, ...), otherwise call log.L.Info(...)
-	logger := log.MustNewLogger(id, Name, Version, true, 2)
-	kratoslog.SetLogger(logger)
-	log.SetGlobalLogger(log.MustNewLogger(id, Name, Version, true, 0))
+	//kLog := log.MustNewLogger(id, Name, Version, true, 2)
+	//kratoslog.SetLogger(kLog)
+	logger := log.MustNewLogger(id, Name, Version, true, 0)
+	log.SetGlobalLogger(logger)
 
 	c := config.New(
 		config.WithSource(

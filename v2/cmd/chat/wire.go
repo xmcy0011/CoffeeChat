@@ -9,13 +9,13 @@ import (
 	"CoffeeChat/internal/chat/conf"
 	"CoffeeChat/internal/chat/server"
 	"CoffeeChat/internal/chat/service"
+	"CoffeeChat/pkg/log"
 
 	"github.com/go-kratos/kratos/v2"
-	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
 )
 
 // wireApp init kratos application.
-func wireApp(*conf.Server, *conf.Data, log.Logger) (*kratos.App, func(), error) {
-	panic(wire.Build(server.ProviderSet, service.ProviderSet, newApp))
+func wireApp(*conf.Server, *conf.Data, *log.Logger) (*kratos.App, func(), error) {
+	panic(wire.Build(server.ProviderSet /*data.ProviderSet,*/, service.ProviderSet, newApp))
 }

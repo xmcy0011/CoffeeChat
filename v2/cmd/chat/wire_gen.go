@@ -10,14 +10,14 @@ import (
 	"CoffeeChat/internal/chat/conf"
 	"CoffeeChat/internal/chat/server"
 	"CoffeeChat/internal/chat/service"
+	"CoffeeChat/pkg/log"
 	"github.com/go-kratos/kratos/v2"
-	"github.com/go-kratos/kratos/v2/log"
 )
 
 // Injectors from wire.go:
 
 // wireApp init kratos application.
-func wireApp(confServer *conf.Server, data *conf.Data, logger log.Logger) (*kratos.App, func(), error) {
+func wireApp(confServer *conf.Server, data *conf.Data, logger *log.Logger) (*kratos.App, func(), error) {
 	chatService := service.NewChatService()
 	grpcServer := server.NewGRPCServer(confServer, chatService, logger)
 	httpServer := server.NewHTTPServer(confServer, chatService, logger)
