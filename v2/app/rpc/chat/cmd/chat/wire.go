@@ -6,10 +6,10 @@
 package main
 
 import (
-	"CoffeeChat/internal/chat/conf"
-	"CoffeeChat/internal/chat/server"
-	"CoffeeChat/internal/chat/service"
-	"CoffeeChat/pkg/log"
+	"CoffeeChat/log"
+	"chat/internal/chat/conf"
+	"chat/internal/chat/server"
+	"chat/internal/chat/service"
 
 	"github.com/go-kratos/kratos/v2"
 	"github.com/google/wire"

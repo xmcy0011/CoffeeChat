@@ -4,7 +4,7 @@ package coffeechat;
 option go_package = "CoffeeChat/api/chat;chat";
 option java_package = "com.coffeechat.protobuf";
 
-import "api/chat/contants.proto";
+import "app/rpc/chat/api/chat/contants.proto";
 
 // 会话信息
 message CIMContactSessionInfo {

@@ -1,7 +1,7 @@
 package service
 
 import (
-	pb "CoffeeChat/api/chat"
+	pb "chat/api/chat"
 	"context"
 )
 

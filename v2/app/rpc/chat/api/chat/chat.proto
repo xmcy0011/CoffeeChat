@@ -5,9 +5,9 @@ option go_package = "CoffeeChat/api/chat;chat";
 option java_package = "com.coffeechat.protobuf";
 
 import "google/api/annotations.proto";
-import "api/chat/message.proto";
-import "api/chat/contants.proto";
-import "api/chat/error_reason.proto";
+import "app/rpc/chat/api/chat/message.proto";
+import "app/rpc/chat/api/chat/contants.proto";
+import "app/rpc/chat/api/chat/error_reason.proto";
 
 // 消息服务
 service Chat {
@@ -44,10 +44,10 @@ service Chat {
 
 // 消息已读回复请求（我方）
 message CIMMsgDataReadReq{
-    uint64 user_id = 1; // 消息发送方
-    uint64 session_id = 2;
-    uint64 msg_id = 3; // 服务器消息ID，在该ID之前的所有消息被标记为已读
-    CIMSessionType session_type = 4;
+  uint64 user_id = 1; // 消息发送方
+  uint64 session_id = 2;
+  uint64 msg_id = 3; // 服务器消息ID，在该ID之前的所有消息被标记为已读
+  CIMSessionType session_type = 4;
 }
 
 // 消息已读回复响应

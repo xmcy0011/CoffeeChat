@@ -1,4 +1,4 @@
-module CoffeeChat
+module chat
 
 go 1.17
 

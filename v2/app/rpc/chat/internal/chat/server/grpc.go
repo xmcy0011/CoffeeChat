@@ -1,10 +1,10 @@
 package server
 
 import (
-	"CoffeeChat/api/chat"
-	"CoffeeChat/internal/chat/conf"
-	"CoffeeChat/internal/chat/service"
-	"CoffeeChat/pkg/log"
+	"CoffeeChat/log"
+	"chat/api/chat"
+	"chat/internal/chat/conf"
+	"chat/internal/chat/service"
 	"github.com/go-kratos/kratos/v2/middleware/logging"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/transport/grpc"

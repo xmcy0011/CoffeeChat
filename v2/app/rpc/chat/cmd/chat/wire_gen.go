@@ -7,10 +7,10 @@
 package main
 
 import (
-	"CoffeeChat/internal/chat/conf"
-	"CoffeeChat/internal/chat/server"
-	"CoffeeChat/internal/chat/service"
-	"CoffeeChat/pkg/log"
+	"chat/internal/chat/conf"
+	"chat/internal/chat/server"
+	"chat/internal/chat/service"
+	"CoffeeChat/log"
 	"github.com/go-kratos/kratos/v2"
 )
 

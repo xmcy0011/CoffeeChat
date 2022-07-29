@@ -1,6 +1,6 @@
 package biz
 
-import "CoffeeChat/internal/chat/data/ent"
+import "chat/internal/chat/data/ent"
 
 type Message struct {
 	client *ent.Client

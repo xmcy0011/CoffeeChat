@@ -1,8 +1,8 @@
 package main
 
 import (
-	"CoffeeChat/internal/chat/conf"
-	"CoffeeChat/pkg/log"
+	"CoffeeChat/log"
+	"chat/internal/chat/conf"
 	"flag"
 	kratoslog "github.com/go-kratos/kratos/v2/log"
 	"os"
@@ -27,7 +27,7 @@ var (
 )
 
 func init() {
-	flag.StringVar(&flagconf, "conf", "../../configs/chat-config.yaml", "config path, eg: -conf config.yaml")
+	flag.StringVar(&flagconf, "conf", "configs/chat-config.yaml", "config path, eg: -conf config.yaml")
 }
 
 func newApp(logger *log.Logger, gs *grpc.Server, hs *http.Server) *kratos.App {

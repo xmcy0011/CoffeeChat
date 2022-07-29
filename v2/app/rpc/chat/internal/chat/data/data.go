@@ -1,9 +1,9 @@
 package data
 
 import (
-	"CoffeeChat/internal/chat/conf"
-	"CoffeeChat/internal/chat/data/ent"
-	"CoffeeChat/pkg/log"
+	"CoffeeChat/log"
+	"chat/internal/chat/conf"
+	"chat/internal/chat/data/ent"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/wire"
 )
