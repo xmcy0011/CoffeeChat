@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package auth;
+
+import "google/api/annotations.proto";
+import "rpc/user/api/auth/error_reason.proto";
+option go_package = "user/api/auth;auth";
+
+service Auth {
+  rpc Register (RegisterRequest) returns (RegisterReply) {
+    option (google.api.http) = {
+      post: "/auth/device/register"
+      body: "*"
+    };
+  }
+
+  rpc Auth (AuthRequest) returns (AuthReply) {
+    option (google.api.http) = {
+      post: "/auth/login"
+      body: "*"
+    };
+  }
+}
+
+message RegisterRequest {
+  string deviceId = 1;
+  string appVersion = 2;
+  string osVersion = 3;
+}
+
+message RegisterReply {
+  ErrorReason code = 1;
+  string message = 2;
+}
+
+message AuthRequest {
+  enum LoginType {
+    loginTypeMobile = 0;
+  }
+  message MobileAuth{
+    string phone = 2;
+    string code = 3;
+  }
+  LoginType loginType = 1;
+  MobileAuth byMobile = 2;
+}
+
+message AuthReply {
+  ErrorReason code = 1;
+  string msg = 2;
+}
