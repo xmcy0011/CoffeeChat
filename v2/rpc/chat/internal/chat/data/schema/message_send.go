@@ -1,6 +1,9 @@
 package schema
 
-import "entgo.io/ent"
+import (
+	"CoffeeChat/ent/mixin"
+	"entgo.io/ent"
+)
 
 // MessageSend holds the schema definition for the MessageSend entity.
 type MessageSend struct {
@@ -15,6 +18,6 @@ func (MessageSend) Edges() []ent.Edge {
 func (MessageSend) Mixin() []ent.Mixin {
 	return []ent.Mixin{
 		MessageMixin{},
-		TimeMixin{},
+		mixin.TimeMixin{},
 	}
 }

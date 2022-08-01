@@ -3,6 +3,7 @@ module CoffeeChat
 go 1.18
 
 require (
+	entgo.io/ent v0.11.1
 	github.com/aliyun/aliyun-tablestore-go-sdk v1.7.6
 	github.com/go-kratos/kratos/v2 v2.4.1
 	github.com/stretchr/testify v1.8.0

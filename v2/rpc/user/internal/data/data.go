@@ -1,23 +1,60 @@
 package data
 
 import (
-	"user/internal/conf"
-	"github.com/go-kratos/kratos/v2/log"
+	"CoffeeChat/log"
+	"context"
+	"entgo.io/ent/dialect"
+	"entgo.io/ent/dialect/sql"
+	"fmt"
 	"github.com/google/wire"
+	"go.uber.org/zap"
+	"user/internal/conf"
+	"user/internal/data/ent"
+
+	// init mysql driver
+	_ "github.com/go-sql-driver/mysql"
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, NewGreeterRepo)
+var ProviderSet = wire.NewSet(NewData, NewUserRepo)
 
 // Data .
 type Data struct {
-	// TODO wrapped database client
+	*ent.Client
 }
 
 // NewData .
-func NewData(c *conf.Data, logger log.Logger) (*Data, func(), error) {
-	cleanup := func() {
-		log.NewHelper(logger).Info("closing the data resources")
+func NewData(c *conf.Data, logger *log.Logger) (*Data, func(), error) {
+	drv, err := sql.Open(c.Database.Driver, c.Database.Source)
+	if err != nil {
+		return nil, nil, err
 	}
-	return &Data{}, cleanup, nil
+	sqlDrv := dialect.DebugWithContext(drv, func(ctx context.Context, i ...interface{}) {
+		log.Trace(ctx).Info("sql" + fmt.Sprintf("%v", i...))
+
+		// trace
+		//tracer := otel.Tracer("ent.")
+		//kind := trace.SpanKindServer
+		//_, span := tracer.Start(ctx,
+		//	"Query",
+		//	trace.WithAttributes(
+		//		attribute.String("sql", fmt.Sprint(i...)),
+		//	),
+		//	trace.WithSpanKind(kind),
+		//)
+		//span.End()
+	})
+	client := ent.NewClient(ent.Driver(sqlDrv))
+
+	if err := client.Schema.Create(context.Background()); err != nil {
+		return nil, nil, err
+	}
+
+	cleanup := func() {
+		logger.Info("closing the data resources")
+		if err = client.Close(); err != nil {
+			logger.Error("close sql client error", zap.Error(err))
+		}
+	}
+	return &Data{Client: client}, cleanup, nil
 }

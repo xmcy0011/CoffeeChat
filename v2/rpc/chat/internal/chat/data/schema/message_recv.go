@@ -1,6 +1,7 @@
 package schema
 
 import (
+	"CoffeeChat/ent/mixin"
 	"entgo.io/ent"
 )
 
@@ -12,7 +13,7 @@ type MessageRecv struct {
 func (MessageRecv) Mixin() []ent.Mixin {
 	return []ent.Mixin{
 		MessageMixin{},
-		TimeMixin{},
+		mixin.TimeMixin{},
 	}
 }
 
