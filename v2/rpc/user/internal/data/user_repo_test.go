@@ -6,7 +6,6 @@ import (
 	"github.com/stretchr/testify/require"
 	"os"
 	"testing"
-	"time"
 	"user/internal/conf"
 	"user/internal/data/ent"
 	"user/internal/data/pojo"
@@ -16,7 +15,7 @@ var (
 	dataSource = os.Getenv("GoMicroIMDb")
 )
 
-func setup(t *testing.T) *Data {
+func setupUserRepo(t *testing.T) UserRepo {
 	data, _, err := NewData(&conf.Data{
 		Database: &conf.Data_Database{
 			Driver: "mysql",
@@ -27,23 +26,32 @@ func setup(t *testing.T) *Data {
 	if err != nil {
 		t.Fatal(err)
 	}
-	return data
+	return NewUserRepo(data, log.L)
 }
 
 func TestUserRepo_Save(t *testing.T) {
-	client := setup(t)
-	repo := NewUserRepo(client, log.L)
+	repo := setupUserRepo(t)
 	u, err := repo.Save(context.Background(), &ent.User{
-		ID:       0,
-		Created:  time.Time{},
-		Updated:  time.Time{},
-		NickName: "",
-		Sex:      0,
-		Phone:    "",
-		Email:    "",
+		NickName: "xmcy0011",
+		Sex:      1,
+		Phone:    "17300000000",
+		Email:    "xmcy0011@sina.com",
 		Extra:    pojo.UserExtra{},
 	})
 
 	require.Equal(t, err, nil)
 	t.Log("save success,user:", u)
+}
+
+func TestUserRepo_Update(t *testing.T) {
+	repo := setupUserRepo(t)
+	err := repo.Update(context.Background(), &ent.User{ID: 2, NickName: "xmcy0011-New"})
+	require.Equal(t, err, nil)
+}
+
+func TestUserRepo_ListAll(t *testing.T) {
+	repo := setupUserRepo(t)
+	arr, err := repo.ListAll(context.Background())
+	require.Equal(t, err, nil)
+	t.Log(arr)
 }

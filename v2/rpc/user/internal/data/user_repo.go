@@ -35,8 +35,14 @@ func (u *userRepo) Save(ctx context.Context, user *ent.User) (*ent.User, error) 
 		SetSex(user.Sex).
 		SetExtra(user.Extra).Save(ctx)
 }
-func (u *userRepo) Update(ctx context.Context, user *ent.User) error {
-	return u.data.User.UpdateOne(user).Exec(ctx)
+func (u *userRepo) Update(ctx context.Context, newUser *ent.User) error {
+	_, err := u.data.User.UpdateOneID(newUser.ID).
+		SetNickName(newUser.NickName).
+		SetSex(newUser.Sex).
+		SetPhone(newUser.Phone).
+		SetEmail(newUser.Email).
+		Save(ctx)
+	return err
 }
 func (u *userRepo) FindByID(ctx context.Context, id int32) (*ent.User, error) {
 	return u.data.User.Query().Where(user.ID(id)).Only(ctx)
