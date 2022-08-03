@@ -55,3 +55,14 @@ func TestUserRepo_ListAll(t *testing.T) {
 	require.Equal(t, err, nil)
 	t.Log(arr)
 }
+
+func TestUserRepo_FindByPhone(t *testing.T) {
+	repo := setupUserRepo(t)
+	arr, err := repo.FindByPhone(context.Background(), "333")
+	if ent.IsNotFound(err) {
+		t.Log("not found")
+		return
+	}
+	require.Equal(t, err, nil)
+	t.Log(arr)
+}

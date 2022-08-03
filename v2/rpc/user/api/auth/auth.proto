@@ -24,13 +24,12 @@ service Auth {
 
 message RegisterRequest {
   string deviceId = 1;
-  string appVersion = 2;
+  int32 appVersion = 2;
   string osVersion = 3;
 }
 
 message RegisterReply {
-  ErrorReason code = 1;
-  string message = 2;
+  int32 id = 1;
 }
 
 message AuthRequest {
