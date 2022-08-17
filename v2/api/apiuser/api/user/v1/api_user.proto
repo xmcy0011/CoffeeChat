@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package user.v1;
+
+import "google/api/annotations.proto";
+import "rpc/user/api/user/user.proto";
+
+option go_package = "apiuser/api/user/v1;v1";
+
+// The greeting service definition.
+service ApiUser {
+  rpc Register (user.RegisterRequest) returns (user.RegisterReply){
+    option (google.api.http) = {
+      post: "/auth/device/register"
+      body: "*"
+    };
+  }
+
+  rpc Auth (user.AuthRequest) returns (user.AuthReply){
+    option (google.api.http) = {
+      post: "/auth/login"
+      body: "*"
+    };
+  };
+}
