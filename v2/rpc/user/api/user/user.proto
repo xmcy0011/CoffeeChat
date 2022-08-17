@@ -2,25 +2,39 @@ syntax = "proto3";
 
 package user;
 
-import "google/api/annotations.proto";
+import "rpc/user/api/user/error_reason.proto";
 option go_package = "user/api/user;user";
 
-// The greeting service definition.
-service User {
-  // Sends a greeting
-  rpc SayHello (HelloRequest) returns (HelloReply) {
-    option (google.api.http) = {
-      get: "/helloworld/{name}"
-    };
+service Auth {
+  // 设备注册
+  rpc Register (RegisterRequest) returns (RegisterReply);
+  // 认证，换取token
+  rpc Auth (AuthRequest) returns (AuthReply);
+}
+
+message RegisterRequest {
+  string deviceId = 1;
+  int32 appVersion = 2;
+  string osVersion = 3;
+}
+
+message RegisterReply {
+  int32 id = 1;
+}
+
+message AuthRequest {
+  enum LoginType {
+    loginTypeMobile = 0;
   }
+  message MobileAuth{
+    string phone = 2;
+    string code = 3;
+  }
+  LoginType loginType = 1;
+  MobileAuth byMobile = 2;
 }
 
-// The request message containing the user's name.
-message HelloRequest {
-  string name = 1;
-}
-
-// The response message containing the greetings
-message HelloReply {
-  string message = 1;
+message AuthReply {
+  ErrorReason code = 1;
+  string msg = 2;
 }

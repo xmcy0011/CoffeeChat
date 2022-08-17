@@ -11,18 +11,12 @@ message Bootstrap {
 }
 
 message Server {
-  message HTTP {
-    string network = 1;
-    string addr = 2;
-    google.protobuf.Duration timeout = 3;
-  }
   message GRPC {
     string network = 1;
     string addr = 2;
     google.protobuf.Duration timeout = 3;
   }
-  HTTP http = 1;
-  GRPC grpc = 2;
+  GRPC grpc = 1;
 }
 
 message Data {
