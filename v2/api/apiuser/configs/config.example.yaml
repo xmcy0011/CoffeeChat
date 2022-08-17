@@ -1,0 +1,17 @@
+server:
+  http:
+    addr: 0.0.0.0:8000
+    timeout: 1s
+data:
+  database:
+    driver: mysql
+    source: root:root@tcp(127.0.0.1:3306)/test
+  redis:
+    addr: 127.0.0.1:6379
+    read_timeout: 0.2s
+    write_timeout: 0.2s
+discover:
+  etcd:
+    endpoints: [127.0.0.1:2379]
+  service_endpoint:
+    rpc_user: rpc-user

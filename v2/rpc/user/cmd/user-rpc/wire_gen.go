@@ -8,6 +8,7 @@ package main
 
 import (
 	log2 "CoffeeChat/log"
+	"github.com/go-kratos/kratos/contrib/registry/etcd/v2"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"user/internal/biz"
@@ -20,16 +21,16 @@ import (
 // Injectors from wire.go:
 
 // wireApp init kratos application.
-func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger, logLogger *log2.Logger) (*kratos.App, func(), error) {
+func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger, logLogger *log2.Logger, registry *etcd.Registry) (*kratos.App, func(), error) {
 	dataData, cleanup, err := data.NewData(confData, logLogger)
 	if err != nil {
 		return nil, nil, err
 	}
 	deviceRepo := data.NewDeviceRepo(dataData, logLogger)
 	deviceUseCase := biz.NewDeviceUseCase(deviceRepo, logLogger)
-	authService := service.NewAuthService(deviceUseCase)
-	grpcServer := server.NewGRPCServer(confServer, authService, logger)
-	app := newApp(logLogger, grpcServer)
+	userService := service.NewAuthService(deviceUseCase)
+	grpcServer := server.NewGRPCServer(confServer, userService, logger)
+	app := newApp(logLogger, grpcServer, registry)
 	return app, func() {
 		cleanup()
 	}, nil

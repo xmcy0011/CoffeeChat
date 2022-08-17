@@ -5,8 +5,11 @@ server:
 data:
   database:
     driver: mysql
-    source: root:root@tcp(127.0.0.1:3306)/test
+    source: cim:coffeechat2022@tcp(127.0.0.1:3306)/coffeechat?charset=utf8mb4&parseTime=true
   redis:
     addr: 127.0.0.1:6379
     read_timeout: 0.2s
     write_timeout: 0.2s
+registry:
+  etcd:
+    endpoints: [127.0.0.1:2379]

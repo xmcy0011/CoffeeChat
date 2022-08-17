@@ -13,9 +13,10 @@ import (
 	"github.com/go-kratos/kratos/v2"
 	klog "github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
+	"user/api/user"
 )
 
 // wireApp init kratos application.
-func wireApp(*conf.Server, *conf.Data, klog.Logger, *log.Logger) (*kratos.App, func(), error) {
+func wireApp(*conf.Server, *conf.Data, klog.Logger, *log.Logger, user.AuthClient) (*kratos.App, func(), error) {
 	panic(wire.Build(server.ProviderSet, service.ProviderSet, newApp))
 }

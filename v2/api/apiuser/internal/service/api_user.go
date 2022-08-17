@@ -9,16 +9,18 @@ import (
 
 type ApiUserService struct {
 	pb.UnimplementedApiUserServer
+
+	client user.AuthClient
 }
 
-func NewApiUserService() *ApiUserService {
-	return &ApiUserService{}
+func NewApiUserService(client user.AuthClient) *ApiUserService {
+	return &ApiUserService{client: client}
 }
 
 func (s *ApiUserService) Register(ctx context.Context, req *user.RegisterRequest) (*user.RegisterReply, error) {
-	return &user.RegisterReply{}, nil
+	return s.client.Register(ctx, req)
 }
 
 func (s *ApiUserService) Auth(ctx context.Context, req *user.AuthRequest) (*user.AuthReply, error) {
-	return &user.AuthReply{}, nil
+	return s.client.Auth(ctx, req)
 }

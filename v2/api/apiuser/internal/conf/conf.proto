@@ -8,6 +8,18 @@ import "google/protobuf/duration.proto";
 message Bootstrap {
   Server server = 1;
   Data data = 2;
+  Discover discover = 3;
+}
+
+message Discover {
+  message ETCD {
+    repeated string endpoints = 1;
+  }
+  message ServiceEndpoint{
+      string rpc_user = 1;
+  }
+  ETCD etcd = 1;
+  ServiceEndpoint service_endpoint = 2;
 }
 
 message Server {

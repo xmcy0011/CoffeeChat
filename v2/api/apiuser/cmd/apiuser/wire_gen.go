@@ -13,13 +13,14 @@ import (
 	"apiuser/internal/service"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
+	"user/api/user"
 )
 
 // Injectors from wire.go:
 
 // wireApp init kratos application.
-func wireApp(confServer *conf.Server, data *conf.Data, logger log.Logger, logLogger *log2.Logger) (*kratos.App, func(), error) {
-	apiUserService := service.NewApiUserService()
+func wireApp(confServer *conf.Server, data *conf.Data, logger log.Logger, logLogger *log2.Logger, authClient user.AuthClient) (*kratos.App, func(), error) {
+	apiUserService := service.NewApiUserService(authClient)
 	httpServer := server.NewHTTPServer(confServer, apiUserService, logger)
 	app := newApp(logLogger, httpServer)
 	return app, func() {
