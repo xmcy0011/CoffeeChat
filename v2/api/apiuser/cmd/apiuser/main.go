@@ -41,8 +41,7 @@ func newApp(logger *log.Logger, hs *http.Server) *kratos.App {
 func main() {
 	flag.Parse()
 	kratoslog.SetLogger(log.MustNewLogger(id, Name, Version, true, 2))
-	logger := log.MustNewLogger(id, Name, Version, true, 0)
-	log.SetGlobalLogger(logger)
+	log.SetGlobalLogger(log.MustNewLogger(id, Name, Version, true, 0))
 
 	c := config.New(
 		config.WithSource(
@@ -60,7 +59,9 @@ func main() {
 		panic(err)
 	}
 
-	app, cleanup, err := wireApp(bc.Server, bc.Data, logger, log.L)
+	app, cleanup, err := wireApp(bc.Server, bc.Data,
+		log.MustNewLogger(id, Name, Version, true, 4),
+		log.L)
 	if err != nil {
 		panic(err)
 	}

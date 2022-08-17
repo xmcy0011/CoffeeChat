@@ -18,8 +18,8 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationApiUserAuth = "/apigw.v1.ApiUser/Auth"
-const OperationApiUserRegister = "/apigw.v1.ApiUser/Register"
+const OperationApiUserAuth = "/user.v1.ApiUser/Auth"
+const OperationApiUserRegister = "/user.v1.ApiUser/Register"
 
 type ApiUserHTTPServer interface {
 	Auth(context.Context, *user.AuthRequest) (*user.AuthReply, error)

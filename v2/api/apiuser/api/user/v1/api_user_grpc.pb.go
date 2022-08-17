@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v3.19.4
-// source: api/apiuser/api/user/api_user.proto
+// source: api/apiuser/api/user/v1/api_user.proto
 
 package v1
 
@@ -37,7 +37,7 @@ func NewApiUserClient(cc grpc.ClientConnInterface) ApiUserClient {
 
 func (c *apiUserClient) Register(ctx context.Context, in *user.RegisterRequest, opts ...grpc.CallOption) (*user.RegisterReply, error) {
 	out := new(user.RegisterReply)
-	err := c.cc.Invoke(ctx, "/apigw.v1.ApiUser/Register", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/user.v1.ApiUser/Register", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +46,7 @@ func (c *apiUserClient) Register(ctx context.Context, in *user.RegisterRequest, 
 
 func (c *apiUserClient) Auth(ctx context.Context, in *user.AuthRequest, opts ...grpc.CallOption) (*user.AuthReply, error) {
 	out := new(user.AuthReply)
-	err := c.cc.Invoke(ctx, "/apigw.v1.ApiUser/Auth", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/user.v1.ApiUser/Auth", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -95,7 +95,7 @@ func _ApiUser_Register_Handler(srv interface{}, ctx context.Context, dec func(in
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/apigw.v1.ApiUser/Register",
+		FullMethod: "/user.v1.ApiUser/Register",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ApiUserServer).Register(ctx, req.(*user.RegisterRequest))
@@ -113,7 +113,7 @@ func _ApiUser_Auth_Handler(srv interface{}, ctx context.Context, dec func(interf
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/apigw.v1.ApiUser/Auth",
+		FullMethod: "/user.v1.ApiUser/Auth",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ApiUserServer).Auth(ctx, req.(*user.AuthRequest))
@@ -125,7 +125,7 @@ func _ApiUser_Auth_Handler(srv interface{}, ctx context.Context, dec func(interf
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var ApiUser_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "apigw.v1.ApiUser",
+	ServiceName: "user.v1.ApiUser",
 	HandlerType: (*ApiUserServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -138,5 +138,5 @@ var ApiUser_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "api/apiuser/api/user/api_user.proto",
+	Metadata: "api/apiuser/api/user/v1/api_user.proto",
 }
