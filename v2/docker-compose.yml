@@ -38,7 +38,7 @@ services:
     command: [ '--default-authentication-plugin=mysql_native_password', '--character-set-server=utf8mb4',
                '--collation-server=utf8mb4_unicode_ci' ]
   redis:
-    build: setup/redis
+    build: deploy/setup/redis
     container_name: cim_redis
     volumes:
       - cim_redis:/data  # 持久化数据，其他如密码等，在redis.conf里已配置
@@ -46,76 +46,30 @@ services:
       - CoffeeChat
     ports:
       - "6379:6379"     # 端口改掉，预防攻击
-  consul:
-    image: bitnami/consul:latest
-    container_name: cim_consul
-    volumes:
-      - cim_consul:/bitnami
-    networks:
-      - CoffeeChat
+#  consul:
+#    image: bitnami/consul:latest
+#    container_name: cim_consul
+#    volumes:
+#      - cim_consul:/bitnami
+#    networks:
+#      - CoffeeChat
+#    ports:
+#      - '8300:8300'
+#      - '8301:8301'
+#      - '8301:8301/udp'
+#      - '8500:8500'
+#      - '8600:8600'
+#      - '8600:8600/udp'
+  etcd:
+    image: 'bitnami/etcd:latest'
+    environment:
+      - ALLOW_NONE_AUTHENTICATION=yes
+      - ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379
     ports:
-      - '8300:8300'
-      - '8301:8301'
-      - '8301:8301/udp'
-      - '8500:8500'
-      - '8600:8600'
-      - '8600:8600/udp'
-  cim_http: # http 服务
-    container_name: cim_http
-    build: # 指定从dockerfile编译
-      context: .
-      dockerfile: ./app/im_http/Dockerfile
-    volumes: # 数据卷绑定
-      - ./log/http:/log
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 120s
+      - "2379:2379"
+      - "2380:2380"
     networks:
       - CoffeeChat
-    ports:
-      - "18080:18080"
-    depends_on:
-      - cim_logic
-  cim_gate: # 网关服务
-    container_name: cim_gate
-    build:
-      context: .
-      dockerfile: ./app/im_gate/Dockerfile
-    volumes:
-      - ./log/gate:/log
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 120s
-    networks:
-      - CoffeeChat
-    ports:
-      - "8000:8000"
-    depends_on:
-      - cim_logic
-  cim_logic: # 逻辑服务
-    container_name: cim_logic
-    build:
-      context: .
-      dockerfile: ./app/im_logic/Dockerfile
-    volumes:
-      - ./log/logic:/log
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 120s
-    networks:
-      - CoffeeChat
-    depends_on:
-      - mysql
-      - redis
 volumes: # 声明使用的数据卷，不使用宿主机目录，可以自行更改
   cim_mysql_data: # mysql数据卷
     driver: local
