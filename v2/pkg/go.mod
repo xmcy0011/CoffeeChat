@@ -5,8 +5,10 @@ go 1.18
 require (
 	entgo.io/ent v0.11.1
 	github.com/aliyun/aliyun-tablestore-go-sdk v1.7.6
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-kratos/kratos/v2 v2.4.1
 	github.com/stretchr/testify v1.8.0
+	github.com/twinj/uuid v1.0.0
 	go.opentelemetry.io/otel/trace v1.8.0
 	go.uber.org/zap v1.21.0
 )
@@ -21,6 +23,7 @@ require (
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
+	github.com/myesui/uuid v1.0.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	go.opentelemetry.io/otel v1.8.0 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
@@ -29,5 +32,6 @@ require (
 	google.golang.org/genproto v0.0.0-20220519153652-3a47de7e79bd // indirect
 	google.golang.org/grpc v1.46.2 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
+	gopkg.in/stretchr/testify.v1 v1.2.2 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
