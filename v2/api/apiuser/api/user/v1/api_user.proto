@@ -16,10 +16,16 @@ service ApiUser {
     };
   }
 
-  rpc Auth (user.AuthRequest) returns (user.AuthReply){
+  rpc Auth (AuthRequestV1) returns (user.AuthReply){
     option (google.api.http) = {
       post: "/auth/login"
       body: "*"
     };
   };
+}
+
+message AuthRequestV1 {
+  user.AuthRequest.LoginType login_type = 1;
+  user.AuthRequest.MobileAuth by_mobile = 2;
+  user.AuthRequest.ClientType client_type = 3;
 }

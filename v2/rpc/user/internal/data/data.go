@@ -6,9 +6,13 @@ import (
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"fmt"
+	"github.com/go-redis/redis/v8"
 	"github.com/google/wire"
 	"go.uber.org/zap"
+	"runtime"
+	"time"
 	"user/internal/conf"
+	"user/internal/data/cache"
 	"user/internal/data/ent"
 
 	// init mysql driver
@@ -16,14 +20,14 @@ import (
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, NewUserRepo, NewDeviceRepo)
+var ProviderSet = wire.NewSet(NewData, NewRedis, NewUserRepo, NewDeviceRepo, cache.NewAuthTokenRepo)
 
-// Data .
+// Data ent client
 type Data struct {
 	*ent.Client
 }
 
-// NewData .
+// NewData create ent client
 func NewData(c *conf.Data, logger *log.Logger) (*Data, func(), error) {
 	drv, err := sql.Open(c.Database.Driver, c.Database.Source)
 	if err != nil {
@@ -57,4 +61,29 @@ func NewData(c *conf.Data, logger *log.Logger) (*Data, func(), error) {
 		}
 	}
 	return &Data{Client: client}, cleanup, nil
+}
+
+func NewRedis(c *conf.Data_Redis, logger *log.Logger) (*redis.Client, error) {
+	client := redis.NewClient(&redis.Options{
+		Addr:     c.Addr,
+		Password: c.Password,
+		DB:       int(c.Db),
+
+		DialTimeout:  c.DialTimeout.AsDuration(),
+		ReadTimeout:  c.ReadTimeout.AsDuration(),
+		WriteTimeout: c.WriteTimeout.AsDuration(),
+
+		// use go-redis default value
+		PoolSize:           10 * runtime.NumCPU(),
+		MinIdleConns:       runtime.NumCPU(),
+		PoolTimeout:        time.Second * (3 + 1), // ReadTimeout + 1
+		IdleTimeout:        time.Minute * 5,
+		IdleCheckFrequency: time.Minute,
+	})
+	err := client.Ping(context.Background()).Err()
+	if err != nil {
+		return nil, err
+	}
+	logger.Info("ping redis success", zap.String("addr", fmt.Sprintf("%s/%d", c.Addr, c.Db)))
+	return client, nil
 }

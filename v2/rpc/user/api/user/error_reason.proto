@@ -5,6 +5,7 @@ package user;
 option go_package = "user/api/user;user";
 
 enum ErrorReason {
-  GEETER_UNSPECIFIED = 0;
+  USER_UNSPECIFIED = 0;
   USER_NOT_FOUND = 1;
+  USER_LOGIN_TYPE_NOT_SUPPORT = 2;
 }

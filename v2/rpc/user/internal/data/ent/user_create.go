@@ -104,7 +104,7 @@ func (uc *UserCreate) SetNillableExtra(pe *pojo.UserExtra) *UserCreate {
 }
 
 // SetID sets the "id" field.
-func (uc *UserCreate) SetID(i int32) *UserCreate {
+func (uc *UserCreate) SetID(i int64) *UserCreate {
 	uc.mutation.SetID(i)
 	return uc
 }
@@ -238,7 +238,7 @@ func (uc *UserCreate) sqlSave(ctx context.Context) (*User, error) {
 	}
 	if _spec.ID.Value != _node.ID {
 		id := _spec.ID.Value.(int64)
-		_node.ID = int32(id)
+		_node.ID = int64(id)
 	}
 	return _node, nil
 }
@@ -249,7 +249,7 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		_spec = &sqlgraph.CreateSpec{
 			Table: user.Table,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt32,
+				Type:   field.TypeInt64,
 				Column: user.FieldID,
 			},
 		}
@@ -360,7 +360,7 @@ func (ucb *UserCreateBulk) Save(ctx context.Context) ([]*User, error) {
 				mutation.id = &nodes[i].ID
 				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
 					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int32(id)
+					nodes[i].ID = int64(id)
 				}
 				mutation.done = true
 				return nodes[i], nil

@@ -53,8 +53,8 @@ func (a *AuthTokenRepo) DeleteAuth(ctx context.Context, givenUuid string) (userI
 }
 
 // FetchAuth if token not expires, return the userId
-func (a *AuthTokenRepo) FetchAuth(ctx context.Context, token jwt.TokenDetails) (userId int64, err error) {
-	key := a.buildTokenUuidKey(token.AccessUuid)
+func (a *AuthTokenRepo) FetchAuth(ctx context.Context, tokenUuid string) (userId int64, err error) {
+	key := a.buildTokenUuidKey(tokenUuid)
 	userid, err := a.client.Get(ctx, key).Result()
 	if err != nil {
 		return 0, err

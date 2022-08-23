@@ -24,7 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ApiUserClient interface {
 	Register(ctx context.Context, in *user.RegisterRequest, opts ...grpc.CallOption) (*user.RegisterReply, error)
-	Auth(ctx context.Context, in *user.AuthRequest, opts ...grpc.CallOption) (*user.AuthReply, error)
+	Auth(ctx context.Context, in *AuthRequestV1, opts ...grpc.CallOption) (*user.AuthReply, error)
 }
 
 type apiUserClient struct {
@@ -44,7 +44,7 @@ func (c *apiUserClient) Register(ctx context.Context, in *user.RegisterRequest, 
 	return out, nil
 }
 
-func (c *apiUserClient) Auth(ctx context.Context, in *user.AuthRequest, opts ...grpc.CallOption) (*user.AuthReply, error) {
+func (c *apiUserClient) Auth(ctx context.Context, in *AuthRequestV1, opts ...grpc.CallOption) (*user.AuthReply, error) {
 	out := new(user.AuthReply)
 	err := c.cc.Invoke(ctx, "/user.v1.ApiUser/Auth", in, out, opts...)
 	if err != nil {
@@ -58,7 +58,7 @@ func (c *apiUserClient) Auth(ctx context.Context, in *user.AuthRequest, opts ...
 // for forward compatibility
 type ApiUserServer interface {
 	Register(context.Context, *user.RegisterRequest) (*user.RegisterReply, error)
-	Auth(context.Context, *user.AuthRequest) (*user.AuthReply, error)
+	Auth(context.Context, *AuthRequestV1) (*user.AuthReply, error)
 	mustEmbedUnimplementedApiUserServer()
 }
 
@@ -69,7 +69,7 @@ type UnimplementedApiUserServer struct {
 func (UnimplementedApiUserServer) Register(context.Context, *user.RegisterRequest) (*user.RegisterReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
 }
-func (UnimplementedApiUserServer) Auth(context.Context, *user.AuthRequest) (*user.AuthReply, error) {
+func (UnimplementedApiUserServer) Auth(context.Context, *AuthRequestV1) (*user.AuthReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Auth not implemented")
 }
 func (UnimplementedApiUserServer) mustEmbedUnimplementedApiUserServer() {}
@@ -104,7 +104,7 @@ func _ApiUser_Register_Handler(srv interface{}, ctx context.Context, dec func(in
 }
 
 func _ApiUser_Auth_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(user.AuthRequest)
+	in := new(AuthRequestV1)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -116,7 +116,7 @@ func _ApiUser_Auth_Handler(srv interface{}, ctx context.Context, dec func(interf
 		FullMethod: "/user.v1.ApiUser/Auth",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiUserServer).Auth(ctx, req.(*user.AuthRequest))
+		return srv.(ApiUserServer).Auth(ctx, req.(*AuthRequestV1))
 	}
 	return interceptor(ctx, in, info, handler)
 }

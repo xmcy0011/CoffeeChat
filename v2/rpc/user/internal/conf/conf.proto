@@ -24,7 +24,12 @@ message Server {
     string addr = 2;
     google.protobuf.Duration timeout = 3;
   }
+  message JWT {
+    string access_secret = 1;
+    string refresh_secret = 2;
+  }
   GRPC grpc = 1;
+  JWT jwt = 2;
 }
 
 message Data {
@@ -33,10 +38,12 @@ message Data {
     string source = 2;
   }
   message Redis {
-    string network = 1;
-    string addr = 2;
-    google.protobuf.Duration read_timeout = 3;
-    google.protobuf.Duration write_timeout = 4;
+    string addr = 1;
+    string password = 2;
+    int32 db = 3;
+    google.protobuf.Duration read_timeout = 4;
+    google.protobuf.Duration write_timeout = 5;
+    google.protobuf.Duration dial_timeout = 6;
   }
   Database database = 1;
   Redis redis = 2;

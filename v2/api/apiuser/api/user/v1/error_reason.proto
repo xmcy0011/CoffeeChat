@@ -5,6 +5,9 @@ package user.v1;
 option go_package = "apiuser/api/user/v1;v1";
 
 enum ErrorReason {
-  GEETER_UNSPECIFIED = 0;
+  USER_UNSPECIFIED = 0;
   USER_NOT_FOUND = 1;
+  
+  TOKEN_MISS = 100;
+  TOKEN_INVALID = 101;
 }

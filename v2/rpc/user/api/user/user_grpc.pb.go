@@ -22,8 +22,12 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthClient interface {
+	// 设备注册
 	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterReply, error)
+	// 认证，换取token
 	Auth(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*AuthReply, error)
+	// 校验token有效性
+	TokenValid(ctx context.Context, in *TokenValidRequest, opts ...grpc.CallOption) (*TokenValidReply, error)
 }
 
 type authClient struct {
@@ -36,7 +40,7 @@ func NewAuthClient(cc grpc.ClientConnInterface) AuthClient {
 
 func (c *authClient) Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterReply, error) {
 	out := new(RegisterReply)
-	err := c.cc.Invoke(ctx, "/auth.Auth/Register", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/user.Auth/Register", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -45,7 +49,16 @@ func (c *authClient) Register(ctx context.Context, in *RegisterRequest, opts ...
 
 func (c *authClient) Auth(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*AuthReply, error) {
 	out := new(AuthReply)
-	err := c.cc.Invoke(ctx, "/auth.Auth/Auth", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/user.Auth/Auth", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authClient) TokenValid(ctx context.Context, in *TokenValidRequest, opts ...grpc.CallOption) (*TokenValidReply, error) {
+	out := new(TokenValidReply)
+	err := c.cc.Invoke(ctx, "/user.Auth/TokenValid", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -56,8 +69,12 @@ func (c *authClient) Auth(ctx context.Context, in *AuthRequest, opts ...grpc.Cal
 // All implementations must embed UnimplementedAuthServer
 // for forward compatibility
 type AuthServer interface {
+	// 设备注册
 	Register(context.Context, *RegisterRequest) (*RegisterReply, error)
+	// 认证，换取token
 	Auth(context.Context, *AuthRequest) (*AuthReply, error)
+	// 校验token有效性
+	TokenValid(context.Context, *TokenValidRequest) (*TokenValidReply, error)
 	mustEmbedUnimplementedAuthServer()
 }
 
@@ -70,6 +87,9 @@ func (UnimplementedAuthServer) Register(context.Context, *RegisterRequest) (*Reg
 }
 func (UnimplementedAuthServer) Auth(context.Context, *AuthRequest) (*AuthReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Auth not implemented")
+}
+func (UnimplementedAuthServer) TokenValid(context.Context, *TokenValidRequest) (*TokenValidReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TokenValid not implemented")
 }
 func (UnimplementedAuthServer) mustEmbedUnimplementedAuthServer() {}
 
@@ -94,7 +114,7 @@ func _Auth_Register_Handler(srv interface{}, ctx context.Context, dec func(inter
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/auth.Auth/Register",
+		FullMethod: "/user.Auth/Register",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AuthServer).Register(ctx, req.(*RegisterRequest))
@@ -112,10 +132,28 @@ func _Auth_Auth_Handler(srv interface{}, ctx context.Context, dec func(interface
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/auth.Auth/Auth",
+		FullMethod: "/user.Auth/Auth",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AuthServer).Auth(ctx, req.(*AuthRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Auth_TokenValid_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TokenValidRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServer).TokenValid(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.Auth/TokenValid",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServer).TokenValid(ctx, req.(*TokenValidRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -124,7 +162,7 @@ func _Auth_Auth_Handler(srv interface{}, ctx context.Context, dec func(interface
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Auth_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "auth.Auth",
+	ServiceName: "user.Auth",
 	HandlerType: (*AuthServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -134,6 +172,10 @@ var Auth_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Auth",
 			Handler:    _Auth_Auth_Handler,
+		},
+		{
+			MethodName: "TokenValid",
+			Handler:    _Auth_TokenValid_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

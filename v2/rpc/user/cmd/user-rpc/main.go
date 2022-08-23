@@ -75,7 +75,7 @@ func main() {
 	reg := etcd.New(etcdClient)
 
 	// wire depends
-	app, cleanup, err := wireApp(bc.Server, bc.Data, logger, log.L, reg)
+	app, cleanup, err := wireApp(bc.Server, bc.Data, bc.Server.Jwt, bc.Data.Redis, logger, log.L, reg)
 	if err != nil {
 		panic(err)
 	}

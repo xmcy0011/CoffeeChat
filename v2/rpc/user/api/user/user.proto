@@ -10,31 +10,56 @@ service Auth {
   rpc Register (RegisterRequest) returns (RegisterReply);
   // 认证，换取token
   rpc Auth (AuthRequest) returns (AuthReply);
+  // 校验token有效性
+  rpc TokenValid(TokenValidRequest) returns (TokenValidReply);
 }
 
 message RegisterRequest {
-  string deviceId = 1;
-  int32 appVersion = 2;
-  string osVersion = 3;
+  string device_id = 1;
+  int32 app_version = 2;
+  string os_version = 3;
 }
 
 message RegisterReply {
-  int32 id = 1;
+  string access_token = 1;
+  int64 at_expires = 2;
 }
 
 message AuthRequest {
   enum LoginType {
     loginTypeMobile = 0;
   }
+  enum ClientType{
+    clientTypeUnknown = 0;
+    clientTypeApp = 1;
+    clientTypeWeb = 2;
+    clientTypeDesktop = 3;
+  }
   message MobileAuth{
     string phone = 2;
     string code = 3;
   }
-  LoginType loginType = 1;
-  MobileAuth byMobile = 2;
+  LoginType login_type = 1;
+  MobileAuth by_mobile = 2;
+  string access_token = 3;
+  ClientType client_type = 4;
 }
 
 message AuthReply {
-  ErrorReason code = 1;
-  string msg = 2;
+  string access_token = 1;
+  string refresh_token = 2;
+  int64 at_expires = 3;
+  int64 rt_expires = 4;
+  int64 user_id = 5;
+}
+
+message TokenValidRequest{
+  string token = 1;
+  // 是否是刷新的token
+  bool is_refresh_token = 2;
+}
+
+message TokenValidReply{
+  // 过期时间
+  int64 expires = 1;
 }

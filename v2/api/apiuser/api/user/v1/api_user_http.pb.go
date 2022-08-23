@@ -22,7 +22,7 @@ const OperationApiUserAuth = "/user.v1.ApiUser/Auth"
 const OperationApiUserRegister = "/user.v1.ApiUser/Register"
 
 type ApiUserHTTPServer interface {
-	Auth(context.Context, *user.AuthRequest) (*user.AuthReply, error)
+	Auth(context.Context, *AuthRequestV1) (*user.AuthReply, error)
 	Register(context.Context, *user.RegisterRequest) (*user.RegisterReply, error)
 }
 
@@ -53,13 +53,13 @@ func _ApiUser_Register0_HTTP_Handler(srv ApiUserHTTPServer) func(ctx http.Contex
 
 func _ApiUser_Auth0_HTTP_Handler(srv ApiUserHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in user.AuthRequest
+		var in AuthRequestV1
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationApiUserAuth)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.Auth(ctx, req.(*user.AuthRequest))
+			return srv.Auth(ctx, req.(*AuthRequestV1))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
@@ -71,7 +71,7 @@ func _ApiUser_Auth0_HTTP_Handler(srv ApiUserHTTPServer) func(ctx http.Context) e
 }
 
 type ApiUserHTTPClient interface {
-	Auth(ctx context.Context, req *user.AuthRequest, opts ...http.CallOption) (rsp *user.AuthReply, err error)
+	Auth(ctx context.Context, req *AuthRequestV1, opts ...http.CallOption) (rsp *user.AuthReply, err error)
 	Register(ctx context.Context, req *user.RegisterRequest, opts ...http.CallOption) (rsp *user.RegisterReply, err error)
 }
 
@@ -83,7 +83,7 @@ func NewApiUserHTTPClient(client *http.Client) ApiUserHTTPClient {
 	return &ApiUserHTTPClientImpl{client}
 }
 
-func (c *ApiUserHTTPClientImpl) Auth(ctx context.Context, in *user.AuthRequest, opts ...http.CallOption) (*user.AuthReply, error) {
+func (c *ApiUserHTTPClientImpl) Auth(ctx context.Context, in *AuthRequestV1, opts ...http.CallOption) (*user.AuthReply, error) {
 	var out user.AuthReply
 	pattern := "/auth/login"
 	path := binding.EncodeURL(pattern, in, false)

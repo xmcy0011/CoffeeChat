@@ -14,6 +14,7 @@ import (
 	"user/internal/biz"
 	"user/internal/conf"
 	"user/internal/data"
+	"user/internal/data/cache"
 	"user/internal/server"
 	"user/internal/service"
 )
@@ -21,14 +22,23 @@ import (
 // Injectors from wire.go:
 
 // wireApp init kratos application.
-func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger, logLogger *log2.Logger, registry *etcd.Registry) (*kratos.App, func(), error) {
+func wireApp(confServer *conf.Server, confData *conf.Data, server_JWT *conf.Server_JWT, data_Redis *conf.Data_Redis, logger log.Logger, logLogger *log2.Logger, registry *etcd.Registry) (*kratos.App, func(), error) {
 	dataData, cleanup, err := data.NewData(confData, logLogger)
 	if err != nil {
 		return nil, nil, err
 	}
 	deviceRepo := data.NewDeviceRepo(dataData, logLogger)
 	deviceUseCase := biz.NewDeviceUseCase(deviceRepo, logLogger)
-	userService := service.NewAuthService(deviceUseCase)
+	userRepo := data.NewUserRepo(dataData, logLogger)
+	userUseCase := biz.NewUserUseCase(userRepo, logLogger)
+	client, err := data.NewRedis(data_Redis, logLogger)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	authTokenRepo := cache.NewAuthTokenRepo(client)
+	authUseCase := biz.NewAuthUseCase(server_JWT, authTokenRepo)
+	userService := service.NewAuthService(deviceUseCase, userUseCase, authUseCase)
 	grpcServer := server.NewGRPCServer(confServer, userService, logger)
 	app := newApp(logLogger, grpcServer, registry)
 	return app, func() {

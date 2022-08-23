@@ -17,7 +17,7 @@ import (
 type User struct {
 	config `json:"-"`
 	// ID of the ent.
-	ID int32 `json:"id,omitempty"`
+	ID int64 `json:"id,omitempty"`
 	// Created holds the value of the "created" field.
 	Created time.Time `json:"created,omitempty"`
 	// Updated holds the value of the "updated" field.
@@ -67,7 +67,7 @@ func (u *User) assignValues(columns []string, values []interface{}) error {
 			if !ok {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
-			u.ID = int32(value.Int64)
+			u.ID = int64(value.Int64)
 		case user.FieldCreated:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field created", values[i])
