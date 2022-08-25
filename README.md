@@ -11,13 +11,14 @@ opensource im with server(go) and client(flutter+swift)
 
 最新动态：
 - 至今: 生命不息，探索不止💪💪
-- 2022/04/10：制定Monthly Release计划，每个月至少要保证一次Release
+- 2022/07/01: 目前正在开发v2架构（基于kratos v2框架），总体设计由pb+tcp变更为http+json接口方式，降低上手成本。考虑到自由度和方便体验，目前正在开发android app。
+- ~~2022/04/10：制定Monthly Release计划，每个月至少要保证一次Release~~
 - 2021/08: 作者最近在考虑跳槽，故精力主要放在研究[OpenIM](https://github.com/OpenIMSDK/Open-IM-Server)，学习Kafka，微服务，收件箱，Etcd，Docker，K8S等使用，提升技术深度。
 - 2021/03 - 07: 开发QT客户端和C++跨平台SDK，受限于精力进展缓慢。
 - 2021/02: 使用sketch设计win+mac客户端界面。
 
 总结：
-- `2022`: 再出发
+- `2022`: 再出发，学习android + kratos + k8s，实现go服务端v2版本重构
 - `2021`: 主要精力在探索百万级的架构，C++跨平台SDK，QT，Go微服务，Docker，Etcd等等，coffeechat几乎没有更新
 - `2020`: 这一年coffeechat不断完善，作者主要在学习ios开发，实现简单ios app
 - `2019/08`: coffeechat诞生，学习flutter，实现简单flutter客户端，后续因为flutter聊天界面下拉感觉效果不理想放弃
