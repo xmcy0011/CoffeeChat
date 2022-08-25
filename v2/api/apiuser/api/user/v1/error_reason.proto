@@ -9,7 +9,10 @@ option java_outer_classname = "ErrorReasonProto";
 enum ErrorReason {
   USER_UNSPECIFIED = 0;
   USER_NOT_FOUND = 1;
-  
+
   TOKEN_MISS = 100;
   TOKEN_INVALID = 101;
+
+  AUTH_NOT_SUPPORT_LOGIN_TYPE = 200;
+  AUTH_LOGIN_MISS_PHONE_OR_CODE = 201;
 }

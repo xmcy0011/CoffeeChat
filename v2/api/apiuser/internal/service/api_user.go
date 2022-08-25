@@ -42,6 +42,13 @@ func (s *ApiUserService) Auth(ctx context.Context, req *pb.AuthRequest) (*pb.Aut
 		return nil, err
 	}
 
+	if req.LoginType != pb.AuthRequest_loginTypeMobile {
+		return nil, errors.BadRequest(pb.ErrorReason_AUTH_NOT_SUPPORT_LOGIN_TYPE.String(), "not support login type")
+	}
+	if req.ByMobile == nil || req.ByMobile.Phone == "" || req.ByMobile.Code == "" {
+		return nil, errors.BadRequest(pb.ErrorReason_AUTH_LOGIN_MISS_PHONE_OR_CODE.String(), "miss phone or code")
+	}
+
 	result, err := s.client.Auth(ctx, &user.AuthRequest{
 		LoginType: user.AuthRequest_LoginType(req.LoginType),
 		ByMobile: &user.AuthRequest_MobileAuth{

@@ -4,7 +4,7 @@ package user.v1;
 
 option go_package = "apiuser/api/user/v1;v1";
 option java_package = "com.gomicroim.lib.protos.user";
-option java_outer_classname = "ApiUserProto";
+option java_outer_classname = "User";
 
 message RegisterRequest {
   string device_id = 1;
