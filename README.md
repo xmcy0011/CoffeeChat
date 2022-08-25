@@ -26,6 +26,21 @@ opensource im with server(go) and client(flutter+swift)
 - `2020`: 这一年coffeechat不断完善，作者主要在学习ios开发，实现简单ios app
 - `2019/08`: coffeechat诞生，学习flutter，实现简单flutter客户端，后续因为flutter聊天界面下拉感觉效果不理想放弃
 
+## Client
+
+支持的客户端有：
+
+- 开发中（V2）
+  - [Android](https://github.com/gomicroim/client-android): 基于android 7.0 + java实现，目前正在开发中（2022年8月），适用于 `V2版本` 服务端。
+
+- 暂停中（V1）
+  - [iOS](https://github.com/xmcy0011/CoffeeChat-iOS)：基于swift5实现，目前主要维护的客户端，推荐使用。适用于 `V1版本` 服务端。
+  - [Flutter](https://github.com/xmcy0011/CoffeeChat-Flutter)：基于flutter2和dart实现，目前已不再维护，仅供学习。
+  - [Windows](https://github.com/xmcy0011/CoffeeChat-Win)：基于c++和网易duilib实现，目前只实现了登录功能。
+  - [Mac](https://github.com/xmcy0011/CoffeeChat-Desktop)：基于c++和Qt6实现，目前只实现了登录功能。
+
+请点击对应的链接查看详情。
+
 ## Preview
 
 ### flutter
@@ -171,20 +186,6 @@ $ docker-compose down -v
 - [gim](https://github.com/alberliu/gim)：一个简单的写扩散项目，可以更深入理解写扩散的架构和原理。
 
 更多开源im，请移步：[史上最全开源IM盘点](https://blog.csdn.net/xmcy001122/article/details/110679978)
-
-## Client
-
-支持的客户端有：
-
-- 开发中
-  - [iOS](https://github.com/xmcy0011/CoffeeChat-iOS)：基于swift5实现，目前主要维护的客户端，推荐使用。
-
-- 暂停中
-  - [Flutter](https://github.com/xmcy0011/CoffeeChat-Flutter)：基于flutter2和dart实现，目前已不再维护，仅供学习。
-  - [Windows](https://github.com/xmcy0011/CoffeeChat-Win)：基于c++和网易duilib实现，目前只实现了登录功能。
-  - [Mac](https://github.com/xmcy0011/CoffeeChat-Desktop)：基于c++和Qt6实现，目前只实现了登录功能。
-
-请点击对应的链接查看详情。
 
 ## Contact
 
