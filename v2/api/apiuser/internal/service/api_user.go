@@ -20,23 +20,48 @@ func NewApiUserService(client user.AuthClient) *ApiUserService {
 	return &ApiUserService{client: client}
 }
 
-func (s *ApiUserService) Register(ctx context.Context, req *user.RegisterRequest) (*user.RegisterReply, error) {
-	return s.client.Register(ctx, req)
+func (s *ApiUserService) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.RegisterReply, error) {
+	result, err := s.client.Register(ctx, &user.RegisterRequest{
+		DeviceId:   req.DeviceId,
+		AppVersion: req.AppVersion,
+		OsVersion:  req.OsVersion,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &pb.RegisterReply{
+		AccessToken: result.AccessToken,
+		AtExpires:   result.AtExpires,
+	}, nil
 }
 
-func (s *ApiUserService) Auth(ctx context.Context, req *pb.AuthRequestV1) (*user.AuthReply, error) {
+func (s *ApiUserService) Auth(ctx context.Context, req *pb.AuthRequest) (*pb.AuthReply, error) {
 	httpCtx := ctx.(http.Context)
 	token, err := extractToken(httpCtx)
 	if err != nil {
 		return nil, err
 	}
 
-	return s.client.Auth(ctx, &user.AuthRequest{
-		LoginType:   req.LoginType,
-		ByMobile:    req.ByMobile,
+	result, err := s.client.Auth(ctx, &user.AuthRequest{
+		LoginType: user.AuthRequest_LoginType(req.LoginType),
+		ByMobile: &user.AuthRequest_MobileAuth{
+			Phone: req.ByMobile.Phone,
+			Code:  req.ByMobile.Code,
+		},
 		AccessToken: token,
-		ClientType:  req.ClientType,
+		ClientType:  user.AuthRequest_ClientType(req.ClientType),
 	})
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.AuthReply{
+		AccessToken:  result.AccessToken,
+		RefreshToken: result.RefreshToken,
+		AtExpires:    result.AtExpires,
+		RtExpires:    result.RtExpires,
+		UserId:       result.UserId,
+	}, nil
 }
 
 func extractToken(ctx http.Context) (string, error) {

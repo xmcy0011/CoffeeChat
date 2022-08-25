@@ -8,7 +8,6 @@ import (
 	context "context"
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
-	user "user/api/user"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -22,8 +21,8 @@ const OperationApiUserAuth = "/user.v1.ApiUser/Auth"
 const OperationApiUserRegister = "/user.v1.ApiUser/Register"
 
 type ApiUserHTTPServer interface {
-	Auth(context.Context, *AuthRequestV1) (*user.AuthReply, error)
-	Register(context.Context, *user.RegisterRequest) (*user.RegisterReply, error)
+	Auth(context.Context, *AuthRequest) (*AuthReply, error)
+	Register(context.Context, *RegisterRequest) (*RegisterReply, error)
 }
 
 func RegisterApiUserHTTPServer(s *http.Server, srv ApiUserHTTPServer) {
@@ -34,45 +33,45 @@ func RegisterApiUserHTTPServer(s *http.Server, srv ApiUserHTTPServer) {
 
 func _ApiUser_Register0_HTTP_Handler(srv ApiUserHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in user.RegisterRequest
+		var in RegisterRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationApiUserRegister)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.Register(ctx, req.(*user.RegisterRequest))
+			return srv.Register(ctx, req.(*RegisterRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*user.RegisterReply)
+		reply := out.(*RegisterReply)
 		return ctx.Result(200, reply)
 	}
 }
 
 func _ApiUser_Auth0_HTTP_Handler(srv ApiUserHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in AuthRequestV1
+		var in AuthRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationApiUserAuth)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.Auth(ctx, req.(*AuthRequestV1))
+			return srv.Auth(ctx, req.(*AuthRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*user.AuthReply)
+		reply := out.(*AuthReply)
 		return ctx.Result(200, reply)
 	}
 }
 
 type ApiUserHTTPClient interface {
-	Auth(ctx context.Context, req *AuthRequestV1, opts ...http.CallOption) (rsp *user.AuthReply, err error)
-	Register(ctx context.Context, req *user.RegisterRequest, opts ...http.CallOption) (rsp *user.RegisterReply, err error)
+	Auth(ctx context.Context, req *AuthRequest, opts ...http.CallOption) (rsp *AuthReply, err error)
+	Register(ctx context.Context, req *RegisterRequest, opts ...http.CallOption) (rsp *RegisterReply, err error)
 }
 
 type ApiUserHTTPClientImpl struct {
@@ -83,8 +82,8 @@ func NewApiUserHTTPClient(client *http.Client) ApiUserHTTPClient {
 	return &ApiUserHTTPClientImpl{client}
 }
 
-func (c *ApiUserHTTPClientImpl) Auth(ctx context.Context, in *AuthRequestV1, opts ...http.CallOption) (*user.AuthReply, error) {
-	var out user.AuthReply
+func (c *ApiUserHTTPClientImpl) Auth(ctx context.Context, in *AuthRequest, opts ...http.CallOption) (*AuthReply, error) {
+	var out AuthReply
 	pattern := "/auth/login"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationApiUserAuth))
@@ -96,8 +95,8 @@ func (c *ApiUserHTTPClientImpl) Auth(ctx context.Context, in *AuthRequestV1, opt
 	return &out, err
 }
 
-func (c *ApiUserHTTPClientImpl) Register(ctx context.Context, in *user.RegisterRequest, opts ...http.CallOption) (*user.RegisterReply, error) {
-	var out user.RegisterReply
+func (c *ApiUserHTTPClientImpl) Register(ctx context.Context, in *RegisterRequest, opts ...http.CallOption) (*RegisterReply, error) {
+	var out RegisterReply
 	pattern := "/auth/device/register"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationApiUserRegister))
