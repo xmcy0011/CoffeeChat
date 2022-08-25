@@ -2,6 +2,9 @@
 
 opensource im with server(go) and client(flutter+swift)
 
+> ⚠️⚠️Warnning⚠️⚠️
+> 持续开发中，仅适合学习使用。
+
 ## News
 
 有网友在Issues询问后续更新一事，这里回复一下：
