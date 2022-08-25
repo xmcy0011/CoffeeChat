@@ -1,10 +1,10 @@
 syntax = "proto3";
 
 package user.v1;
+option go_package = "apiuser/api/user/v1;v1";
 
 import "google/api/annotations.proto";
-
-option go_package = "apiuser/api/user/v1;v1";
+import "api/apiuser/api/user/v1/user.proto";
 
 // The greeting service definition.
 service ApiUser {
@@ -21,42 +21,4 @@ service ApiUser {
       body: "*"
     };
   };
-}
-
-message RegisterRequest {
-  string device_id = 1;
-  int32 app_version = 2;
-  string os_version = 3;
-}
-
-message RegisterReply {
-  string access_token = 1;
-  int64 at_expires = 2;
-}
-
-message AuthRequest {
-  enum LoginType {
-    loginTypeMobile = 0;
-  }
-  enum ClientType{
-    clientTypeUnknown = 0;
-    clientTypeApp = 1;
-    clientTypeWeb = 2;
-    clientTypeDesktop = 3;
-  }
-  message MobileAuth{
-    string phone = 2;
-    string code = 3;
-  }
-  LoginType login_type = 1;
-  MobileAuth by_mobile = 2;
-  ClientType client_type = 3;
-}
-
-message AuthReply {
-  string access_token = 1;
-  string refresh_token = 2;
-  int64 at_expires = 3;
-  int64 rt_expires = 4;
-  int64 user_id = 5;
 }
