@@ -14,8 +14,8 @@ services:
     networks:
       - CoffeeChat
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: mongopass
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=123456
   mysql:
     image: 'arm64v8/mysql:8.0.28-oracle' # mac m1
 #    image: 'mysql:5.7'
@@ -40,6 +40,7 @@ services:
   redis:
     build: deploy/setup/redis
     container_name: cim_redis
+    restart: always
     volumes:
       - cim_redis:/data  # 持久化数据，其他如密码等，在redis.conf里已配置
     networks:
@@ -62,6 +63,7 @@ services:
 #      - '8600:8600/udp'
   etcd:
     image: 'bitnami/etcd:latest'
+    restart: always
     environment:
       - ALLOW_NONE_AUTHENTICATION=yes
       - ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379
