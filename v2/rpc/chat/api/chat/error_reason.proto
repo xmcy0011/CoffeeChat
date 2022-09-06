@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package chat;
+option go_package = "chat/api/chat;chat";
+
+// chat 错误代码定义
+enum ErrorReason {
+  GEETER_UNSPECIFIED = 0;
+  USER_NOT_FOUND = 1;
+}

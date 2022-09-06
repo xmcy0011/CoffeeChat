@@ -1,0 +1,167 @@
+syntax = "proto3";
+
+package chat;
+option go_package = "chat/api/chat;chat";
+
+import "google/api/annotations.proto";
+import "rpc/chat/api/chat/contants.proto";
+import "rpc/chat/api/chat/error_reason.proto";
+
+// 聊天服务
+service Chat {
+  // 发消息
+  rpc SendMsg(SendMsgRequest) returns(SendMsgReply);
+
+  // timeline 同步消息（适合有本地存储能力的客户端，如APP）
+  rpc GetSyncMessage (SyncMessageRequest) returns (SyncMessageReply);
+
+  // 查询会话列表
+  rpc GetRecentContactSession(GetRecentSessionRequest) returns(GetRecentSessionReply);
+
+  // 查询历史消息列表
+  rpc GetMsgList(GetMsgListRequest) returns(GetMsgListReply);
+
+  // 已读消息回执
+  rpc MsgReadAck(MsgReadAckRequest) returns(MsgReadAckReply);
+}
+
+// 消息已读回复请求（我方）
+message MsgReadAckRequest{
+  uint64 user_id = 1;   // 消息发送方
+  uint64 msg_seq = 2;   // 服务器消息ID，在该ID之前的所有消息被标记为已读
+  uint64 session_id = 3;
+  IMSessionType session_type = 4;
+}
+
+// 消息已读回复响应
+message MsgReadAckReply{
+  uint32 unread_count = 1; // 已读消息数量
+}
+
+// 最近聊天会话列表请求
+message GetRecentSessionRequest {
+  uint64 user_id = 1;
+  uint32 latest_update_time = 2; // 最后更新时间
+}
+
+// 会话信息
+message IMContactSessionInfo {
+  uint64 session_id = 1;                    // 会话id
+  IMSessionType session_type = 2;           // 会话类型
+  IMSessionStatusType session_status = 3;   // 会话修改命令，预留
+  uint32 unread_cnt = 4;                    // 该会话未读消息数量
+  uint32 updated_time = 5;                  // 更新时间
+  string latest_msg_id = 6;     // 最新一条消息的id（UUID）
+  uint64 latest_msg_seq = 7;    // 最新一条消息服务端的id（顺序递增）
+  uint32 msg_time_stamp = 8;    // 最新一条消息时间戳（毫秒）
+  string msg_data = 9;          // 最新一条消息的内容
+  IMMsgType msg_type = 10;      // 最新一条消息的类型
+  uint64 msg_from_user_id = 11; // 最新一条消息的发送者
+  CIMMsgStatus msg_status = 12; // 最新一条消息的状态（预留）
+  //  string msg_attach = 13;     // 最新一条消息的附件（预留）
+  //  string extend_data = 14;    // 本地扩展字段（限制4096）
+  //  bool is_robot_session = 15; // 是否为机器人会话
+}
+
+message GetRecentSessionReply {
+  uint64 user_id = 1;
+  uint32 unread_counts = 2; // 总未读数量
+  repeated IMContactSessionInfo contact_session_list = 3; // 会话列表
+}
+
+// 查询历史聊天消息请求（漫游，任意时间，任意位置）
+message GetMsgListRequest {
+  message GetMsgByTime {
+    uint64 from_time_stamp = 1;  // 起始时间点，单位：毫秒
+    uint64 end_time_stamp = 2;   // 结束时间点，单位：毫秒
+  }
+  message GetMsgBySeq {
+    uint64 msg_seq = 1;   // 起始或结束的消息序号(不包含在查询结果中)
+    // 扫描方向
+    // true: 向前扫描（类似微信），msg_seq代表结束消息序号
+    // false: 向后扫描，msg_seq代表起始消息序号
+    bool is_forward = 2;
+  }
+
+  uint64 user_id = 1;
+  IMSessionType session_type = 2;
+  uint64 session_id = 3;
+  GetMsgByTime time_span = 4;       // 时间范围，不设置代表不限
+  GetMsgBySeq filter = 5;           // 扫描条件
+  uint32 limit_count = 6;           // 本次查询消息的条数上线(最多100条)
+  // repeated IMMsgType msg_type_list = 7; // 查询指定的消息类型
+  // optional bool is_exclusion_type_ = 8; // 是否排除指定的消息类型
+}
+
+// 消息信息
+message IMMsgInfo {
+  uint64 from_user_id = 1;         // 来源会话ID
+  string to = 2;                   // 目标ID，单聊userId，群聊groupId
+  IMSessionType session_type = 3;  // 会话类型
+
+  string client_msg_id = 4;     // 消息ID（UUID，客户端生成），去重
+  uint64 server_msg_seq = 5;    // 递增消息序号（服务端生成），乱序处理
+
+  IMMsgType msg_type = 6;       // 消息类型
+  string msg_data = 7;          // 消息内容
+  IMResCode msg_res_code = 8;   // 消息错误码
+  IMMsgFeature msg_feature = 9; // 消息属性
+  CIMMsgStatus msg_status = 10; // 消息状态（预留）
+
+  uint32 create_time = 11;      // 消息创建时间戳（毫秒）
+}
+
+//对于群而言，如果消息数目返回的数值小于请求的cnt,则表示群的消息能拉取的到头了，更早的消息没有权限拉取。
+//如果limit_count 和 msg_list.count 不一致，说明服务器消息有缺失，需要
+//客户端做一个缺失标记，避免下次再次拉取。
+message GetMsgListReply {
+  uint64 end_msg_seq = 1;           // 结束消息序号(不包含在查询结果中)
+  repeated IMMsgInfo msg_list = 2;  // 消息列表
+}
+
+// 发送消息请求
+message SendMsgRequest {
+  uint64 from_user_id = 1;    // 消息发送方
+  string to = 2;              // 消息接受方，单聊用户ID，群聊群ID
+  string client_msg_id = 3;   // 客户端消息ID，唯一（UUID）
+  int32 create_time = 4;      // 消息创建时间戳(秒)
+  IMMsgType msg_type = 5;    // 消息类型
+  string msg_data = 6;         // 消息内容
+}
+
+// 发送消息响应
+message SendMsgReply {
+  uint64 msg_seq = 1;        // 服务端生成的递增消息序号，乱序处理
+  IMResCode res_code = 2;    // 消息状态码
+}
+
+// 同步消息请求
+message SyncMessageRequest{
+  string member = 1;
+  int64 last_read = 2;
+  int32 count = 3;
+}
+
+message TimelineEntry {
+  message IMMessage{
+    uint64 from = 1;            // 消息发送方
+    string to = 2;              // 消息接受方，单聊用户ID，群聊群ID
+    string client_msg_id = 3;   // 客户端消息ID，唯一（UUID）
+    uint64 server_msg_seq = 4;  // 服务端生成的消息ID，顺序（客户端发送时无需设置）
+    int32 create_time = 5;      // 消息创建时间戳(秒)
+    IMMsgType msg_type = 6;     // 消息类型
+    string msg_data = 7;        // 消息内容
+  }
+  int64 sequence = 1;
+  repeated IMMessage message = 2;
+}
+
+// 同步消息响应
+message SyncMessageReply{
+  // 最新的消息序号
+  int64 latest_seq = 1;
+  // entry_set 中最后的序号值
+  int64 entry_set_last_seq = 2;
+  // 如果拉取到的结果为空，说明同步完成
+  repeated TimelineEntry entry_set = 3;
+}
