@@ -1,4 +1,4 @@
-@startuml
+@startuml 发消息
 gate -> logic: msg
 logic -> db: validGroup & isInGroup
 logic -> db: check & create session
@@ -16,4 +16,43 @@ gate <-> redis: get group member
 
 gate -> app1: broadcast msg
 gate -> app2: broadcast msg
+@enduml
+
+@startuml 发消息V2
+autonumber
+client -> client: gen msg_id
+client -> ingress: send msg
+ingress -> apichat: send
+apichat -> chat: send 
+chat -> mysql: check session & create
+chat -> redis: incr msg_seq
+chat -> mysql: insert msg
+chat --> apichat: return msg_seq
+apichat --> ingress: ack
+ingress --> client: ack
+apichat -> push: push (peer or groum member)
+push -> timeline: write offline msg
+push -> push: user online?
+push -> client: new chat message notify
+client --> push: ack
+push -> apns: push (if user offline)
+
+client -> ingress: sync msg (lastRead,count)
+ingress -> apipush: sync msg
+apipush -> push: pull offline msg
+push <-> timeline: query
+push --> apipush: offline msgs
+apipush --> ingress: offline msg
+ingress --> client: msg_list & sync seq
+@enduml
+
+@startuml 会话创建
+autonumber
+client -> apichat: /chat/msg/send
+apichat -> chat: rpc call
+chat -> mysql: create session(userId=from,peerId=to)
+chat -> mysql: create session(userId=to,peerId=from)
+chat -> chat: send msg ...
+chat --> apichat: result
+apichat --> client: result
 @enduml
