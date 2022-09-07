@@ -38,9 +38,10 @@ func (m *MessageUseCase) Send(ctx context.Context, from int64, to string, client
 	}
 
 	sessionType := pb.IMSessionType_kCIM_SESSION_TYPE_SINGLE
+	fromStr := strconv.FormatInt(from, 10)
 
 	// check session
-	sessions, err := m.sessionRepo.FindSingleSession(ctx, strconv.FormatInt(from, 10), to, sessionType)
+	sessions, err := m.sessionRepo.FindSingleSession(ctx, fromStr, to, sessionType)
 	if err != nil {
 		return nil, err
 	}
@@ -69,7 +70,25 @@ func (m *MessageUseCase) Send(ctx context.Context, from int64, to string, client
 		}
 	}
 
-	return nil, nil
+	// get session autoincrement msg_seq
+	msgSeq, err := m.seqCache.IncrSingle(ctx, fromStr, to)
+	if err != nil {
+		return nil, err
+	}
+
+	return m.msgRepo.Create(ctx, &data.Message{
+		From:         from,
+		To:           to,
+		SessionType:  int(sessionType),
+		ClientMsgID:  clientMsgID,
+		ServerMsgSeq: msgSeq,
+		MsgType:      int(msgType),
+		MsgData:      msgData,
+		MsgResCode:   int(pb.IMResCode_kCIM_RES_CODE_OK),
+		MsgFeature:   int(pb.IMMsgFeature_kCIM_MSG_FEATURE_ROAM_MSG),
+		MsgStatus:    int(pb.CIMMsgStatus_kCIM_MSG_STATUS_NONE),
+		CreateTime:   createTime,
+	})
 }
 
 func (m *MessageUseCase) SendGroup(ctx context.Context, groupId int64, sessionType int,

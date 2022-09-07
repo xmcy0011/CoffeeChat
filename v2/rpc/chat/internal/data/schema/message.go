@@ -30,7 +30,7 @@ func (Message) Fields() []ent.Field {
 		field.Int8("msg_feature"),
 		field.Int8("msg_status"),
 
-		field.Int32("create_time"),
+		field.Int64("create_time"),
 	}
 }
 

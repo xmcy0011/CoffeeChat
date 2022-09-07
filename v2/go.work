@@ -2,7 +2,8 @@ go 1.18
 
 use (
 	./api/apiuser
-	./rpc/message
+	./api/apichat
 	./rpc/user
+	./rpc/chat
 	./pkg
 )
