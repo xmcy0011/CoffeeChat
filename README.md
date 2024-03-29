@@ -185,7 +185,7 @@ $ docker-compose down -v
 - [Terry-Ye/im](https://github.com/Terry-Ye/im)：结合goim，理解了所谓的job含义，看懂了goim的架构。
 - [gim](https://github.com/alberliu/gim)：一个简单的写扩散项目，可以更深入理解写扩散的架构和原理。
 
-更多开源im，请移步：[史上最全开源IM盘点]([https://blog.csdn.net/xmcy001122/article/details/110679978](https://mp.weixin.qq.com/s?__biz=MzkwMzE3OTQ1Nw==&amp;mid=2247483692&amp;idx=1&amp;sn=32973a4ef2854e1999b2eaaaff378c89&amp;chksm=c09b7c82f7ecf594f9faf1bb69fbb9351696b8751c0396d5a725ce1b980c04ea36b8585c2289&token=823755029&lang=zh_CN#rd))
+更多开源im，请移步：[史上最全开源IM盘点](https://blog.csdn.net/xmcy001122/article/details/110679978](https://mp.weixin.qq.com/s?__biz=MzkwMzE3OTQ1Nw==&amp;mid=2247483692&amp;idx=1&amp;sn=32973a4ef2854e1999b2eaaaff378c89&amp;chksm=c09b7c82f7ecf594f9faf1bb69fbb9351696b8751c0396d5a725ce1b980c04ea36b8585c2289&token=823755029&lang=zh_CN#rd)
 
 ## Contact
 
